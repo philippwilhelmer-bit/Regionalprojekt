@@ -37,7 +37,7 @@ describe('checkCostCircuitBreaker()', () => {
     expect(result).toBe(true)
   })
 
-  it('returns false (halt) when daily token total meets or exceeds threshold', async () => {
+  it('returns false (halt) when daily token total meets threshold exactly (500000)', async () => {
     await db.pipelineRun.create({
       data: {
         totalInputTokens: 300_000,
@@ -48,7 +48,7 @@ describe('checkCostCircuitBreaker()', () => {
     expect(result).toBe(false)
   })
 
-  it('returns false when daily token total exceeds threshold', async () => {
+  it('returns false when daily token total exceeds threshold (600000 tokens)', async () => {
     await db.pipelineRun.create({
       data: {
         totalInputTokens: 400_000,
@@ -74,7 +74,7 @@ describe('checkCostCircuitBreaker()', () => {
     warnSpy.mockRestore()
   })
 
-  it('console.warn does NOT fire when below threshold', async () => {
+  it('console.warn is NOT emitted when below threshold', async () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     await db.pipelineRun.create({
       data: {
@@ -97,8 +97,8 @@ describe('checkCostCircuitBreaker()', () => {
         totalOutputTokens: 200_000,
       },
     })
+    // Yesterday's tokens should NOT be counted → total = 0 → below threshold → true
     const result = await checkCostCircuitBreaker(db)
-    // Yesterday's tokens not counted → total = 0 → below threshold → true
     expect(result).toBe(true)
   })
 
