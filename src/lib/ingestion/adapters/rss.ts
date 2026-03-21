@@ -61,7 +61,7 @@ export async function rssAdapter(source: Source): Promise<RawItem[]> {
         source.url
 
       return {
-        externalId: entry.id,
+        externalId: entry.id ?? computeContentHash(title, summary),
         sourceUrl: link,
         title,
         body: summary,

@@ -8,8 +8,26 @@
  */
 import { describe, it, expect, beforeAll, beforeEach, vi, afterEach } from 'vitest'
 import { createTestDb, cleanDb } from '../../../test/setup-db'
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient, Source } from '@prisma/client'
 import { createOtsAtAdapter } from './ots-at'
+
+// OTS adapter ignores the source param (uses OTS_API_KEY env var instead).
+// Provide a minimal Source shape to satisfy the AdapterFn type.
+function makeSource(overrides: Partial<Source> = {}): Source {
+  return {
+    id: 1,
+    type: 'OTS_AT',
+    url: 'https://www.ots.at/api',
+    enabled: true,
+    pollIntervalMinutes: 60,
+    consecutiveFailures: 0,
+    lastSuccessAt: null,
+    healthStatus: 'OK',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    ...overrides,
+  } as Source
+}
 
 // Minimal fixture data matching OTS.at confirmed field names
 const OTS_LIST_ITEM_1 = {
@@ -55,7 +73,8 @@ function makeJsonResponse(data: unknown, status = 200): Response {
 
 describe('createOtsAtAdapter', () => {
   let prisma: PrismaClient
-  let fetchSpy: ReturnType<typeof vi.spyOn>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let fetchSpy: any
 
   beforeAll(async () => {
     prisma = await createTestDb()
@@ -81,7 +100,7 @@ describe('createOtsAtAdapter', () => {
     process.env.OTS_API_KEY = apiKey
 
     const adapter = createOtsAtAdapter(prisma)
-    await adapter('OTS_AT')
+    await adapter(makeSource())
 
     // Assert: first call must be to /api/liste with app= and anz=50
     const listCall = fetchSpy.mock.calls[0][0] as string
@@ -100,7 +119,7 @@ describe('createOtsAtAdapter', () => {
     process.env.OTS_API_KEY = 'TEST_KEY'
 
     const adapter = createOtsAtAdapter(prisma)
-    const items = await adapter('OTS_AT')
+    const items = await adapter(makeSource())
 
     expect(items).toHaveLength(1)
     const item = items[0]
@@ -132,7 +151,7 @@ describe('createOtsAtAdapter', () => {
     process.env.OTS_API_KEY = 'TEST_KEY'
 
     const adapter = createOtsAtAdapter(prisma)
-    const items = await adapter('OTS_AT')
+    const items = await adapter(makeSource())
 
     // fetch called twice: once for list, once for detail of item 2 only
     expect(fetchSpy).toHaveBeenCalledTimes(2)
@@ -153,7 +172,7 @@ describe('createOtsAtAdapter', () => {
     process.env.OTS_API_KEY = 'BAD_KEY'
 
     const adapter = createOtsAtAdapter(prisma)
-    await expect(adapter('OTS_AT')).rejects.toThrow()
+    await expect(adapter(makeSource())).rejects.toThrow()
 
     delete process.env.OTS_API_KEY
   })

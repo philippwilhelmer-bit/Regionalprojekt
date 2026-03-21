@@ -5,11 +5,11 @@
  *   ING-04 — Health tracking: consecutiveFailures, DEGRADED/DOWN/OK transitions
  *   ING-05 — Adapter registry: ingest() resolves adapter from registry
  */
-import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest'
 import { createTestDb, cleanDb } from '../../test/setup-db'
 import type { PrismaClient, Source } from '@prisma/client'
 import { ingest, HEALTH_FAILURE_THRESHOLD } from './ingest'
-import * as registryModule from './adapters/registry'
+import { adapterRegistry } from './adapters/registry'
 import type { RawItem } from './types'
 
 // Helper: build a minimal RawItem for testing
@@ -25,9 +25,23 @@ function makeRawItem(overrides: Partial<RawItem> = {}): RawItem {
   }
 }
 
+// Helper: mock adapterRegistry.OTS_AT with a vi.fn() returning resolvedValue/rejectedValue.
+// Returns the mock so tests can assert on it if needed.
+function mockOtsAdapter(
+  resolvedValue?: RawItem[],
+  rejectedError?: Error,
+) {
+  const mockFn = resolvedValue !== undefined
+    ? vi.fn().mockResolvedValue(resolvedValue)
+    : vi.fn().mockRejectedValue(rejectedError ?? new Error('adapter error'))
+  adapterRegistry.OTS_AT = mockFn
+  return mockFn
+}
+
 describe('ingest()', () => {
   let prisma: PrismaClient
   let source: Source
+  const originalAdapter = adapterRegistry.OTS_AT
 
   beforeAll(async () => {
     prisma = await createTestDb()
@@ -45,16 +59,17 @@ describe('ingest()', () => {
         healthStatus: 'OK',
       },
     })
+  })
 
-    // Reset all registry spies
+  afterEach(() => {
+    // Restore original adapter after each test
+    adapterRegistry.OTS_AT = originalAdapter
     vi.restoreAllMocks()
   })
 
   it('creates an IngestionRun record at start and closes it on success', async () => {
     // Arrange: mock adapter returns one item
-    vi.spyOn(registryModule.adapterRegistry, 'OTS_AT', 'get').mockReturnValue(
-      vi.fn().mockResolvedValue([makeRawItem()])
-    )
+    mockOtsAdapter([makeRawItem()])
 
     // Act
     await ingest(prisma, source)
@@ -69,11 +84,9 @@ describe('ingest()', () => {
   })
 
   it('writes Article with status FETCHED for new non-duplicate items', async () => {
-    vi.spyOn(registryModule.adapterRegistry, 'OTS_AT', 'get').mockReturnValue(
-      vi.fn().mockResolvedValue([
-        makeRawItem({ externalId: 'new-001', title: 'New Article', body: 'New body' }),
-      ])
-    )
+    mockOtsAdapter([
+      makeRawItem({ externalId: 'new-001', title: 'New Article', body: 'New body' }),
+    ])
 
     await ingest(prisma, source)
 
@@ -95,11 +108,9 @@ describe('ingest()', () => {
       },
     })
 
-    vi.spyOn(registryModule.adapterRegistry, 'OTS_AT', 'get').mockReturnValue(
-      vi.fn().mockResolvedValue([
-        makeRawItem({ externalId: 'dup-001', title: 'Existing Article', body: 'Existing body' }),
-      ])
-    )
+    mockOtsAdapter([
+      makeRawItem({ externalId: 'dup-001', title: 'Existing Article', body: 'Existing body' }),
+    ])
 
     const result = await ingest(prisma, source)
 
@@ -119,9 +130,7 @@ describe('ingest()', () => {
     })
     const updatedSource = await prisma.source.findUniqueOrThrow({ where: { id: source.id } })
 
-    vi.spyOn(registryModule.adapterRegistry, 'OTS_AT', 'get').mockReturnValue(
-      vi.fn().mockResolvedValue([])
-    )
+    mockOtsAdapter([])
 
     await ingest(prisma, updatedSource)
 
@@ -132,9 +141,7 @@ describe('ingest()', () => {
   })
 
   it('increments consecutiveFailures when adapter throws', async () => {
-    vi.spyOn(registryModule.adapterRegistry, 'OTS_AT', 'get').mockReturnValue(
-      vi.fn().mockRejectedValue(new Error('Network failure'))
-    )
+    mockOtsAdapter(undefined, new Error('Network failure'))
 
     await expect(ingest(prisma, source)).rejects.toThrow('Network failure')
 
@@ -143,9 +150,7 @@ describe('ingest()', () => {
   })
 
   it('sets healthStatus to DEGRADED after 1-2 failures', async () => {
-    vi.spyOn(registryModule.adapterRegistry, 'OTS_AT', 'get').mockReturnValue(
-      vi.fn().mockRejectedValue(new Error('Adapter down'))
-    )
+    mockOtsAdapter(undefined, new Error('Adapter down'))
 
     await expect(ingest(prisma, source)).rejects.toThrow()
 
@@ -163,9 +168,7 @@ describe('ingest()', () => {
     })
     const failingSource = await prisma.source.findUniqueOrThrow({ where: { id: source.id } })
 
-    vi.spyOn(registryModule.adapterRegistry, 'OTS_AT', 'get').mockReturnValue(
-      vi.fn().mockRejectedValue(new Error('Adapter down'))
-    )
+    mockOtsAdapter(undefined, new Error('Adapter down'))
 
     await expect(ingest(prisma, failingSource)).rejects.toThrow()
 
@@ -175,9 +178,7 @@ describe('ingest()', () => {
   })
 
   it('records error string in IngestionRun.error when adapter throws', async () => {
-    vi.spyOn(registryModule.adapterRegistry, 'OTS_AT', 'get').mockReturnValue(
-      vi.fn().mockRejectedValue(new Error('Connection refused'))
-    )
+    mockOtsAdapter(undefined, new Error('Connection refused'))
 
     await expect(ingest(prisma, source)).rejects.toThrow()
 
