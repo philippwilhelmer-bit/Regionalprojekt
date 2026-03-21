@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 03-ai-pipeline-03-01-PLAN.md
-last_updated: "2026-03-21T23:35:19.547Z"
+stopped_at: Completed 03-ai-pipeline-03-05-PLAN.md
+last_updated: "2026-03-21T23:43:35.387Z"
 last_activity: "2026-03-21 — Phase 2 Plan 06 executed: source seed + ingest-run CLI, 49 tests GREEN"
 progress:
   total_phases: 7
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
   percent: 14
 ---
 
@@ -63,6 +63,7 @@ Progress: [█░░░░░░░░░] 14%
 | Phase 03-ai-pipeline P03 | 4 | 2 tasks | 7 files |
 | Phase 03-ai-pipeline P02 | 3 | 2 tasks | 2 files |
 | Phase 03-ai-pipeline P01 | 5 | 2 tasks | 8 files |
+| Phase 03-ai-pipeline P05 | 6 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -106,6 +107,9 @@ Recent decisions affecting current work:
 - [Phase 03-ai-pipeline]: runStep1Tag() accepts injected Anthropic client as first arg — enables vi.spyOn mocking; output_config cast as 'any' since SDK types don't expose it
 - [Phase 03-ai-pipeline]: PipelineRun has no FK to Source — pipeline-level run tracking, not per-source like IngestionRun
 - [Phase 03-ai-pipeline]: Article.seoTitle is a separate nullable String? field — SEO-optimised title distinct from display title
+- [Phase 03-ai-pipeline]: _clientFactory.create mutable object pattern for Anthropic client injection — vi.spyOn on exported let doesn't intercept internal module calls in vitest ESM
+- [Phase 03-ai-pipeline]: Circuit-breaker checked before PipelineRun.create — no run record opened if budget exhausted
+- [Phase 03-ai-pipeline]: (import.meta as any).main cast in ai-run.ts — Bun extension not typed in standard ImportMeta
 
 ### Pending Todos
 
@@ -119,6 +123,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T23:35:19.544Z
-Stopped at: Completed 03-ai-pipeline-03-01-PLAN.md
+Last session: 2026-03-21T23:43:35.385Z
+Stopped at: Completed 03-ai-pipeline-03-05-PLAN.md
 Resume file: None
