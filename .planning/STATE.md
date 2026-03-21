@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 02-06-PLAN.md
-last_updated: "2026-03-21T22:33:17Z"
+status: completed
+stopped_at: Completed 02-07-PLAN.md
+last_updated: "2026-03-21T22:54:57.203Z"
 last_activity: "2026-03-21 — Phase 2 Plan 06 executed: source seed + ingest-run CLI, 49 tests GREEN"
 progress:
   total_phases: 7
-  completed_phases: 1
-  total_plans: 9
-  completed_plans: 9
+  completed_phases: 2
+  total_plans: 10
+  completed_plans: 10
   percent: 14
 ---
 
@@ -58,6 +58,7 @@ Progress: [█░░░░░░░░░] 14%
 | Phase 02-ingestion P04 | 2 | 2 tasks | 4 files |
 | Phase 02-ingestion P05 | 15 | 2 tasks | 6 files |
 | Phase 02-ingestion P06 | 3 | 2 tasks | 4 files |
+| Phase 02-ingestion P07 | 5 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -93,6 +94,8 @@ Recent decisions affecting current work:
 - [Phase 02-ingestion]: HEALTH_FAILURE_THRESHOLD = 3 as module-level constant in ingest.ts — Phase 5 CMS will make it configurable per-source
 - [Phase 02-06]: seedSources upserts by url (@unique in schema) — consistent with seedBezirke upsert-by-slug pattern
 - [Phase 02-06]: ingest-run.ts per-source error handling: failures logged and aggregated, remaining sources continue, exit(1) only if any errors
+- [Phase 02-ingestion]: AdapterFn parameter changed from ArticleSource (enum) to Source (Prisma model) — enables adapters to access source.url without unsafe casts
+- [Phase 02-ingestion]: ingest.test.ts mock strategy: direct registry property assignment with afterEach restore instead of vi.spyOn accessor (avoids vitest overload incompatibility with Partial<Record<K,V>>)
 
 ### Pending Todos
 
@@ -106,6 +109,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T22:33:17Z
-Stopped at: Completed 02-06-PLAN.md
+Last session: 2026-03-21T22:54:57.202Z
+Stopped at: Completed 02-07-PLAN.md
 Resume file: None
