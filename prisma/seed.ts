@@ -14,6 +14,8 @@ import { PrismaClient } from '@prisma/client'
 import config from '../bundesland.config'
 import { steiermarkBezirke } from './seed-data/bezirke'
 import type { BezirkSeedEntry } from './seed-data/bezirke'
+import { steiermarkSources } from './seed-data/sources'
+import type { SourceSeedEntry } from './seed-data/sources'
 
 /**
  * Seed Bezirke for a given bundesland into the provided Prisma client.
@@ -47,6 +49,40 @@ export async function seedBezirke(
 }
 
 /**
+ * Seed Sources for a given bundesland into the provided Prisma client.
+ * Exported for testing — tests pass a pgLite-backed client and a bundesland name.
+ *
+ * Uses upsert (not create) so the seed is idempotent and safe to re-run.
+ * The unique key for sources is the URL.
+ */
+export async function seedSources(
+  prisma: PrismaClient,
+  bundesland: string
+): Promise<void> {
+  const seedData: SourceSeedEntry[] =
+    bundesland === 'steiermark' ? steiermarkSources : []
+
+  for (const source of seedData) {
+    await prisma.source.upsert({
+      where: { url: source.url },
+      update: {
+        type: source.type,
+        enabled: source.enabled,
+        pollIntervalMinutes: source.pollIntervalMinutes,
+      },
+      create: {
+        type: source.type,
+        url: source.url,
+        enabled: source.enabled,
+        pollIntervalMinutes: source.pollIntervalMinutes,
+      },
+    })
+  }
+
+  console.log(`Seeded ${seedData.length} Sources for ${bundesland}`)
+}
+
+/**
  * Main entry point — runs when invoked via `npx prisma db seed`.
  * Reads config.bundesland and uses it to select seed data.
  */
@@ -54,6 +90,7 @@ async function main(): Promise<void> {
   const prisma = new PrismaClient()
   try {
     await seedBezirke(prisma, config.bundesland)
+    await seedSources(prisma, config.bundesland)
   } finally {
     await prisma.$disconnect()
   }

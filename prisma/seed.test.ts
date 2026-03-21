@@ -8,7 +8,8 @@
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
 import { createTestDb, cleanDb } from '../src/test/setup-db'
 import type { PrismaClient } from '@prisma/client'
-import { seedBezirke } from './seed'
+import { seedBezirke, seedSources } from './seed'
+import { steiermarkSources } from './seed-data/sources'
 
 describe('Config-driven seed (CONF-01 + CONF-02)', () => {
   let prisma: PrismaClient
@@ -50,9 +51,46 @@ describe('Config-driven seed (CONF-01 + CONF-02)', () => {
 })
 
 describe('seedSources', () => {
-  // import { seedSources } from './seed'  // uncomment when implemented
-  it.todo('inserts Source rows for the given bundesland on first run')
-  it.todo('re-running seed produces no duplicate Source rows (idempotent upsert by url)')
-  it.todo('only seeds sources for the given bundesland — other bundesland sources are untouched')
-  it.todo('seedSources called after seedBezirke — existing Bezirk rows are unaffected')
+  let prisma: PrismaClient
+
+  beforeAll(async () => {
+    prisma = await createTestDb()
+  })
+
+  beforeEach(async () => {
+    await cleanDb(prisma)
+  })
+
+  it('inserts Source rows for the given bundesland on first run', async () => {
+    await seedSources(prisma, 'steiermark')
+    const count = await prisma.source.count()
+    expect(count).toBe(steiermarkSources.length)
+  })
+
+  it('re-running seed produces no duplicate Source rows (idempotent upsert by url)', async () => {
+    await seedSources(prisma, 'steiermark')
+    await seedSources(prisma, 'steiermark') // second run
+    const count = await prisma.source.count()
+    expect(count).toBe(steiermarkSources.length) // still same count, no duplicates
+  })
+
+  it('only seeds sources for the given bundesland — other bundesland sources are untouched', async () => {
+    await seedSources(prisma, 'steiermark')
+    const countBefore = await prisma.source.count()
+    // Calling with a different bundesland that has no sources defined should add 0 rows
+    await seedSources(prisma, 'unknown-bundesland')
+    const countAfter = await prisma.source.count()
+    expect(countAfter).toBe(countBefore)
+  })
+
+  it('seedSources called after seedBezirke — existing Bezirk rows are unaffected', async () => {
+    await seedBezirke(prisma, 'steiermark')
+    const bezirkCountBefore = await prisma.bezirk.count()
+    await seedSources(prisma, 'steiermark')
+    const bezirkCountAfter = await prisma.bezirk.count()
+    // Bezirk rows must be unaffected by seeding sources
+    expect(bezirkCountAfter).toBe(bezirkCountBefore)
+    // And repeated source seeding must not throw
+    await expect(seedSources(prisma, 'steiermark')).resolves.not.toThrow()
+  })
 })
