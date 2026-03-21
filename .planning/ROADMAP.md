@@ -12,7 +12,7 @@ Build an autonomous AI-powered regional news platform covering all Bezirke of St
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - DB schema, Bezirk data model, and content data access layer
+- [x] **Phase 1: Foundation** - DB schema, Bezirk data model, and content data access layer (completed 2026-03-21)
 - [ ] **Phase 2: Ingestion** - Source adapter interface, OTS.at adapter, RSS adapter, deduplication, and feed health monitoring
 - [ ] **Phase 3: AI Pipeline** - Bezirk tagger, article writer, named-person exception queue, and cost circuit-breaker
 - [ ] **Phase 4: Scheduler and Autonomous Publishing** - Cron scheduler, automated ingestion-to-publish loop, and dead-man monitoring
@@ -134,7 +134,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 2/3 | In Progress|  |
+| 1. Foundation | 3/3 | Complete   | 2026-03-21 |
 | 2. Ingestion | 0/? | Not started | - |
 | 3. AI Pipeline | 0/? | Not started | - |
 | 4. Scheduler and Autonomous Publishing | 0/? | Not started | - |
