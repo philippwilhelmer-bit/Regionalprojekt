@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-03-21T21:01:08.920Z"
-last_activity: "2026-03-21 — Phase 2 Plan 02 executed: types.ts and dedup service implemented, 6 tests GREEN"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-03-21T21:05:11.769Z"
+last_activity: "2026-03-21 — Phase 2 Plan 03 executed: OTS.at adapter implemented, 4 tests GREEN"
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 9
-  completed_plans: 5
-  percent: 5
+  completed_plans: 7
+  percent: 7
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 2 of 7 (Ingestion)
-Plan: 2 of 6 in current phase
+Plan: 3 of 6 in current phase
 Status: In progress
-Last activity: 2026-03-21 — Phase 2 Plan 02 executed: types.ts and dedup service implemented, 6 tests GREEN
+Last activity: 2026-03-21 — Phase 2 Plan 03 executed: OTS.at adapter implemented, 4 tests GREEN
 
-Progress: [█░░░░░░░░░] 5%
+Progress: [█░░░░░░░░░] 7%
 
 ## Performance Metrics
 
@@ -81,6 +81,9 @@ Recent decisions affecting current work:
 - [Phase 02-02]: AdapterFn uses ArticleSource enum (not a separate Source model type) — matches enum already in @prisma/client
 - [Phase 02-02]: cleanDb updated to include IngestionRun and Source tables — required for correct test isolation in Phase 2
 - [Phase 02-02]: Prisma client regenerated after Phase 2 schema — Source and IngestionRun models were missing from generated client
+- [Phase 02-03]: createOtsAtAdapter(db?) factory pattern — keeps AdapterFn signature clean while enabling DI for tests
+- [Phase 02-03]: CANDIDATE_BODY_FIELDS defensive extraction — OTS API body field name is MEDIUM confidence; tries TEXT/BODY/INHALT/text/body with warn-and-fallback
+- [Phase 02-03]: Pre-fetch dedup uses article.findFirst (not isDuplicate) — isDuplicate requires contentHash which only exists after the detail fetch
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T21:01:08.918Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-03-21T21:10:00.000Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None
