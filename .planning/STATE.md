@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-04-PLAN.md
-last_updated: "2026-03-21T21:05:27.207Z"
+stopped_at: Completed 02-05-PLAN.md
+last_updated: "2026-03-21T22:25:03.907Z"
 last_activity: "2026-03-21 — Phase 2 Plan 03 executed: OTS.at adapter implemented, 4 tests GREEN"
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 9
-  completed_plans: 7
+  completed_plans: 8
   percent: 7
 ---
 
@@ -56,6 +56,7 @@ Progress: [█░░░░░░░░░] 7%
 | Phase 02-ingestion P01 | 3 | 2 tasks | 11 files |
 | Phase 02-ingestion P02 | 7 | 2 tasks | 4 files |
 | Phase 02-ingestion P04 | 2 | 2 tasks | 4 files |
+| Phase 02-ingestion P05 | 15 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,8 @@ Recent decisions affecting current work:
 - [Phase 02-03]: Pre-fetch dedup uses article.findFirst (not isDuplicate) — isDuplicate requires contentHash which only exists after the detail fetch
 - [Phase 02-ingestion]: rssAdapter takes Source (Prisma model, has .url) not ArticleSource enum — adapter needs source.url to fetch the feed
 - [Phase 02-ingestion]: feedsmith RSS item.guid is a Guid object {value, isPermaLink?} — use item.guid.value for externalId string
+- [Phase 02-ingestion]: rssAdapter cast to AdapterFn in registry via 'as unknown as AdapterFn' — rssAdapter takes Source (Prisma model) not ArticleSource enum; ingest() passes full Source row satisfying both
+- [Phase 02-ingestion]: HEALTH_FAILURE_THRESHOLD = 3 as module-level constant in ingest.ts — Phase 5 CMS will make it configurable per-source
 
 ### Pending Todos
 
@@ -100,6 +103,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T21:05:27.205Z
-Stopped at: Completed 02-04-PLAN.md
+Last session: 2026-03-21T22:25:03.905Z
+Stopped at: Completed 02-05-PLAN.md
 Resume file: None
