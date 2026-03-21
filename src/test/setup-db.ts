@@ -64,7 +64,9 @@ export async function createTestDb(): Promise<PrismaClient> {
  */
 export async function cleanDb(prisma: PrismaClient): Promise<void> {
   // Delete in dependency order (child tables first)
+  await prisma.ingestionRun.deleteMany()
   await prisma.articleBezirk.deleteMany()
   await prisma.article.deleteMany()
   await prisma.bezirk.deleteMany()
+  await prisma.source.deleteMany()
 }

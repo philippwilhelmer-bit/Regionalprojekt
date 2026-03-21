@@ -46,7 +46,7 @@ describe('isDuplicate', () => {
         externalId: 'ots-123',
         source: 'OTS_AT',
         title: 'Test Article',
-        body: 'Test body',
+        content: 'Test body',
         contentHash: computeContentHash('Test Article', 'Test body'),
       },
     })
@@ -62,7 +62,7 @@ describe('isDuplicate', () => {
         externalId: 'rss-456',
         source: 'RSS',
         title: 'Shared content',
-        body: 'Same body text',
+        content: 'Same body text',
         contentHash: hash,
       },
     })
