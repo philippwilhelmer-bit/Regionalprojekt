@@ -62,9 +62,7 @@ export async function ingest(
   })
 
   // Step 2: Resolve adapter
-  // The registry maps ArticleSource → AdapterFn, but RSS adapter needs the full Source object.
-  // We cast the adapter call — the ingest() function always passes the full Source row,
-  // which satisfies both the generic AdapterFn and the rssAdapter signature.
+  // adapterRegistry maps ArticleSource → AdapterFn; AdapterFn takes Source (Prisma model).
   const adapterFn = adapterRegistry[src.type]
   if (!adapterFn) {
     const errMsg = `No adapter registered for source type: ${src.type} (sourceId=${src.id})`
@@ -78,8 +76,8 @@ export async function ingest(
   // Step 3: Call adapter, catch errors
   let rawItems
   try {
-    // Pass full Source row — adapters that need .url (RSS) will use it
-    rawItems = await (adapterFn as (s: Source) => ReturnType<typeof adapterFn>)(src)
+    // Call adapter — AdapterFn takes Source so adapters can access source.url if needed
+    rawItems = await adapterFn(src)
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : String(err)
 

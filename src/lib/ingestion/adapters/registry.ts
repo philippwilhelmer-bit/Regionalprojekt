@@ -17,9 +17,6 @@ import { rssAdapter } from './rss'
 
 export const adapterRegistry: Partial<Record<ArticleSource, AdapterFn>> = {
   OTS_AT: otsAtAdapter,
-  // rssAdapter signature is (source: Source) but AdapterFn is (source: ArticleSource).
-  // The ingest() function passes the full Source row from the DB.
-  // Cast here is safe because ingest() always passes Source which satisfies both.
-  RSS: rssAdapter as unknown as AdapterFn,
+  RSS: rssAdapter,
   // MANUAL: intentionally absent — MANUAL sources are not polled
 }

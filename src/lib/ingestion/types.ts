@@ -1,4 +1,4 @@
-import type { ArticleSource } from '@prisma/client'
+import type { Source } from '@prisma/client'
 
 export interface RawItem {
   externalId: string
@@ -9,4 +9,4 @@ export interface RawItem {
   rawPayload: unknown
 }
 
-export type AdapterFn = (source: ArticleSource) => Promise<RawItem[]>
+export type AdapterFn = (source: Source) => Promise<RawItem[]>
