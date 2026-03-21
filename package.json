@@ -12,6 +12,7 @@
     "db:seed": "prisma db seed"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
     "@prisma/client": "^6.19.2",
     "feedsmith": "^2.9.1",
     "next": "^15.5.14",
