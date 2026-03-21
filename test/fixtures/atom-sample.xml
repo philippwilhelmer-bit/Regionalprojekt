@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Steiermark Aktuell</title>
+  <link href="https://aktuell.example.at"/>
+  <updated>2026-03-21T10:00:00+01:00</updated>
+  <id>https://aktuell.example.at/feed</id>
+  <entry>
+    <id>https://aktuell.example.at/meldung/schule-liezen-sanierung</id>
+    <title>Schulgebäude in Liezen wird saniert</title>
+    <link href="https://aktuell.example.at/meldung/schule-liezen-sanierung"/>
+    <updated>2026-03-21T09:15:00+01:00</updated>
+    <summary>Das Volksschulgebäude in Liezen erhält eine umfassende thermische Sanierung.</summary>
+  </entry>
+  <entry>
+    <id>https://aktuell.example.at/meldung/tourismus-schladming-rekord</id>
+    <title>Schladming verzeichnet Nächtigungsrekord</title>
+    <link href="https://aktuell.example.at/meldung/tourismus-schladming-rekord"/>
+    <updated>2026-03-21T07:45:00+01:00</updated>
+    <summary>Der Wintertourismus in Schladming hat in dieser Saison einen neuen Nächtigungsrekord erreicht.</summary>
+  </entry>
+</feed>

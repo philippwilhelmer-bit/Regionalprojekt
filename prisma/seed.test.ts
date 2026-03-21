@@ -48,3 +48,11 @@ describe('Config-driven seed (CONF-01 + CONF-02)', () => {
     expect(count).toBe(0)
   })
 })
+
+describe('seedSources', () => {
+  // import { seedSources } from './seed'  // uncomment when implemented
+  it.todo('inserts Source rows for the given bundesland on first run')
+  it.todo('re-running seed produces no duplicate Source rows (idempotent upsert by url)')
+  it.todo('only seeds sources for the given bundesland — other bundesland sources are untouched')
+  it.todo('seedSources called after seedBezirke — existing Bezirk rows are unaffected')
+})

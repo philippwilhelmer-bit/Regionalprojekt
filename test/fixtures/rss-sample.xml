@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Steiermark Nachrichten</title>
+    <link>https://news.example.at</link>
+    <description>Aktuelle Nachrichten aus der Steiermark</description>
+    <item>
+      <title>Neue Radwege in Graz geplant</title>
+      <link>https://news.example.at/artikel/radwege-graz-2026</link>
+      <guid>https://news.example.at/artikel/radwege-graz-2026</guid>
+      <description>Die Stadt Graz plant den Ausbau von 15 Kilometern neuer Radwege bis Ende 2026.</description>
+      <pubDate>Sat, 21 Mar 2026 10:00:00 +0100</pubDate>
+    </item>
+    <item>
+      <title>Hochwasserschutz Mur: Bauarbeiten abgeschlossen</title>
+      <link>https://news.example.at/artikel/hochwasserschutz-mur</link>
+      <description>Die Hochwasserschutzmaßnahmen entlang der Mur in Leoben wurden erfolgreich abgeschlossen.</description>
+      <pubDate>Sat, 21 Mar 2026 08:30:00 +0100</pubDate>
+    </item>
+  </channel>
+</rss>
