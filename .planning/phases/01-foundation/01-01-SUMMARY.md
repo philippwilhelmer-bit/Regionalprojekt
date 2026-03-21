@@ -96,7 +96,7 @@ Each task was committed atomically:
 1. **Task 1: Scaffold Next.js 15 project with Prisma v6 and dev tooling** - `0a79b36` (chore)
 2. **Task 2: Set up Vitest with pgLite and write RED stub tests** - `b4f0ce0` (test)
 
-**Plan metadata:** `[to be filled after final commit]` (docs: complete plan)
+**Plan metadata:** `b4a1778` (docs: complete plan)
 
 ## Files Created/Modified
 
