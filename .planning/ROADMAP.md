@@ -47,10 +47,15 @@ Plans:
   2. A generic RSS feed can be added by registering a new adapter config entry; no changes to core ingestion logic required
   3. Submitting the same article via two different sources results in exactly one database record — content fingerprinting blocks the duplicate
   4. When OTS.at returns an error or goes silent, an operator alert fires and the failed source is visible in admin with last-successful-fetch timestamp
-**Plans**: TBD
+**Plans**: 6 plans
 
 Plans:
-- [ ] 02-01: TBD
+- [x] 02-01-PLAN.md — Schema migration + Wave 0 test stubs: Source/IngestionRun models, contentHash on Article, all test scaffold files and XML fixtures
+- [ ] 02-02-PLAN.md — Types + dedup service (TDD): RawItem/AdapterFn interfaces, SHA-256 content fingerprinting, isDuplicate with two-layer dedup
+- [ ] 02-03-PLAN.md — OTS.at adapter (TDD): REST API list+detail flow, externalId dedup before detail fetch, defensive body field extraction
+- [ ] 02-04-PLAN.md — RSS/Atom adapter (TDD): feedsmith parsing, externalId fallback chain (guid → link → contentHash)
+- [ ] 02-05-PLAN.md — Registry + ingest() + Source DAL (TDD): adapter registry, core ingest with health tracking and IngestionRun recording, Source DAL
+- [ ] 02-06-PLAN.md — Source seed + ingest-run.ts CLI: idempotent Steiermark source seed, CLI entry point for Phase 4 scheduler
 
 ### Phase 3: AI Pipeline
 **Goal**: Ingested articles are transformed into clean German-language news articles with SEO-optimized titles and meta descriptions, tagged to the correct Bezirk(e), flagged for review when they mention named persons, and guarded against cost explosion — all without blocking any web request
@@ -135,7 +140,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete    | 2026-03-21 |
-| 2. Ingestion | 0/? | Not started | - |
+| 2. Ingestion | 1/6 | In progress | - |
 | 3. AI Pipeline | 0/? | Not started | - |
 | 4. Scheduler and Autonomous Publishing | 0/? | Not started | - |
 | 5. Editorial CMS | 0/? | Not started | - |

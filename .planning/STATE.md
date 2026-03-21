@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-03-21T18:41:41.820Z"
-last_activity: 2026-03-21 — Roadmap created; 7 phases derived from 25 v1 requirements
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-03-21T18:55:00Z"
+last_activity: 2026-03-21 — Phase 2 Plan 01 executed: schema extended, migration created, Wave 0 test stubs added
 progress:
   total_phases: 7
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
-  percent: 0
+  total_plans: 4
+  completed_plans: 4
+  percent: 5
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** Phase 1 — Foundation
+**Current focus:** Phase 2 — Ingestion
 
 ## Current Position
 
-Phase: 1 of 7 (Foundation)
-Plan: 0 of ? in current phase
-Status: Ready to plan
-Last activity: 2026-03-21 — Roadmap created; 7 phases derived from 25 v1 requirements
+Phase: 2 of 7 (Ingestion)
+Plan: 1 of 6 in current phase
+Status: In progress
+Last activity: 2026-03-21 — Phase 2 Plan 01 executed: schema extended, migration created, Wave 0 test stubs added
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 5%
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-foundation P01 | 9 | 2 tasks | 12 files |
 | Phase 01-foundation P02 | 5 | 2 tasks | 3 files |
 | Phase 01-foundation P03 | 4 | 2 tasks | 7 files |
+| Phase 02-ingestion P01 | 3 | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation]: Seed exports seedBezirke(prisma, bundesland) for testability — main() only runs when file is executed directly via import.meta.url guard
 - [Phase 01-foundation]: DAL functions use TypeScript overloads for DI: zero-arg for production (singleton), client-injection for tests
 - [Phase 01-foundation]: Duck-typing ($connect in client) instead of instanceof PrismaClient — vitest module isolation breaks instanceof across module boundaries
+- [Phase 02-01]: Migration SQL manually crafted (no live DB) using prisma migrate diff as reference — pgLite picks it up via sorted directory scan
+- [Phase 02-01]: contentHash is nullable String? @unique — allows Article rows without hash (MANUAL source items don't need dedup)
+- [Phase 02-01]: Wave 0 stubs use it.todo() with commented-out imports — no TypeScript errors before implementation files exist
 
 ### Pending Todos
 
@@ -86,6 +90,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T18:38:38.685Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-03-21T18:55:00Z
+Stopped at: Completed 02-01-PLAN.md
 Resume file: None

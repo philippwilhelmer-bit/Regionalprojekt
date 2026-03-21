@@ -12,11 +12,11 @@
 
 ### Ingestion
 
-- [ ] **ING-01**: System ingests press releases from OTS.at via API
-- [ ] **ING-02**: System ingests content from generic RSS/Atom feeds
-- [ ] **ING-03**: System deduplicates content using content fingerprinting (not URL-only)
-- [ ] **ING-04**: System alerts operator when a source fails or goes stale
-- [ ] **ING-05**: Source adapters follow a plug-in interface so new sources can be added without changing core ingestion logic
+- [x] **ING-01**: System ingests press releases from OTS.at via API
+- [x] **ING-02**: System ingests content from generic RSS/Atom feeds
+- [x] **ING-03**: System deduplicates content using content fingerprinting (not URL-only)
+- [x] **ING-04**: System alerts operator when a source fails or goes stale
+- [x] **ING-05**: Source adapters follow a plug-in interface so new sources can be added without changing core ingestion logic
 
 ### AI Pipeline
 
@@ -87,11 +87,11 @@
 |-------------|-------|--------|
 | CONF-01 | Phase 1 | Complete |
 | CONF-02 | Phase 1 | Complete |
-| ING-01 | Phase 2 | Pending |
-| ING-02 | Phase 2 | Pending |
-| ING-03 | Phase 2 | Pending |
-| ING-04 | Phase 2 | Pending |
-| ING-05 | Phase 2 | Pending |
+| ING-01 | Phase 2 | Complete |
+| ING-02 | Phase 2 | Complete |
+| ING-03 | Phase 2 | Complete |
+| ING-04 | Phase 2 | Complete |
+| ING-05 | Phase 2 | Complete |
 | AI-01 | Phase 3 | Pending |
 | AI-02 | Phase 3 | Pending |
 | AI-03 | Phase 3 | Pending |
