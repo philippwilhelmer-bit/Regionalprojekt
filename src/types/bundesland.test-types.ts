@@ -38,8 +38,9 @@ const _missingAdZones: BundeslandConfig = {
 }
 
 // --- Behavior 3: Invalid adZone id causes compile error ---
-// @ts-expect-error — 'sidebar' is not in the literal union
+// Casting via satisfies triggers error on the invalid id property.
 const _invalidAdZoneId: AdZone = {
+  // @ts-expect-error — 'sidebar' is not in the literal union 'hero' | 'between-articles' | 'article-detail'
   id: 'sidebar',
   envVar: 'SOME_VAR',
   enabled: true,
