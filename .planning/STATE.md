@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-03-21T18:55:00Z"
-last_activity: 2026-03-21 — Phase 2 Plan 01 executed: schema extended, migration created, Wave 0 test stubs added
+status: executing
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-03-21T21:01:08.920Z"
+last_activity: "2026-03-21 — Phase 2 Plan 02 executed: types.ts and dedup service implemented, 6 tests GREEN"
 progress:
   total_phases: 7
   completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 9
+  completed_plans: 5
   percent: 5
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 2 of 7 (Ingestion)
-Plan: 1 of 6 in current phase
+Plan: 2 of 6 in current phase
 Status: In progress
-Last activity: 2026-03-21 — Phase 2 Plan 01 executed: schema extended, migration created, Wave 0 test stubs added
+Last activity: 2026-03-21 — Phase 2 Plan 02 executed: types.ts and dedup service implemented, 6 tests GREEN
 
 Progress: [█░░░░░░░░░] 5%
 
@@ -54,6 +54,7 @@ Progress: [█░░░░░░░░░] 5%
 | Phase 01-foundation P02 | 5 | 2 tasks | 3 files |
 | Phase 01-foundation P03 | 4 | 2 tasks | 7 files |
 | Phase 02-ingestion P01 | 3 | 2 tasks | 11 files |
+| Phase 02-ingestion P02 | 7 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,9 @@ Recent decisions affecting current work:
 - [Phase 02-01]: Migration SQL manually crafted (no live DB) using prisma migrate diff as reference — pgLite picks it up via sorted directory scan
 - [Phase 02-01]: contentHash is nullable String? @unique — allows Article rows without hash (MANUAL source items don't need dedup)
 - [Phase 02-01]: Wave 0 stubs use it.todo() with commented-out imports — no TypeScript errors before implementation files exist
+- [Phase 02-02]: AdapterFn uses ArticleSource enum (not a separate Source model type) — matches enum already in @prisma/client
+- [Phase 02-02]: cleanDb updated to include IngestionRun and Source tables — required for correct test isolation in Phase 2
+- [Phase 02-02]: Prisma client regenerated after Phase 2 schema — Source and IngestionRun models were missing from generated client
 
 ### Pending Todos
 
@@ -90,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T18:55:00Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-03-21T21:01:08.918Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None
