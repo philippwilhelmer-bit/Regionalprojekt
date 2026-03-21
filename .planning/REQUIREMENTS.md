@@ -20,9 +20,9 @@
 
 ### AI Pipeline
 
-- [ ] **AI-01**: System rewrites ingested content into clean German-language news articles via AI
-- [ ] **AI-02**: System automatically tags each article with the relevant Bezirk(e)
-- [ ] **AI-03**: System flags articles mentioning real named persons and routes them to an exception queue before auto-publishing
+- [x] **AI-01**: System rewrites ingested content into clean German-language news articles via AI
+- [x] **AI-02**: System automatically tags each article with the relevant Bezirk(e)
+- [x] **AI-03**: System flags articles mentioning real named persons and routes them to an exception queue before auto-publishing
 - [x] **AI-04**: System halts AI generation and alerts operator if LLM costs exceed a configurable threshold (cost circuit-breaker)
 - [ ] **AI-05**: All AI-generated articles display an "Automatisch erstellt" disclosure label
 
@@ -53,7 +53,7 @@
 ### SEO
 
 - [ ] **SEO-01**: Every article page has SEO-optimized meta tags (title, description, Open Graph)
-- [ ] **SEO-02**: AI generates SEO-optimized article titles and meta descriptions as part of the generation pipeline
+- [x] **SEO-02**: AI generates SEO-optimized article titles and meta descriptions as part of the generation pipeline
 - [ ] **SEO-03**: Site generates a sitemap.xml updated on each new article publish
 - [ ] **SEO-04**: Article pages include structured data (JSON-LD NewsArticle schema) for Google News eligibility
 
@@ -92,9 +92,9 @@
 | ING-03 | Phase 2 | Complete |
 | ING-04 | Phase 2 | Complete |
 | ING-05 | Phase 2 | Complete |
-| AI-01 | Phase 3 | Pending |
-| AI-02 | Phase 3 | Pending |
-| AI-03 | Phase 3 | Pending |
+| AI-01 | Phase 3 | Complete |
+| AI-02 | Phase 3 | Complete |
+| AI-03 | Phase 3 | Complete |
 | AI-04 | Phase 3 | Complete |
 | AI-05 | Phase 3 | Pending |
 | PUB-01 | Phase 4 | Pending |
@@ -116,7 +116,7 @@
 | AD-01 | Phase 6 | Pending |
 | AD-02 | Phase 1 | Complete |
 | SEO-01 | Phase 6 | Pending |
-| SEO-02 | Phase 3 | Pending |
+| SEO-02 | Phase 3 | Complete |
 | SEO-03 | Phase 6 | Pending |
 | SEO-04 | Phase 6 | Pending |
 
