@@ -2,15 +2,14 @@
  * Integration tests for processArticles() pipeline orchestrator.
  *
  * Uses pgLite in-process test DB (no external services).
- * Anthropic client is mocked via _createAnthropicClient factory override.
+ * Anthropic client is mocked by overriding _clientFactory.create before each test.
  *
  * Requirements: AI-01, AI-02, AI-03, AI-04, AI-05, SEO-02
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import type { PrismaClient } from '@prisma/client'
 import { createTestDb, cleanDb } from '../../test/setup-db'
-import { processArticles } from './pipeline'
-import * as pipeline from './pipeline'
+import { processArticles, _clientFactory } from './pipeline'
 
 // ---------------------------------------------------------------------------
 // Mock Anthropic client factory
@@ -48,7 +47,7 @@ function makeStep2Response() {
 
 /**
  * Creates a mock Anthropic client that alternates responses:
- * first call → Step 1 response, second call → Step 2 response.
+ * odd calls → Step 1 response, even calls → Step 2 response.
  */
 function makeMockAnthropicClient(
   step1Response = makeStep1Response(['graz'], false),
@@ -69,6 +68,7 @@ function makeMockAnthropicClient(
 // ---------------------------------------------------------------------------
 
 let db: PrismaClient
+const originalCreate = _clientFactory.create
 
 beforeEach(async () => {
   db = await createTestDb()
@@ -76,6 +76,8 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
+  // Restore factory after each test
+  _clientFactory.create = originalCreate
   vi.restoreAllMocks()
 })
 
@@ -110,10 +112,7 @@ async function seedFetchedArticle(overrides: { bezirkSlug?: string } = {}) {
 describe('processArticles()', () => {
   it('advances a FETCHED article to TAGGED after Step 1', async () => {
     const { article } = await seedFetchedArticle()
-
-    vi.spyOn(pipeline, '_createAnthropicClient').mockReturnValue(
-      makeMockAnthropicClient() as any
-    )
+    _clientFactory.create = () => makeMockAnthropicClient() as any
 
     await processArticles(db)
 
@@ -123,10 +122,7 @@ describe('processArticles()', () => {
 
   it('advances a TAGGED article to WRITTEN after Step 2 (AI-01, SEO-02)', async () => {
     const { article } = await seedFetchedArticle()
-
-    vi.spyOn(pipeline, '_createAnthropicClient').mockReturnValue(
-      makeMockAnthropicClient() as any
-    )
+    _clientFactory.create = () => makeMockAnthropicClient() as any
 
     await processArticles(db)
 
@@ -138,10 +134,7 @@ describe('processArticles()', () => {
 
   it('writes seoTitle and metaDescription to Article row (SEO-02)', async () => {
     const { article } = await seedFetchedArticle()
-
-    vi.spyOn(pipeline, '_createAnthropicClient').mockReturnValue(
-      makeMockAnthropicClient() as any
-    )
+    _clientFactory.create = () => makeMockAnthropicClient() as any
 
     await processArticles(db)
 
@@ -152,10 +145,7 @@ describe('processArticles()', () => {
 
   it('creates ArticleBezirk rows for returned bezirkSlugs (AI-02)', async () => {
     const { article, bezirk } = await seedFetchedArticle()
-
-    vi.spyOn(pipeline, '_createAnthropicClient').mockReturnValue(
-      makeMockAnthropicClient(makeStep1Response(['graz'], false)) as any
-    )
+    _clientFactory.create = () => makeMockAnthropicClient(makeStep1Response(['graz'], false)) as any
 
     await processArticles(db)
 
@@ -168,10 +158,7 @@ describe('processArticles()', () => {
 
   it('sets status REVIEW (not WRITTEN) when hasNamedPerson is true (AI-03)', async () => {
     const { article } = await seedFetchedArticle()
-
-    vi.spyOn(pipeline, '_createAnthropicClient').mockReturnValue(
-      makeMockAnthropicClient(makeStep1Response(['graz'], true)) as any
-    )
+    _clientFactory.create = () => makeMockAnthropicClient(makeStep1Response(['graz'], true)) as any
 
     await processArticles(db)
 
@@ -181,10 +168,7 @@ describe('processArticles()', () => {
 
   it('records PipelineRun with token totals', async () => {
     await seedFetchedArticle()
-
-    vi.spyOn(pipeline, '_createAnthropicClient').mockReturnValue(
-      makeMockAnthropicClient() as any
-    )
+    _clientFactory.create = () => makeMockAnthropicClient() as any
 
     await processArticles(db)
 
@@ -199,10 +183,7 @@ describe('processArticles()', () => {
 
   it('returns ProcessResult with articlesProcessed and articlesWritten counts', async () => {
     await seedFetchedArticle()
-
-    vi.spyOn(pipeline, '_createAnthropicClient').mockReturnValue(
-      makeMockAnthropicClient() as any
-    )
+    _clientFactory.create = () => makeMockAnthropicClient() as any
 
     const result = await processArticles(db)
 
@@ -228,9 +209,8 @@ describe('processArticles()', () => {
 
     const runsBefore = await db.pipelineRun.count()
 
-    vi.spyOn(pipeline, '_createAnthropicClient').mockReturnValue(
-      makeMockAnthropicClient() as any
-    )
+    const mockClient = makeMockAnthropicClient()
+    _clientFactory.create = () => mockClient as any
 
     const result = await processArticles(db)
 
@@ -257,7 +237,7 @@ describe('processArticles()', () => {
     })
 
     const mockClient = makeMockAnthropicClient()
-    vi.spyOn(pipeline, '_createAnthropicClient').mockReturnValue(mockClient as any)
+    _clientFactory.create = () => mockClient as any
 
     const result = await processArticles(db)
 
@@ -288,9 +268,7 @@ describe('processArticles()', () => {
       return Promise.resolve(makeStep2Response())
     })
 
-    vi.spyOn(pipeline, '_createAnthropicClient').mockReturnValue({
-      messages: { create: mockCreate },
-    } as any)
+    _clientFactory.create = () => ({ messages: { create: mockCreate } } as any)
 
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
