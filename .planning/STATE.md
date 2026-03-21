@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 03-ai-pipeline 03-02-PLAN.md
-last_updated: "2026-03-21T23:34:30.419Z"
+stopped_at: Completed 03-ai-pipeline-03-01-PLAN.md
+last_updated: "2026-03-21T23:35:19.547Z"
 last_activity: "2026-03-21 — Phase 2 Plan 06 executed: source seed + ingest-run CLI, 49 tests GREEN"
 progress:
   total_phases: 7
   completed_phases: 2
   total_plans: 15
-  completed_plans: 13
+  completed_plans: 14
   percent: 14
 ---
 
@@ -62,6 +62,7 @@ Progress: [█░░░░░░░░░] 14%
 | Phase 03-ai-pipeline P04 | 8 | 2 tasks | 2 files |
 | Phase 03-ai-pipeline P03 | 4 | 2 tasks | 7 files |
 | Phase 03-ai-pipeline P02 | 3 | 2 tasks | 2 files |
+| Phase 03-ai-pipeline P01 | 5 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -103,6 +104,8 @@ Recent decisions affecting current work:
 - [Phase 03-ai-pipeline]: System prompt kept as module-level constant SYSTEM_PROMPT_TEMPLATE with bezirkContext placeholder — LOW confidence wording until validated against real OTS data in Phase 7
 - [Phase 03-ai-pipeline]: runStep2Write() accepts Anthropic client as first arg for vi.spyOn testability — same DI pattern as Step 1
 - [Phase 03-ai-pipeline]: runStep1Tag() accepts injected Anthropic client as first arg — enables vi.spyOn mocking; output_config cast as 'any' since SDK types don't expose it
+- [Phase 03-ai-pipeline]: PipelineRun has no FK to Source — pipeline-level run tracking, not per-source like IngestionRun
+- [Phase 03-ai-pipeline]: Article.seoTitle is a separate nullable String? field — SEO-optimised title distinct from display title
 
 ### Pending Todos
 
@@ -116,6 +119,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T23:34:30.417Z
-Stopped at: Completed 03-ai-pipeline 03-02-PLAN.md
+Last session: 2026-03-21T23:35:19.544Z
+Stopped at: Completed 03-ai-pipeline-03-01-PLAN.md
 Resume file: None
