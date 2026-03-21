@@ -46,6 +46,7 @@ model Article {
   title           String?
   metaDescription String?
   content         String?
+  contentHash     String?          @unique  // SHA-256 of normalized title+body for cross-source dedup
   rawPayload      Json?            // original source content before AI rewrite
   publishedAt     DateTime?
   createdAt       DateTime         @default(now())
@@ -66,4 +67,39 @@ model ArticleBezirk {
 
   @@id([articleId, bezirkId])
   @@index([bezirkId])
+}
+
+enum SourceHealth {
+  OK
+  DEGRADED
+  DOWN
+}
+
+model Source {
+  id                    Int           @id @default(autoincrement())
+  type                  ArticleSource // OTS_AT or RSS only — MANUAL sources are not polled
+  url                   String        @unique
+  enabled               Boolean       @default(true)
+  pollIntervalMinutes   Int           @default(15)
+  consecutiveFailures   Int           @default(0)
+  lastSuccessAt         DateTime?
+  healthStatus          SourceHealth  @default(OK)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  runs                  IngestionRun[]
+
+  @@index([enabled])
+}
+
+model IngestionRun {
+  id          Int       @id @default(autoincrement())
+  source      Source    @relation(fields: [sourceId], references: [id])
+  sourceId    Int
+  startedAt   DateTime  @default(now())
+  finishedAt  DateTime?
+  itemsFound  Int?
+  itemsNew    Int?
+  error       String?
+
+  @@index([sourceId, startedAt])
 }
