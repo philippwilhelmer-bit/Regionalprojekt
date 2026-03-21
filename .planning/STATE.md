@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-03-21T21:05:11.769Z"
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-03-21T21:05:27.207Z"
 last_activity: "2026-03-21 — Phase 2 Plan 03 executed: OTS.at adapter implemented, 4 tests GREEN"
 progress:
   total_phases: 7
@@ -55,6 +55,7 @@ Progress: [█░░░░░░░░░] 7%
 | Phase 01-foundation P03 | 4 | 2 tasks | 7 files |
 | Phase 02-ingestion P01 | 3 | 2 tasks | 11 files |
 | Phase 02-ingestion P02 | 7 | 2 tasks | 4 files |
+| Phase 02-ingestion P04 | 2 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -84,6 +85,8 @@ Recent decisions affecting current work:
 - [Phase 02-03]: createOtsAtAdapter(db?) factory pattern — keeps AdapterFn signature clean while enabling DI for tests
 - [Phase 02-03]: CANDIDATE_BODY_FIELDS defensive extraction — OTS API body field name is MEDIUM confidence; tries TEXT/BODY/INHALT/text/body with warn-and-fallback
 - [Phase 02-03]: Pre-fetch dedup uses article.findFirst (not isDuplicate) — isDuplicate requires contentHash which only exists after the detail fetch
+- [Phase 02-ingestion]: rssAdapter takes Source (Prisma model, has .url) not ArticleSource enum — adapter needs source.url to fetch the feed
+- [Phase 02-ingestion]: feedsmith RSS item.guid is a Guid object {value, isPermaLink?} — use item.guid.value for externalId string
 
 ### Pending Todos
 
@@ -97,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T21:10:00.000Z
-Stopped at: Completed 02-03-PLAN.md
+Last session: 2026-03-21T21:05:27.205Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None
