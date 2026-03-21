@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-03-21T18:27:32.338Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-03-21T18:32:02.574Z"
 last_activity: 2026-03-21 — Roadmap created; 7 phases derived from 25 v1 requirements
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -51,6 +51,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01-foundation P01 | 9 | 2 tasks | 12 files |
+| Phase 01-foundation P02 | 5 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -65,6 +66,9 @@ Recent decisions affecting current work:
 - [Phase 01-01]: Used pglite-prisma-adapter@0.6.1 (not 0.7.x) — v0.7.x requires @prisma/client >= 7.1.0, conflicts with Prisma v6
 - [Phase 01-01]: Explicit ArticleBezirk junction model (not Prisma implicit M2M) — enables taggedAt/taggedBy metadata in Phase 3 without destructive migration
 - [Phase 01-01]: Migration SQL applied directly to pgLite in tests — no running Postgres server needed for test environment
+- [Phase 01-02]: Used satisfies BundeslandConfig operator (not as) — enforces type checking without widening the type
+- [Phase 01-02]: AdZone.id as string literal union — invalid zone names caught at build time (not runtime)
+- [Phase 01-02]: bundesland.config.ts committed to git with env var name strings only — actual AdSense unit IDs stay in .env
 
 ### Pending Todos
 
@@ -78,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T18:27:32.336Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-03-21T18:32:02.573Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
