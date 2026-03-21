@@ -23,7 +23,7 @@
 - [ ] **AI-01**: System rewrites ingested content into clean German-language news articles via AI
 - [ ] **AI-02**: System automatically tags each article with the relevant Bezirk(e)
 - [ ] **AI-03**: System flags articles mentioning real named persons and routes them to an exception queue before auto-publishing
-- [ ] **AI-04**: System halts AI generation and alerts operator if LLM costs exceed a configurable threshold (cost circuit-breaker)
+- [x] **AI-04**: System halts AI generation and alerts operator if LLM costs exceed a configurable threshold (cost circuit-breaker)
 - [ ] **AI-05**: All AI-generated articles display an "Automatisch erstellt" disclosure label
 
 ### Publishing
@@ -95,7 +95,7 @@
 | AI-01 | Phase 3 | Pending |
 | AI-02 | Phase 3 | Pending |
 | AI-03 | Phase 3 | Pending |
-| AI-04 | Phase 3 | Pending |
+| AI-04 | Phase 3 | Complete |
 | AI-05 | Phase 3 | Pending |
 | PUB-01 | Phase 4 | Pending |
 | PUB-02 | Phase 4 | Pending |

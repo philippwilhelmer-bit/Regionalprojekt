@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-21T23:10:06.679Z"
+stopped_at: Completed 03-04-PLAN.md — checkCostCircuitBreaker() implemented, 10 tests GREEN
+last_updated: "2026-03-21T23:33:47.053Z"
 last_activity: "2026-03-21 — Phase 2 Plan 06 executed: source seed + ingest-run CLI, 49 tests GREEN"
 progress:
   total_phases: 7
   completed_phases: 2
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 15
+  completed_plans: 11
   percent: 14
 ---
 
@@ -59,6 +59,7 @@ Progress: [█░░░░░░░░░] 14%
 | Phase 02-ingestion P05 | 15 | 2 tasks | 6 files |
 | Phase 02-ingestion P06 | 3 | 2 tasks | 4 files |
 | Phase 02-ingestion P07 | 5 | 2 tasks | 6 files |
+| Phase 03-ai-pipeline P04 | 8 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -96,6 +97,7 @@ Recent decisions affecting current work:
 - [Phase 02-06]: ingest-run.ts per-source error handling: failures logged and aggregated, remaining sources continue, exit(1) only if any errors
 - [Phase 02-ingestion]: AdapterFn parameter changed from ArticleSource (enum) to Source (Prisma model) — enables adapters to access source.url without unsafe casts
 - [Phase 02-ingestion]: ingest.test.ts mock strategy: direct registry property assignment with afterEach restore instead of vi.spyOn accessor (avoids vitest overload incompatibility with Partial<Record<K,V>>)
+- [Phase 03-ai-pipeline]: Threshold read from AI_DAILY_TOKEN_THRESHOLD env var, defaults to 500000; >= comparison halts generation conservatively
 
 ### Pending Todos
 
@@ -109,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T23:10:06.663Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-ai-pipeline/03-CONTEXT.md
+Last session: 2026-03-21T23:33:47.050Z
+Stopped at: Completed 03-04-PLAN.md — checkCostCircuitBreaker() implemented, 10 tests GREEN
+Resume file: None

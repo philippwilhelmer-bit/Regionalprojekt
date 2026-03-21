@@ -68,10 +68,14 @@ Plans:
   3. An article mentioning a real named person does not auto-publish — it appears in the exception queue awaiting editor review
   4. Every AI-generated article has an "Automatisch erstellt" label attached before it can reach the published state
   5. When simulated LLM costs exceed the configured daily threshold, the circuit-breaker fires, AI generation halts, and the operator receives an alert
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 03-01: TBD
+- [ ] 03-01-PLAN.md — Schema migration + SDK install + Wave 0 test stubs: Article.seoTitle, PipelineRun model, @anthropic-ai/sdk, four test scaffold files
+- [ ] 03-02-PLAN.md — Step 1: Tag & Classify (TDD): runStep1Tag() with structured JSON output, bezirk synonym injection, hasNamedPerson detection
+- [ ] 03-03-PLAN.md — Step 2: Write & SEO (TDD): runStep2Write() with structured JSON output, Hochdeutsch rewrite, seoTitle + metaDescription
+- [ ] 03-04-PLAN.md — Cost circuit-breaker (TDD): checkCostCircuitBreaker() daily token aggregation, threshold from env var, structured console.warn
+- [ ] 03-05-PLAN.md — Pipeline orchestrator + CLI (TDD): processArticles() wiring Steps 1+2+circuit-breaker, PipelineRun tracking, ai-run.ts CLI
 
 ### Phase 4: Scheduler and Autonomous Publishing
 **Goal**: The platform runs unattended — a cron schedule drives the full ingestion-to-publish loop, articles move from ready to published without human action, and the operator is alerted if the pipeline goes silent
@@ -142,7 +146,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete    | 2026-03-21 |
 | 2. Ingestion | 7/7 | Complete   | 2026-03-21 |
-| 3. AI Pipeline | 0/? | Not started | - |
+| 3. AI Pipeline | 1/5 | In Progress|  |
 | 4. Scheduler and Autonomous Publishing | 0/? | Not started | - |
 | 5. Editorial CMS | 0/? | Not started | - |
 | 6. Reader Frontend | 0/? | Not started | - |
