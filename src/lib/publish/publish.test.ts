@@ -61,7 +61,7 @@ describe('publishArticles()', () => {
     expect(result.reviewBacklog).toBe(1)
 
     // REVIEW article is unchanged
-    const reviewArticle = await db.article.findUnique({ where: { externalId: 'art-3' } })
+    const reviewArticle = await db.article.findFirst({ where: { externalId: 'art-3' } })
     expect(reviewArticle?.status).toBe('REVIEW')
     expect(reviewArticle?.publishedAt).toBeNull()
   })
@@ -102,7 +102,7 @@ describe('publishArticles()', () => {
     expect(result.articlesPublished).toBe(1)
 
     // Confirm it used the injected db (article is published in that db)
-    const article = await db.article.findUnique({ where: { externalId: 'art-di' } })
+    const article = await db.article.findFirst({ where: { externalId: 'art-di' } })
     expect(article?.status).toBe('PUBLISHED')
     expect(article?.publishedAt).not.toBeNull()
   })
