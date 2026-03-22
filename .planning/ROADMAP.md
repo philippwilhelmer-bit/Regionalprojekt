@@ -132,7 +132,7 @@ Plans:
 
 Plans:
 - [ ] 06-01-PLAN.md — Schema migration + Wave 0 stubs: publicId on Article (nanoid), five test stub files for reader/slug, reader/rss, reader/metadata, reader/sitemap, articles.test.ts extensions
-- [ ] 06-02-PLAN.md — Reader DAL + slug utility (TDD): slugify() for German URLs, getArticleByPublicId(), listArticlesReader() with pinned/featured sort and multi-bezirk filter
+- [x] 06-02-PLAN.md — Reader DAL + slug utility (TDD): slugify() for German URLs, getArticleByPublicId(), listArticlesReader() with pinned/featured sort and multi-bezirk filter
 - [ ] 06-03-PLAN.md — Public layout shell: root layout update (lang=de, AdSense script), (public) layout, Header, BottomNav, Footer, CookieBanner, AdUnit
 - [ ] 06-04-PLAN.md — Homepage + Bezirk pages: ArticleCard, BezirkModal (localStorage selection), ArticleFeed (infinite scroll), /bezirk/[slug] page
 - [ ] 06-05-PLAN.md — Article detail page (TDD metadata): generateMetadata OG tags, canonical redirect, JSON-LD NewsArticle, breadcrumb, social share, related articles, AdUnit
@@ -165,5 +165,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. AI Pipeline | 5/5 | Complete   | 2026-03-22 |
 | 4. Scheduler and Autonomous Publishing | 4/4 | Complete   | 2026-03-22 |
 | 5. Editorial CMS | 7/8 | Complete    | 2026-03-22 |
-| 6. Reader Frontend | 1/7 | In Progress|  |
+| 6. Reader Frontend | 2/7 | In Progress|  |
 | 7. Extensibility and Quality Validation | 0/? | Not started | - |

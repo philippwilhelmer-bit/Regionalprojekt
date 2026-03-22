@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 06-reader-frontend 06-01-PLAN.md
-last_updated: "2026-03-22T20:37:41.261Z"
-last_activity: "2026-03-22 — Phase 5 Plan 06 executed: articles list page, exception queue page, manual article creation form — 139 tests GREEN, next build success"
+status: in_progress
+stopped_at: Completed 06-reader-frontend 06-02-PLAN.md
+last_updated: "2026-03-22T20:46:40Z"
+last_activity: "2026-03-22 — Phase 6 Plan 02 executed: slugify(), getArticleByPublicId(), listArticlesReader() — 153 tests GREEN"
 progress:
   total_phases: 7
   completed_phases: 5
   total_plans: 34
-  completed_plans: 28
-  percent: 93
+  completed_plans: 29
+  percent: 85
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 
 ## Current Position
 
-Phase: 5 of 7 (Editorial CMS)
-Plan: 6 of 6 in current phase (complete)
-Status: Phase 5 Plan 06 complete — CMS UI pages delivered
-Last activity: 2026-03-22 — Phase 5 Plan 06 executed: articles list page, exception queue page, manual article creation form — 139 tests GREEN, next build success
+Phase: 6 of 7 (Reader Frontend)
+Plan: 2 of 7 in current phase (in progress)
+Status: Phase 6 Plan 02 complete — reader DAL and slug utility delivered
+Last activity: 2026-03-22 — Phase 6 Plan 02 executed: slugify(), getArticleByPublicId(), listArticlesReader() — 153 tests GREEN
 
-Progress: [█████████░] 93%
+Progress: [████████░░] 85%
 
 ## Performance Metrics
 
@@ -151,6 +151,8 @@ Recent decisions affecting current work:
 - [Phase 05-editorial-cms]: AI Config page uses prisma.source.findMany with include.aiSourceConfig directly — sources-actions.ts SourceAdminRow does not include the aiSourceConfig relation
 - [Phase 06-reader-frontend]: publicId is String? (nullable) — existing articles don't fail migration, backfill populates values before unique constraint is added
 - [Phase 06-reader-frontend]: Wave 0 stubs use only describe/it from vitest with no implementation imports — prevents TypeScript errors before reader implementation files exist
+- [Phase 06-02]: slugify() implemented inline without external library — all German umlaut rules fit in 7 replace chains
+- [Phase 06-02]: listArticlesReader omits bezirkIds WHERE clause when array is undefined/empty — avoids spurious empty-IN clause causing DB errors
 
 ### Pending Todos
 
