@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-03-22T07:47:15.770Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-03-22T11:50:03.762Z"
 last_activity: "2026-03-22 — Phase 4 Plan 04 executed: ai-run.ts orchestrator + PM2 ecosystem config, 103 tests GREEN"
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 27
-  completed_plans: 20
+  completed_plans: 21
   percent: 57
 ---
 
@@ -69,6 +69,7 @@ Progress: [████░░░░░░] 57%
 | Phase 04-scheduler-and-autonomous-publishing P03 | 4 | 2 tasks | 2 files |
 | Phase 04-scheduler-and-autonomous-publishing P04 | 4 | 2 tasks | 3 files |
 | Phase 05-editorial-cms P01 | 15 | 2 tasks | 7 files |
+| Phase 05-editorial-cms P02 | 25 | 2 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -126,6 +127,9 @@ Recent decisions affecting current work:
 - [Phase 05-01]: AiConfig and PipelineConfig are singleton tables with no FK constraints — cleanDb() deletes them after aiSourceConfig to maintain FK-safe order
 - [Phase 05-01]: Wave 0 test stubs use it.todo() with no implementation imports — avoids TypeScript errors before implementation files exist in later plans
 - [Phase 05-01]: Migration SQL hand-crafted to mirror Prisma schema for pgLite test compatibility — sorted directory scan applies all migrations in createTestDb()
+- [Phase 05-editorial-cms]: Auth split into auth-node.ts (node:crypto) + auth-edge.ts (crypto.subtle) — middleware imports auth-edge.ts directly to avoid Edge bundling of node:crypto
+- [Phase 05-editorial-cms]: tailwindcss upgraded to v4 — @tailwindcss/postcss@4 bundles v4 internally; root v3 conflicted with webpack CSS @import resolution in Next.js build
+- [Phase 05-editorial-cms]: loginAction uses LoginState = { error: string } | null with useActionState — Server Action returns error without redirect; redirect() only on success outside try/catch
 
 ### Pending Todos
 
@@ -139,6 +143,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T07:47:15.768Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-03-22T11:50:03.760Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None
