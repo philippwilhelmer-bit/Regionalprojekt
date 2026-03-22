@@ -27,6 +27,18 @@ enum ArticleSource {
   MANUAL
 }
 
+enum AiTone {
+  NEUTRAL
+  FORMAL
+  CONVERSATIONAL
+}
+
+enum AiArticleLength {
+  SHORT
+  MEDIUM
+  LONG
+}
+
 model Bezirk {
   id               Int              @id @default(autoincrement())
   slug             String           @unique  // e.g. "liezen", "graz"
@@ -52,6 +64,8 @@ model Article {
   contentHash     String?          @unique  // SHA-256 of normalized title+body for cross-source dedup
   rawPayload      Json?            // original source content before AI rewrite
   publishedAt     DateTime?
+  isPinned        Boolean          @default(false)
+  isFeatured      Boolean          @default(false)
   retryCount      Int              @default(0)
   errorMessage    String?
   createdAt       DateTime         @default(now())
@@ -61,6 +75,8 @@ model Article {
   @@index([status])
   @@index([publishedAt])
   @@index([source, externalId])
+  @@index([isPinned, isFeatured])
+  @@index([source, status])
 }
 
 model ArticleBezirk {
@@ -89,9 +105,11 @@ model Source {
   consecutiveFailures   Int           @default(0)
   lastSuccessAt         DateTime?
   healthStatus          SourceHealth  @default(OK)
+  healthFailureThreshold Int          @default(3)
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
   runs                  IngestionRun[]
+  aiSourceConfig        AiSourceConfig?
 
   @@index([enabled])
 }
@@ -120,4 +138,31 @@ model PipelineRun {
   error               String?
 
   @@index([startedAt])
+}
+
+model AiConfig {
+  id            Int             @id @default(autoincrement())
+  tone          AiTone          @default(NEUTRAL)
+  articleLength AiArticleLength @default(MEDIUM)
+  styleNotes    String?
+  modelOverride String?
+  updatedAt     DateTime        @updatedAt
+}
+
+model AiSourceConfig {
+  id            Int              @id @default(autoincrement())
+  sourceId      Int              @unique
+  source        Source           @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  tone          AiTone?
+  articleLength AiArticleLength?
+  styleNotes    String?
+  modelOverride String?
+  updatedAt     DateTime         @updatedAt
+}
+
+model PipelineConfig {
+  id                    Int      @id @default(autoincrement())
+  maxRetryCount         Int      @default(3)
+  deadManThresholdHours Int      @default(6)
+  updatedAt             DateTime @updatedAt
 }
