@@ -86,10 +86,13 @@ Plans:
   2. The cron schedule fires on the configured interval and its execution is logged with timestamps visible to the operator
   3. If the pipeline produces no new published articles for 6 hours, the operator receives a dead-man alert
   4. Items stuck in an error status are retried automatically on the next cycle without manual intervention
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 04-01: TBD
+- [ ] 04-01-PLAN.md — Schema migration + Wave 0 stubs: ERROR/FAILED enum values, retryCount/errorMessage on Article, publish.ts and dead-man.ts stubs with it.todo() tests
+- [ ] 04-02-PLAN.md — Publish service + dead-man monitor (TDD): publishArticles() status flip, REVIEW backlog logging, checkDeadMan() silence alerting
+- [ ] 04-03-PLAN.md — Pipeline retry extension (TDD): processArticles() picks up ERROR articles, MAX_RETRY_COUNT → FAILED, errorMessage recorded
+- [ ] 04-04-PLAN.md — Orchestration + scheduler config: ai-run.ts wiring dead-man→AI→publish, ecosystem.config.js PM2 config, CRONTAB.md
 
 ### Phase 5: Editorial CMS
 **Goal**: Editors can manage the full content lifecycle — writing manual articles, curating automated content, configuring AI generation behaviour per source, reviewing flagged exceptions, and controlling source configuration — from a single authenticated interface designed for high-volume automated output
@@ -147,7 +150,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 1. Foundation | 3/3 | Complete    | 2026-03-21 |
 | 2. Ingestion | 7/7 | Complete   | 2026-03-21 |
 | 3. AI Pipeline | 4/5 | In Progress|  |
-| 4. Scheduler and Autonomous Publishing | 0/? | Not started | - |
+| 4. Scheduler and Autonomous Publishing | 0/4 | Not started | - |
 | 5. Editorial CMS | 0/? | Not started | - |
 | 6. Reader Frontend | 0/? | Not started | - |
 | 7. Extensibility and Quality Validation | 0/? | Not started | - |
