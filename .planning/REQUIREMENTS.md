@@ -34,16 +34,16 @@
 
 ### Editorial CMS
 
-- [ ] **CMS-01**: Editor can write and publish articles manually
-- [ ] **CMS-02**: Editor can pin, feature, edit, or remove any article
-- [ ] **CMS-03**: Editor can review, approve, or reject articles in the exception queue
-- [ ] **CMS-04**: Editor can add, configure, and disable content sources from the admin interface
+- [x] **CMS-01**: Editor can write and publish articles manually
+- [x] **CMS-02**: Editor can pin, feature, edit, or remove any article
+- [x] **CMS-03**: Editor can review, approve, or reject articles in the exception queue
+- [x] **CMS-04**: Editor can add, configure, and disable content sources from the admin interface
 
 ### AI Configuration
 
-- [ ] **AICONF-01**: Editor can configure global AI generation settings (tone, style, article length, language register)
-- [ ] **AICONF-02**: Editor can override AI settings per source (different prompt templates for OTS.at vs individual RSS feeds)
-- [ ] **AICONF-03**: AI configuration is editable from the admin UI without code changes
+- [x] **AICONF-01**: Editor can configure global AI generation settings (tone, style, article length, language register)
+- [x] **AICONF-02**: Editor can override AI settings per source (different prompt templates for OTS.at vs individual RSS feeds)
+- [x] **AICONF-03**: AI configuration is editable from the admin UI without code changes
 
 ### Advertising
 
@@ -100,19 +100,19 @@
 | PUB-01 | Phase 4 | Complete |
 | PUB-02 | Phase 4 | Complete |
 | PUB-03 | Phase 4 | Complete |
-| CMS-01 | Phase 5 | Pending |
-| CMS-02 | Phase 5 | Pending |
-| CMS-03 | Phase 5 | Pending |
-| CMS-04 | Phase 5 | Pending |
+| CMS-01 | Phase 5 | Complete |
+| CMS-02 | Phase 5 | Complete |
+| CMS-03 | Phase 5 | Complete |
+| CMS-04 | Phase 5 | Complete |
 | READ-01 | Phase 6 | Pending |
 | READ-02 | Phase 6 | Pending |
 | READ-03 | Phase 6 | Pending |
 | READ-04 | Phase 6 | Pending |
 | READ-05 | Phase 6 | Pending |
 | READ-06 | Phase 6 | Pending |
-| AICONF-01 | Phase 5 | Pending |
-| AICONF-02 | Phase 5 | Pending |
-| AICONF-03 | Phase 5 | Pending |
+| AICONF-01 | Phase 5 | Complete |
+| AICONF-02 | Phase 5 | Complete |
+| AICONF-03 | Phase 5 | Complete |
 | AD-01 | Phase 6 | Pending |
 | AD-02 | Phase 1 | Complete |
 | SEO-01 | Phase 6 | Pending |

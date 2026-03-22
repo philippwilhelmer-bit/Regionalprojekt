@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-22T07:19:51.416Z"
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-03-22T07:47:15.770Z"
 last_activity: "2026-03-22 — Phase 4 Plan 04 executed: ai-run.ts orchestrator + PM2 ecosystem config, 103 tests GREEN"
 progress:
   total_phases: 7
   completed_phases: 4
-  total_plans: 19
-  completed_plans: 19
+  total_plans: 27
+  completed_plans: 20
   percent: 57
 ---
 
@@ -68,6 +68,7 @@ Progress: [████░░░░░░] 57%
 | Phase 04-scheduler-and-autonomous-publishing P02 | 3 | 4 tasks | 4 files |
 | Phase 04-scheduler-and-autonomous-publishing P03 | 4 | 2 tasks | 2 files |
 | Phase 04-scheduler-and-autonomous-publishing P04 | 4 | 2 tasks | 3 files |
+| Phase 05-editorial-cms P01 | 15 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -122,6 +123,9 @@ Recent decisions affecting current work:
 - [Phase 04-scheduler-and-autonomous-publishing]: newRetryCount >= MAX_RETRY_COUNT for FAILED boundary — 3rd failure = FAILED, no 4th attempt
 - [Phase 04-04]: ecosystem.config.js block comment avoids */ sequence — writes '* /15' with note to prevent JS parser treating it as comment-close
 - [Phase 04-04]: ai-run.ts log line includes inputTokens/outputTokens alongside published/reviewBacklog — complete observability from single log entry
+- [Phase 05-01]: AiConfig and PipelineConfig are singleton tables with no FK constraints — cleanDb() deletes them after aiSourceConfig to maintain FK-safe order
+- [Phase 05-01]: Wave 0 test stubs use it.todo() with no implementation imports — avoids TypeScript errors before implementation files exist in later plans
+- [Phase 05-01]: Migration SQL hand-crafted to mirror Prisma schema for pgLite test compatibility — sorted directory scan applies all migrations in createTestDb()
 
 ### Pending Todos
 
@@ -135,6 +139,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T07:19:51.408Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-editorial-cms/05-CONTEXT.md
+Last session: 2026-03-22T07:47:15.768Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: None
