@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 05-06-PLAN.md
-last_updated: "2026-03-22T12:15:54.991Z"
-last_activity: "2026-03-22 — Phase 5 Plan 05 executed: DB-driven config integration (dead-man, step2-write), 139 total tests GREEN"
+stopped_at: Completed 05-07-PLAN.md
+last_updated: "2026-03-22T12:23:17.520Z"
+last_activity: "2026-03-22 — Phase 5 Plan 06 executed: articles list page, exception queue page, manual article creation form — 139 tests GREEN, next build success"
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 27
-  completed_plans: 25
-  percent: 89
+  completed_plans: 26
+  percent: 93
 ---
 
 # Project State
@@ -74,6 +74,7 @@ Progress: [█████████░] 93%
 | Phase 05-editorial-cms P04 | 20 | 2 tasks | 7 files |
 | Phase 05-editorial-cms P05 | 5 | 2 tasks | 5 files |
 | Phase 05-editorial-cms P06 | 20 | 2 tasks | 8 files |
+| Phase 05-editorial-cms P07 | 5 | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -144,6 +145,9 @@ Recent decisions affecting current work:
 - [Phase 05-editorial-cms]: dead-man.ts reads deadManThresholdHours from PipelineConfig DB row via getPipelineConfig(db) — env var DEAD_MAN_THRESHOLD_HOURS no longer controls threshold
 - [Phase 05-06]: FormData wrappers (*Form suffix) added alongside typed Server Actions — form-facing wrappers parse FormData.get('id'); typed *Db functions remain for test injection
 - [Phase 05-06]: ArticleRow is 'use client' to support window.confirm on soft-delete; Client Components can reference Server Actions in form action={} in Next.js 15
+- [Phase 05-editorial-cms]: ai-config-actions.ts and pipeline-config-actions.ts rewritten with FormData-accepting Server Actions — Plan 04 stubs used typed args incompatible with HTML form action= binding
+- [Phase 05-editorial-cms]: SourceOverrideForm uses details open={hasOverride} for server-side pre-expanded state — no client JS needed for collapsible override forms
+- [Phase 05-editorial-cms]: AI Config page uses prisma.source.findMany with include.aiSourceConfig directly — sources-actions.ts SourceAdminRow does not include the aiSourceConfig relation
 
 ### Pending Todos
 
@@ -157,6 +161,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T12:15:54.989Z
-Stopped at: Completed 05-06-PLAN.md
+Last session: 2026-03-22T12:23:17.518Z
+Stopped at: Completed 05-07-PLAN.md
 Resume file: None
