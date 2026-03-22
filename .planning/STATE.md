@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Completed 06-reader-frontend 06-03-PLAN.md
-last_updated: "2026-03-22T20:52:00Z"
+status: completed
+stopped_at: Completed 06-reader-frontend 06-05-PLAN.md
+last_updated: "2026-03-22T20:52:43.959Z"
 last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 7
   completed_phases: 5
   total_plans: 34
-  completed_plans: 30
+  completed_plans: 31
   percent: 88
 ---
 
@@ -76,6 +76,7 @@ Progress: [████████░░] 88%
 | Phase 05-editorial-cms P06 | 20 | 2 tasks | 8 files |
 | Phase 05-editorial-cms P07 | 5 | 2 tasks | 9 files |
 | Phase 06-reader-frontend P01 | 4 | 2 tasks | 7 files |
+| Phase 06-reader-frontend P05 | 3 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -156,6 +157,8 @@ Recent decisions affecting current work:
 - [Phase 06-03]: Admin login moved to top-level src/app/admin/login (no route group) — prevents (public)/layout.tsx reader shell from wrapping the login page
 - [Phase 06-03]: AdUnit renders dev placeholder when NEXT_PUBLIC_ADSENSE_PUB_ID absent — enables local development without AdSense credentials
 - [Phase 06-03]: CookieBanner sets window.__adsenseNpa=true on rejection — AdUnit reads flag to pass {google_npa:true} in adsbygoogle push
+- [Phase 06-reader-frontend]: buildArticleMetadata() returns empty {} on null article — generateMetadata() calls it directly, notFound() in page component handles 404
+- [Phase 06-reader-frontend]: ShareButton extracted as separate 'use client' component — keeps article detail page as Server Component
 
 ### Pending Todos
 
@@ -169,6 +172,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T20:52:00Z
-Stopped at: Completed 06-reader-frontend 06-03-PLAN.md
+Last session: 2026-03-22T20:52:43.957Z
+Stopped at: Completed 06-reader-frontend 06-05-PLAN.md
 Resume file: None
