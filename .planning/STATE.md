@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 04-03-PLAN.md
-last_updated: "2026-03-22T06:58:47.019Z"
-last_activity: "2026-03-21 — Phase 2 Plan 06 executed: source seed + ingest-run CLI, 49 tests GREEN"
+stopped_at: Completed 04-04-PLAN.md
+last_updated: "2026-03-22T07:04:00Z"
+last_activity: "2026-03-22 — Phase 4 Plan 04 executed: ai-run.ts orchestrator + PM2 ecosystem config, 103 tests GREEN"
 progress:
   total_phases: 7
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 19
-  completed_plans: 18
-  percent: 14
+  completed_plans: 19
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** Phase 2 — Ingestion
+**Current focus:** Phase 4 — Scheduler and Autonomous Publishing (COMPLETE)
 
 ## Current Position
 
-Phase: 2 of 7 (Ingestion)
-Plan: 6 of 6 in current phase (COMPLETE)
-Status: Phase 2 complete — ready for Phase 3
-Last activity: 2026-03-21 — Phase 2 Plan 06 executed: source seed + ingest-run CLI, 49 tests GREEN
+Phase: 4 of 7 (Scheduler and Autonomous Publishing)
+Plan: 4 of 4 in current phase (COMPLETE)
+Status: Phase 4 complete — ready for Phase 5
+Last activity: 2026-03-22 — Phase 4 Plan 04 executed: ai-run.ts orchestrator + PM2 ecosystem config, 103 tests GREEN
 
-Progress: [█░░░░░░░░░] 14%
+Progress: [████░░░░░░] 57%
 
 ## Performance Metrics
 
@@ -67,6 +67,7 @@ Progress: [█░░░░░░░░░] 14%
 | Phase 04-scheduler-and-autonomous-publishing P01 | 7 | 2 tasks | 6 files |
 | Phase 04-scheduler-and-autonomous-publishing P02 | 3 | 4 tasks | 4 files |
 | Phase 04-scheduler-and-autonomous-publishing P03 | 4 | 2 tasks | 2 files |
+| Phase 04-scheduler-and-autonomous-publishing P04 | 4 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -119,6 +120,8 @@ Recent decisions affecting current work:
 - [Phase 04-scheduler-and-autonomous-publishing]: Math.round(silenceDurationHours) in DEAD_MAN_ALERT produces clean integer hours in alert payload
 - [Phase 04-scheduler-and-autonomous-publishing]: MAX_RETRY_COUNT = 3 module-level constant in pipeline.ts — configurable via CMS in Phase 5
 - [Phase 04-scheduler-and-autonomous-publishing]: newRetryCount >= MAX_RETRY_COUNT for FAILED boundary — 3rd failure = FAILED, no 4th attempt
+- [Phase 04-04]: ecosystem.config.js block comment avoids */ sequence — writes '* /15' with note to prevent JS parser treating it as comment-close
+- [Phase 04-04]: ai-run.ts log line includes inputTokens/outputTokens alongside published/reviewBacklog — complete observability from single log entry
 
 ### Pending Todos
 
@@ -132,6 +135,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T06:58:47.017Z
-Stopped at: Completed 04-03-PLAN.md
+Last session: 2026-03-22T07:04:00Z
+Stopped at: Completed 04-04-PLAN.md
 Resume file: None

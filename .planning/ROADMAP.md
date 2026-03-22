@@ -14,8 +14,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - DB schema, Bezirk data model, and content data access layer (completed 2026-03-21)
 - [x] **Phase 2: Ingestion** - Source adapter interface, OTS.at adapter, RSS adapter, deduplication, and feed health monitoring (completed 2026-03-21)
-- [ ] **Phase 3: AI Pipeline** - Bezirk tagger, article writer, named-person exception queue, and cost circuit-breaker
-- [ ] **Phase 4: Scheduler and Autonomous Publishing** - Cron scheduler, automated ingestion-to-publish loop, and dead-man monitoring
+- [x] **Phase 3: AI Pipeline** - Bezirk tagger, article writer, named-person exception queue, and cost circuit-breaker (completed 2026-03-22)
+- [x] **Phase 4: Scheduler and Autonomous Publishing** - Cron scheduler, automated ingestion-to-publish loop, and dead-man monitoring (completed 2026-03-22)
 - [ ] **Phase 5: Editorial CMS** - Authenticated admin interface, article CRUD, exception queue inbox, and source management
 - [ ] **Phase 6: Reader Frontend** - "Mein Bezirk" selector, Bezirk-filtered feed, article detail pages, RSS feeds per Bezirk, and Impressum
 - [ ] **Phase 7: Extensibility and Quality Validation** - Second RSS adapter, end-to-end deduplication test, alert chain verification
@@ -92,7 +92,7 @@ Plans:
 - [ ] 04-01-PLAN.md — Schema migration + Wave 0 stubs: ERROR/FAILED enum values, retryCount/errorMessage on Article, publish.ts and dead-man.ts stubs with it.todo() tests
 - [ ] 04-02-PLAN.md — Publish service + dead-man monitor (TDD): publishArticles() status flip, REVIEW backlog logging, checkDeadMan() silence alerting
 - [ ] 04-03-PLAN.md — Pipeline retry extension (TDD): processArticles() picks up ERROR articles, MAX_RETRY_COUNT → FAILED, errorMessage recorded
-- [ ] 04-04-PLAN.md — Orchestration + scheduler config: ai-run.ts wiring dead-man→AI→publish, ecosystem.config.js PM2 config, CRONTAB.md
+- [x] 04-04-PLAN.md — Orchestration + scheduler config: ai-run.ts wiring dead-man→AI→publish, ecosystem.config.js PM2 config, CRONTAB.md
 
 ### Phase 5: Editorial CMS
 **Goal**: Editors can manage the full content lifecycle — writing manual articles, curating automated content, configuring AI generation behaviour per source, reviewing flagged exceptions, and controlling source configuration — from a single authenticated interface designed for high-volume automated output
@@ -149,8 +149,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete    | 2026-03-21 |
 | 2. Ingestion | 7/7 | Complete   | 2026-03-21 |
-| 3. AI Pipeline | 4/5 | In Progress|  |
-| 4. Scheduler and Autonomous Publishing | 3/4 | In Progress|  |
+| 3. AI Pipeline | 5/5 | Complete   | 2026-03-22 |
+| 4. Scheduler and Autonomous Publishing | 4/4 | Complete   | 2026-03-22 |
 | 5. Editorial CMS | 0/? | Not started | - |
 | 6. Reader Frontend | 0/? | Not started | - |
 | 7. Extensibility and Quality Validation | 0/? | Not started | - |
