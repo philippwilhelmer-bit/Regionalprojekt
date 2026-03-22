@@ -3,6 +3,10 @@ import { listArticles } from '../lib/content/articles'
 import { listBezirke } from '../lib/content/bezirke'
 import { slugify } from '../lib/reader/slug'
 
+// Always render the sitemap dynamically (DB query on each request).
+// Prevents Next.js from attempting to statically pre-render /sitemap.xml at build time.
+export const dynamic = 'force-dynamic'
+
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://ennstal-aktuell.at'
 
 /**

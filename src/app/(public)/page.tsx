@@ -1,3 +1,7 @@
+// Always render the homepage dynamically — article feed must be fresh.
+// Prevents Next.js from attempting to statically pre-render at build time.
+export const dynamic = 'force-dynamic'
+
 import { listArticlesReader } from "@/lib/content/articles";
 import { ArticleFeed } from "@/components/reader/ArticleFeed";
 import { BezirkModal } from "@/components/reader/BezirkModal";
