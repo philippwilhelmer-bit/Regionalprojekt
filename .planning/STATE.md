@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-03-22T12:00:00.000Z"
+status: completed
+stopped_at: Completed 05-04-PLAN.md
+last_updated: "2026-03-22T11:59:33.055Z"
 last_activity: "2026-03-22 — Phase 5 Plan 03 executed: articles-actions + exceptions-actions DB-layer functions, 14 TDD tests GREEN, 139 total tests"
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 27
-  completed_plans: 22
-  percent: 59
+  completed_plans: 23
+  percent: 57
 ---
 
 # Project State
@@ -71,6 +71,7 @@ Progress: [████░░░░░░] 57%
 | Phase 05-editorial-cms P01 | 15 | 2 tasks | 7 files |
 | Phase 05-editorial-cms P02 | 25 | 2 tasks | 14 files |
 | Phase 05-editorial-cms P03 | 8 | 2 tasks | 4 files |
+| Phase 05-editorial-cms P04 | 20 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -134,6 +135,9 @@ Recent decisions affecting current work:
 - [Phase 05-03]: DB-layer *Db functions exported separately from Server Action wrappers — tests call *Db directly, no cookie/auth mocking needed in vitest
 - [Phase 05-03]: listArticlesAdmin uses duck-typed DI overload ($connect check) — zero-arg = production singleton, injected = tests
 - [Phase 05-03]: approveArticleDb sets publishedAt=new Date() alongside status=PUBLISHED — approval marks when article went live
+- [Phase 05-04]: listSourcesAdmin FAILED+ERROR count filters by source type not source id — Articles have no FK to Source (ArticleSource enum only), documented as approximate for multi-source same-type
+- [Phase 05-04]: upsertAiSourceConfig uses Prisma native upsert on sourceId @unique — single atomic DB call avoids findFirst+update race condition
+- [Phase 05-04]: getResolvedAiConfig calls getAiConfig(client) internally — reuses singleton logic without duplication, passes injected client through for test isolation
 
 ### Pending Todos
 
@@ -147,6 +151,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T12:00:00.000Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-03-22T11:59:33.053Z
+Stopped at: Completed 05-04-PLAN.md
 Resume file: None
