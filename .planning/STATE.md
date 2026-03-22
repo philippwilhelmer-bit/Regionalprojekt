@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-03-22T11:50:03.762Z"
-last_activity: "2026-03-22 — Phase 4 Plan 04 executed: ai-run.ts orchestrator + PM2 ecosystem config, 103 tests GREEN"
+status: in_progress
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-03-22T12:00:00.000Z"
+last_activity: "2026-03-22 — Phase 5 Plan 03 executed: articles-actions + exceptions-actions DB-layer functions, 14 TDD tests GREEN, 139 total tests"
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 27
-  completed_plans: 21
-  percent: 57
+  completed_plans: 22
+  percent: 59
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-21)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** Phase 4 — Scheduler and Autonomous Publishing (COMPLETE)
+**Current focus:** Phase 5 — Editorial CMS (in progress)
 
 ## Current Position
 
-Phase: 4 of 7 (Scheduler and Autonomous Publishing)
-Plan: 4 of 4 in current phase (COMPLETE)
-Status: Phase 4 complete — ready for Phase 5
-Last activity: 2026-03-22 — Phase 4 Plan 04 executed: ai-run.ts orchestrator + PM2 ecosystem config, 103 tests GREEN
+Phase: 5 of 7 (Editorial CMS)
+Plan: 3 of 5 in current phase (complete)
+Status: Phase 5 Plan 03 complete — ready for 05-04
+Last activity: 2026-03-22 — Phase 5 Plan 03 executed: articles-actions + exceptions-actions DB-layer functions, 14 TDD tests GREEN, 139 total tests
 
 Progress: [████░░░░░░] 57%
 
@@ -70,6 +70,7 @@ Progress: [████░░░░░░] 57%
 | Phase 04-scheduler-and-autonomous-publishing P04 | 4 | 2 tasks | 3 files |
 | Phase 05-editorial-cms P01 | 15 | 2 tasks | 7 files |
 | Phase 05-editorial-cms P02 | 25 | 2 tasks | 14 files |
+| Phase 05-editorial-cms P03 | 8 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -130,6 +131,9 @@ Recent decisions affecting current work:
 - [Phase 05-editorial-cms]: Auth split into auth-node.ts (node:crypto) + auth-edge.ts (crypto.subtle) — middleware imports auth-edge.ts directly to avoid Edge bundling of node:crypto
 - [Phase 05-editorial-cms]: tailwindcss upgraded to v4 — @tailwindcss/postcss@4 bundles v4 internally; root v3 conflicted with webpack CSS @import resolution in Next.js build
 - [Phase 05-editorial-cms]: loginAction uses LoginState = { error: string } | null with useActionState — Server Action returns error without redirect; redirect() only on success outside try/catch
+- [Phase 05-03]: DB-layer *Db functions exported separately from Server Action wrappers — tests call *Db directly, no cookie/auth mocking needed in vitest
+- [Phase 05-03]: listArticlesAdmin uses duck-typed DI overload ($connect check) — zero-arg = production singleton, injected = tests
+- [Phase 05-03]: approveArticleDb sets publishedAt=new Date() alongside status=PUBLISHED — approval marks when article went live
 
 ### Pending Todos
 
@@ -143,6 +147,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T11:50:03.760Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-03-22T12:00:00.000Z
+Stopped at: Completed 05-03-PLAN.md
 Resume file: None
