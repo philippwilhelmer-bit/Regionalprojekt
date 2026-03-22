@@ -105,6 +105,37 @@ async function seedFetchedArticle(overrides: { bezirkSlug?: string } = {}) {
   return { article, bezirk }
 }
 
+/**
+ * Seeds a Bezirk (if not yet present) and an article with given status/retryCount.
+ */
+async function seedArticleWithStatus(
+  status: 'FETCHED' | 'ERROR' | 'FAILED',
+  retryCount = 0
+) {
+  // Upsert bezirk so multiple calls in one test are safe
+  const bezirk = await db.bezirk.upsert({
+    where: { slug: 'graz' },
+    create: { slug: 'graz', name: 'Graz (Stadt)', gemeindeSynonyms: [] },
+    update: {},
+  })
+  const article = await db.article.create({
+    data: {
+      source: 'OTS_AT',
+      status,
+      retryCount,
+      title: `Article (${status})`,
+      content: 'content',
+    },
+  })
+  return { article, bezirk }
+}
+
+/** Creates a mock Anthropic client that always throws. */
+function makeFailingAnthropicClient(message = 'AI failure') {
+  const mockCreate = vi.fn().mockRejectedValue(new Error(message))
+  return { messages: { create: mockCreate } }
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -280,5 +311,114 @@ describe('processArticles()', () => {
 
     // console.error was called for the failing article
     expect(consoleSpy).toHaveBeenCalled()
+  })
+
+  // ---------------------------------------------------------------------------
+  // ERROR retry and FAILED permanent exclusion (Plan 04-03)
+  // ---------------------------------------------------------------------------
+
+  it('ERROR article with retryCount=0 → stays ERROR with retryCount=1 after AI failure', async () => {
+    const { article } = await seedArticleWithStatus('ERROR', 0)
+    _clientFactory.create = () => makeFailingAnthropicClient('Transient AI error') as any
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    await processArticles(db)
+
+    const updated = await db.article.findUniqueOrThrow({ where: { id: article.id } })
+    expect(updated.status).toBe('ERROR')
+    expect(updated.retryCount).toBe(1)
+  })
+
+  it('ERROR article with retryCount=2 (MAX_RETRY_COUNT-1) → becomes FAILED with retryCount=3 after AI failure', async () => {
+    const { article } = await seedArticleWithStatus('ERROR', 2)
+    _clientFactory.create = () => makeFailingAnthropicClient('Terminal AI error') as any
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    await processArticles(db)
+
+    const updated = await db.article.findUniqueOrThrow({ where: { id: article.id } })
+    expect(updated.status).toBe('FAILED')
+    expect(updated.retryCount).toBe(3)
+  })
+
+  it('FAILED article is excluded from processing (articlesProcessed remains 0)', async () => {
+    const { article } = await seedArticleWithStatus('FAILED', 3)
+    const mockClient = makeMockAnthropicClient()
+    _clientFactory.create = () => mockClient as any
+
+    const result = await processArticles(db)
+
+    expect(result.articlesProcessed).toBe(0)
+    expect(mockClient.messages.create).not.toHaveBeenCalled()
+
+    // Article should remain FAILED, untouched
+    const unchanged = await db.article.findUniqueOrThrow({ where: { id: article.id } })
+    expect(unchanged.status).toBe('FAILED')
+  })
+
+  it('FETCHED and ERROR articles are both picked up in the same run', async () => {
+    await seedArticleWithStatus('FETCHED', 0)
+    await seedArticleWithStatus('ERROR', 1)
+
+    // Both succeed: alternating mock handles both articles (2 Step1 + 2 Step2 calls)
+    let callCount = 0
+    const mockCreate = vi.fn().mockImplementation(() => {
+      callCount++
+      return Promise.resolve(callCount % 2 === 1 ? makeStep1Response(['graz'], false) : makeStep2Response())
+    })
+    _clientFactory.create = () => ({ messages: { create: mockCreate } } as any)
+
+    const result = await processArticles(db)
+
+    expect(result.articlesProcessed).toBe(2)
+  })
+
+  it('after AI failure, errorMessage is non-null and contains the error string', async () => {
+    const { article } = await seedArticleWithStatus('FETCHED', 0)
+    _clientFactory.create = () => makeFailingAnthropicClient('Network timeout') as any
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    await processArticles(db)
+
+    const updated = await db.article.findUniqueOrThrow({ where: { id: article.id } })
+    expect(updated.errorMessage).not.toBeNull()
+    expect(updated.errorMessage).toContain('Network timeout')
+  })
+
+  it('one failing article does not prevent other articles in the batch from succeeding', async () => {
+    await db.bezirk.upsert({
+      where: { slug: 'graz' },
+      create: { slug: 'graz', name: 'Graz (Stadt)', gemeindeSynonyms: [] },
+      update: {},
+    })
+
+    // Two FETCHED articles
+    const failing = await db.article.create({
+      data: { source: 'OTS_AT', status: 'FETCHED', title: 'Failing', content: 'content' },
+    })
+    const succeeding = await db.article.create({
+      data: { source: 'OTS_AT', status: 'FETCHED', title: 'Succeeding', content: 'content' },
+    })
+
+    // First AI call (step1 for failing article) throws; remaining calls succeed
+    let callCount = 0
+    const mockCreate = vi.fn().mockImplementation(() => {
+      callCount++
+      if (callCount === 1) return Promise.reject(new Error('Step 1 failure'))
+      return Promise.resolve(callCount % 2 === 0 ? makeStep1Response(['graz'], false) : makeStep2Response())
+    })
+    _clientFactory.create = () => ({ messages: { create: mockCreate } } as any)
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    const result = await processArticles(db)
+
+    expect(result.articlesProcessed).toBe(2)
+    expect(result.articlesWritten).toBe(1)
+
+    const failingUpdated = await db.article.findUniqueOrThrow({ where: { id: failing.id } })
+    expect(failingUpdated.status).toBe('ERROR')
+
+    const succeedingUpdated = await db.article.findUniqueOrThrow({ where: { id: succeeding.id } })
+    expect(succeedingUpdated.status).toBe('WRITTEN')
   })
 })
