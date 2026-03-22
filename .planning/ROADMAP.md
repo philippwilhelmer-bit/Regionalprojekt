@@ -128,10 +128,16 @@ Plans:
   5. Each Bezirk has a working RSS feed URL that returns valid XML with current articles, and the Impressum page satisfies Austrian MedienG/ECG requirements
   6. Article pages include correct Open Graph meta tags, JSON-LD NewsArticle schema, and the site exposes a sitemap.xml updated on each publish
   7. Google AdSense ad units render in all configured placement zones (hero, between articles, article detail)
-**Plans**: TBD
+**Plans**: 7 plans
 
 Plans:
-- [ ] 06-01: TBD
+- [ ] 06-01-PLAN.md — Schema migration + Wave 0 stubs: publicId on Article (nanoid), five test stub files for reader/slug, reader/rss, reader/metadata, reader/sitemap, articles.test.ts extensions
+- [ ] 06-02-PLAN.md — Reader DAL + slug utility (TDD): slugify() for German URLs, getArticleByPublicId(), listArticlesReader() with pinned/featured sort and multi-bezirk filter
+- [ ] 06-03-PLAN.md — Public layout shell: root layout update (lang=de, AdSense script), (public) layout, Header, BottomNav, Footer, CookieBanner, AdUnit
+- [ ] 06-04-PLAN.md — Homepage + Bezirk pages: ArticleCard, BezirkModal (localStorage selection), ArticleFeed (infinite scroll), /bezirk/[slug] page
+- [ ] 06-05-PLAN.md — Article detail page (TDD metadata): generateMetadata OG tags, canonical redirect, JSON-LD NewsArticle, breadcrumb, social share, related articles, AdUnit
+- [ ] 06-06-PLAN.md — RSS feeds + sitemap + Impressum (TDD): generateBezirkRssFeed(), /rss/[slug] route handler, app/sitemap.ts, /impressum page with MedienG/ECG/DSGVO/KI-disclosure
+- [ ] 06-07-PLAN.md — Checkpoint: human verification of all seven Phase 6 success criteria
 
 ### Phase 7: Extensibility and Quality Validation
 **Goal**: The platform's two most critical architectural properties are confirmed by evidence — the adapter pattern genuinely allows new sources without core changes, and deduplication provably blocks cross-source duplicates — before declaring the platform production-ready
@@ -159,5 +165,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. AI Pipeline | 5/5 | Complete   | 2026-03-22 |
 | 4. Scheduler and Autonomous Publishing | 4/4 | Complete   | 2026-03-22 |
 | 5. Editorial CMS | 7/8 | Complete    | 2026-03-22 |
-| 6. Reader Frontend | 0/? | Not started | - |
+| 6. Reader Frontend | 0/7 | Not started | - |
 | 7. Extensibility and Quality Validation | 0/? | Not started | - |
