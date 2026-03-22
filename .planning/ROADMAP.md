@@ -104,10 +104,17 @@ Plans:
   3. The article list is filterable by Bezirk, source, status, and time range — locating any article in a list of 200+ takes under 10 seconds
   4. An editor can add a new RSS source, configure its polling interval, and disable it again — all from the admin interface without touching code
   5. An editor can set global AI generation settings (tone, length, style) and override them per source — changes take effect on the next ingestion cycle without a code deploy
-**Plans**: TBD
+**Plans**: 8 plans
 
 Plans:
-- [ ] 05-01: TBD
+- [ ] 05-01-PLAN.md — Schema migration + Wave 0 test stubs: isPinned/isFeatured/healthFailureThreshold fields, AiConfig/AiSourceConfig/PipelineConfig tables, cleanDb update, 4 test stub files
+- [ ] 05-02-PLAN.md — Auth + middleware + login: HMAC session cookie (Node + Edge), Next.js middleware guard, login page + admin layout
+- [ ] 05-03-PLAN.md — Articles + Exceptions Server Actions (TDD): createManualArticle, updateArticle, togglePin, toggleFeature, softDelete, approveArticle, rejectArticle
+- [ ] 05-04-PLAN.md — Sources + AI Config + Pipeline Config Server Actions + DALs (TDD): createSource, updateSource, getAiConfig, getResolvedAiConfig, getPipelineConfig
+- [ ] 05-05-PLAN.md — Pipeline integration: replace hardcoded constants with DB config reads in pipeline.ts, ingest.ts, dead-man.ts, step2-write.ts
+- [ ] 05-06-PLAN.md — Admin UI: articles list page (filterable, inline actions) + manual article creation form + exception queue page
+- [ ] 05-07-PLAN.md — Admin UI: sources health dashboard + add source form + AI config page (global + per-source overrides + pipeline config)
+- [ ] 05-08-PLAN.md — Checkpoint: human verification of all five Phase 5 success criteria
 
 ### Phase 6: Reader Frontend
 **Goal**: Steiermark residents can open the site, select their Bezirk(e), and read a personalized local news feed on any device — with full article detail pages, Google AdSense placements, per-Bezirk RSS feeds, SEO-complete article pages, and a legally compliant Impressum
@@ -151,6 +158,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 2. Ingestion | 7/7 | Complete   | 2026-03-21 |
 | 3. AI Pipeline | 5/5 | Complete   | 2026-03-22 |
 | 4. Scheduler and Autonomous Publishing | 4/4 | Complete   | 2026-03-22 |
-| 5. Editorial CMS | 0/? | Not started | - |
+| 5. Editorial CMS | 0/8 | Not started | - |
 | 6. Reader Frontend | 0/? | Not started | - |
 | 7. Extensibility and Quality Validation | 0/? | Not started | - |
