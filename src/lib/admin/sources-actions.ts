@@ -10,6 +10,8 @@
  */
 import type { PrismaClient, Source, ArticleSource } from '@prisma/client'
 import { prisma as defaultPrisma } from '../prisma'
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 // ─────────────────────────────────────────────
 // Types
@@ -165,7 +167,7 @@ export async function listSourcesAdmin(db?: PrismaClient): Promise<SourceAdminRo
 // ─────────────────────────────────────────────
 
 /**
- * Server Action: create a new source.
+ * Server Action: create a new source (typed input).
  * Requires editor session (auth guard in middleware for /admin routes).
  */
 export async function createSource(input: CreateSourceInput): Promise<Source> {
@@ -173,9 +175,54 @@ export async function createSource(input: CreateSourceInput): Promise<Source> {
 }
 
 /**
- * Server Action: update an existing source.
+ * Server Action: update an existing source (typed input).
  * Requires editor session (auth guard in middleware for /admin routes).
  */
 export async function updateSource(input: UpdateSourceInput): Promise<Source> {
   return updateSourceDb(input)
+}
+
+// ─────────────────────────────────────────────
+// FormData Server Action wrappers (for HTML form action={})
+// ─────────────────────────────────────────────
+
+/**
+ * Server Action: create a new source from an HTML form.
+ * Form fields: url, type, pollIntervalMinutes
+ * Redirects to /admin/sources on success.
+ */
+export async function createSourceForm(formData: FormData): Promise<void> {
+  const url = formData.get('url')?.toString() ?? ''
+  const type = formData.get('type')?.toString() as ArticleSource
+  const pollIntervalMinutes = parseInt(formData.get('pollIntervalMinutes')?.toString() ?? '60', 10)
+
+  await createSourceDb({ url, type, pollIntervalMinutes: isNaN(pollIntervalMinutes) ? 60 : pollIntervalMinutes })
+  redirect('/admin/sources')
+}
+
+/**
+ * Server Action: update a source from an HTML form.
+ * Form fields: id (hidden), pollIntervalMinutes, healthFailureThreshold, enabled
+ * Revalidates /admin/sources on success.
+ */
+export async function updateSourceForm(formData: FormData): Promise<void> {
+  const id = parseInt(formData.get('id')?.toString() ?? '', 10)
+  if (isNaN(id)) return
+
+  const pollIntervalMinutes = formData.get('pollIntervalMinutes')
+    ? parseInt(formData.get('pollIntervalMinutes')!.toString(), 10)
+    : undefined
+  const healthFailureThreshold = formData.get('healthFailureThreshold')
+    ? parseInt(formData.get('healthFailureThreshold')!.toString(), 10)
+    : undefined
+  const enabledRaw = formData.get('enabled')
+  const enabled = enabledRaw !== null ? enabledRaw === 'true' || enabledRaw === 'on' : undefined
+
+  await updateSourceDb({
+    id,
+    pollIntervalMinutes: pollIntervalMinutes !== undefined && !isNaN(pollIntervalMinutes) ? pollIntervalMinutes : undefined,
+    healthFailureThreshold: healthFailureThreshold !== undefined && !isNaN(healthFailureThreshold) ? healthFailureThreshold : undefined,
+    enabled,
+  })
+  revalidatePath('/admin/sources')
 }
