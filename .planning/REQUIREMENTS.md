@@ -28,9 +28,9 @@
 
 ### Publishing
 
-- [ ] **PUB-01**: Approved articles publish automatically without manual intervention
+- [x] **PUB-01**: Approved articles publish automatically without manual intervention
 - [ ] **PUB-02**: System polls all sources on a scheduled cron interval
-- [ ] **PUB-03**: System alerts operator if the automated pipeline stops running (dead-man monitor)
+- [x] **PUB-03**: System alerts operator if the automated pipeline stops running (dead-man monitor)
 
 ### Editorial CMS
 
@@ -97,9 +97,9 @@
 | AI-03 | Phase 3 | Complete |
 | AI-04 | Phase 3 | Complete |
 | AI-05 | Phase 3 | Complete |
-| PUB-01 | Phase 4 | Pending |
+| PUB-01 | Phase 4 | Complete |
 | PUB-02 | Phase 4 | Pending |
-| PUB-03 | Phase 4 | Pending |
+| PUB-03 | Phase 4 | Complete |
 | CMS-01 | Phase 5 | Pending |
 | CMS-02 | Phase 5 | Pending |
 | CMS-03 | Phase 5 | Pending |

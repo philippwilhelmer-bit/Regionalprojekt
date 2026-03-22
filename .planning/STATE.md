@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 4 context gathered
-last_updated: "2026-03-22T06:30:21.156Z"
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-03-22T06:48:33.110Z"
 last_activity: "2026-03-21 — Phase 2 Plan 06 executed: source seed + ingest-run CLI, 49 tests GREEN"
 progress:
   total_phases: 7
   completed_phases: 3
-  total_plans: 15
-  completed_plans: 15
+  total_plans: 19
+  completed_plans: 16
   percent: 14
 ---
 
@@ -64,6 +64,7 @@ Progress: [█░░░░░░░░░] 14%
 | Phase 03-ai-pipeline P02 | 3 | 2 tasks | 2 files |
 | Phase 03-ai-pipeline P01 | 5 | 2 tasks | 8 files |
 | Phase 03-ai-pipeline P05 | 6 | 2 tasks | 3 files |
+| Phase 04-scheduler-and-autonomous-publishing P01 | 7 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -110,6 +111,8 @@ Recent decisions affecting current work:
 - [Phase 03-ai-pipeline]: _clientFactory.create mutable object pattern for Anthropic client injection — vi.spyOn on exported let doesn't intercept internal module calls in vitest ESM
 - [Phase 03-ai-pipeline]: Circuit-breaker checked before PipelineRun.create — no run record opened if budget exhausted
 - [Phase 03-ai-pipeline]: (import.meta as any).main cast in ai-run.ts — Bun extension not typed in standard ImportMeta
+- [Phase 04-scheduler-and-autonomous-publishing]: Wave 0 test stubs import describe/it from vitest explicitly — tsconfig includes test files in compilation, no globals configured
+- [Phase 04-scheduler-and-autonomous-publishing]: ERROR = retryable failure (scheduler retries), FAILED = permanently excluded (max retries exceeded)
 
 ### Pending Todos
 
@@ -123,6 +126,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T06:30:21.147Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-scheduler-and-autonomous-publishing/04-CONTEXT.md
+Last session: 2026-03-22T06:48:33.108Z
+Stopped at: Completed 04-01-PLAN.md
+Resume file: None
