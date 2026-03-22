@@ -102,6 +102,90 @@ export async function getArticleById(
   })
 }
 
+export async function getArticleByPublicId(publicId: string): Promise<ArticleWithBezirke | null>
+export async function getArticleByPublicId(
+  client: PrismaClient,
+  publicId: string
+): Promise<ArticleWithBezirke | null>
+export async function getArticleByPublicId(
+  clientOrPublicId: PrismaClient | string,
+  publicId?: string
+): Promise<ArticleWithBezirke | null> {
+  if (typeof clientOrPublicId === 'string') {
+    return defaultPrisma.article.findUnique({
+      where: { publicId: clientOrPublicId },
+      include: { bezirke: { include: { bezirk: true } } },
+    })
+  }
+  return clientOrPublicId.article.findUnique({
+    where: { publicId: publicId! },
+    include: { bezirke: { include: { bezirk: true } } },
+  })
+}
+
+export async function listArticlesReader(options?: {
+  bezirkIds?: number[]
+  limit?: number
+  offset?: number
+}): Promise<ArticleWithBezirke[]>
+export async function listArticlesReader(
+  client: PrismaClient,
+  options?: {
+    bezirkIds?: number[]
+    limit?: number
+    offset?: number
+  }
+): Promise<ArticleWithBezirke[]>
+export async function listArticlesReader(
+  clientOrOptions?:
+    | PrismaClient
+    | {
+        bezirkIds?: number[]
+        limit?: number
+        offset?: number
+      },
+  options?: {
+    bezirkIds?: number[]
+    limit?: number
+    offset?: number
+  }
+): Promise<ArticleWithBezirke[]> {
+  let db: PrismaClient
+  let opts: { bezirkIds?: number[]; limit?: number; offset?: number }
+
+  if (clientOrOptions !== null && typeof clientOrOptions === 'object' && '$connect' in clientOrOptions) {
+    db = clientOrOptions as PrismaClient
+    opts = options ?? {}
+  } else {
+    db = defaultPrisma
+    opts = (clientOrOptions as { bezirkIds?: number[]; limit?: number; offset?: number }) ?? {}
+  }
+
+  const { bezirkIds, limit = 20, offset = 0 } = opts
+
+  return db.article.findMany({
+    where: {
+      status: 'PUBLISHED',
+      ...(bezirkIds !== undefined && bezirkIds.length > 0
+        ? { bezirke: { some: { bezirkId: { in: bezirkIds } } } }
+        : {}),
+    },
+    include: {
+      bezirke: {
+        include: { bezirk: true },
+      },
+    },
+    orderBy: [
+      { isPinned: 'desc' },
+      { isFeatured: 'desc' },
+      { publishedAt: 'desc' },
+      { createdAt: 'desc' },
+    ],
+    take: limit,
+    skip: offset,
+  })
+}
+
 export async function getArticlesByBezirk(
   bezirkSlug: string,
   options?: { limit?: number; offset?: number }
