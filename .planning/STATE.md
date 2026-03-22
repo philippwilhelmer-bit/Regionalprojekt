@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-03-22T06:54:03.508Z"
+stopped_at: Completed 04-03-PLAN.md
+last_updated: "2026-03-22T06:58:47.019Z"
 last_activity: "2026-03-21 — Phase 2 Plan 06 executed: source seed + ingest-run CLI, 49 tests GREEN"
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 19
-  completed_plans: 17
+  completed_plans: 18
   percent: 14
 ---
 
@@ -66,6 +66,7 @@ Progress: [█░░░░░░░░░] 14%
 | Phase 03-ai-pipeline P05 | 6 | 2 tasks | 3 files |
 | Phase 04-scheduler-and-autonomous-publishing P01 | 7 | 2 tasks | 6 files |
 | Phase 04-scheduler-and-autonomous-publishing P02 | 3 | 4 tasks | 4 files |
+| Phase 04-scheduler-and-autonomous-publishing P03 | 4 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,8 @@ Recent decisions affecting current work:
 - [Phase 04-scheduler-and-autonomous-publishing]: ERROR = retryable failure (scheduler retries), FAILED = permanently excluded (max retries exceeded)
 - [Phase 04-scheduler-and-autonomous-publishing]: findFirst used instead of findUnique for externalId lookup — externalId is String? (not @unique) in Article schema
 - [Phase 04-scheduler-and-autonomous-publishing]: Math.round(silenceDurationHours) in DEAD_MAN_ALERT produces clean integer hours in alert payload
+- [Phase 04-scheduler-and-autonomous-publishing]: MAX_RETRY_COUNT = 3 module-level constant in pipeline.ts — configurable via CMS in Phase 5
+- [Phase 04-scheduler-and-autonomous-publishing]: newRetryCount >= MAX_RETRY_COUNT for FAILED boundary — 3rd failure = FAILED, no 4th attempt
 
 ### Pending Todos
 
@@ -129,6 +132,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T06:54:03.507Z
-Stopped at: Completed 04-02-PLAN.md
+Last session: 2026-03-22T06:58:47.017Z
+Stopped at: Completed 04-03-PLAN.md
 Resume file: None
