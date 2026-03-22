@@ -5,7 +5,7 @@
  *
  * Uses pgLite in-memory DB injected via DI overload.
  * Uses vi.spyOn(console, 'warn') for alert verification.
- * Uses vi.useFakeTimers() to control "now" for time-based assertions.
+ * Threshold now read from PipelineConfig DB row (configurable via CMS, default 6h).
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import type { PrismaClient } from '@prisma/client'
@@ -17,14 +17,11 @@ let db: PrismaClient
 beforeEach(async () => {
   db = await createTestDb()
   await cleanDb(db)
-  // Ensure env var is clean before each test
-  delete process.env.DEAD_MAN_THRESHOLD_HOURS
 })
 
 afterEach(() => {
   vi.restoreAllMocks()
   vi.useRealTimers()
-  delete process.env.DEAD_MAN_THRESHOLD_HOURS
 })
 
 describe('checkDeadMan()', () => {
@@ -82,9 +79,11 @@ describe('checkDeadMan()', () => {
     expect(call.silenceDurationHours).toBeGreaterThan(1000)
   })
 
-  it('reads threshold from DEAD_MAN_THRESHOLD_HOURS env var — alert fires when threshold is lower', async () => {
-    // Threshold = 2, publishedAt = 3 hours ago → should alert
-    process.env.DEAD_MAN_THRESHOLD_HOURS = '2'
+  it('reads threshold from PipelineConfig DB row — alert fires when threshold is lower', async () => {
+    // Set threshold = 2 in DB, publishedAt = 3 hours ago → should alert
+    await db.pipelineConfig.create({
+      data: { maxRetryCount: 3, deadManThresholdHours: 2 },
+    })
 
     const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000)
     await db.article.create({
@@ -105,7 +104,8 @@ describe('checkDeadMan()', () => {
     expect(call.silenceDurationHours).toBe(3)
   })
 
-  it('uses default threshold of 6 hours when DEAD_MAN_THRESHOLD_HOURS is not set', async () => {
+  it('uses default threshold of 6 hours from PipelineConfig when no row exists', async () => {
+    // No PipelineConfig in DB — getPipelineConfig creates default with 6h
     // Publish 5 hours ago — within default 6h threshold → no alert
     const fiveHoursAgo = new Date(Date.now() - 5 * 60 * 60 * 1000)
     await db.article.create({

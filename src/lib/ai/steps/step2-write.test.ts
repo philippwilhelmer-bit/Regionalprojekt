@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import type Anthropic from '@anthropic-ai/sdk'
+import type { PrismaClient } from '@prisma/client'
 
 // Implementation: src/lib/ai/steps/step2-write.ts
 // Requirements: AI-01, SEO-02
@@ -36,11 +37,32 @@ function makeMockClient(
   } as unknown as Anthropic
 }
 
+/**
+ * Creates a mock PrismaClient that returns a default AiConfig row.
+ * Required since runStep2Write() now reads AiConfig from DB.
+ */
+function makeMockDb(): PrismaClient {
+  return {
+    $connect: vi.fn(),
+    aiConfig: {
+      findFirst: vi.fn().mockResolvedValue({
+        id: 1,
+        tone: 'NEUTRAL',
+        articleLength: 'MEDIUM',
+        styleNotes: null,
+        modelOverride: null,
+        updatedAt: new Date(),
+      }),
+    },
+  } as unknown as PrismaClient
+}
+
 describe('runStep2Write()', () => {
   it('returns headline, lead, body from structured JSON response', async () => {
     const client = makeMockClient()
+    const db = makeMockDb()
 
-    const result: Step2Result = await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'])
+    const result: Step2Result = await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'], db)
 
     expect(result.headline).toBe('Testüberschrift für Steiermark')
     expect(result.lead).toBe('Ein Einstiegssatz zur Nachricht.')
@@ -49,16 +71,18 @@ describe('runStep2Write()', () => {
 
   it('returns seoTitle from structured JSON response (SEO-02)', async () => {
     const client = makeMockClient()
+    const db = makeMockDb()
 
-    const result: Step2Result = await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'])
+    const result: Step2Result = await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'], db)
 
     expect(result.seoTitle).toBe('SEO-Titel für Google')
   })
 
   it('returns metaDescription from structured JSON response (SEO-02)', async () => {
     const client = makeMockClient()
+    const db = makeMockDb()
 
-    const result: Step2Result = await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'])
+    const result: Step2Result = await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'], db)
 
     expect(result.metaDescription).toBe('Eine kurze Meta-Beschreibung für Suchmaschinen unter 160 Zeichen.')
   })
@@ -67,8 +91,9 @@ describe('runStep2Write()', () => {
     const client = makeMockClient({
       usage: { input_tokens: 200, output_tokens: 150 },
     })
+    const db = makeMockDb()
 
-    const result: Step2Result = await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'])
+    const result: Step2Result = await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'], db)
 
     expect(result.inputTokens).toBe(200)
     expect(result.outputTokens).toBe(150)
@@ -78,17 +103,19 @@ describe('runStep2Write()', () => {
     const client = makeMockClient({
       content: [],
     })
+    const db = makeMockDb()
 
     await expect(
-      runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'])
+      runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'], db)
     ).rejects.toThrow('No text block in response')
   })
 
   it('calls messages.create with model claude-haiku-4-5-20251001', async () => {
     const client = makeMockClient()
+    const db = makeMockDb()
     const mockCreate = vi.spyOn(client.messages, 'create')
 
-    await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'])
+    await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'], db)
 
     const callArgs = mockCreate.mock.calls[0][0] as Anthropic.Messages.MessageCreateParamsNonStreaming
     expect(callArgs.model).toBe('claude-haiku-4-5-20251001')
@@ -96,9 +123,10 @@ describe('runStep2Write()', () => {
 
   it('calls messages.create with output_config json_schema format', async () => {
     const client = makeMockClient()
+    const db = makeMockDb()
     const mockCreate = vi.spyOn(client.messages, 'create')
 
-    await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'])
+    await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'], db)
 
     const callArgs = mockCreate.mock.calls[0][0] as Anthropic.Messages.MessageCreateParamsNonStreaming
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -107,9 +135,10 @@ describe('runStep2Write()', () => {
 
   it('calls messages.create with max_tokens 512', async () => {
     const client = makeMockClient()
+    const db = makeMockDb()
     const mockCreate = vi.spyOn(client.messages, 'create')
 
-    await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'])
+    await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'], db)
 
     const callArgs = mockCreate.mock.calls[0][0] as Anthropic.Messages.MessageCreateParamsNonStreaming
     expect(callArgs.max_tokens).toBe(512)
@@ -117,9 +146,10 @@ describe('runStep2Write()', () => {
 
   it('injects bezirk names into system prompt', async () => {
     const client = makeMockClient()
+    const db = makeMockDb()
     const mockCreate = vi.spyOn(client.messages, 'create')
 
-    await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'])
+    await runStep2Write(client, 'Rohtext eines Artikels.', ['liezen'], db)
 
     const callArgs = mockCreate.mock.calls[0][0] as Anthropic.Messages.MessageCreateParamsNonStreaming
     expect(callArgs.system).toContain('liezen')
@@ -127,9 +157,10 @@ describe('runStep2Write()', () => {
 
   it('uses Steiermark-weit fallback when bezirkNames is empty', async () => {
     const client = makeMockClient()
+    const db = makeMockDb()
     const mockCreate = vi.spyOn(client.messages, 'create')
 
-    await runStep2Write(client, 'Rohtext eines Artikels.', [])
+    await runStep2Write(client, 'Rohtext eines Artikels.', [], db)
 
     const callArgs = mockCreate.mock.calls[0][0] as Anthropic.Messages.MessageCreateParamsNonStreaming
     expect(callArgs.system).toContain('Steiermark-weit')

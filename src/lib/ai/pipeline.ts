@@ -145,7 +145,7 @@ export async function processArticles(
 
         // 5e. Step 2: Write & SEO
         const matchedBezirkNames = matchedBezirke.map((b) => b.name)
-        const step2 = await runStep2Write(anthropicClient, articleText, matchedBezirkNames)
+        const step2 = await runStep2Write(anthropicClient, articleText, matchedBezirkNames, db)
         totalInputTokens += step2.inputTokens
         totalOutputTokens += step2.outputTokens
 
