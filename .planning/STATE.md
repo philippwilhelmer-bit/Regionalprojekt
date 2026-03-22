@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-stopped_at: Completed 06-reader-frontend 06-02-PLAN.md
-last_updated: "2026-03-22T20:46:40Z"
-last_activity: "2026-03-22 — Phase 6 Plan 02 executed: slugify(), getArticleByPublicId(), listArticlesReader() — 153 tests GREEN"
+stopped_at: Completed 06-reader-frontend 06-03-PLAN.md
+last_updated: "2026-03-22T20:52:00Z"
+last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 7
   completed_phases: 5
   total_plans: 34
-  completed_plans: 29
-  percent: 85
+  completed_plans: 30
+  percent: 88
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-21)
 ## Current Position
 
 Phase: 6 of 7 (Reader Frontend)
-Plan: 2 of 7 in current phase (in progress)
-Status: Phase 6 Plan 02 complete — reader DAL and slug utility delivered
-Last activity: 2026-03-22 — Phase 6 Plan 02 executed: slugify(), getArticleByPublicId(), listArticlesReader() — 153 tests GREEN
+Plan: 3 of 7 in current phase (in progress)
+Status: Phase 6 Plan 03 complete — public layout shell delivered
+Last activity: 2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success
 
-Progress: [████████░░] 85%
+Progress: [████████░░] 88%
 
 ## Performance Metrics
 
@@ -153,6 +153,9 @@ Recent decisions affecting current work:
 - [Phase 06-reader-frontend]: Wave 0 stubs use only describe/it from vitest with no implementation imports — prevents TypeScript errors before reader implementation files exist
 - [Phase 06-02]: slugify() implemented inline without external library — all German umlaut rules fit in 7 replace chains
 - [Phase 06-02]: listArticlesReader omits bezirkIds WHERE clause when array is undefined/empty — avoids spurious empty-IN clause causing DB errors
+- [Phase 06-03]: Admin login moved to top-level src/app/admin/login (no route group) — prevents (public)/layout.tsx reader shell from wrapping the login page
+- [Phase 06-03]: AdUnit renders dev placeholder when NEXT_PUBLIC_ADSENSE_PUB_ID absent — enables local development without AdSense credentials
+- [Phase 06-03]: CookieBanner sets window.__adsenseNpa=true on rejection — AdUnit reads flag to pass {google_npa:true} in adsbygoogle push
 
 ### Pending Todos
 
@@ -166,6 +169,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T20:37:41.257Z
-Stopped at: Completed 06-reader-frontend 06-01-PLAN.md
+Last session: 2026-03-22T20:52:00Z
+Stopped at: Completed 06-reader-frontend 06-03-PLAN.md
 Resume file: None

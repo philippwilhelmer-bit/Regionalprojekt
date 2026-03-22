@@ -165,5 +165,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. AI Pipeline | 5/5 | Complete   | 2026-03-22 |
 | 4. Scheduler and Autonomous Publishing | 4/4 | Complete   | 2026-03-22 |
 | 5. Editorial CMS | 7/8 | Complete    | 2026-03-22 |
-| 6. Reader Frontend | 2/7 | In Progress|  |
+| 6. Reader Frontend | 3/7 | In Progress|  |
 | 7. Extensibility and Quality Validation | 0/? | Not started | - |
