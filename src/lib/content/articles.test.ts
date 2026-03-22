@@ -103,3 +103,17 @@ describe('Article DAL', () => {
     expect(ids).toContain(stateWide.id)
   })
 })
+
+describe('getArticleByPublicId', () => {
+  it.todo('returns article with bezirke when publicId matches')
+  it.todo('returns null when publicId not found')
+})
+
+describe('listArticlesReader', () => {
+  it.todo('filters to PUBLISHED status only')
+  it.todo('sorts pinned articles first, then featured, then by publishedAt desc')
+  it.todo('filters by single bezirkId when provided')
+  it.todo('filters by multiple bezirkIds when array provided')
+  it.todo('returns all Steiermark articles when no bezirkId filter')
+  it.todo('supports limit and offset pagination')
+})
