@@ -17,6 +17,8 @@ enum ArticleStatus {
   REVIEW      // flagged: named person detected
   PUBLISHED   // live on site
   REJECTED    // editor rejected
+  ERROR       // retryable failure — scheduler will retry
+  FAILED      // permanently excluded — max retries exceeded
 }
 
 enum ArticleSource {
@@ -50,6 +52,8 @@ model Article {
   contentHash     String?          @unique  // SHA-256 of normalized title+body for cross-source dedup
   rawPayload      Json?            // original source content before AI rewrite
   publishedAt     DateTime?
+  retryCount      Int              @default(0)
+  errorMessage    String?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   bezirke         ArticleBezirk[]
