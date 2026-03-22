@@ -26,6 +26,7 @@ describe('rssAdapter (RSS 2.0)', () => {
     consecutiveFailures: 0,
     lastSuccessAt: null,
     healthStatus: 'OK',
+    healthFailureThreshold: 3,
     createdAt: new Date(),
     updatedAt: new Date(),
   }
@@ -117,6 +118,7 @@ describe('rssAdapter (Atom 1.0)', () => {
     consecutiveFailures: 0,
     lastSuccessAt: null,
     healthStatus: 'OK',
+    healthFailureThreshold: 3,
     createdAt: new Date(),
     updatedAt: new Date(),
   }
@@ -166,6 +168,7 @@ describe('rssAdapter (error handling)', () => {
     consecutiveFailures: 0,
     lastSuccessAt: null,
     healthStatus: 'OK',
+    healthFailureThreshold: 3,
     createdAt: new Date(),
     updatedAt: new Date(),
   }

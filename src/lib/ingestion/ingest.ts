@@ -13,8 +13,8 @@
  *   5. Close IngestionRun with counts or error
  *   6. Update Source health (consecutiveFailures, healthStatus, lastSuccessAt)
  *
- * Health thresholds (module-level constant; Phase 5 CMS will make this configurable per-source):
- *   consecutiveFailures >= HEALTH_FAILURE_THRESHOLD → DOWN
+ * Health thresholds (read from source.healthFailureThreshold — configurable per-source via CMS):
+ *   consecutiveFailures >= source.healthFailureThreshold → DOWN
  *   consecutiveFailures >= 1 → DEGRADED
  *   0 → OK
  *
@@ -24,8 +24,6 @@ import type { PrismaClient, Source } from '@prisma/client'
 import { prisma as defaultPrisma } from '../prisma'
 import { adapterRegistry } from './adapters/registry'
 import { computeContentHash, isDuplicate } from './dedup'
-
-export const HEALTH_FAILURE_THRESHOLD = 3
 
 export interface IngestResult {
   itemsFound: number
@@ -90,7 +88,7 @@ export async function ingest(
     // Increment failures and update health
     const newFailures = src.consecutiveFailures + 1
     const newHealth =
-      newFailures >= HEALTH_FAILURE_THRESHOLD ? 'DOWN' : 'DEGRADED'
+      newFailures >= src.healthFailureThreshold ? 'DOWN' : 'DEGRADED'
 
     await db.source.update({
       where: { id: src.id },

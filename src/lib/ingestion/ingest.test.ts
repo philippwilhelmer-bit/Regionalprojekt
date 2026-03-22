@@ -8,7 +8,10 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest'
 import { createTestDb, cleanDb } from '../../test/setup-db'
 import type { PrismaClient, Source } from '@prisma/client'
-import { ingest, HEALTH_FAILURE_THRESHOLD } from './ingest'
+import { ingest } from './ingest'
+
+// healthFailureThreshold default = 3 (from source.healthFailureThreshold field default)
+const HEALTH_FAILURE_THRESHOLD = 3
 import { adapterRegistry } from './adapters/registry'
 import type { RawItem } from './types'
 
