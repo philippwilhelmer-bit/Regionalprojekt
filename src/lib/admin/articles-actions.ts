@@ -239,3 +239,37 @@ export async function softDelete(articleId: number): Promise<Article> {
   // await requireAuth()
   return softDeleteDb(defaultPrisma, articleId)
 }
+
+// ─── FormData-based wrappers for use in <form action={...}> ──────────────────
+// Next.js Server Actions used in forms receive FormData — these wrappers parse
+// the hidden `id` field and delegate to the typed *Db functions.
+
+export async function togglePinForm(formData: FormData): Promise<void> {
+  const id = Number(formData.get('id'))
+  await togglePinDb(defaultPrisma, id)
+}
+
+export async function toggleFeatureForm(formData: FormData): Promise<void> {
+  const id = Number(formData.get('id'))
+  await toggleFeatureDb(defaultPrisma, id)
+}
+
+export async function softDeleteForm(formData: FormData): Promise<void> {
+  const id = Number(formData.get('id'))
+  await softDeleteDb(defaultPrisma, id)
+}
+
+export async function createManualArticleForm(formData: FormData): Promise<void> {
+  const { redirect } = await import('next/navigation')
+  const bezirkIdsRaw = formData.getAll('bezirkIds').map(Number).filter(Boolean)
+  await createManualArticleDb(defaultPrisma, {
+    title: formData.get('title')?.toString() ?? '',
+    content: formData.get('content')?.toString() ?? '',
+    bezirkIds: bezirkIdsRaw,
+    seoTitle: formData.get('seoTitle')?.toString() || undefined,
+    metaDescription: formData.get('metaDescription')?.toString() || undefined,
+    isPinned: formData.get('isPinned') === 'on',
+    isFeatured: formData.get('isFeatured') === 'on',
+  })
+  redirect('/admin/articles')
+}

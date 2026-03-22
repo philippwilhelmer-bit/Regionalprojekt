@@ -64,3 +64,19 @@ export async function rejectArticle(articleId: number): Promise<Article> {
   // await requireAuth()
   return rejectArticleDb(defaultPrisma, articleId)
 }
+
+// ─── FormData-based wrappers for use in <form action={...}> ──────────────────
+
+export async function approveArticleForm(formData: FormData): Promise<void> {
+  const id = Number(formData.get('id'))
+  await approveArticleDb(defaultPrisma, id)
+}
+
+export async function rejectArticleForm(formData: FormData): Promise<void> {
+  const id = Number(formData.get('id'))
+  await rejectArticleDb(defaultPrisma, id)
+}
+
+export async function listExceptionQueue(): Promise<Article[]> {
+  return listExceptionQueueDb(defaultPrisma)
+}
