@@ -148,3 +148,16 @@ None - all tests use pgLite in-process. No external database required. To run `n
 ---
 *Phase: 01-foundation*
 *Completed: 2026-03-21*
+
+## Self-Check: PASSED
+
+- FOUND: prisma/seed-data/bezirke.ts
+- FOUND: prisma/seed.ts
+- FOUND: src/lib/prisma.ts
+- FOUND: src/lib/content/bezirke.ts
+- FOUND: src/lib/content/articles.ts
+- FOUND: .planning/phases/01-foundation/01-03-SUMMARY.md
+- FOUND commit: 585413a (test RED seed)
+- FOUND commit: d74de19 (feat GREEN seed)
+- FOUND commit: 3a22371 (test RED DAL)
+- FOUND commit: cfc48c1 (feat GREEN DAL)

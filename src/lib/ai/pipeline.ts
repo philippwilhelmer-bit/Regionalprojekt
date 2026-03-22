@@ -20,6 +20,7 @@ import { prisma as defaultPrisma } from '../prisma'
 import { checkCostCircuitBreaker } from './circuit-breaker'
 import { runStep1Tag } from './steps/step1-tag'
 import { runStep2Write } from './steps/step2-write'
+import { getPipelineConfig } from '../admin/pipeline-config-dal'
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -68,27 +69,30 @@ export async function processArticles(
       ? (clientOrUndefined as PrismaClient)
       : defaultPrisma
 
-  // 1. Load all Bezirke once — needed for slug→id mapping and Step 1 context
+  // 1. Load pipeline config from DB (maxRetryCount, deadManThresholdHours)
+  const pipelineConfig = await getPipelineConfig(db)
+
+  // 2. Load all Bezirke once — needed for slug→id mapping and Step 1 context
   const allBezirke = await db.bezirk.findMany()
   const bezirkBySlug = new Map(allBezirke.map((b) => [b.slug, b]))
 
-  // 2. Check circuit-breaker — halt early without opening a PipelineRun
+  // 3. Check circuit-breaker — halt early without opening a PipelineRun
   const proceed = await checkCostCircuitBreaker(db)
   if (!proceed) {
     return { articlesProcessed: 0, articlesWritten: 0, totalInputTokens: 0, totalOutputTokens: 0 }
   }
 
-  // 3. Open PipelineRun
+  // 4. Open PipelineRun
   const run = await db.pipelineRun.create({
     data: { startedAt: new Date() },
   })
 
-  // 4. Load FETCHED and ERROR articles (ERROR = retryable failure)
+  // 5. Load FETCHED and ERROR articles (ERROR = retryable failure)
   const articles = await db.article.findMany({
     where: { status: { in: ['FETCHED', 'ERROR'] } },
   })
 
-  // 5. Create Anthropic client once per run (via factory — testable via _clientFactory.create)
+  // 6. Create Anthropic client once per run (via factory — testable via _clientFactory.create)
   const anthropicClient = _clientFactory.create()
 
   let articlesProcessed = 0
@@ -163,9 +167,8 @@ export async function processArticles(
         }
       } catch (err) {
         // Per-article error: increment retryCount, mark ERROR or FAILED
-        const MAX_RETRY_COUNT = 3
         const newRetryCount = (article.retryCount ?? 0) + 1
-        const nextStatus = newRetryCount >= MAX_RETRY_COUNT ? 'FAILED' : 'ERROR'
+        const nextStatus = newRetryCount >= pipelineConfig.maxRetryCount ? 'FAILED' : 'ERROR'
         await db.article.update({
           where: { id: article.id },
           data: {
@@ -180,7 +183,7 @@ export async function processArticles(
       }
     }
   } finally {
-    // 6. Close PipelineRun with final counts (always, even on unexpected error)
+    // 7. Close PipelineRun with final counts (always, even on unexpected error)
     await db.pipelineRun.update({
       where: { id: run.id },
       data: {
@@ -193,6 +196,6 @@ export async function processArticles(
     })
   }
 
-  // 7. Return ProcessResult
+  // 8. Return ProcessResult
   return { articlesProcessed, articlesWritten, totalInputTokens, totalOutputTokens }
 }

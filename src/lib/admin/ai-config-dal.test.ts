@@ -4,7 +4,7 @@
  *
  * Uses pgLite-backed PrismaClient via createTestDb() for full DB isolation.
  */
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
 import { createTestDb, cleanDb } from '../../test/setup-db'
 import type { PrismaClient } from '@prisma/client'
 import {
@@ -18,8 +18,11 @@ import { getPipelineConfig, upsertPipelineConfig } from './pipeline-config-dal'
 
 let db: PrismaClient
 
-beforeEach(async () => {
+beforeAll(async () => {
   db = await createTestDb()
+})
+
+beforeEach(async () => {
   await cleanDb(db)
 })
 
