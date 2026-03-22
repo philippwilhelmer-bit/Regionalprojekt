@@ -47,24 +47,24 @@
 
 ### Advertising
 
-- [ ] **AD-01**: Site integrates Google AdSense with configurable placement zones (e.g. hero, between articles, article detail)
+- [x] **AD-01**: Site integrates Google AdSense with configurable placement zones (e.g. hero, between articles, article detail)
 - [x] **AD-02**: Ad placements are configurable per deployment via the Bundesland config file
 
 ### SEO
 
-- [ ] **SEO-01**: Every article page has SEO-optimized meta tags (title, description, Open Graph)
+- [x] **SEO-01**: Every article page has SEO-optimized meta tags (title, description, Open Graph)
 - [x] **SEO-02**: AI generates SEO-optimized article titles and meta descriptions as part of the generation pipeline
-- [ ] **SEO-03**: Site generates a sitemap.xml updated on each new article publish
-- [ ] **SEO-04**: Article pages include structured data (JSON-LD NewsArticle schema) for Google News eligibility
+- [x] **SEO-03**: Site generates a sitemap.xml updated on each new article publish
+- [x] **SEO-04**: Article pages include structured data (JSON-LD NewsArticle schema) for Google News eligibility
 
 ### Reader Site
 
-- [ ] **READ-01**: Reader can select one or more Bezirke ("Mein Bezirk"), preferences saved locally without an account
-- [ ] **READ-02**: Homepage shows a news feed filtered to the reader's selected regions
-- [ ] **READ-03**: Reader can open a full article detail page with source attribution
-- [ ] **READ-04**: Site is mobile-optimized (existing alpine-themed HTML design is the visual reference)
-- [ ] **READ-05**: Site includes a legally compliant Impressum page (Austrian Mediengesetz / ECG)
-- [ ] **READ-06**: Each Bezirk has its own subscribable RSS feed for readers
+- [x] **READ-01**: Reader can select one or more Bezirke ("Mein Bezirk"), preferences saved locally without an account
+- [x] **READ-02**: Homepage shows a news feed filtered to the reader's selected regions
+- [x] **READ-03**: Reader can open a full article detail page with source attribution
+- [x] **READ-04**: Site is mobile-optimized (existing alpine-themed HTML design is the visual reference)
+- [x] **READ-05**: Site includes a legally compliant Impressum page (Austrian Mediengesetz / ECG)
+- [x] **READ-06**: Each Bezirk has its own subscribable RSS feed for readers
 
 ## v2 Requirements
 
@@ -104,21 +104,21 @@
 | CMS-02 | Phase 5 | Complete |
 | CMS-03 | Phase 5 | Complete |
 | CMS-04 | Phase 5 | Complete |
-| READ-01 | Phase 6 | Pending |
-| READ-02 | Phase 6 | Pending |
-| READ-03 | Phase 6 | Pending |
-| READ-04 | Phase 6 | Pending |
-| READ-05 | Phase 6 | Pending |
-| READ-06 | Phase 6 | Pending |
+| READ-01 | Phase 6 | Complete |
+| READ-02 | Phase 6 | Complete |
+| READ-03 | Phase 6 | Complete |
+| READ-04 | Phase 6 | Complete |
+| READ-05 | Phase 6 | Complete |
+| READ-06 | Phase 6 | Complete |
 | AICONF-01 | Phase 5 | Complete |
 | AICONF-02 | Phase 5 | Complete |
 | AICONF-03 | Phase 5 | Complete |
-| AD-01 | Phase 6 | Pending |
+| AD-01 | Phase 6 | Complete |
 | AD-02 | Phase 1 | Complete |
-| SEO-01 | Phase 6 | Pending |
+| SEO-01 | Phase 6 | Complete |
 | SEO-02 | Phase 3 | Complete |
-| SEO-03 | Phase 6 | Pending |
-| SEO-04 | Phase 6 | Pending |
+| SEO-03 | Phase 6 | Complete |
+| SEO-04 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 35 total

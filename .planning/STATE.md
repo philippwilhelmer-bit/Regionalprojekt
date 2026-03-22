@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 6 context gathered
-last_updated: "2026-03-22T20:04:41.787Z"
+stopped_at: Completed 06-reader-frontend 06-01-PLAN.md
+last_updated: "2026-03-22T20:37:41.261Z"
 last_activity: "2026-03-22 — Phase 5 Plan 06 executed: articles list page, exception queue page, manual article creation form — 139 tests GREEN, next build success"
 progress:
   total_phases: 7
   completed_phases: 5
-  total_plans: 27
-  completed_plans: 27
+  total_plans: 34
+  completed_plans: 28
   percent: 93
 ---
 
@@ -75,6 +75,7 @@ Progress: [█████████░] 93%
 | Phase 05-editorial-cms P05 | 5 | 2 tasks | 5 files |
 | Phase 05-editorial-cms P06 | 20 | 2 tasks | 8 files |
 | Phase 05-editorial-cms P07 | 5 | 2 tasks | 9 files |
+| Phase 06-reader-frontend P01 | 4 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -148,6 +149,8 @@ Recent decisions affecting current work:
 - [Phase 05-editorial-cms]: ai-config-actions.ts and pipeline-config-actions.ts rewritten with FormData-accepting Server Actions — Plan 04 stubs used typed args incompatible with HTML form action= binding
 - [Phase 05-editorial-cms]: SourceOverrideForm uses details open={hasOverride} for server-side pre-expanded state — no client JS needed for collapsible override forms
 - [Phase 05-editorial-cms]: AI Config page uses prisma.source.findMany with include.aiSourceConfig directly — sources-actions.ts SourceAdminRow does not include the aiSourceConfig relation
+- [Phase 06-reader-frontend]: publicId is String? (nullable) — existing articles don't fail migration, backfill populates values before unique constraint is added
+- [Phase 06-reader-frontend]: Wave 0 stubs use only describe/it from vitest with no implementation imports — prevents TypeScript errors before reader implementation files exist
 
 ### Pending Todos
 
@@ -161,6 +164,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T20:04:41.780Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-reader-frontend/06-CONTEXT.md
+Last session: 2026-03-22T20:37:41.257Z
+Stopped at: Completed 06-reader-frontend 06-01-PLAN.md
+Resume file: None
