@@ -52,6 +52,7 @@ model Bezirk {
 
 model Article {
   id              Int              @id @default(autoincrement())
+  publicId        String?          @unique @default(nanoid())  // stable reader-facing URL identifier
   externalId      String?          // source system ID (e.g. OTS article ID)
   source          ArticleSource
   status          ArticleStatus    @default(FETCHED)
@@ -75,6 +76,7 @@ model Article {
   @@index([status])
   @@index([publishedAt])
   @@index([source, externalId])
+  @@index([publicId])
   @@index([isPinned, isFeatured])
   @@index([source, status])
 }
