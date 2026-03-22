@@ -83,8 +83,10 @@ export async function processArticles(
     data: { startedAt: new Date() },
   })
 
-  // 4. Load FETCHED articles
-  const articles = await db.article.findMany({ where: { status: 'FETCHED' } })
+  // 4. Load FETCHED and ERROR articles (ERROR = retryable failure)
+  const articles = await db.article.findMany({
+    where: { status: { in: ['FETCHED', 'ERROR'] } },
+  })
 
   // 5. Create Anthropic client once per run (via factory — testable via _clientFactory.create)
   const anthropicClient = _clientFactory.create()
@@ -160,9 +162,20 @@ export async function processArticles(
           articlesWritten++
         }
       } catch (err) {
-        // Per-article error: log and continue to next article
+        // Per-article error: increment retryCount, mark ERROR or FAILED
+        const MAX_RETRY_COUNT = 3
+        const newRetryCount = (article.retryCount ?? 0) + 1
+        const nextStatus = newRetryCount >= MAX_RETRY_COUNT ? 'FAILED' : 'ERROR'
+        await db.article.update({
+          where: { id: article.id },
+          data: {
+            status: nextStatus,
+            retryCount: newRetryCount,
+            errorMessage: err instanceof Error ? err.message : String(err),
+          },
+        })
         console.error(
-          `[ai-pipeline] article id=${article.id} failed — ${err instanceof Error ? err.message : String(err)}`
+          `[ai-pipeline] article id=${article.id} → ${nextStatus} (attempt ${newRetryCount}) — ${err instanceof Error ? err.message : String(err)}`
         )
       }
     }
