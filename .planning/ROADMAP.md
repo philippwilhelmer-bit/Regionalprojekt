@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: AI Pipeline** - Bezirk tagger, article writer, named-person exception queue, and cost circuit-breaker (completed 2026-03-22)
 - [x] **Phase 4: Scheduler and Autonomous Publishing** - Cron scheduler, automated ingestion-to-publish loop, and dead-man monitoring (completed 2026-03-22)
 - [x] **Phase 5: Editorial CMS** - Authenticated admin interface, article CRUD, exception queue inbox, and source management (completed 2026-03-22)
-- [ ] **Phase 6: Reader Frontend** - "Mein Bezirk" selector, Bezirk-filtered feed, article detail pages, RSS feeds per Bezirk, and Impressum
+- [x] **Phase 6: Reader Frontend** - "Mein Bezirk" selector, Bezirk-filtered feed, article detail pages, RSS feeds per Bezirk, and Impressum (completed 2026-03-22)
 - [ ] **Phase 7: Extensibility and Quality Validation** - Second RSS adapter, end-to-end deduplication test, alert chain verification
 
 ## Phase Details
@@ -165,5 +165,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. AI Pipeline | 5/5 | Complete   | 2026-03-22 |
 | 4. Scheduler and Autonomous Publishing | 4/4 | Complete   | 2026-03-22 |
 | 5. Editorial CMS | 7/8 | Complete    | 2026-03-22 |
-| 6. Reader Frontend | 6/7 | In Progress|  |
+| 6. Reader Frontend | 7/7 | Complete   | 2026-03-22 |
 | 7. Extensibility and Quality Validation | 0/? | Not started | - |
