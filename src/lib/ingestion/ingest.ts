@@ -116,6 +116,7 @@ export async function ingest(
       data: {
         externalId: item.externalId,
         source: src.type,
+        sourceId: src.id,
         status: 'FETCHED',
         title: item.title,
         content: item.body,

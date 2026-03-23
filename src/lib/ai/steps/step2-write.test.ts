@@ -54,6 +54,9 @@ function makeMockDb(): PrismaClient {
         updatedAt: new Date(),
       }),
     },
+    aiSourceConfig: {
+      findFirst: vi.fn().mockResolvedValue(null),
+    },
   } as unknown as PrismaClient
 }
 

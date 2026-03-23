@@ -9,7 +9,7 @@
  */
 import type Anthropic from '@anthropic-ai/sdk'
 import type { PrismaClient } from '@prisma/client'
-import { getAiConfig, type ResolvedAiConfig } from '../../admin/ai-config-dal'
+import { getResolvedAiConfig, type ResolvedAiConfig } from '../../admin/ai-config-dal'
 
 // JSON schema for Step 2 structured output — all five fields required
 const Step2Schema = {
@@ -105,17 +105,13 @@ export async function runStep2Write(
   client: Anthropic,
   articleText: string,
   bezirkNames: string[],
-  db?: PrismaClient
+  db?: PrismaClient,
+  sourceId?: number
 ): Promise<Step2Result> {
-  // Read AI config from DB (global only — per-source override wired in Phase 7 when sourceId is available)
-  // TODO(Phase 7): pass sourceId to getResolvedAiConfig for per-source prompt overrides
-  const aiConfig = await getAiConfig(db)
-  const resolvedConfig: ResolvedAiConfig = {
-    tone: aiConfig.tone,
-    articleLength: aiConfig.articleLength,
-    styleNotes: aiConfig.styleNotes,
-    modelOverride: aiConfig.modelOverride,
-  }
+  // Read AI config from DB — merges per-source override onto global defaults when sourceId is provided
+  const resolvedConfig = db
+    ? await getResolvedAiConfig(db, sourceId ?? undefined)
+    : await getResolvedAiConfig(sourceId as unknown as number)
 
   const bezirkContext = buildBezirkContext(bezirkNames)
   const systemPrompt = buildSystemPrompt(resolvedConfig, bezirkContext)
