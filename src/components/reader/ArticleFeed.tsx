@@ -96,28 +96,27 @@ export function ArticleFeed({ initialArticles }: ArticleFeedProps) {
     window.location.reload();
   }
 
-  if (articles.length === 0 && !loading) {
-    return (
-      <div className="px-4 py-12 text-center">
-        <p className="text-zinc-500 mb-4">
-          Noch keine Nachrichten für deine Bezirke.
-        </p>
-        <button
-          onClick={clearSelection}
-          className="text-blue-600 underline text-sm hover:text-blue-700"
-        >
-          Alle Nachrichten anzeigen
-        </button>
-      </div>
-    );
-  }
-
   return (
     <section aria-label={feedHeading}>
       <div className="px-4 pt-4 pb-2">
         <h1 className="text-lg font-bold text-zinc-900">{feedHeading}</h1>
         <p className="text-xs text-zinc-500">Steiermark Aktuell</p>
       </div>
+
+      {articles.length === 0 && !loading && (
+        <div className="px-4 py-12 text-center">
+          <p className="text-zinc-500 mb-4">
+            Noch keine Nachrichten für deine Bezirke.
+          </p>
+          <button
+            onClick={clearSelection}
+            className="text-blue-600 underline text-sm hover:text-blue-700"
+          >
+            Alle Nachrichten anzeigen
+          </button>
+        </div>
+      )}
+
       <div className="px-4 py-4 space-y-3">
         {articles.map((article, index) => (
           <div key={article.id}>
