@@ -72,7 +72,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
     ? article.content.slice(0, 160) + (article.content.length > 160 ? "…" : "")
     : null;
 
-  const publishedAt = article.publishedAt ?? article.createdAt;
+  const publishedAt = new Date(article.publishedAt ?? article.createdAt);
 
   return (
     <Link
