@@ -42,7 +42,7 @@
 ### AI Configuration
 
 - [x] **AICONF-01**: Editor can configure global AI generation settings (tone, style, article length, language register)
-- [ ] **AICONF-02**: Editor can override AI settings per source (different prompt templates for OTS.at vs individual RSS feeds)
+- [x] **AICONF-02**: Editor can override AI settings per source (different prompt templates for OTS.at vs individual RSS feeds)
 - [x] **AICONF-03**: AI configuration is editable from the admin UI without code changes
 
 ### Advertising
@@ -111,7 +111,7 @@
 | READ-05 | Phase 6 | Complete |
 | READ-06 | Phase 6 | Complete |
 | AICONF-01 | Phase 5 | Complete |
-| AICONF-02 | Phase 8 | Pending |
+| AICONF-02 | Phase 8 | Complete |
 | AICONF-03 | Phase 5 | Complete |
 | AD-01 | Phase 6 | Complete |
 | AD-02 | Phase 9 | Pending |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 8 context gathered
-last_updated: "2026-03-23T22:13:20.353Z"
+stopped_at: Completed 08-per-source-ai-config-wiring-01-PLAN.md
+last_updated: "2026-03-23T22:35:34.661Z"
 last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 9
   completed_phases: 7
-  total_plans: 36
-  completed_plans: 36
+  total_plans: 39
+  completed_plans: 37
   percent: 88
 ---
 
@@ -81,6 +81,7 @@ Progress: [████████░░] 88%
 | Phase 06-reader-frontend P06 | 10 | 2 tasks | 7 files |
 | Phase 06-reader-frontend P07 | 10 | 1 tasks | 0 files |
 | Phase 06-reader-frontend P07 | 15 | 2 tasks | 5 files |
+| Phase 08-per-source-ai-config-wiring P01 | 8 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -168,6 +169,8 @@ Recent decisions affecting current work:
 - [Phase 06-04]: API route /api/reader/articles resolves bezirk slugs via listBezirke() on each request — needed for client-side localStorage personalization
 - [Phase 06-reader-frontend]: sitemap.ts and (public)/page.tsx use export const dynamic = 'force-dynamic' — prevents static pre-render of DB-dependent routes at build time
 - [Phase 06-reader-frontend]: sitemap.test.ts uses relative imports not @/ alias — vitest does not resolve @/ for value imports without explicit vite resolve.alias config
+- [Phase 08-per-source-ai-config-wiring]: Article.sourceId uses sourceFk relation field name (not source) — Article already has source ArticleSource enum field; Prisma forbids duplicate field names
+- [Phase 08-per-source-ai-config-wiring]: onDelete: SetNull on Article.sourceFk — articles survive Source deletion, fall through to global AI config
 
 ### Pending Todos
 
@@ -181,6 +184,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T22:13:20.342Z
-Stopped at: Phase 8 context gathered
-Resume file: .planning/phases/08-per-source-ai-config-wiring/08-CONTEXT.md
+Last session: 2026-03-23T22:35:34.659Z
+Stopped at: Completed 08-per-source-ai-config-wiring-01-PLAN.md
+Resume file: None

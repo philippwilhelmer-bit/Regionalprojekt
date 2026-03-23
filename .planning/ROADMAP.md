@@ -199,5 +199,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 5. Editorial CMS | 7/8 | Complete    | 2026-03-22 |
 | 6. Reader Frontend | 7/7 | Complete   | 2026-03-23 |
 | 7. Extensibility and Quality Validation | 0/2 | Not started | - |
-| 8. Phase 7 Verification + Per-Source AI Config Wiring | 0/3 | Not started | - |
+| 8. Phase 7 Verification + Per-Source AI Config Wiring | 1/3 | In Progress|  |
 | 9. Ad Config Wiring + Auth Hardening | 0/TBD | Not started | - |
