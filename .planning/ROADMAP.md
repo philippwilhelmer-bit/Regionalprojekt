@@ -137,7 +137,7 @@ Plans:
 - [ ] 06-04-PLAN.md — Homepage + Bezirk pages: ArticleCard, BezirkModal (localStorage selection), ArticleFeed (infinite scroll), /bezirk/[slug] page
 - [ ] 06-05-PLAN.md — Article detail page (TDD metadata): generateMetadata OG tags, canonical redirect, JSON-LD NewsArticle, breadcrumb, social share, related articles, AdUnit
 - [ ] 06-06-PLAN.md — RSS feeds + sitemap + Impressum (TDD): generateBezirkRssFeed(), /rss/[slug] route handler, app/sitemap.ts, /impressum page with MedienG/ECG/DSGVO/KI-disclosure
-- [ ] 06-07-PLAN.md — Checkpoint: human verification of all seven Phase 6 success criteria
+- [x] 06-07-PLAN.md — Checkpoint: human verification of all seven Phase 6 success criteria (completed 2026-03-23)
 
 ### Phase 7: Extensibility and Quality Validation
 **Goal**: The platform's two most critical architectural properties are confirmed by evidence — the adapter pattern genuinely allows new sources without core changes, and deduplication provably blocks cross-source duplicates — before declaring the platform production-ready
@@ -165,5 +165,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. AI Pipeline | 5/5 | Complete   | 2026-03-22 |
 | 4. Scheduler and Autonomous Publishing | 4/4 | Complete   | 2026-03-22 |
 | 5. Editorial CMS | 7/8 | Complete    | 2026-03-22 |
-| 6. Reader Frontend | 7/7 | Complete   | 2026-03-22 |
+| 6. Reader Frontend | 7/7 | Complete   | 2026-03-23 |
 | 7. Extensibility and Quality Validation | 0/? | Not started | - |
