@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Impressum & Datenschutz',
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 export default function ImpressumPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 prose prose-zinc">
+      <Link href="/" className="text-sm text-zinc-500 hover:text-zinc-800 no-underline">← Zur Startseite</Link>
       {/* ------------------------------------------------------------------ */}
       {/* 1. Impressum (MedienG §25 + ECG §5)                                 */}
       {/* ------------------------------------------------------------------ */}
