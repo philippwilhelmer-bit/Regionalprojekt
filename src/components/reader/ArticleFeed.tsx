@@ -114,7 +114,10 @@ export function ArticleFeed({ initialArticles }: ArticleFeedProps) {
 
   return (
     <section aria-label={feedHeading}>
-      <h1 className="sr-only">{feedHeading}</h1>
+      <div className="px-4 pt-4 pb-2">
+        <h1 className="text-lg font-bold text-zinc-900">{feedHeading}</h1>
+        <p className="text-xs text-zinc-500">Steiermark Aktuell</p>
+      </div>
       <div className="px-4 py-4 space-y-3">
         {articles.map((article, index) => (
           <div key={article.id}>

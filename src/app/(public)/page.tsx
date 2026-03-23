@@ -13,10 +13,6 @@ export default async function HomePage() {
   return (
     <div className="max-w-2xl mx-auto">
       <BezirkModal />
-      <div className="px-4 pt-4 pb-2">
-        <h1 className="text-lg font-bold text-zinc-900">Alle Nachrichten</h1>
-        <p className="text-xs text-zinc-500">Steiermark Aktuell</p>
-      </div>
       <div className="px-4 pb-4">
         <AdUnit zone="hero" />
       </div>
