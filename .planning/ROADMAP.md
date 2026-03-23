@@ -165,7 +165,12 @@ Plans:
   3. `runStep2Write()` calls `getResolvedAiConfig(db, sourceId)` — an article from a source with a per-source override is generated using that override's settings, confirmed by test
   4. All existing pipeline tests still pass
 
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — Schema + Wave 0 stub: Article.sourceId FK migration, prisma generate, step2-write-source-override.test.ts stubs
+- [ ] 08-02-PLAN.md — Pipeline wiring (TDD): ingest.ts sets sourceId, runStep2Write gains sourceId param + calls getResolvedAiConfig, pipeline.ts passes sourceId
+- [ ] 08-03-PLAN.md — Phase 7 verification doc: run npx vitest run, write 07-VERIFICATION.md with real evidence + Known Limitations
 
 ### Phase 9: Ad Config Wiring + Auth Hardening
 **Goal**: Ad placements are driven by the Bundesland config file as the requirement specifies, the `features.ads` flag actually gates ad rendering, and the Server Action auth gap is closed so that direct POST requests cannot bypass the session check
@@ -194,5 +199,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 5. Editorial CMS | 7/8 | Complete    | 2026-03-22 |
 | 6. Reader Frontend | 7/7 | Complete   | 2026-03-23 |
 | 7. Extensibility and Quality Validation | 0/2 | Not started | - |
-| 8. Phase 7 Verification + Per-Source AI Config Wiring | 0/TBD | Not started | - |
+| 8. Phase 7 Verification + Per-Source AI Config Wiring | 0/3 | Not started | - |
 | 9. Ad Config Wiring + Auth Hardening | 0/TBD | Not started | - |
