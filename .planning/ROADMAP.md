@@ -148,10 +148,11 @@ Plans:
   2. The same article arriving via both OTS.at and the RSS feed produces exactly one published article — confirmed by automated test
   3. All three operator alert types (source failure, LLM cost circuit-breaker, dead-man silence) fire correctly when their trigger conditions are simulated
   4. Article detail pages and Bezirk feed pages load within acceptable time under simulated load, with database query indexes verified
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 07-01: TBD
+- [ ] 07-01-PLAN.md — Validation foundation: ORF Steiermark RSS fixture, updated sources seed, seedBulkArticles() helper
+- [ ] 07-02-PLAN.md — Validation test suite: src/test/validation.test.ts with all 4 success criteria as describe blocks
 
 ## Progress
 
@@ -166,4 +167,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 4. Scheduler and Autonomous Publishing | 4/4 | Complete   | 2026-03-22 |
 | 5. Editorial CMS | 7/8 | Complete    | 2026-03-22 |
 | 6. Reader Frontend | 7/7 | Complete   | 2026-03-23 |
-| 7. Extensibility and Quality Validation | 0/? | Not started | - |
+| 7. Extensibility and Quality Validation | 0/2 | Not started | - |
