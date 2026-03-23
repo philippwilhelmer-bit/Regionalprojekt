@@ -54,7 +54,7 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
   return (
     <div className="flex flex-wrap gap-3 items-end">
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Bezirk</label>
+        <label className="block text-xs font-medium text-gray-700 mb-1">Bezirk</label>
         <select
           value={searchParams.get('bezirkId') ?? ''}
           onChange={(e) => updateParam('bezirkId', e.target.value)}
@@ -70,7 +70,7 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Quelle</label>
+        <label className="block text-xs font-medium text-gray-700 mb-1">Quelle</label>
         <select
           value={searchParams.get('source') ?? ''}
           onChange={(e) => updateParam('source', e.target.value)}
@@ -85,7 +85,7 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Status</label>
+        <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
         <select
           value={searchParams.get('status') ?? ''}
           onChange={(e) => updateParam('status', e.target.value)}
@@ -100,7 +100,7 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Von</label>
+        <label className="block text-xs font-medium text-gray-700 mb-1">Von</label>
         <input
           type="date"
           value={searchParams.get('from') ?? ''}
@@ -110,7 +110,7 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Bis</label>
+        <label className="block text-xs font-medium text-gray-700 mb-1">Bis</label>
         <input
           type="date"
           value={searchParams.get('to') ?? ''}

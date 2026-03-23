@@ -36,7 +36,7 @@ export function ExceptionCard({ article }: ExceptionCardProps) {
             {article.title ?? '(Kein Titel)'}
           </h2>
           <div className="flex items-center gap-3 mt-1">
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-gray-700">
               Erstellt: {formatDate(article.createdAt)}
             </span>
             <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
@@ -71,7 +71,7 @@ export function ExceptionCard({ article }: ExceptionCardProps) {
       <div className="grid grid-cols-2 divide-x divide-gray-100">
         {/* Left: rewritten article content */}
         <div className="p-6">
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+          <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">
             KI-generierter Artikel
           </h3>
           <div className="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed">
@@ -81,7 +81,7 @@ export function ExceptionCard({ article }: ExceptionCardProps) {
 
         {/* Right: raw source payload */}
         <div className="p-6 bg-gray-50">
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+          <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">
             Rohdaten (Quelle)
           </h3>
           <pre className="text-xs text-gray-600 overflow-auto max-h-96 leading-relaxed font-mono whitespace-pre-wrap">

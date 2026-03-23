@@ -19,7 +19,7 @@ export default async function AiConfigPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">KI-Konfiguration</h1>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-700 mt-1">
           Diese Einstellungen gelten ab dem naechsten Scheduler-Lauf.
         </p>
       </div>
@@ -36,7 +36,7 @@ export default async function AiConfigPage() {
       <section className="mb-8">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Quellen-Ueberschreibungen</h2>
         {sources.length === 0 ? (
-          <p className="text-sm text-gray-500">Keine Quellen konfiguriert.</p>
+          <p className="text-sm text-gray-700">Keine Quellen konfiguriert.</p>
         ) : (
           <div>
             {sources.map((source) => (
@@ -71,7 +71,7 @@ export default async function AiConfigPage() {
                 defaultValue={pipelineConfig.maxRetryCount}
                 className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-gray-600 mt-1">
                 Anzahl der Versuche, bevor ein Artikel als dauerhaft fehlgeschlagen markiert wird.
               </p>
             </div>
@@ -92,7 +92,7 @@ export default async function AiConfigPage() {
                 defaultValue={pipelineConfig.deadManThresholdHours}
                 className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-gray-600 mt-1">
                 Maximale Zeit ohne neuen Artikel, bevor ein Alert ausgeloest wird.
               </p>
             </div>

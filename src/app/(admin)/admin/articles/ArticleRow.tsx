@@ -54,13 +54,13 @@ export function ArticleRow({ article }: ArticleRowProps) {
           {article.status}
         </span>
       </td>
-      <td className="px-4 py-3 text-sm text-gray-500">
+      <td className="px-4 py-3 text-sm text-gray-700">
         {SOURCE_LABELS[article.source] ?? article.source}
       </td>
-      <td className="px-4 py-3 text-sm text-gray-500">
+      <td className="px-4 py-3 text-sm text-gray-700">
         {formatDate(article.publishedAt)}
       </td>
-      <td className="px-4 py-3 text-sm text-gray-500">
+      <td className="px-4 py-3 text-sm text-gray-700">
         {article.bezirke.map((ab) => ab.bezirk.name).join(', ') || '—'}
       </td>
       <td className="px-4 py-3">

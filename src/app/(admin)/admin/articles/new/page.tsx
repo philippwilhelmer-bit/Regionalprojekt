@@ -8,7 +8,7 @@ export default async function NewArticlePage() {
   return (
     <div className="max-w-2xl">
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/admin/articles" className="text-sm text-gray-500 hover:text-gray-700">
+        <Link href="/admin/articles" className="text-sm text-gray-700 hover:text-gray-700">
           &larr; Zurueck
         </Link>
         <h1 className="text-2xl font-bold text-gray-900">Neuer Artikel</h1>
@@ -68,7 +68,7 @@ export default async function NewArticlePage() {
         {/* SEO-Titel */}
         <div>
           <label htmlFor="seoTitle" className="block text-sm font-medium text-gray-700 mb-1">
-            SEO-Titel <span className="text-xs text-gray-400">(optional)</span>
+            SEO-Titel <span className="text-xs text-gray-600">(optional)</span>
           </label>
           <input
             id="seoTitle"
@@ -82,7 +82,7 @@ export default async function NewArticlePage() {
         {/* Meta-Beschreibung */}
         <div>
           <label htmlFor="metaDescription" className="block text-sm font-medium text-gray-700 mb-1">
-            Meta-Beschreibung <span className="text-xs text-gray-400">(optional)</span>
+            Meta-Beschreibung <span className="text-xs text-gray-600">(optional)</span>
           </label>
           <textarea
             id="metaDescription"

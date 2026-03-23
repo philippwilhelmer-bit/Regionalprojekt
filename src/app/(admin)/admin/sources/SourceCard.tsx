@@ -50,7 +50,7 @@ export function SourceCard({ source }: SourceCardProps) {
               {source.healthStatus}
             </span>
           </div>
-          <div className="flex items-center gap-4 mt-2 text-xs text-gray-500 flex-wrap">
+          <div className="flex items-center gap-4 mt-2 text-xs text-gray-700 flex-wrap">
             <span>Letzter Erfolg: {formatDateTime(source.lastSuccessAt)}</span>
             {source.latestRun ? (
               <span>
@@ -73,7 +73,7 @@ export function SourceCard({ source }: SourceCardProps) {
               Aktiv
             </span>
           ) : (
-            <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500">
+            <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
               Deaktiviert
             </span>
           )}
@@ -82,7 +82,7 @@ export function SourceCard({ source }: SourceCardProps) {
 
       {/* Inline edit form in collapsible details */}
       <details className="px-6 py-3 border-t border-gray-50">
-        <summary className="text-sm text-gray-500 cursor-pointer hover:text-gray-700 select-none">
+        <summary className="text-sm text-gray-700 cursor-pointer hover:text-gray-700 select-none">
           Einstellungen bearbeiten
         </summary>
         <form action={updateSourceForm} className="mt-4 space-y-4">

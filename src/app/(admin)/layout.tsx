@@ -19,8 +19,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="flex h-screen bg-gray-100">
       <aside className="w-56 bg-white border-r border-gray-200 flex flex-col py-6 px-4 shrink-0">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">
-          Ennstal Aktuell
+        <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-4">
+          Regionencompass
         </p>
         <nav className="space-y-1 flex-1">
           {navItems.map(item => (

@@ -18,7 +18,7 @@ export default async function SourcesPage() {
       </div>
 
       {sources.length === 0 ? (
-        <div className="text-center py-16 text-gray-500">
+        <div className="text-center py-16 text-gray-700">
           <p className="text-lg">Keine Quellen konfiguriert.</p>
           <p className="text-sm mt-2">
             <Link href="/admin/sources/new" className="text-blue-600 hover:underline">

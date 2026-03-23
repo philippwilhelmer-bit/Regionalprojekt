@@ -45,7 +45,7 @@ export function GlobalAiConfigForm({ config }: GlobalAiConfigFormProps) {
       {/* Stilhinweise */}
       <div>
         <label htmlFor="styleNotes" className="block text-sm font-medium text-gray-700 mb-1">
-          Stilhinweise <span className="text-xs text-gray-400">(optional)</span>
+          Stilhinweise <span className="text-xs text-gray-600">(optional)</span>
         </label>
         <textarea
           id="styleNotes"
@@ -60,7 +60,7 @@ export function GlobalAiConfigForm({ config }: GlobalAiConfigFormProps) {
       {/* Modell-Override */}
       <div>
         <label htmlFor="modelOverride" className="block text-sm font-medium text-gray-700 mb-1">
-          Modell-Override <span className="text-xs text-gray-400">(optional)</span>
+          Modell-Override <span className="text-xs text-gray-600">(optional)</span>
         </label>
         <input
           id="modelOverride"

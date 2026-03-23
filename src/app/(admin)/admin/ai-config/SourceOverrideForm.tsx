@@ -36,7 +36,7 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
             Override aktiv
           </span>
         ) : (
-          <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500">
+          <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
             Globale Einstellungen
           </span>
         )}
@@ -44,7 +44,7 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
 
       <div className="px-6 py-4">
         {!hasOverride && (
-          <p className="text-sm text-gray-500 mb-3">
+          <p className="text-sm text-gray-700 mb-3">
             Globale Einstellungen werden verwendet.
           </p>
         )}
@@ -63,7 +63,7 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
                 htmlFor={`tone-${source.id}`}
                 className="block text-xs font-medium text-gray-700 mb-1"
               >
-                Ton <span className="text-xs text-gray-400">(leer = global)</span>
+                Ton <span className="text-xs text-gray-600">(leer = global)</span>
               </label>
               <select
                 id={`tone-${source.id}`}
@@ -84,7 +84,7 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
                 htmlFor={`articleLength-${source.id}`}
                 className="block text-xs font-medium text-gray-700 mb-1"
               >
-                Artikellaenge <span className="text-xs text-gray-400">(leer = global)</span>
+                Artikellaenge <span className="text-xs text-gray-600">(leer = global)</span>
               </label>
               <select
                 id={`articleLength-${source.id}`}
@@ -105,7 +105,7 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
                 htmlFor={`styleNotes-${source.id}`}
                 className="block text-xs font-medium text-gray-700 mb-1"
               >
-                Stilhinweise <span className="text-xs text-gray-400">(optional)</span>
+                Stilhinweise <span className="text-xs text-gray-600">(optional)</span>
               </label>
               <textarea
                 id={`styleNotes-${source.id}`}
@@ -123,7 +123,7 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
                 htmlFor={`modelOverride-${source.id}`}
                 className="block text-xs font-medium text-gray-700 mb-1"
               >
-                Modell-Override <span className="text-xs text-gray-400">(optional)</span>
+                Modell-Override <span className="text-xs text-gray-600">(optional)</span>
               </label>
               <input
                 id={`modelOverride-${source.id}`}

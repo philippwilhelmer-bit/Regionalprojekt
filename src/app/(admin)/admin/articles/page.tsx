@@ -72,25 +72,25 @@ export default async function ArticlesPage({
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4">
-        <Suspense fallback={<div className="text-sm text-gray-400">Lade Filter…</div>}>
+        <Suspense fallback={<div className="text-sm text-gray-600">Lade Filter…</div>}>
           <ArticleFilters bezirke={bezirke} />
         </Suspense>
       </div>
 
       {articles.length === 0 ? (
-        <p className="text-center text-gray-500 py-12">Keine Artikel gefunden.</p>
+        <p className="text-center text-gray-700 py-12">Keine Artikel gefunden.</p>
       ) : (
         <>
           <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
             <table className="w-full text-left">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Titel</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Quelle</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Datum</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Bezirke</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Aktionen</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-gray-700 uppercase tracking-wide">Titel</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-gray-700 uppercase tracking-wide">Status</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-gray-700 uppercase tracking-wide">Quelle</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-gray-700 uppercase tracking-wide">Datum</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-gray-700 uppercase tracking-wide">Bezirke</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-gray-700 uppercase tracking-wide">Aktionen</th>
                 </tr>
               </thead>
               <tbody>
@@ -101,7 +101,7 @@ export default async function ArticlesPage({
             </table>
           </div>
 
-          <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
+          <div className="flex items-center justify-between mt-4 text-sm text-gray-700">
             <span>Seite {page}</span>
             <div className="flex gap-2">
               {prevPage && (
