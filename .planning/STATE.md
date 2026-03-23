@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 08-per-source-ai-config-wiring-03-PLAN.md
-last_updated: "2026-03-23T22:41:14.321Z"
+stopped_at: Completed 08-per-source-ai-config-wiring-02-PLAN.md
+last_updated: "2026-03-23T22:47:21.480Z"
 last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 9
-  completed_phases: 7
+  completed_phases: 8
   total_plans: 39
-  completed_plans: 38
+  completed_plans: 39
   percent: 88
 ---
 
@@ -83,6 +83,7 @@ Progress: [████████░░] 88%
 | Phase 06-reader-frontend P07 | 15 | 2 tasks | 5 files |
 | Phase 08-per-source-ai-config-wiring P01 | 8 | 2 tasks | 3 files |
 | Phase 08-per-source-ai-config-wiring P03 | 4 | 1 tasks | 1 files |
+| Phase 08-per-source-ai-config-wiring P02 | 15 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -172,6 +173,7 @@ Recent decisions affecting current work:
 - [Phase 06-reader-frontend]: sitemap.test.ts uses relative imports not @/ alias — vitest does not resolve @/ for value imports without explicit vite resolve.alias config
 - [Phase 08-per-source-ai-config-wiring]: Article.sourceId uses sourceFk relation field name (not source) — Article already has source ArticleSource enum field; Prisma forbids duplicate field names
 - [Phase 08-per-source-ai-config-wiring]: onDelete: SetNull on Article.sourceFk — articles survive Source deletion, fall through to global AI config
+- [Phase 08-per-source-ai-config-wiring]: step2-write.ts uses conditional call: getResolvedAiConfig(db, sourceId) when db injected, getResolvedAiConfig(sourceId as unknown as number) for production singleton path — production always passes db from pipeline.ts so the else branch is a safety fallback only
 
 ### Pending Todos
 
@@ -185,6 +187,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-23T22:41:14.319Z
-Stopped at: Completed 08-per-source-ai-config-wiring-03-PLAN.md
+Last session: 2026-03-23T22:47:21.477Z
+Stopped at: Completed 08-per-source-ai-config-wiring-02-PLAN.md
 Resume file: None
