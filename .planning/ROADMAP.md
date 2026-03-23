@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Scheduler and Autonomous Publishing** - Cron scheduler, automated ingestion-to-publish loop, and dead-man monitoring (completed 2026-03-22)
 - [x] **Phase 5: Editorial CMS** - Authenticated admin interface, article CRUD, exception queue inbox, and source management (completed 2026-03-22)
 - [x] **Phase 6: Reader Frontend** - "Mein Bezirk" selector, Bezirk-filtered feed, article detail pages, RSS feeds per Bezirk, and Impressum (completed 2026-03-22)
-- [ ] **Phase 7: Extensibility and Quality Validation** - Second RSS adapter, end-to-end deduplication test, alert chain verification
+- [x] **Phase 7: Extensibility and Quality Validation** - Second RSS adapter, end-to-end deduplication test, alert chain verification (completed 2026-03-23)
 
 ## Phase Details
 
@@ -154,6 +154,32 @@ Plans:
 - [ ] 07-01-PLAN.md — Validation foundation: ORF Steiermark RSS fixture, updated sources seed, seedBulkArticles() helper
 - [ ] 07-02-PLAN.md — Validation test suite: src/test/validation.test.ts with all 4 success criteria as describe blocks
 
+### Phase 8: Phase 7 Verification + Per-Source AI Config Wiring
+**Goal**: The Phase 7 validation work is formally verified, and the per-source AI config override is fully wired into the pipeline so that an editor's per-source tone/style settings actually affect article generation
+**Depends on**: Phase 7
+**Requirements**: AICONF-02
+**Gap Closure**: Closes AICONF-02, integration gap Phase 5→3 (per-source override), flow "Editor sets per-source AI tone → pipeline uses that tone", and Phase 07 verification absent blocker
+**Success Criteria** (what must be TRUE):
+  1. `07-VERIFICATION.md` exists and all success criteria from Phase 7 are documented as satisfied
+  2. `Article` model has a `sourceId` FK backed by a Prisma migration that runs without error
+  3. `runStep2Write()` calls `getResolvedAiConfig(db, sourceId)` — an article from a source with a per-source override is generated using that override's settings, confirmed by test
+  4. All existing pipeline tests still pass
+
+**Plans**: TBD
+
+### Phase 9: Ad Config Wiring + Auth Hardening
+**Goal**: Ad placements are driven by the Bundesland config file as the requirement specifies, the `features.ads` flag actually gates ad rendering, and the Server Action auth gap is closed so that direct POST requests cannot bypass the session check
+**Depends on**: Phase 8
+**Requirements**: AD-02
+**Gap Closure**: Closes AD-02, integration gap Phase 1→6 (adZones.envVar → AdUnit), flow "Deploy new Bundesland → ads use correct slots", and requireAuth() tech debt
+**Success Criteria** (what must be TRUE):
+  1. `AdUnit.tsx` resolves the ad slot by looking up `config.adZones.find(z => z.id === zone)?.envVar` from `bundesland.config` — hardcoded env var names removed
+  2. Setting `features.ads: false` in `bundesland.config.ts` causes no ad units to render (confirmed by test or visual check)
+  3. All 7 Server Action wrappers have `requireAuth()` restored and active — a request without a valid session cookie returns a 401/redirect
+  4. Impressum publisher details are populated from `bundesland.config.ts` impressum fields, not placeholder text
+
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
@@ -168,3 +194,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 5. Editorial CMS | 7/8 | Complete    | 2026-03-22 |
 | 6. Reader Frontend | 7/7 | Complete   | 2026-03-23 |
 | 7. Extensibility and Quality Validation | 0/2 | Not started | - |
+| 8. Phase 7 Verification + Per-Source AI Config Wiring | 0/TBD | Not started | - |
+| 9. Ad Config Wiring + Auth Hardening | 0/TBD | Not started | - |

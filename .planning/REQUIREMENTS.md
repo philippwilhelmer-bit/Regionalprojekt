@@ -42,13 +42,13 @@
 ### AI Configuration
 
 - [x] **AICONF-01**: Editor can configure global AI generation settings (tone, style, article length, language register)
-- [x] **AICONF-02**: Editor can override AI settings per source (different prompt templates for OTS.at vs individual RSS feeds)
+- [ ] **AICONF-02**: Editor can override AI settings per source (different prompt templates for OTS.at vs individual RSS feeds)
 - [x] **AICONF-03**: AI configuration is editable from the admin UI without code changes
 
 ### Advertising
 
 - [x] **AD-01**: Site integrates Google AdSense with configurable placement zones (e.g. hero, between articles, article detail)
-- [x] **AD-02**: Ad placements are configurable per deployment via the Bundesland config file
+- [ ] **AD-02**: Ad placements are configurable per deployment via the Bundesland config file
 
 ### SEO
 
@@ -111,10 +111,10 @@
 | READ-05 | Phase 6 | Complete |
 | READ-06 | Phase 6 | Complete |
 | AICONF-01 | Phase 5 | Complete |
-| AICONF-02 | Phase 5 | Complete |
+| AICONF-02 | Phase 8 | Pending |
 | AICONF-03 | Phase 5 | Complete |
 | AD-01 | Phase 6 | Complete |
-| AD-02 | Phase 1 | Complete |
+| AD-02 | Phase 9 | Pending |
 | SEO-01 | Phase 6 | Complete |
 | SEO-02 | Phase 3 | Complete |
 | SEO-03 | Phase 6 | Complete |
@@ -124,6 +124,7 @@
 - v1 requirements: 35 total
 - Mapped to phases: 35
 - Unmapped: 0 ✓
+- Pending (gap closure): AICONF-02 (Phase 8), AD-02 (Phase 9)
 
 **Note on Phase 7:** Phase 7 (Extensibility and Quality Validation) is a validation phase — it does not introduce new requirements. It verifies that ING-02 (RSS extensibility), ING-03 (cross-source deduplication), and all monitoring requirements are correct end-to-end under real conditions.
 
