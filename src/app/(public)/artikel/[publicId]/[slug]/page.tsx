@@ -25,7 +25,7 @@ export default async function ArticlePage({ params }: Props) {
   if (!article) notFound();
 
   // Canonical slug enforcement — permanent redirect on wrong slug
-  const canonical = slugify(article.seoTitle ?? article.title ?? "");
+  const canonical = slugify(article.title ?? "");
   if (slug !== canonical) {
     permanentRedirect(`/artikel/${publicId}/${canonical}`);
   }

@@ -65,7 +65,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
     ? (BEZIRK_COLORS[firstBezirk.slug] ?? "from-zinc-400 to-zinc-300")
     : "from-zinc-400 to-zinc-300";
 
-  const articleSlug = slugify(article.seoTitle ?? article.title ?? "artikel");
+  const articleSlug = slugify(article.title ?? "artikel");
   const href = `/artikel/${article.publicId}/${articleSlug}`;
 
   const excerpt = article.content
