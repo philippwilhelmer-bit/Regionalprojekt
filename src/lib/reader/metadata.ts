@@ -14,7 +14,7 @@ export function buildArticleMetadata(
 ): Metadata {
   if (!article) return {}
 
-  const slug = slugify(article.seoTitle ?? article.title ?? '')
+  const slug = slugify(article.title ?? '')
   const canonical = `${baseUrl}/artikel/${article.publicId}/${slug}`
 
   return {
