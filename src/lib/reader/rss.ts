@@ -21,7 +21,7 @@ export function generateBezirkRssFeed(
     description: `Aktuelle Nachrichten f\u00fcr ${slug} aus der Steiermark`,
     items: articles.map(a => ({
       title: a.title ?? '',
-      link: `${baseUrl}/artikel/${a.publicId}/${slugify(a.seoTitle ?? a.title ?? '')}`,
+      link: `${baseUrl}/artikel/${a.publicId}/${slugify(a.title ?? '')}`,
       description: a.content ?? '',
       pubDate: a.publishedAt ?? a.createdAt,
       guid: { value: a.publicId ?? String(a.id), isPermaLink: false },

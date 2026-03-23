@@ -50,10 +50,10 @@ describe('buildArticleMetadata', () => {
     expect(result.description).toBe('Beschreibung')
   })
 
-  it('canonical URL uses /artikel/[publicId]/[slug] form', () => {
-    const article = makeArticle({ publicId: 'k7x9mn', seoTitle: 'Test Artikel Graz' })
+  it('canonical URL uses /artikel/[publicId]/[slug] form based on title', () => {
+    const article = makeArticle({ publicId: 'k7x9mn', title: 'Regular Titel', seoTitle: 'SEO Titel' })
     const result = buildArticleMetadata(article, 'https://example.com')
-    expect(result.alternates?.canonical).toContain('/artikel/k7x9mn/test-artikel-graz')
+    expect(result.alternates?.canonical).toContain('/artikel/k7x9mn/regular-titel')
   })
 
   it('og:type is "article"', () => {

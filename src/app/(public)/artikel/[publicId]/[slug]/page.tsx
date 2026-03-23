@@ -155,7 +155,7 @@ export default async function ArticlePage({ params }: Props) {
             <div className="flex flex-col gap-3">
               {relatedArticles.slice(0, 5).map((related) => {
                 const relSlug = slugify(
-                  related.seoTitle ?? related.title ?? ""
+                  related.title ?? ""
                 );
                 return (
                   <Link

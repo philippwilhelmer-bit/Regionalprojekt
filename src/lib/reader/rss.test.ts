@@ -41,7 +41,7 @@ describe('generateBezirkRssFeed', () => {
   })
 
   it('each item link is the canonical /artikel/[publicId]/[slug] URL', () => {
-    const article = makeArticle({ publicId: 'k7x9mn', seoTitle: 'Liezen Unwetter Warnung' })
+    const article = makeArticle({ publicId: 'k7x9mn', title: 'Liezen Unwetter Warnung' })
     const xml = generateBezirkRssFeed([article], 'liezen', 'https://example.at')
     expect(xml).toContain('https://example.at/artikel/k7x9mn/liezen-unwetter-warnung')
   })

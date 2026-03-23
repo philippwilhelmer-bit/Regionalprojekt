@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   const articleEntries: MetadataRoute.Sitemap = articles.map(a => ({
-    url: `${BASE_URL}/artikel/${a.publicId}/${slugify(a.seoTitle ?? a.title ?? '')}`,
+    url: `${BASE_URL}/artikel/${a.publicId}/${slugify(a.title ?? '')}`,
     lastModified: a.publishedAt ?? a.createdAt,
     changeFrequency: 'daily',
     priority: 0.8,
