@@ -58,7 +58,7 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
         <select
           value={searchParams.get('bezirkId') ?? ''}
           onChange={(e) => updateParam('bezirkId', e.target.value)}
-          className="border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-gray-300 rounded px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">Alle Bezirke</option>
           {bezirke.map((b) => (
@@ -74,7 +74,7 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
         <select
           value={searchParams.get('source') ?? ''}
           onChange={(e) => updateParam('source', e.target.value)}
-          className="border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-gray-300 rounded px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {SOURCES.map((s) => (
             <option key={s.value} value={s.value}>
@@ -89,7 +89,7 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
         <select
           value={searchParams.get('status') ?? ''}
           onChange={(e) => updateParam('status', e.target.value)}
-          className="border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-gray-300 rounded px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {STATUSES.map((s) => (
             <option key={s.value} value={s.value}>
@@ -105,7 +105,7 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
           type="date"
           value={searchParams.get('from') ?? ''}
           onChange={(e) => updateParam('from', e.target.value)}
-          className="border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-gray-300 rounded px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
@@ -115,7 +115,7 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
           type="date"
           value={searchParams.get('to') ?? ''}
           onChange={(e) => updateParam('to', e.target.value)}
-          className="border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-gray-300 rounded px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 

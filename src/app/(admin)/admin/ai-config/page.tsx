@@ -69,7 +69,7 @@ export default async function AiConfigPage() {
                 type="number"
                 min={0}
                 defaultValue={pipelineConfig.maxRetryCount}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <p className="text-xs text-gray-600 mt-1">
                 Anzahl der Versuche, bevor ein Artikel als dauerhaft fehlgeschlagen markiert wird.
@@ -90,7 +90,7 @@ export default async function AiConfigPage() {
                 type="number"
                 min={1}
                 defaultValue={pipelineConfig.deadManThresholdHours}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <p className="text-xs text-gray-600 mt-1">
                 Maximale Zeit ohne neuen Artikel, bevor ein Alert ausgeloest wird.

@@ -17,7 +17,7 @@ export function GlobalAiConfigForm({ config }: GlobalAiConfigFormProps) {
           id="tone"
           name="tone"
           defaultValue={config.tone}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="NEUTRAL">Neutral</option>
           <option value="FORMAL">Formell</option>
@@ -34,7 +34,7 @@ export function GlobalAiConfigForm({ config }: GlobalAiConfigFormProps) {
           id="articleLength"
           name="articleLength"
           defaultValue={config.articleLength}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="SHORT">Kurz (100-150 Woerter)</option>
           <option value="MEDIUM">Mittel (150-250 Woerter)</option>
@@ -52,7 +52,7 @@ export function GlobalAiConfigForm({ config }: GlobalAiConfigFormProps) {
           name="styleNotes"
           rows={3}
           defaultValue={config.styleNotes ?? ''}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="z.B. Erwaehne immer den Bezirk im ersten Satz"
         />
       </div>
@@ -67,7 +67,7 @@ export function GlobalAiConfigForm({ config }: GlobalAiConfigFormProps) {
           name="modelOverride"
           type="text"
           defaultValue={config.modelOverride ?? ''}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="leer = Standard (claude-haiku-4-5-20251001)"
         />
       </div>

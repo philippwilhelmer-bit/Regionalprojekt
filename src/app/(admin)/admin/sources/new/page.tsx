@@ -22,7 +22,7 @@ export default function NewSourcePage() {
             name="url"
             type="text"
             required
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="https://..."
           />
         </div>
@@ -36,7 +36,7 @@ export default function NewSourcePage() {
             id="type"
             name="type"
             required
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="OTS_AT">OTS.at</option>
             <option value="RSS">RSS</option>
@@ -54,7 +54,7 @@ export default function NewSourcePage() {
             type="number"
             min={1}
             defaultValue={60}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 

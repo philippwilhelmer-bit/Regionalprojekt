@@ -107,7 +107,7 @@ export default async function ArticlesPage({
               {prevPage && (
                 <Link
                   href={buildPageUrl(prevPage)}
-                  className="px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-50"
+                  className="px-3 py-1.5 border border-gray-300 rounded text-gray-900 hover:bg-gray-50"
                 >
                   Zurueck
                 </Link>
@@ -115,7 +115,7 @@ export default async function ArticlesPage({
               {nextPage && (
                 <Link
                   href={buildPageUrl(nextPage)}
-                  className="px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-50"
+                  className="px-3 py-1.5 border border-gray-300 rounded text-gray-900 hover:bg-gray-50"
                 >
                   Weiter
                 </Link>

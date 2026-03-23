@@ -69,7 +69,7 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
                 id={`tone-${source.id}`}
                 name="tone"
                 defaultValue={override?.tone ?? ''}
-                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">— Globaler Wert —</option>
                 <option value="NEUTRAL">Neutral</option>
@@ -90,7 +90,7 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
                 id={`articleLength-${source.id}`}
                 name="articleLength"
                 defaultValue={override?.articleLength ?? ''}
-                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">— Globaler Wert —</option>
                 <option value="SHORT">Kurz (100-150 Woerter)</option>
@@ -112,7 +112,7 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
                 name="styleNotes"
                 rows={2}
                 defaultValue={override?.styleNotes ?? ''}
-                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="z.B. Erwaehne immer den Bezirk im ersten Satz"
               />
             </div>
@@ -130,7 +130,7 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
                 name="modelOverride"
                 type="text"
                 defaultValue={override?.modelOverride ?? ''}
-                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="leer = Standard (claude-haiku-4-5-20251001)"
               />
             </div>
