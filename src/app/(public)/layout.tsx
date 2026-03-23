@@ -2,6 +2,7 @@ import { Header } from "@/components/reader/Header";
 import { BottomNav } from "@/components/reader/BottomNav";
 import { Footer } from "@/components/reader/Footer";
 import { CookieBanner } from "@/components/reader/CookieBanner";
+import { BezirkModal } from "@/components/reader/BezirkModal";
 
 export default function PublicLayout({
   children,
@@ -15,6 +16,7 @@ export default function PublicLayout({
       <Footer />
       <BottomNav />
       <CookieBanner />
+      <BezirkModal />
     </>
   );
 }

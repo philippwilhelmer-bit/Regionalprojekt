@@ -4,7 +4,6 @@ export const dynamic = 'force-dynamic'
 
 import { listArticlesReader } from "@/lib/content/articles";
 import { ArticleFeed } from "@/components/reader/ArticleFeed";
-import { BezirkModal } from "@/components/reader/BezirkModal";
 import { AdUnit } from "@/components/reader/AdUnit";
 
 export default async function HomePage() {
@@ -12,7 +11,6 @@ export default async function HomePage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <BezirkModal />
       <div className="px-4 pb-4">
         <AdUnit zone="hero" />
       </div>
