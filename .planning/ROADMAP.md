@@ -172,6 +172,23 @@ Plans:
 - [ ] 08-02-PLAN.md — Pipeline wiring (TDD): ingest.ts sets sourceId, runStep2Write gains sourceId param + calls getResolvedAiConfig, pipeline.ts passes sourceId
 - [ ] 08-03-PLAN.md — Phase 7 verification doc: run npx vitest run, write 07-VERIFICATION.md with real evidence + Known Limitations
 
+### Phase 10: Wire Config Site Name into UI
+**Goal**: The Bundesland config file is the single source of truth for the site name — four hardcoded `"Ennstal Aktuell"` occurrences are replaced with `config.siteName` so that a new Bundesland deployment requires only a config change, not code changes
+**Depends on**: Phase 9
+**Requirements**: CONF-01, CONF-02, READ-06
+**Gap Closure**: Closes CONF-01, CONF-02, READ-06, integration gap (bundesland.config → Header/layout/RSS/admin login), and flow "Deploy new Bundesland → all branding updates"
+**Success Criteria** (what must be TRUE):
+  1. `Header.tsx` renders `config.siteName` instead of the hardcoded string `"Ennstal Aktuell"`
+  2. `app/layout.tsx` sets `metadata.title` from `config.siteName`
+  3. `lib/reader/rss.ts` uses `config.siteName` as the RSS feed title
+  4. `app/admin/login/page.tsx` uses `config.siteName + " Admin"` as the page heading
+  5. Changing `siteName` in `bundesland.config.ts` propagates to all four locations without any other code change
+
+**Plans**: 1 plan
+
+Plans:
+- [ ] 10-01-PLAN.md — Wire config.siteName into Header, layout metadata, RSS feed title, and admin login heading
+
 ### Phase 9: Ad Config Wiring + Auth Hardening
 **Goal**: Ad placements are driven by the Bundesland config file as the requirement specifies, the `features.ads` flag actually gates ad rendering, and the Server Action auth gap is closed so that direct POST requests cannot bypass the session check
 **Depends on**: Phase 8
@@ -193,7 +210,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -206,3 +223,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 7. Extensibility and Quality Validation | 0/2 | Not started | - |
 | 8. Phase 7 Verification + Per-Source AI Config Wiring | 3/3 | Complete   | 2026-03-23 |
 | 9. Ad Config Wiring + Auth Hardening | 3/3 | Complete    | 2026-03-24 |
+| 10. Wire Config Site Name into UI | 0/1 | Not started | - |
