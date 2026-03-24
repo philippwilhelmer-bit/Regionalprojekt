@@ -48,7 +48,7 @@
 ### Advertising
 
 - [x] **AD-01**: Site integrates Google AdSense with configurable placement zones (e.g. hero, between articles, article detail)
-- [ ] **AD-02**: Ad placements are configurable per deployment via the Bundesland config file
+- [x] **AD-02**: Ad placements are configurable per deployment via the Bundesland config file
 
 ### SEO
 
@@ -114,7 +114,7 @@
 | AICONF-02 | Phase 8 | Complete |
 | AICONF-03 | Phase 5 | Complete |
 | AD-01 | Phase 6 | Complete |
-| AD-02 | Phase 9 | Pending |
+| AD-02 | Phase 9 | Complete |
 | SEO-01 | Phase 6 | Complete |
 | SEO-02 | Phase 3 | Complete |
 | SEO-03 | Phase 6 | Complete |

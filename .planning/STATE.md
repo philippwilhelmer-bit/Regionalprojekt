@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 9 context gathered
-last_updated: "2026-03-24T18:48:56.299Z"
+stopped_at: Completed 09-03-PLAN.md
+last_updated: "2026-03-24T19:05:12.063Z"
 last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 9
   completed_phases: 8
-  total_plans: 39
-  completed_plans: 39
+  total_plans: 42
+  completed_plans: 40
   percent: 88
 ---
 
@@ -84,6 +84,7 @@ Progress: [████████░░] 88%
 | Phase 08-per-source-ai-config-wiring P01 | 8 | 2 tasks | 3 files |
 | Phase 08-per-source-ai-config-wiring P03 | 4 | 1 tasks | 1 files |
 | Phase 08-per-source-ai-config-wiring P02 | 15 | 2 tasks | 5 files |
+| Phase 09-ad-config-wiring-auth-hardening P03 | 1min | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -174,6 +175,7 @@ Recent decisions affecting current work:
 - [Phase 08-per-source-ai-config-wiring]: Article.sourceId uses sourceFk relation field name (not source) — Article already has source ArticleSource enum field; Prisma forbids duplicate field names
 - [Phase 08-per-source-ai-config-wiring]: onDelete: SetNull on Article.sourceFk — articles survive Source deletion, fall through to global AI config
 - [Phase 08-per-source-ai-config-wiring]: step2-write.ts uses conditional call: getResolvedAiConfig(db, sourceId) when db injected, getResolvedAiConfig(sourceId as unknown as number) for production singleton path — production always passes db from pipeline.ts so the else branch is a safety fallback only
+- [Phase 09-ad-config-wiring-auth-hardening]: Remaining Impressum placeholders ([TELEFON], [UNTERNEHMENSGEGENSTAND], [BLATTLINIE], [DATENSCHUTZ_EMAIL]) left as static strings — operator fills before launch
 
 ### Pending Todos
 
@@ -187,6 +189,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T18:48:56.290Z
-Stopped at: Phase 9 context gathered
-Resume file: .planning/phases/09-ad-config-wiring-auth-hardening/09-CONTEXT.md
+Last session: 2026-03-24T19:05:12.060Z
+Stopped at: Completed 09-03-PLAN.md
+Resume file: None
