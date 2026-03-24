@@ -183,7 +183,12 @@ Plans:
   3. All 7 Server Action wrappers have `requireAuth()` restored and active — a request without a valid session cookie returns a 401/redirect
   4. Impressum publisher details are populated from `bundesland.config.ts` impressum fields, not placeholder text
 
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 09-01-PLAN.md — AdUnit Server wrapper: Wave 0 test stubs + refactor AdUnit.tsx (Server wrapper) + AdUnitClient.tsx (client impl)
+- [ ] 09-02-PLAN.md — Auth hardening: requireAuth() in auth-node.ts + wire into all admin Server Action wrappers
+- [ ] 09-03-PLAN.md — Impressum + JSON-LD wiring: wire config.branding.impressum fields into impressum/page.tsx and article detail JSON-LD
 
 ## Progress
 
@@ -200,4 +205,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 6. Reader Frontend | 7/7 | Complete   | 2026-03-23 |
 | 7. Extensibility and Quality Validation | 0/2 | Not started | - |
 | 8. Phase 7 Verification + Per-Source AI Config Wiring | 3/3 | Complete   | 2026-03-23 |
-| 9. Ad Config Wiring + Auth Hardening | 0/TBD | Not started | - |
+| 9. Ad Config Wiring + Auth Hardening | 0/3 | Not started | - |
