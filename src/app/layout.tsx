@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import config from '@/../bundesland.config';
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Ennstal Aktuell",
+  title: config.siteName,
   description: "Aktuelle Nachrichten aus der Steiermark",
 };
 

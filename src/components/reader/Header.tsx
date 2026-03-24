@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import config from '@/../bundesland.config';
 
 const BEZIRK_NAMES: Record<string, string> = {
   graz: "Graz",
@@ -44,7 +45,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-zinc-200 px-4 h-14 flex items-center justify-between">
-      <span className="font-bold text-zinc-900">Ennstal Aktuell</span>
+      <span className="font-bold text-zinc-900">{config.siteName}</span>
       <button
         onClick={handleBezirkClick}
         className="text-sm text-zinc-600 flex items-center gap-1 hover:text-zinc-900 transition-colors"
