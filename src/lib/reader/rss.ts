@@ -1,6 +1,7 @@
 import { generateRssFeed } from 'feedsmith'
 import type { ArticleWithBezirke } from '@/lib/content/articles'
 import { slugify } from './slug'
+import config from '@/../bundesland.config'
 
 /**
  * Generates an RSS 2.0 feed XML string for a given Bezirk or all of Steiermark.
@@ -16,7 +17,7 @@ export function generateBezirkRssFeed(
   baseUrl: string
 ): string {
   return generateRssFeed({
-    title: `Ennstal Aktuell \u2013 ${slug}`,
+    title: `${config.siteName} \u2013 ${slug}`,
     link: baseUrl,
     description: `Aktuelle Nachrichten f\u00fcr ${slug} aus der Steiermark`,
     items: articles.map(a => ({
