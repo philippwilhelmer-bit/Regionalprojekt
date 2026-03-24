@@ -6,6 +6,7 @@ import { slugify } from "@/lib/reader/slug";
 import { buildArticleMetadata } from "@/lib/reader/metadata";
 import { AdUnit } from "@/components/reader/AdUnit";
 import { ShareButton } from "@/components/reader/ShareButton";
+import config from "@/../bundesland.config";
 
 type Props = { params: Promise<{ publicId: string; slug: string }> };
 
@@ -39,8 +40,8 @@ export default async function ArticlePage({ params }: Props) {
     headline: article.seoTitle ?? article.title,
     datePublished: article.publishedAt?.toISOString(),
     dateModified: article.updatedAt.toISOString(),
-    author: { "@type": "Organization", name: "Ennstal Aktuell" },
-    publisher: { "@type": "Organization", name: "Ennstal Aktuell" },
+    author: { "@type": "Organization", name: config.branding.impressum.publisherName },
+    publisher: { "@type": "Organization", name: config.branding.impressum.publisherName },
     url: canonicalUrl,
   };
 

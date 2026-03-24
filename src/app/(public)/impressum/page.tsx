@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import config from '@/../bundesland.config'
 
 export const metadata: Metadata = {
   title: 'Impressum & Datenschutz',
@@ -27,13 +28,12 @@ export default function ImpressumPage() {
 
       <h2>Medieninhaber &amp; Herausgeber</h2>
       <address>
-        <strong>[MEDIENINHABER_NAME]</strong><br />
-        [STRASSE]<br />
-        [PLZ] [ORT], Österreich
+        <strong>{config.branding.impressum.publisherName}</strong><br />
+        {config.branding.impressum.address}, Österreich
       </address>
 
       <p>
-        <strong>E-Mail:</strong> <a href="mailto:[EMAIL]">[EMAIL]</a><br />
+        <strong>E-Mail:</strong> <a href={`mailto:${config.branding.impressum.email}`}>{config.branding.impressum.email}</a><br />
         <strong>Telefon:</strong> [TELEFON]
       </p>
 
