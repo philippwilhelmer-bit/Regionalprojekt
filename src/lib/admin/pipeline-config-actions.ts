@@ -9,12 +9,14 @@
  */
 import { upsertPipelineConfig } from './pipeline-config-dal'
 import { revalidatePath } from 'next/cache'
+import { requireAuth } from './auth-node'
 
 /**
  * Server Action: update PipelineConfig from form submission.
  * Form fields: maxRetryCount, deadManThresholdHours
  */
 export async function upsertPipelineConfigAction(formData: FormData): Promise<void> {
+  await requireAuth()
   const maxRetryCount = parseInt(formData.get('maxRetryCount')?.toString() ?? '', 10)
   const deadManThresholdHours = parseInt(formData.get('deadManThresholdHours')?.toString() ?? '', 10)
 

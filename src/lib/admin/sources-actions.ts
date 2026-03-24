@@ -12,6 +12,7 @@ import type { PrismaClient, Source, ArticleSource } from '@prisma/client'
 import { prisma as defaultPrisma } from '../prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { requireAuth } from './auth-node'
 
 // ─────────────────────────────────────────────
 // Types
@@ -171,6 +172,7 @@ export async function listSourcesAdmin(db?: PrismaClient): Promise<SourceAdminRo
  * Requires editor session (auth guard in middleware for /admin routes).
  */
 export async function createSource(input: CreateSourceInput): Promise<Source> {
+  await requireAuth()
   return createSourceDb(input)
 }
 
@@ -179,6 +181,7 @@ export async function createSource(input: CreateSourceInput): Promise<Source> {
  * Requires editor session (auth guard in middleware for /admin routes).
  */
 export async function updateSource(input: UpdateSourceInput): Promise<Source> {
+  await requireAuth()
   return updateSourceDb(input)
 }
 
@@ -192,6 +195,7 @@ export async function updateSource(input: UpdateSourceInput): Promise<Source> {
  * Redirects to /admin/sources on success.
  */
 export async function createSourceForm(formData: FormData): Promise<void> {
+  await requireAuth()
   const url = formData.get('url')?.toString() ?? ''
   const type = formData.get('type')?.toString() as ArticleSource
   const pollIntervalMinutes = parseInt(formData.get('pollIntervalMinutes')?.toString() ?? '60', 10)
@@ -206,6 +210,7 @@ export async function createSourceForm(formData: FormData): Promise<void> {
  * Revalidates /admin/sources on success.
  */
 export async function updateSourceForm(formData: FormData): Promise<void> {
+  await requireAuth()
   const id = parseInt(formData.get('id')?.toString() ?? '', 10)
   if (isNaN(id)) return
 

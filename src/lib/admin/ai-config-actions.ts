@@ -14,6 +14,7 @@ import {
 } from './ai-config-dal'
 import { revalidatePath } from 'next/cache'
 import type { AiConfig, AiSourceConfig } from '@prisma/client'
+import { requireAuth } from './auth-node'
 
 // ---------------------------------------------------------------------------
 // Global AI Config
@@ -24,6 +25,7 @@ import type { AiConfig, AiSourceConfig } from '@prisma/client'
  * Form fields: tone, articleLength, styleNotes, modelOverride
  */
 export async function upsertAiConfigAction(formData: FormData): Promise<void> {
+  await requireAuth()
   const tone = formData.get('tone')?.toString() as AiConfig['tone'] | undefined
   const articleLength = formData.get('articleLength')?.toString() as AiConfig['articleLength'] | undefined
   const styleNotes = formData.get('styleNotes')?.toString() || null
@@ -42,6 +44,7 @@ export async function upsertAiConfigAction(formData: FormData): Promise<void> {
  * Form fields: sourceId (hidden), tone, articleLength, styleNotes, modelOverride
  */
 export async function upsertAiSourceConfigAction(formData: FormData): Promise<void> {
+  await requireAuth()
   const sourceId = parseInt(formData.get('sourceId')?.toString() ?? '', 10)
   if (isNaN(sourceId)) return
 
@@ -59,6 +62,7 @@ export async function upsertAiSourceConfigAction(formData: FormData): Promise<vo
  * Form fields: sourceId (hidden)
  */
 export async function deleteAiSourceConfigAction(formData: FormData): Promise<void> {
+  await requireAuth()
   const sourceId = parseInt(formData.get('sourceId')?.toString() ?? '', 10)
   if (isNaN(sourceId)) return
 

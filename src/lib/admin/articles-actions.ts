@@ -14,6 +14,7 @@ import type {
 } from '@prisma/client'
 import { prisma as defaultPrisma } from '../prisma'
 import { ArticleWithBezirke } from '../content/articles'
+import { requireAuth } from './auth-node'
 
 // ─── Input types ─────────────────────────────────────────────────────────────
 
@@ -216,27 +217,27 @@ export async function listArticlesAdmin(
 export async function createManualArticle(
   input: CreateManualArticleInput
 ): Promise<Article> {
-  // await requireAuth()
+  await requireAuth()
   return createManualArticleDb(defaultPrisma, input)
 }
 
 export async function updateArticle(input: UpdateArticleInput): Promise<Article> {
-  // await requireAuth()
+  await requireAuth()
   return updateArticleDb(defaultPrisma, input)
 }
 
 export async function togglePin(articleId: number): Promise<Article> {
-  // await requireAuth()
+  await requireAuth()
   return togglePinDb(defaultPrisma, articleId)
 }
 
 export async function toggleFeature(articleId: number): Promise<Article> {
-  // await requireAuth()
+  await requireAuth()
   return toggleFeatureDb(defaultPrisma, articleId)
 }
 
 export async function softDelete(articleId: number): Promise<Article> {
-  // await requireAuth()
+  await requireAuth()
   return softDeleteDb(defaultPrisma, articleId)
 }
 
@@ -245,21 +246,25 @@ export async function softDelete(articleId: number): Promise<Article> {
 // the hidden `id` field and delegate to the typed *Db functions.
 
 export async function togglePinForm(formData: FormData): Promise<void> {
+  await requireAuth()
   const id = Number(formData.get('id'))
   await togglePinDb(defaultPrisma, id)
 }
 
 export async function toggleFeatureForm(formData: FormData): Promise<void> {
+  await requireAuth()
   const id = Number(formData.get('id'))
   await toggleFeatureDb(defaultPrisma, id)
 }
 
 export async function softDeleteForm(formData: FormData): Promise<void> {
+  await requireAuth()
   const id = Number(formData.get('id'))
   await softDeleteDb(defaultPrisma, id)
 }
 
 export async function createManualArticleForm(formData: FormData): Promise<void> {
+  await requireAuth()
   const { redirect } = await import('next/navigation')
   const bezirkIdsRaw = formData.getAll('bezirkIds').map(Number).filter(Boolean)
   await createManualArticleDb(defaultPrisma, {

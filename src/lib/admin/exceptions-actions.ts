@@ -8,6 +8,7 @@
 
 import type { Article, PrismaClient } from '@prisma/client'
 import { prisma as defaultPrisma } from '../prisma'
+import { requireAuth } from './auth-node'
 
 // ─── DB-layer functions (pure, injectable, no auth) ──────────────────────────
 
@@ -56,27 +57,30 @@ export async function listExceptionQueueDb(db?: PrismaClient): Promise<Article[]
 // ─── Server Action wrappers (auth-gated, for Next.js Server Actions) ──────────
 
 export async function approveArticle(articleId: number): Promise<Article> {
-  // await requireAuth()
+  await requireAuth()
   return approveArticleDb(defaultPrisma, articleId)
 }
 
 export async function rejectArticle(articleId: number): Promise<Article> {
-  // await requireAuth()
+  await requireAuth()
   return rejectArticleDb(defaultPrisma, articleId)
 }
 
 // ─── FormData-based wrappers for use in <form action={...}> ──────────────────
 
 export async function approveArticleForm(formData: FormData): Promise<void> {
+  await requireAuth()
   const id = Number(formData.get('id'))
   await approveArticleDb(defaultPrisma, id)
 }
 
 export async function rejectArticleForm(formData: FormData): Promise<void> {
+  await requireAuth()
   const id = Number(formData.get('id'))
   await rejectArticleDb(defaultPrisma, id)
 }
 
 export async function listExceptionQueue(): Promise<Article[]> {
+  await requireAuth()
   return listExceptionQueueDb(defaultPrisma)
 }
