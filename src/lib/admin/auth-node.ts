@@ -2,6 +2,8 @@
 // Only import this from Server Actions and Server Components (NOT middleware)
 
 import { createHmac, timingSafeEqual } from 'node:crypto'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 import { SESSION_COOKIE_NAME } from './auth-edge'
 
 export { SESSION_COOKIE_NAME }
@@ -30,5 +32,13 @@ export function verifySessionCookie(cookie: string): boolean {
     return timingSafeEqual(Buffer.from(sig, 'hex'), Buffer.from(expected, 'hex'))
   } catch {
     return false
+  }
+}
+
+export async function requireAuth(): Promise<void> {
+  const cookieStore = await cookies()
+  const session = cookieStore.get(SESSION_COOKIE_NAME)
+  if (!session || !verifySessionCookie(session.value)) {
+    redirect('/admin/login')  // throws NEXT_REDIRECT internally — do NOT wrap in try/catch
   }
 }
