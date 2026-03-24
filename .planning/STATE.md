@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 09-01-PLAN.md
-last_updated: "2026-03-24T19:07:30.032Z"
+stopped_at: Completed 09-02-PLAN.md
+last_updated: "2026-03-24T19:09:05.046Z"
 last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 9
-  completed_phases: 8
+  completed_phases: 9
   total_plans: 42
-  completed_plans: 41
+  completed_plans: 42
   percent: 88
 ---
 
@@ -86,6 +86,7 @@ Progress: [████████░░] 88%
 | Phase 08-per-source-ai-config-wiring P02 | 15 | 2 tasks | 5 files |
 | Phase 09-ad-config-wiring-auth-hardening P03 | 1min | 1 tasks | 2 files |
 | Phase 09-ad-config-wiring-auth-hardening P01 | 10 | 1 tasks | 3 files |
+| Phase 09-ad-config-wiring-auth-hardening P02 | multi-session | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -179,6 +180,7 @@ Recent decisions affecting current work:
 - [Phase 09-ad-config-wiring-auth-hardening]: Remaining Impressum placeholders ([TELEFON], [UNTERNEHMENSGEGENSTAND], [BLATTLINIE], [DATENSCHUTZ_EMAIL]) left as static strings — operator fills before launch
 - [Phase 09-ad-config-wiring-auth-hardening]: AdUnit.tsx has no 'use client' — Server Component reads bundesland.config and server-side env vars at import time
 - [Phase 09-ad-config-wiring-auth-hardening]: React import added explicitly to AdUnit.tsx for vitest JSX transform (classic runtime requires React in scope)
+- [Phase 09-ad-config-wiring-auth-hardening]: requireAuth() placed before try/catch in Server Actions — Next.js redirect() throws NEXT_REDIRECT internally and must not be caught
 
 ### Pending Todos
 
@@ -192,6 +194,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T19:07:30.029Z
-Stopped at: Completed 09-01-PLAN.md
+Last session: 2026-03-24T19:09:05.044Z
+Stopped at: Completed 09-02-PLAN.md
 Resume file: None
