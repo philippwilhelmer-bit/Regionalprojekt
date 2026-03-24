@@ -223,4 +223,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 7. Extensibility and Quality Validation | 0/2 | Not started | - |
 | 8. Phase 7 Verification + Per-Source AI Config Wiring | 3/3 | Complete   | 2026-03-23 |
 | 9. Ad Config Wiring + Auth Hardening | 3/3 | Complete    | 2026-03-24 |
-| 10. Wire Config Site Name into UI | 0/1 | Not started | - |
+| 10. Wire Config Site Name into UI | 1/1 | Complete   | 2026-03-24 |

@@ -7,8 +7,8 @@
 
 ### Configuration
 
-- [ ] **CONF-01**: Platform is deployable for any Bundesland by changing a single config file (regions, branding, sources)
-- [ ] **CONF-02**: Steiermark deployment ships with all 13 regions pre-configured (12 Bezirke + Graz)
+- [x] **CONF-01**: Platform is deployable for any Bundesland by changing a single config file (regions, branding, sources)
+- [x] **CONF-02**: Steiermark deployment ships with all 13 regions pre-configured (12 Bezirke + Graz)
 
 ### Ingestion
 
@@ -64,7 +64,7 @@
 - [x] **READ-03**: Reader can open a full article detail page with source attribution
 - [x] **READ-04**: Site is mobile-optimized (existing alpine-themed HTML design is the visual reference)
 - [x] **READ-05**: Site includes a legally compliant Impressum page (Austrian Mediengesetz / ECG)
-- [ ] **READ-06**: Each Bezirk has its own subscribable RSS feed for readers
+- [x] **READ-06**: Each Bezirk has its own subscribable RSS feed for readers
 
 ## v2 Requirements
 
@@ -85,8 +85,8 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CONF-01 | Phase 10 | Pending |
-| CONF-02 | Phase 10 | Pending |
+| CONF-01 | Phase 10 | Complete |
+| CONF-02 | Phase 10 | Complete |
 | ING-01 | Phase 2 | Complete |
 | ING-02 | Phase 2 | Complete |
 | ING-03 | Phase 2 | Complete |
@@ -109,7 +109,7 @@
 | READ-03 | Phase 6 | Complete |
 | READ-04 | Phase 6 | Complete |
 | READ-05 | Phase 6 | Complete |
-| READ-06 | Phase 10 | Pending |
+| READ-06 | Phase 10 | Complete |
 | AICONF-01 | Phase 5 | Complete |
 | AICONF-02 | Phase 8 | Complete |
 | AICONF-03 | Phase 5 | Complete |
