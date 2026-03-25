@@ -65,7 +65,9 @@ Plans:
   2. The header displays in dark green with "RegionalNews" in italic serif — immediately distinguishable from the v1.0 header
   3. A Steiermark location badge appears in the header on every page
   4. Tapping the search icon in the header navigates to the search page
-**Plans**: TBD
+**Plans:** 1 plan
+Plans:
+- [ ] 17-01-PLAN.md — Refactor Header.tsx with Styrian stripe, dark green styling, location badge, and search icon
 
 ### Phase 18: Homepage Editorial Layout
 **Goal**: The homepage presents news in an editorial newspaper-like layout with a dominant hero, a scrollable top-stories row, themed topic sections, and a breaking news banner when warranted
@@ -119,8 +121,8 @@ Plans:
 | 13. Production Readiness | v1.0 | 1/1 | Complete | 2026-03-25 |
 | 14. CMS Acceptance Gate | v1.0 | 1/1 | Complete | 2026-03-25 |
 | 15. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-03-25 |
-| 16. Design System Foundation | 2/2 | Complete    | 2026-03-25 | - |
-| 17. Header & Identity | v1.1 | 0/TBD | Not started | - |
+| 16. Design System Foundation | v1.1 | 2/2 | Complete | 2026-03-25 |
+| 17. Header & Identity | v1.1 | 0/1 | Not started | - |
 | 18. Homepage Editorial Layout | v1.1 | 0/TBD | Not started | - |
 | 19. Article Detail & Bottom Navigation | v1.1 | 0/TBD | Not started | - |
 | 20. Search & Categories | v1.1 | 0/TBD | Not started | - |
