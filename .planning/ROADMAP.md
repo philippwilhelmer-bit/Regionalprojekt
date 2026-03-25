@@ -276,10 +276,27 @@ Plans:
 Plans:
 - [ ] 14-01-PLAN.md — Human acceptance testing checklist and 05-VERIFICATION.md sign-off
 
+### Phase 15: Tech Debt Cleanup — PUBLISHED Filter + Auth UX
+**Goal**: Close the brittle getArticlesByBezirk() integration gap with a proper PUBLISHED filter, fix the misleading ADMIN_PASSWORD lockout error, and remove orphaned code identified by the v1.0 milestone audit
+**Depends on**: Phase 14
+**Requirements**: READ-06
+**Gap Closure**: Closes integration gap (getArticlesByBezirk missing PUBLISHED filter), tech debt from audit (ADMIN_PASSWORD silent lockout, orphaned LogoutButton.tsx, stale requireAuth comment, orphaned updateSourceHealth export)
+**Success Criteria** (what must be TRUE):
+  1. `getArticlesByBezirk()` includes `status: 'PUBLISHED'` in its WHERE clause — RSS route JS post-filter workaround removed
+  2. Missing `ADMIN_PASSWORD` env var returns a clear configuration error, not a misleading "wrong password" message
+  3. `LogoutButton.tsx` is either wired into the admin layout or deleted
+  4. Stale `requireAuth() is a placeholder` comment removed from articles-actions.ts
+  5. Orphaned `updateSourceHealth()` export removed from sources.ts
+
+**Plans**: 1 plan
+
+Plans:
+- [ ] 15-01-PLAN.md — PUBLISHED filter fix, ADMIN_PASSWORD error clarity, orphaned code removal
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -297,3 +314,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 12. Config-Driven Region List + RSS Feature Flag | 4/4 | Complete    | 2026-03-25 |
 | 13. Production Readiness — Impressum + CMS Error Count | 1/1 | Complete    | 2026-03-25 |
 | 14. Phase 5 Human Acceptance Gate | 1/1 | Complete    | 2026-03-25 |
+| 15. Tech Debt Cleanup | 0/1 | Not started | - |
