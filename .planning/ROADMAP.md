@@ -93,7 +93,10 @@ Plans:
   2. The article page background is warm cream (#fbfaee) with spacing and sizing consistent with the design system
   3. The bottom navigation bar shows a warm cream background with Material Symbols icons for all items
   4. The currently active navigation item is displayed as a filled green pill — all inactive items have no background highlight
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 19-01-PLAN.md — Restyle article detail page (hero image, cream/sage palette, editorial typography, related articles scroll)
+- [ ] 19-02-PLAN.md — Rewrite bottom nav (four items, active green pill, disabled placeholders)
 
 ### Phase 20: Search & Categories
 **Goal**: Readers can search for articles by keyword and browse the full topic taxonomy from a single, well-designed discovery page
@@ -104,7 +107,10 @@ Plans:
   2. Trending topics appear as pill-shaped tags below the search input and tapping one filters results to that topic
   3. A category grid below trending topics lists all topic categories with hover/tap states; selecting one shows relevant articles
   4. A "Empfohlene Artikel" section renders below the category grid with article recommendations when no active search or filter is applied
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 19-01-PLAN.md — Restyle article detail page (hero image, cream/sage palette, editorial typography, related articles scroll)
+- [ ] 19-02-PLAN.md — Rewrite bottom nav (four items, active green pill, disabled placeholders)
 
 ## Progress
 
