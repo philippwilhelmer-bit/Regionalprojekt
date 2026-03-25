@@ -97,13 +97,13 @@ describe('listSourcesAdmin', () => {
 
     // Create articles with various statuses
     await db.article.create({
-      data: { source: 'RSS', status: 'FAILED', title: 'Failed article' },
+      data: { source: 'RSS', sourceId: source.id, status: 'FAILED', title: 'Failed article' },
     })
     await db.article.create({
-      data: { source: 'RSS', status: 'ERROR', title: 'Error article' },
+      data: { source: 'RSS', sourceId: source.id, status: 'ERROR', title: 'Error article' },
     })
     await db.article.create({
-      data: { source: 'RSS', status: 'PUBLISHED', title: 'Published article' },
+      data: { source: 'RSS', sourceId: source.id, status: 'PUBLISHED', title: 'Published article' },
     })
 
     const results = await listSourcesAdmin(db)

@@ -132,12 +132,9 @@ export async function listSourcesAdmin(db?: PrismaClient): Promise<SourceAdminRo
 
   const result: SourceAdminRow[] = await Promise.all(
     sources.map(async (source) => {
-      // Count FAILED + ERROR articles for this source type
-      // Note: Articles reference source TYPE not source ID (no FK).
-      // If multiple sources share the same type, the count is approximate.
       const failedErrorCount = await client.article.count({
         where: {
-          source: source.type,
+          sourceId: source.id,
           status: { in: ['FAILED', 'ERROR'] },
         },
       })
