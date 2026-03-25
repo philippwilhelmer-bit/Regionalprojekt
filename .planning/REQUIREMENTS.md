@@ -42,8 +42,8 @@ Requirements for the Design Overhaul milestone. Each maps to roadmap phases.
 
 ### Bottom Navigation
 
-- [ ] **NAV-01**: Bottom nav restyled with warm cream background, updated Material Symbols icons
-- [ ] **NAV-02**: Active nav item displays as filled pill with primary green background
+- [x] **NAV-01**: Bottom nav restyled with warm cream background, updated Material Symbols icons
+- [x] **NAV-02**: Active nav item displays as filled pill with primary green background
 
 ## Future Requirements
 
@@ -82,8 +82,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HOME-04 | Phase 18 | Complete |
 | ART-01 | Phase 19 | Pending |
 | ART-02 | Phase 19 | Pending |
-| NAV-01 | Phase 19 | Pending |
-| NAV-02 | Phase 19 | Pending |
+| NAV-01 | Phase 19 | Complete |
+| NAV-02 | Phase 19 | Complete |
 | SRCH-01 | Phase 20 | Pending |
 | SRCH-02 | Phase 20 | Pending |
 | SRCH-03 | Phase 20 | Pending |

@@ -93,7 +93,7 @@ Plans:
   2. The article page background is warm cream (#fbfaee) with spacing and sizing consistent with the design system
   3. The bottom navigation bar shows a warm cream background with Material Symbols icons for all items
   4. The currently active navigation item is displayed as a filled green pill — all inactive items have no background highlight
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
 - [ ] 19-01-PLAN.md — Restyle article detail page (hero image, cream/sage palette, editorial typography, related articles scroll)
 - [ ] 19-02-PLAN.md — Rewrite bottom nav (four items, active green pill, disabled placeholders)
@@ -134,5 +134,5 @@ Plans:
 | 16. Design System Foundation | v1.1 | 2/2 | Complete | 2026-03-25 |
 | 17. Header & Identity | 1/1 | Complete    | 2026-03-25 | - |
 | 18. Homepage Editorial Layout | 3/3 | Complete    | 2026-03-25 | - |
-| 19. Article Detail & Bottom Navigation | v1.1 | 0/TBD | Not started | - |
+| 19. Article Detail & Bottom Navigation | 1/2 | In Progress|  | - |
 | 20. Search & Categories | v1.1 | 0/TBD | Not started | - |

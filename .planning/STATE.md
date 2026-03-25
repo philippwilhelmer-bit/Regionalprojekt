@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Design Overhaul
 status: planning
-stopped_at: Phase 19 context gathered
-last_updated: "2026-03-25T21:25:58.455Z"
+stopped_at: Completed 19-02-PLAN.md
+last_updated: "2026-03-25T21:40:41.872Z"
 last_activity: 2026-03-25 — Roadmap created for v1.1
 progress:
   total_phases: 5
   completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 8
+  completed_plans: 7
   percent: 0
 ---
 
@@ -51,6 +51,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 18-homepage-editorial-layout P01 | 15 | 2 tasks | 5 files |
 | Phase 18 P03 | 5 | 1 tasks | 2 files |
 | Phase 18-homepage-editorial-layout P02 | 10 | 2 tasks | 5 files |
+| Phase 19-article-detail-bottom-navigation P02 | 5 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,7 @@ Carried from v1.0 (see PROJECT.md Key Decisions):
 - [Phase 18]: EilmeldungBanner uses visible=false on mount to avoid hydration mismatch — useEffect sets true only when sessionStorage key absent
 - [Phase 18-homepage-editorial-layout]: Plain img tag in HeroArticle (not next/image) — unpredictable external image domains per research
 - [Phase 18-homepage-editorial-layout]: HomepageLayout mounted flag prevents bezirk filter from running during SSR hydration
+- [Phase 19-article-detail-bottom-navigation]: BottomNav.tsx replaced with single re-export line — keeps layout.tsx import unchanged, client/server boundary clean
 
 ### Pending Todos
 
@@ -86,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T21:25:58.445Z
-Stopped at: Phase 19 context gathered
-Resume file: .planning/phases/19-article-detail-bottom-navigation/19-CONTEXT.md
+Last session: 2026-03-25T21:40:41.870Z
+Stopped at: Completed 19-02-PLAN.md
+Resume file: None
