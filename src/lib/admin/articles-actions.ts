@@ -211,9 +211,6 @@ export async function listArticlesAdmin(
 // These call requireAuth() from next/headers, then delegate to the *Db functions.
 // Not called directly in tests — test the *Db functions above instead.
 
-// NOTE: requireAuth() is a placeholder for the auth module (Phase 6).
-// For now, Server Actions are exported but auth is not enforced.
-
 export async function createManualArticle(
   input: CreateManualArticleInput
 ): Promise<Article> {

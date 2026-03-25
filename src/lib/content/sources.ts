@@ -9,7 +9,7 @@
  * singleton for production). Duck-typing via '$connect' check (not instanceof)
  * for vitest module isolation compatibility.
  */
-import type { PrismaClient, Source, SourceHealth } from '@prisma/client'
+import type { PrismaClient, Source } from '@prisma/client'
 import { prisma as defaultPrisma } from '../prisma'
 
 // ─────────────────────────────────────────────
@@ -84,59 +84,3 @@ export async function getSourceById(
   return db.source.findFirst({ where: { id: sourceId } })
 }
 
-// ─────────────────────────────────────────────
-// updateSourceHealth
-// ─────────────────────────────────────────────
-
-export interface SourceHealthPatch {
-  consecutiveFailures: number
-  healthStatus: SourceHealth
-  lastSuccessAt?: Date
-}
-
-/** Production overload */
-export async function updateSourceHealth(
-  id: number,
-  patch: SourceHealthPatch
-): Promise<Source>
-/** Test overload (injected client) */
-export async function updateSourceHealth(
-  client: PrismaClient,
-  id: number,
-  patch: SourceHealthPatch
-): Promise<Source>
-export async function updateSourceHealth(
-  clientOrId: PrismaClient | number,
-  idOrPatch: number | SourceHealthPatch,
-  patch?: SourceHealthPatch
-): Promise<Source> {
-  let db: PrismaClient
-  let sourceId: number
-  let healthPatch: SourceHealthPatch
-
-  if (
-    clientOrId !== null &&
-    clientOrId !== undefined &&
-    typeof clientOrId === 'object' &&
-    '$connect' in clientOrId
-  ) {
-    db = clientOrId as PrismaClient
-    sourceId = idOrPatch as number
-    healthPatch = patch!
-  } else {
-    db = defaultPrisma
-    sourceId = clientOrId as number
-    healthPatch = idOrPatch as SourceHealthPatch
-  }
-
-  return db.source.update({
-    where: { id: sourceId },
-    data: {
-      consecutiveFailures: healthPatch.consecutiveFailures,
-      healthStatus: healthPatch.healthStatus,
-      ...(healthPatch.lastSuccessAt !== undefined
-        ? { lastSuccessAt: healthPatch.lastSuccessAt }
-        : {}),
-    },
-  })
-}
