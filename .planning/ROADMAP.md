@@ -295,5 +295,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 10. Wire Config Site Name into UI | 1/1 | Complete    | 2026-03-24 |
 | 11. Fix State-Wide Article Pipeline | 2/2 | Complete    | 2026-03-25 |
 | 12. Config-Driven Region List + RSS Feature Flag | 4/4 | Complete    | 2026-03-25 |
-| 13. Production Readiness — Impressum + CMS Error Count | 1/1 | Complete   | 2026-03-25 |
+| 13. Production Readiness — Impressum + CMS Error Count | 1/1 | Complete    | 2026-03-25 |
 | 14. Phase 5 Human Acceptance Gate | 0/1 | Not started | - |
