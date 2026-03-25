@@ -2,24 +2,9 @@
 
 import { useEffect, useState } from "react";
 import config from '@/../bundesland.config';
+import type { BezirkItem } from '@/types/bundesland';
 
-const BEZIRK_NAMES: Record<string, string> = {
-  graz: "Graz",
-  "graz-umgebung": "Graz-Umgebung",
-  liezen: "Liezen",
-  "bruck-muerzzuschlag": "Bruck-Mürzzuschlag",
-  leoben: "Leoben",
-  murau: "Murau",
-  murtal: "Murtal",
-  voitsberg: "Voitsberg",
-  deutschlandsberg: "Deutschlandsberg",
-  weiz: "Weiz",
-  "hartberg-fuerstenfeld": "Hartberg-Fürstenfeld",
-  suedoststeiermark: "Südoststeiermark",
-  leibnitz: "Leibnitz",
-};
-
-export function Header() {
+export function Header({ bezirke }: { bezirke: BezirkItem[] }) {
   const [bezirkLabel, setBezirkLabel] = useState<string>("Steiermark");
 
   useEffect(() => {
@@ -28,7 +13,8 @@ export function Header() {
       if (raw) {
         const slugs: string[] = JSON.parse(raw);
         if (Array.isArray(slugs) && slugs.length > 0) {
-          const firstName = BEZIRK_NAMES[slugs[0]] ?? slugs[0];
+          const bezirkNames = Object.fromEntries(bezirke.map(b => [b.slug, b.name]));
+          const firstName = bezirkNames[slugs[0]] ?? slugs[0];
           setBezirkLabel(
             slugs.length > 1 ? `${firstName} +${slugs.length - 1}` : firstName
           );
@@ -37,7 +23,7 @@ export function Header() {
     } catch {
       // Ignore localStorage errors
     }
-  }, []);
+  }, [bezirke]);
 
   function handleBezirkClick() {
     window.dispatchEvent(new CustomEvent("openBezirkModal"));

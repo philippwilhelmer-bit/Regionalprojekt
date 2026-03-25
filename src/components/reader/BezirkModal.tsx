@@ -1,26 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const BEZIRKE = [
-  { slug: "graz", name: "Graz (Stadt)" },
-  { slug: "graz-umgebung", name: "Graz-Umgebung" },
-  { slug: "liezen", name: "Liezen" },
-  { slug: "bruck-muerzzuschlag", name: "Bruck-Mürzzuschlag" },
-  { slug: "leoben", name: "Leoben" },
-  { slug: "murau", name: "Murau" },
-  { slug: "murtal", name: "Murtal" },
-  { slug: "voitsberg", name: "Voitsberg" },
-  { slug: "deutschlandsberg", name: "Deutschlandsberg" },
-  { slug: "weiz", name: "Weiz" },
-  { slug: "hartberg-fuerstenfeld", name: "Hartberg-Fürstenfeld" },
-  { slug: "suedoststeiermark", name: "Südoststeiermark" },
-  { slug: "leibnitz", name: "Leibnitz" },
-];
+import type { BezirkItem } from '@/types/bundesland';
 
 const STORAGE_KEY = "bezirk_selection";
 
-export function BezirkModal() {
+export function BezirkModal({ bezirke }: { bezirke: BezirkItem[] }) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [hasPriorSelection, setHasPriorSelection] = useState(false);
@@ -65,10 +50,10 @@ export function BezirkModal() {
   }
 
   function toggleAll() {
-    if (selected.size === BEZIRKE.length) {
+    if (selected.size === bezirke.length) {
       setSelected(new Set());
     } else {
-      setSelected(new Set(BEZIRKE.map((b) => b.slug)));
+      setSelected(new Set(bezirke.map((b) => b.slug)));
     }
   }
 
@@ -96,7 +81,7 @@ export function BezirkModal() {
 
   if (!open) return null;
 
-  const allSelected = selected.size === BEZIRKE.length;
+  const allSelected = selected.size === bezirke.length;
 
   return (
     <div
@@ -131,7 +116,7 @@ export function BezirkModal() {
 
         {/* Chip grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
-          {BEZIRKE.map((bezirk) => {
+          {bezirke.map((bezirk) => {
             const isSelected = selected.has(bezirk.slug);
             return (
               <button
