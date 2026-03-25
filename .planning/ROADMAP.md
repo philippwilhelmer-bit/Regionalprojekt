@@ -122,7 +122,7 @@ Plans:
 | 14. CMS Acceptance Gate | v1.0 | 1/1 | Complete | 2026-03-25 |
 | 15. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-03-25 |
 | 16. Design System Foundation | v1.1 | 2/2 | Complete | 2026-03-25 |
-| 17. Header & Identity | 1/1 | Complete   | 2026-03-25 | - |
+| 17. Header & Identity | 1/1 | Complete    | 2026-03-25 | - |
 | 18. Homepage Editorial Layout | v1.1 | 0/TBD | Not started | - |
 | 19. Article Detail & Bottom Navigation | v1.1 | 0/TBD | Not started | - |
 | 20. Search & Categories | v1.1 | 0/TBD | Not started | - |
