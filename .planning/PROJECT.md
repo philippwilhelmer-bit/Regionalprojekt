@@ -49,7 +49,19 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 
 ### Active
 
-(None — next milestone requirements to be defined via `/gsd:new-milestone`)
+## Current Milestone: v1.1 Design Overhaul
+
+**Goal:** Restyle the reader frontend with a premium editorial design — Styrian identity, serif headlines, warm cream palette, and newspaper-like layouts.
+
+**Target features:**
+- Design system (Newsreader/Inter/Work Sans fonts, Styrian green + warm cream palette, Material Symbols, sharp corners)
+- Styrian identity bar (white/green flag stripe)
+- Header redesign (dark green, italic serif branding, location badge)
+- Homepage editorial layout (hero featured article, scrollable top stories, topic sections with wood dividers)
+- Article detail page restyling (editorial typography, warm cream)
+- Bottom nav restyling (active pill state)
+- Breaking news banner ("Eilmeldung" flagging from CMS)
+- Search/categories page (article search, trending topics, category grid)
 
 ### Out of Scope
 
@@ -90,4 +102,4 @@ Known pre-launch items: Impressum fields need real publisher data (TODO: placeho
 - **Austrian legal**: Impressum must satisfy MedienG/ECG; AI disclosure required on generated articles
 
 ---
-*Last updated: 2026-03-25 after v1.0 milestone*
+*Last updated: 2026-03-25 after v1.1 milestone start*
