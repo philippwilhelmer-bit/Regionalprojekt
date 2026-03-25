@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 11-fix-state-wide-article-pipeline 11-01-PLAN.md
-last_updated: "2026-03-25T11:04:43.897Z"
+stopped_at: Completed 11-fix-state-wide-article-pipeline 11-02-PLAN.md
+last_updated: "2026-03-25T11:09:11.006Z"
 last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 12
-  completed_phases: 10
+  completed_phases: 11
   total_plans: 45
-  completed_plans: 44
+  completed_plans: 45
   percent: 88
 ---
 
@@ -89,6 +89,7 @@ Progress: [████████░░] 88%
 | Phase 09-ad-config-wiring-auth-hardening P02 | multi-session | 2 tasks | 7 files |
 | Phase 10-config-branding-wiring P01 | 4 | 2 tasks | 5 files |
 | Phase 11-fix-state-wide-article-pipeline P01 | 12min | 3 tasks | 6 files |
+| Phase 11-fix-state-wide-article-pipeline P02 | 3 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -187,6 +188,7 @@ Recent decisions affecting current work:
 - [Phase 11-fix-state-wide-article-pipeline]: pipeline.ts uses typeof allBezirke[number][] for matchedBezirke — avoids manual struct, stays in sync with DB model
 - [Phase 11-fix-state-wide-article-pipeline]: isStateWide branch uses single db.article.update (no transaction) — no ArticleBezirk upserts needed for state-wide articles
 - [Phase 11-fix-state-wide-article-pipeline]: console.warn for mixed slug case is non-fatal — pipeline continues, bad LLM response flagged in logs
+- [Phase 11-fix-state-wide-article-pipeline]: No test file for backfill script — one-time operator tool analogous to ai-run.ts which also has no dedicated test
 
 ### Pending Todos
 
@@ -200,6 +202,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T11:04:43.894Z
-Stopped at: Completed 11-fix-state-wide-article-pipeline 11-01-PLAN.md
+Last session: 2026-03-25T11:09:11.004Z
+Stopped at: Completed 11-fix-state-wide-article-pipeline 11-02-PLAN.md
 Resume file: None
