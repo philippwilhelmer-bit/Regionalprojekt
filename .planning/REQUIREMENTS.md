@@ -23,10 +23,10 @@ Requirements for the Design Overhaul milestone. Each maps to roadmap phases.
 
 ### Homepage
 
-- [ ] **HOME-01**: Full-bleed hero featured article with image, gradient overlay, category badge, and large serif headline
-- [ ] **HOME-02**: Horizontally scrollable "Top-Meldungen" cards with bottom border accent
-- [ ] **HOME-03**: Topic sections with editorial grid layout, wood dividers, and Styrian flag accents
-- [ ] **HOME-04**: Breaking news "Eilmeldung" red banner when an article is flagged
+- [x] **HOME-01**: Full-bleed hero featured article with image, gradient overlay, category badge, and large serif headline
+- [x] **HOME-02**: Horizontally scrollable "Top-Meldungen" cards with bottom border accent
+- [x] **HOME-03**: Topic sections with editorial grid layout, wood dividers, and Styrian flag accents
+- [x] **HOME-04**: Breaking news "Eilmeldung" red banner when an article is flagged
 
 ### Article Detail
 
@@ -76,10 +76,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HDR-02 | Phase 17 | Complete |
 | HDR-03 | Phase 17 | Complete |
 | HDR-04 | Phase 17 | Complete |
-| HOME-01 | Phase 18 | Pending |
-| HOME-02 | Phase 18 | Pending |
-| HOME-03 | Phase 18 | Pending |
-| HOME-04 | Phase 18 | Pending |
+| HOME-01 | Phase 18 | Complete |
+| HOME-02 | Phase 18 | Complete |
+| HOME-03 | Phase 18 | Complete |
+| HOME-04 | Phase 18 | Complete |
 | ART-01 | Phase 19 | Pending |
 | ART-02 | Phase 19 | Pending |
 | NAV-01 | Phase 19 | Pending |
