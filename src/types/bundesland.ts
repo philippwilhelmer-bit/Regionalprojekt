@@ -15,6 +15,11 @@ export interface BundeslandBranding {
   }
 }
 
+export interface BezirkItem {
+  slug: string
+  name: string
+}
+
 export interface BundeslandConfig {
   bundesland: string        // lowercase slug, e.g. 'steiermark'
   siteName: string
@@ -25,4 +30,5 @@ export interface BundeslandConfig {
     ads: boolean
     rss: boolean
   }
+  regions: BezirkItem[]
 }
