@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 15 context gathered
-last_updated: "2026-03-25T16:25:04.034Z"
+stopped_at: Completed 15-01-PLAN.md
+last_updated: "2026-03-25T17:15:01.538Z"
 last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 15
-  completed_phases: 14
-  total_plans: 51
-  completed_plans: 51
+  completed_phases: 15
+  total_plans: 52
+  completed_plans: 52
   percent: 88
 ---
 
@@ -95,6 +95,7 @@ Progress: [████████░░] 88%
 | Phase 12-config-driven-region-list-rss-feature-flag P03 | 2 | 2 tasks | 3 files |
 | Phase 12-config-driven-region-list-rss-feature-flag P04 | 2 | 2 tasks | 2 files |
 | Phase 13-production-readiness-impressum-cms-error-count P01 | 3 | 2 tasks | 6 files |
+| Phase 15-tech-debt-cleanup P01 | 6 | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -203,6 +204,10 @@ Recent decisions affecting current work:
 - [Phase 13-production-readiness-impressum-cms-error-count]: Cast config as BundeslandConfig in impressum page — satisfies narrows away optional uid field, cast restores access
 - [Phase 13-production-readiness-impressum-cms-error-count]: Use TODO: prefixed placeholder values in bundesland.config.ts — dev-mode console.warn fires until operator replaces them before launch
 - [Phase 13-production-readiness-impressum-cms-error-count]: sourceId: source.id FK query in listSourcesAdmin — exact per-source count replacing approximate enum-based type match
+- [Phase 15-01]: getArticlesByBezirk status filter moved to DB WHERE clause — JS post-filter was a workaround that leaked non-PUBLISHED articles to RSS consumers
+- [Phase 15-01]: loginAction missing-env-var branch returns 'Login derzeit nicht möglich.' — never reveals ADMIN_PASSWORD is missing, logs server-side only
+- [Phase 15-01]: LogoutButton 'use client' form wrapping logoutAction Server Action replaces logout Route Handler entirely
+- [Phase 15-01]: updateSourceHealth deleted from sources.ts — ingest.ts calls db.source.update() directly, export was orphaned
 
 ### Pending Todos
 
@@ -216,6 +221,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T16:25:04.023Z
-Stopped at: Phase 15 context gathered
-Resume file: .planning/phases/15-tech-debt-cleanup/15-CONTEXT.md
+Last session: 2026-03-25T17:15:01.536Z
+Stopped at: Completed 15-01-PLAN.md
+Resume file: None

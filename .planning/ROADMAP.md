@@ -314,4 +314,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 12. Config-Driven Region List + RSS Feature Flag | 4/4 | Complete    | 2026-03-25 |
 | 13. Production Readiness — Impressum + CMS Error Count | 1/1 | Complete    | 2026-03-25 |
 | 14. Phase 5 Human Acceptance Gate | 1/1 | Complete    | 2026-03-25 |
-| 15. Tech Debt Cleanup | 0/1 | Not started | - |
+| 15. Tech Debt Cleanup | 1/1 | Complete   | 2026-03-25 |
