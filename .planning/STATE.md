@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 13 context gathered
-last_updated: "2026-03-25T13:03:39.100Z"
+stopped_at: Completed 13-production-readiness-impressum-cms-error-count-01-PLAN.md
+last_updated: "2026-03-25T13:19:12.837Z"
 last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 14
-  completed_phases: 12
-  total_plans: 49
-  completed_plans: 49
+  completed_phases: 13
+  total_plans: 50
+  completed_plans: 50
   percent: 88
 ---
 
@@ -94,6 +94,7 @@ Progress: [████████░░] 88%
 | Phase 12-config-driven-region-list-rss-feature-flag P02 | 5 | 2 tasks | 2 files |
 | Phase 12-config-driven-region-list-rss-feature-flag P03 | 2 | 2 tasks | 3 files |
 | Phase 12-config-driven-region-list-rss-feature-flag P04 | 2 | 2 tasks | 2 files |
+| Phase 13-production-readiness-impressum-cms-error-count P01 | 3 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -199,6 +200,9 @@ Recent decisions affecting current work:
 - [Phase 12-02]: gemeindeSynonyms >= 1 test assertion removed — config.regions has no synonym data; synonyms are populated separately by AI pipeline
 - [Phase 12-config-driven-region-list-rss-feature-flag]: Async Server Component layout calls listBezirke() once and passes Bezirk[] to both Header and BezirkModal via props
 - [Phase 12-config-driven-region-list-rss-feature-flag]: new Response(null, { status: 404 }) for silent RSS 404 — empty body without leaking feature existence; guard before await params fires synchronously before any DB work
+- [Phase 13-production-readiness-impressum-cms-error-count]: Cast config as BundeslandConfig in impressum page — satisfies narrows away optional uid field, cast restores access
+- [Phase 13-production-readiness-impressum-cms-error-count]: Use TODO: prefixed placeholder values in bundesland.config.ts — dev-mode console.warn fires until operator replaces them before launch
+- [Phase 13-production-readiness-impressum-cms-error-count]: sourceId: source.id FK query in listSourcesAdmin — exact per-source count replacing approximate enum-based type match
 
 ### Pending Todos
 
@@ -212,6 +216,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T13:03:39.089Z
-Stopped at: Phase 13 context gathered
-Resume file: .planning/phases/13-production-readiness-impressum-cms-error-count/13-CONTEXT.md
+Last session: 2026-03-25T13:19:12.834Z
+Stopped at: Completed 13-production-readiness-impressum-cms-error-count-01-PLAN.md
+Resume file: None
