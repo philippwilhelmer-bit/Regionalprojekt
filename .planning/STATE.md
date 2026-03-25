@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 11 context gathered
-last_updated: "2026-03-25T10:42:36.310Z"
+stopped_at: Completed 11-fix-state-wide-article-pipeline 11-01-PLAN.md
+last_updated: "2026-03-25T11:04:43.897Z"
 last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 12
   completed_phases: 10
-  total_plans: 43
-  completed_plans: 43
+  total_plans: 45
+  completed_plans: 44
   percent: 88
 ---
 
@@ -88,6 +88,7 @@ Progress: [████████░░] 88%
 | Phase 09-ad-config-wiring-auth-hardening P01 | 10 | 1 tasks | 3 files |
 | Phase 09-ad-config-wiring-auth-hardening P02 | multi-session | 2 tasks | 7 files |
 | Phase 10-config-branding-wiring P01 | 4 | 2 tasks | 5 files |
+| Phase 11-fix-state-wide-article-pipeline P01 | 12min | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -183,6 +184,9 @@ Recent decisions affecting current work:
 - [Phase 09-ad-config-wiring-auth-hardening]: React import added explicitly to AdUnit.tsx for vitest JSX transform (classic runtime requires React in scope)
 - [Phase 09-ad-config-wiring-auth-hardening]: requireAuth() placed before try/catch in Server Actions — Next.js redirect() throws NEXT_REDIRECT internally and must not be caught
 - [Phase 10-01]: vitest.config.ts gains resolve.alias for '@' to match tsconfig paths — required for @/../bundesland.config to resolve in test environment
+- [Phase 11-fix-state-wide-article-pipeline]: pipeline.ts uses typeof allBezirke[number][] for matchedBezirke — avoids manual struct, stays in sync with DB model
+- [Phase 11-fix-state-wide-article-pipeline]: isStateWide branch uses single db.article.update (no transaction) — no ArticleBezirk upserts needed for state-wide articles
+- [Phase 11-fix-state-wide-article-pipeline]: console.warn for mixed slug case is non-fatal — pipeline continues, bad LLM response flagged in logs
 
 ### Pending Todos
 
@@ -196,6 +200,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T10:42:36.302Z
-Stopped at: Phase 11 context gathered
-Resume file: .planning/phases/11-fix-state-wide-article-pipeline/11-CONTEXT.md
+Last session: 2026-03-25T11:04:43.894Z
+Stopped at: Completed 11-fix-state-wide-article-pipeline 11-01-PLAN.md
+Resume file: None
