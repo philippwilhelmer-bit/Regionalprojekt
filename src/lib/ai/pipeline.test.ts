@@ -385,6 +385,14 @@ describe('processArticles()', () => {
     expect(updated.errorMessage).toContain('Network timeout')
   })
 
+  // ---------------------------------------------------------------------------
+  // State-wide article pipeline (Phase 11-01)
+  // ---------------------------------------------------------------------------
+
+  it.todo('sets isStateWide=true when step1 returns steiermark-weit')
+  it.todo('creates no ArticleBezirk rows for state-wide article')
+  it.todo('logs console.warn when steiermark-weit co-returned with other slugs')
+
   it('one failing article does not prevent other articles in the batch from succeeding', async () => {
     await db.bezirk.upsert({
       where: { slug: 'graz' },

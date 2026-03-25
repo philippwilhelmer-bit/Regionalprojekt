@@ -253,6 +253,13 @@ describe('listArticlesReader', () => {
     expect(results.length).toBeGreaterThanOrEqual(2)
   })
 
+  // ---------------------------------------------------------------------------
+  // State-wide article OR clause (Phase 11-01)
+  // ---------------------------------------------------------------------------
+
+  it.todo('listArticlesReader includes isStateWide articles when bezirkIds filter active')
+  it.todo('listArticlesReader excludes non-matching non-state-wide articles when bezirkIds filter active')
+
   it('supports limit and offset pagination', async () => {
     // Create 10 published articles
     for (let i = 1; i <= 10; i++) {
