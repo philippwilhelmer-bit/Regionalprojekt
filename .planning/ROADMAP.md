@@ -217,7 +217,11 @@ Plans:
   2. A state-wide article appears in the feed and RSS output for every Bezirk
   3. Existing per-Bezirk tagging (non-state-wide articles) is unaffected
 
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 11-01-PLAN.md — Pipeline fix + reader feed fix + prompt tightening (TDD): steiermark-weit detection in pipeline.ts, isStateWide OR clause in listArticlesReader, exclusivity rule in step1 prompt
+- [ ] 11-02-PLAN.md — Backfill script: src/scripts/backfill-state-wide.ts CLI to repair existing affected articles
 
 ### Phase 12: Config-Driven Region List + RSS Feature Flag
 **Goal:** The Bundesland config file is the single source of truth for the region list — BezirkModal and Header load Bezirke from the database rather than hardcoded arrays, and the `features.rss` flag is enforced by the RSS route handler
@@ -249,5 +253,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 8. Phase 7 Verification + Per-Source AI Config Wiring | 3/3 | Complete   | 2026-03-23 |
 | 9. Ad Config Wiring + Auth Hardening | 3/3 | Complete    | 2026-03-24 |
 | 10. Wire Config Site Name into UI | 1/1 | Complete    | 2026-03-24 |
-| 11. Fix State-Wide Article Pipeline | 0/TBD | Not started | - |
+| 11. Fix State-Wide Article Pipeline | 0/2 | Not started | - |
 | 12. Config-Driven Region List + RSS Feature Flag | 0/TBD | Not started | - |
