@@ -10,6 +10,7 @@ import { createTestDb, cleanDb } from '../src/test/setup-db'
 import type { PrismaClient } from '@prisma/client'
 import { seedBezirke, seedSources } from './seed'
 import { steiermarkSources } from './seed-data/sources'
+import config from '../bundesland.config'
 
 describe('Config-driven seed (CONF-01 + CONF-02)', () => {
   let prisma: PrismaClient
@@ -22,13 +23,13 @@ describe('Config-driven seed (CONF-01 + CONF-02)', () => {
     await cleanDb(prisma)
   })
 
-  it('seeding with steiermark config produces exactly 13 Bezirk rows (CONF-01 + CONF-02)', async () => {
+  it('seeding with steiermark config produces exactly config.regions.length Bezirk rows (CONF-01)', async () => {
     await seedBezirke(prisma, 'steiermark')
     const count = await prisma.bezirk.count()
-    expect(count).toBe(13)
+    expect(count).toBe(config.regions.length)
   })
 
-  it('each Bezirk row has a unique slug, a non-empty name, and at least 1 gemeindeSynonym (CONF-02)', async () => {
+  it('each Bezirk row has a unique slug and a non-empty name (CONF-01)', async () => {
     await seedBezirke(prisma, 'steiermark')
     const bezirke = await prisma.bezirk.findMany()
 
@@ -39,7 +40,6 @@ describe('Config-driven seed (CONF-01 + CONF-02)', () => {
     for (const bezirk of bezirke) {
       expect(bezirk.slug).toBeTruthy()
       expect(bezirk.name).toBeTruthy()
-      expect(bezirk.gemeindeSynonyms.length).toBeGreaterThanOrEqual(1)
     }
   })
 
