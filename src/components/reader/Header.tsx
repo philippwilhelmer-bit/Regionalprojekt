@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import config from '@/../bundesland.config';
 import type { BezirkItem } from '@/types/bundesland';
+import { computeBezirkLabel } from '@/lib/bezirk-label';
 
 export function Header({ bezirke }: { bezirke: BezirkItem[] }) {
   const [bezirkLabel, setBezirkLabel] = useState<string>("Steiermark");
@@ -13,11 +14,7 @@ export function Header({ bezirke }: { bezirke: BezirkItem[] }) {
       if (raw) {
         const slugs: string[] = JSON.parse(raw);
         if (Array.isArray(slugs) && slugs.length > 0) {
-          const bezirkNames = Object.fromEntries(bezirke.map(b => [b.slug, b.name]));
-          const firstName = bezirkNames[slugs[0]] ?? slugs[0];
-          setBezirkLabel(
-            slugs.length > 1 ? `${firstName} +${slugs.length - 1}` : firstName
-          );
+          setBezirkLabel(computeBezirkLabel(slugs, bezirke));
         }
       }
     } catch {
@@ -30,16 +27,37 @@ export function Header({ bezirke }: { bezirke: BezirkItem[] }) {
   }
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-zinc-200 px-4 h-14 flex items-center justify-between">
-      <span className="font-label font-bold text-zinc-900">{config.siteName}</span>
-      <button
-        onClick={handleBezirkClick}
-        className="text-sm text-zinc-600 flex items-center gap-1 hover:text-zinc-900 transition-colors"
-        aria-label="Bezirk auswählen"
-      >
-        {bezirkLabel}
-        <span className="material-symbols-outlined text-base" aria-hidden="true">arrow_drop_down</span>
-      </button>
-    </header>
+    <div className="sticky top-0 z-40">
+      {/* HDR-01: Styrian identity stripe — 2px white + 2px green matching the Styrian flag */}
+      <div
+        className="w-full h-[4px]"
+        style={{ background: 'linear-gradient(to bottom, #fff 50%, #2D5A27 50%)' }}
+        aria-hidden="true"
+      />
+
+      {/* HDR-02: Dark green editorial header */}
+      <header className="bg-styrian-green px-4 h-14 flex items-center justify-between">
+        <span className="font-headline italic text-white text-xl">{config.siteName}</span>
+
+        <div className="flex items-center gap-3">
+          {/* HDR-03: Location badge / Bezirk selector */}
+          <button
+            onClick={handleBezirkClick}
+            className="flex items-center gap-1 text-white text-sm hover:opacity-80 transition-opacity"
+            aria-label="Bezirk auswählen"
+          >
+            <span className="material-symbols-outlined text-[18px]" aria-hidden="true">location_on</span>
+            <span>{bezirkLabel}</span>
+            <span className="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_drop_down</span>
+          </button>
+
+          {/* HDR-04: Disabled search icon — Phase 20 will activate this */}
+          <span
+            className="material-symbols-outlined text-white opacity-40 cursor-default"
+            aria-hidden="true"
+          >search</span>
+        </div>
+      </header>
+    </div>
   );
 }
