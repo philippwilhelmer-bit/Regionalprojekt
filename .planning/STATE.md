@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Design Overhaul
 status: planning
-stopped_at: Phase 17 context gathered
-last_updated: "2026-03-25T19:36:27.315Z"
+stopped_at: Completed 17-01-PLAN.md
+last_updated: "2026-03-25T19:57:42.190Z"
 last_activity: 2026-03-25 — Roadmap created for v1.1
 progress:
   total_phases: 5
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  completed_phases: 2
+  total_plans: 3
+  completed_plans: 3
   percent: 0
 ---
 
@@ -47,6 +47,7 @@ Progress: [░░░░░░░░░░] 0%
 *Updated after each plan completion*
 | Phase 16-design-system-foundation P01 | 2 | 1 tasks | 2 files |
 | Phase 16-design-system-foundation P02 | 5 | 2 tasks | 8 files |
+| Phase 17-header-identity P01 | 2 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -61,6 +62,9 @@ Carried from v1.0 (see PROJECT.md Key Decisions):
 - [Phase 16]: Material Symbols loaded via CDN link tag in layout.tsx head block (GDPR acknowledged per CONTEXT.md)
 - [Phase 16]: Bezirk gradient map uses arbitrary hex shades as intermediate styrian-green/sage variations for 13 distinct districts
 - [Phase 16]: BezirkModal selection state uses styrian-green/cream instead of blue for design system consistency
+- [Phase 17-header-identity]: Stripe uses inline CSS gradient (hex acceptable only for two-color gradients without Tailwind token support)
+- [Phase 17-header-identity]: Sticky applied to wrapper div wrapping stripe+header — ensures single sticky scroll unit
+- [Phase 17-header-identity]: computeBezirkLabel extracted to pure function for unit testability without DOM dependency
 
 ### Pending Todos
 
@@ -73,6 +77,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T19:36:27.307Z
-Stopped at: Phase 17 context gathered
-Resume file: .planning/phases/17-header-identity/17-CONTEXT.md
+Last session: 2026-03-25T19:57:42.189Z
+Stopped at: Completed 17-01-PLAN.md
+Resume file: None

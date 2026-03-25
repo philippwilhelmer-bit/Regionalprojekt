@@ -16,10 +16,10 @@ Requirements for the Design Overhaul milestone. Each maps to roadmap phases.
 
 ### Header & Identity
 
-- [ ] **HDR-01**: Fixed Styrian identity bar (white/green horizontal stripe) at top of viewport
-- [ ] **HDR-02**: Dark green header with italic serif "RegionalNews" branding
-- [ ] **HDR-03**: Steiermark location badge in header
-- [ ] **HDR-04**: Search icon in header linking to search page
+- [x] **HDR-01**: Fixed Styrian identity bar (white/green horizontal stripe) at top of viewport
+- [x] **HDR-02**: Dark green header with italic serif "RegionalNews" branding
+- [x] **HDR-03**: Steiermark location badge in header
+- [x] **HDR-04**: Search icon in header linking to search page
 
 ### Homepage
 
@@ -72,10 +72,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DS-02 | Phase 16 | Complete |
 | DS-03 | Phase 16 | Complete |
 | DS-04 | Phase 16 | Complete |
-| HDR-01 | Phase 17 | Pending |
-| HDR-02 | Phase 17 | Pending |
-| HDR-03 | Phase 17 | Pending |
-| HDR-04 | Phase 17 | Pending |
+| HDR-01 | Phase 17 | Complete |
+| HDR-02 | Phase 17 | Complete |
+| HDR-03 | Phase 17 | Complete |
+| HDR-04 | Phase 17 | Complete |
 | HOME-01 | Phase 18 | Pending |
 | HOME-02 | Phase 18 | Pending |
 | HOME-03 | Phase 18 | Pending |

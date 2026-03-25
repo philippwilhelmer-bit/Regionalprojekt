@@ -35,7 +35,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 **Milestone Goal:** Restyle the reader frontend with a premium editorial design — Styrian identity, serif headlines, warm cream palette, and newspaper-like layouts.
 
 - [x] **Phase 16: Design System Foundation** - Install fonts, define color tokens, icon library, border radius defaults (completed 2026-03-25)
-- [ ] **Phase 17: Header & Identity** - Styrian identity bar, dark green header, serif branding, location badge, search icon
+- [x] **Phase 17: Header & Identity** - Styrian identity bar, dark green header, serif branding, location badge, search icon (completed 2026-03-25)
 - [ ] **Phase 18: Homepage Editorial Layout** - Hero article, top-stories scroller, topic sections, Eilmeldung banner
 - [ ] **Phase 19: Article Detail & Bottom Navigation** - Editorial typography on article page, bottom nav restyling
 - [ ] **Phase 20: Search & Categories** - Search input, trending pills, category grid, recommended articles
@@ -65,7 +65,7 @@ Plans:
   2. The header displays in dark green with "RegionalNews" in italic serif — immediately distinguishable from the v1.0 header
   3. A Steiermark location badge appears in the header on every page
   4. Tapping the search icon in the header navigates to the search page
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
 - [ ] 17-01-PLAN.md — Refactor Header.tsx with Styrian stripe, dark green styling, location badge, and search icon
 
@@ -122,7 +122,7 @@ Plans:
 | 14. CMS Acceptance Gate | v1.0 | 1/1 | Complete | 2026-03-25 |
 | 15. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-03-25 |
 | 16. Design System Foundation | v1.1 | 2/2 | Complete | 2026-03-25 |
-| 17. Header & Identity | v1.1 | 0/1 | Not started | - |
+| 17. Header & Identity | 1/1 | Complete   | 2026-03-25 | - |
 | 18. Homepage Editorial Layout | v1.1 | 0/TBD | Not started | - |
 | 19. Article Detail & Bottom Navigation | v1.1 | 0/TBD | Not started | - |
 | 20. Search & Categories | v1.1 | 0/TBD | Not started | - |
