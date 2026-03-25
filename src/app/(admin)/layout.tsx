@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { verifySessionCookie, SESSION_COOKIE_NAME } from '@/lib/admin/auth-node'
 import Link from 'next/link'
+import { logoutAction } from '@/lib/admin/logout-action'
 
 const navItems = [
   { href: '/admin/articles',   label: 'Artikel' },
@@ -33,6 +34,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </Link>
           ))}
         </nav>
+        <form action={logoutAction} className="mt-auto">
+          <button
+            type="submit"
+            className="w-full px-3 py-2 rounded text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-700 text-left"
+          >
+            Abmelden
+          </button>
+        </form>
       </aside>
       <main className="flex-1 overflow-auto p-6">{children}</main>
     </div>
