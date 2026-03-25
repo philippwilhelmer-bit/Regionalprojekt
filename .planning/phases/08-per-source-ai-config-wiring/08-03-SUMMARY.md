@@ -90,3 +90,10 @@ None - no external service configuration required.
 ---
 *Phase: 08-per-source-ai-config-wiring*
 *Completed: 2026-03-23*
+
+## Self-Check: PASSED
+
+- FOUND: `.planning/phases/07-extensibility-and-quality-validation/07-VERIFICATION.md`
+- FOUND: `.planning/phases/08-per-source-ai-config-wiring/08-03-SUMMARY.md`
+- FOUND: commit `ee957b5` (task commit)
+- FOUND: commit `46ff996` (metadata commit)
