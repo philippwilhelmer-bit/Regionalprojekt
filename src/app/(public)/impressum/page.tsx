@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import config from '@/../bundesland.config'
+import type { BundeslandConfig } from '@/types/bundesland'
+import _config from '@/../bundesland.config'
+
+const config = _config as BundeslandConfig
 
 export const metadata: Metadata = {
   title: 'Impressum & Datenschutz',
@@ -14,6 +17,14 @@ export const metadata: Metadata = {
  * The id="datenschutz" anchor is linked to from the CookieBanner.
  */
 export default function ImpressumPage() {
+  if (process.env.NODE_ENV === 'development') {
+    const imp = config.branding.impressum
+    const todoFields = Object.entries(imp).filter(([, v]) => typeof v === 'string' && v.startsWith('TODO:'))
+    if (todoFields.length > 0) {
+      console.warn(`[Impressum] ${todoFields.length} field(s) still have TODO: placeholders: ${todoFields.map(([k]) => k).join(', ')}`)
+    }
+  }
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 prose prose-zinc">
       <Link href="/" className="text-sm text-zinc-500 hover:text-zinc-800 no-underline">← Zur Startseite</Link>
@@ -34,15 +45,21 @@ export default function ImpressumPage() {
 
       <p>
         <strong>E-Mail:</strong> <a href={`mailto:${config.branding.impressum.email}`}>{config.branding.impressum.email}</a><br />
-        <strong>Telefon:</strong> [TELEFON]
+        <strong>Telefon:</strong> {config.branding.impressum.telefon}
       </p>
 
       <p>
-        <strong>Unternehmensgegenstand:</strong> [UNTERNEHMENSGEGENSTAND]
+        <strong>Unternehmensgegenstand:</strong> {config.branding.impressum.unternehmensgegenstand}
       </p>
 
+      {config.branding.impressum.uid && (
+        <p>
+          <strong>UID-Nummer:</strong> {config.branding.impressum.uid}
+        </p>
+      )}
+
       <h2>Blattlinie (§25 Abs. 4 MedienG)</h2>
-      <p>[BLATTLINIE]</p>
+      <p>{config.branding.impressum.blattlinie}</p>
 
       <h2>Haftungsausschluss</h2>
       <p>
@@ -99,7 +116,7 @@ export default function ImpressumPage() {
       <h2>Kontakt Datenschutz</h2>
       <p>
         Bei Fragen zum Datenschutz wenden Sie sich an:{' '}
-        <a href="mailto:[DATENSCHUTZ_EMAIL]">[DATENSCHUTZ_EMAIL]</a>
+        <a href={`mailto:${config.branding.impressum.datenschutzEmail}`}>{config.branding.impressum.datenschutzEmail}</a>
       </p>
     </div>
   )

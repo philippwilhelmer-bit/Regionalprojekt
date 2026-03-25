@@ -12,6 +12,11 @@ export interface BundeslandBranding {
     publisherName: string
     address: string
     email: string
+    telefon: string
+    unternehmensgegenstand: string
+    blattlinie: string
+    datenschutzEmail: string
+    uid?: string
   }
 }
 

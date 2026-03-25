@@ -12,6 +12,10 @@ export default {
       publisherName: 'Ennstal Aktuell Medien GmbH',
       address: 'Mustergasse 1, 8940 Liezen, Steiermark',
       email: 'redaktion@ennstal-aktuell.at',
+      telefon: 'TODO: +43 XXX XXXXXXX',
+      unternehmensgegenstand: 'TODO: Betrieb eines regionalen Nachrichtenportals',
+      blattlinie: 'TODO: Blattlinie hier eintragen',
+      datenschutzEmail: 'TODO: datenschutz@example.at',
     },
   },
   adZones: [
