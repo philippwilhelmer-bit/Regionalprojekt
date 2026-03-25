@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Design Overhaul
 status: planning
-stopped_at: Completed 19-02-PLAN.md
-last_updated: "2026-03-25T21:40:41.872Z"
+stopped_at: Completed 19-01-PLAN.md
+last_updated: "2026-03-25T21:41:41.658Z"
 last_activity: 2026-03-25 — Roadmap created for v1.1
 progress:
   total_phases: 5
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 8
-  completed_plans: 7
+  completed_plans: 8
   percent: 0
 ---
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 18 P03 | 5 | 1 tasks | 2 files |
 | Phase 18-homepage-editorial-layout P02 | 10 | 2 tasks | 5 files |
 | Phase 19-article-detail-bottom-navigation P02 | 5 | 1 tasks | 2 files |
+| Phase 19-article-detail-bottom-navigation P01 | 2 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,8 @@ Carried from v1.0 (see PROJECT.md Key Decisions):
 - [Phase 18-homepage-editorial-layout]: Plain img tag in HeroArticle (not next/image) — unpredictable external image domains per research
 - [Phase 18-homepage-editorial-layout]: HomepageLayout mounted flag prevents bezirk filter from running during SSR hydration
 - [Phase 19-article-detail-bottom-navigation]: BottomNav.tsx replaced with single re-export line — keeps layout.tsx import unchanged, client/server boundary clean
+- [Phase 19]: h1 keeps text-zinc-800 on cream — near-black maximizes headline readability
+- [Phase 19]: TopMeldungenRow heading prop added for reuse — caller overrides default 'Top-Meldungen' without duplication
 
 ### Pending Todos
 
@@ -88,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T21:40:41.870Z
-Stopped at: Completed 19-02-PLAN.md
+Last session: 2026-03-25T21:41:41.657Z
+Stopped at: Completed 19-01-PLAN.md
 Resume file: None

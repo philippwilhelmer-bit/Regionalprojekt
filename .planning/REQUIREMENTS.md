@@ -30,8 +30,8 @@ Requirements for the Design Overhaul milestone. Each maps to roadmap phases.
 
 ### Article Detail
 
-- [ ] **ART-01**: Article page uses editorial typography (Newsreader headlines, Inter body)
-- [ ] **ART-02**: Article page uses warm cream background with consistent design system styling
+- [x] **ART-01**: Article page uses editorial typography (Newsreader headlines, Inter body)
+- [x] **ART-02**: Article page uses warm cream background with consistent design system styling
 
 ### Search & Categories
 
@@ -80,8 +80,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HOME-02 | Phase 18 | Complete |
 | HOME-03 | Phase 18 | Complete |
 | HOME-04 | Phase 18 | Complete |
-| ART-01 | Phase 19 | Pending |
-| ART-02 | Phase 19 | Pending |
+| ART-01 | Phase 19 | Complete |
+| ART-02 | Phase 19 | Complete |
 | NAV-01 | Phase 19 | Complete |
 | NAV-02 | Phase 19 | Complete |
 | SRCH-01 | Phase 20 | Pending |
