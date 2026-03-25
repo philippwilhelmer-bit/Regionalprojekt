@@ -4,7 +4,7 @@
  * Production usage (no-arg client): functions use the singleton from src/lib/prisma.ts.
  * Test usage: pass a pgLite-backed PrismaClient as the first argument.
  */
-import type { Article, ArticleStatus, PrismaClient } from '@prisma/client'
+import type { Article, ArticleStatus, Prisma, PrismaClient } from '@prisma/client'
 import { prisma as defaultPrisma } from '../prisma'
 
 export type ArticleWithBezirke = Article & {
@@ -190,6 +190,206 @@ export async function listArticlesReader(
     skip: offset,
   })
 }
+
+// ─── Homepage editorial query functions ──────────────────────────────────────
+
+/**
+ * Returns the article flagged as isFeatured=true (PUBLISHED only).
+ * Falls back to the newest published article when none are featured.
+ * Returns null when there are no published articles.
+ */
+export async function getFeaturedArticle(): Promise<ArticleWithBezirke | null>
+export async function getFeaturedArticle(client: PrismaClient): Promise<ArticleWithBezirke | null>
+export async function getFeaturedArticle(
+  clientOrVoid?: PrismaClient
+): Promise<ArticleWithBezirke | null> {
+  const db = clientOrVoid !== undefined && typeof clientOrVoid === 'object' && '$connect' in clientOrVoid
+    ? clientOrVoid
+    : defaultPrisma
+
+  const include = { bezirke: { include: { bezirk: true } } }
+
+  // Try to get the featured article first
+  const featured = await db.article.findFirst({
+    where: { status: 'PUBLISHED', isFeatured: true },
+    include,
+  })
+  if (featured) return featured
+
+  // Fall back to newest published article
+  return db.article.findFirst({
+    where: { status: 'PUBLISHED' },
+    include,
+    orderBy: { publishedAt: 'desc' },
+  })
+}
+
+/**
+ * Returns isPinned=true articles (PUBLISHED only), filtered by bezirkIds when provided.
+ * isStateWide articles are always included when a bezirkIds filter is applied.
+ * Falls back to newest published articles when none are pinned.
+ */
+export async function getPinnedArticles(options?: {
+  bezirkIds?: number[]
+  limit?: number
+}): Promise<ArticleWithBezirke[]>
+export async function getPinnedArticles(
+  client: PrismaClient,
+  options?: { bezirkIds?: number[]; limit?: number }
+): Promise<ArticleWithBezirke[]>
+export async function getPinnedArticles(
+  clientOrOptions?: PrismaClient | { bezirkIds?: number[]; limit?: number },
+  options?: { bezirkIds?: number[]; limit?: number }
+): Promise<ArticleWithBezirke[]> {
+  let db: PrismaClient
+  let opts: { bezirkIds?: number[]; limit?: number }
+
+  if (clientOrOptions !== undefined && clientOrOptions !== null && typeof clientOrOptions === 'object' && '$connect' in clientOrOptions) {
+    db = clientOrOptions as PrismaClient
+    opts = options ?? {}
+  } else {
+    db = defaultPrisma
+    opts = (clientOrOptions as { bezirkIds?: number[]; limit?: number }) ?? {}
+  }
+
+  const { bezirkIds, limit = 10 } = opts
+  const include = { bezirke: { include: { bezirk: true } } }
+
+  const where: Prisma.ArticleWhereInput = {
+    status: 'PUBLISHED',
+    isPinned: true,
+    ...(bezirkIds !== undefined && bezirkIds.length > 0
+      ? {
+          OR: [
+            { bezirke: { some: { bezirkId: { in: bezirkIds } } } },
+            { isStateWide: true },
+          ],
+        }
+      : {}),
+  }
+
+  const pinned = await db.article.findMany({
+    where,
+    include,
+    orderBy: { publishedAt: 'desc' },
+    take: limit,
+  })
+
+  if (pinned.length > 0) return pinned
+
+  // Fallback: return newest published articles
+  return db.article.findMany({
+    where: {
+      status: 'PUBLISHED',
+      ...(bezirkIds !== undefined && bezirkIds.length > 0
+        ? {
+            OR: [
+              { bezirke: { some: { bezirkId: { in: bezirkIds } } } },
+              { isStateWide: true },
+            ],
+          }
+        : {}),
+    },
+    include,
+    orderBy: { publishedAt: 'desc' },
+    take: limit,
+  })
+}
+
+/**
+ * Returns true when at least one PUBLISHED article has isEilmeldung=true.
+ */
+export async function hasEilmeldung(): Promise<boolean>
+export async function hasEilmeldung(client: PrismaClient): Promise<boolean>
+export async function hasEilmeldung(
+  clientOrVoid?: PrismaClient
+): Promise<boolean> {
+  const db = clientOrVoid !== undefined && typeof clientOrVoid === 'object' && '$connect' in clientOrVoid
+    ? clientOrVoid
+    : defaultPrisma
+
+  const count = await db.article.count({
+    where: { status: 'PUBLISHED', isEilmeldung: true },
+  })
+  return count > 0
+}
+
+/**
+ * Returns PUBLISHED articles where isFeatured=false, ordered by isPinned desc then publishedAt desc.
+ * Default limit is 60.
+ */
+export async function listArticlesForHomepage(options?: {
+  limit?: number
+}): Promise<ArticleWithBezirke[]>
+export async function listArticlesForHomepage(
+  client: PrismaClient,
+  options?: { limit?: number }
+): Promise<ArticleWithBezirke[]>
+export async function listArticlesForHomepage(
+  clientOrOptions?: PrismaClient | { limit?: number },
+  options?: { limit?: number }
+): Promise<ArticleWithBezirke[]> {
+  let db: PrismaClient
+  let opts: { limit?: number }
+
+  if (clientOrOptions !== undefined && clientOrOptions !== null && typeof clientOrOptions === 'object' && '$connect' in clientOrOptions) {
+    db = clientOrOptions as PrismaClient
+    opts = options ?? {}
+  } else {
+    db = defaultPrisma
+    opts = (clientOrOptions as { limit?: number }) ?? {}
+  }
+
+  const { limit = 60 } = opts
+
+  return db.article.findMany({
+    where: { status: 'PUBLISHED', isFeatured: false },
+    include: { bezirke: { include: { bezirk: true } } },
+    orderBy: [{ isPinned: 'desc' }, { publishedAt: 'desc' }],
+    take: limit,
+  })
+}
+
+/**
+ * Pure function — no DB access.
+ *
+ * Groups an array of ArticleWithBezirke by the slug of each article's first tagged bezirk.
+ * Articles with isStateWide=true appear in every group.
+ * Articles with no bezirke are excluded entirely.
+ *
+ * Returns: Map<bezirkSlug, { name: string, articles: ArticleWithBezirke[] }>
+ */
+export function groupArticlesByBezirk(
+  articles: ArticleWithBezirke[]
+): Map<string, { name: string; articles: ArticleWithBezirke[] }> {
+  const result = new Map<string, { name: string; articles: ArticleWithBezirke[] }>()
+
+  // Collect all non-statewide articles that have at least one bezirk
+  const withBezirk = articles.filter(
+    (a) => !a.isStateWide && a.bezirke.length > 0
+  )
+  const stateWide = articles.filter((a) => a.isStateWide)
+
+  // Build groups from normal articles (first bezirk determines the group)
+  for (const article of withBezirk) {
+    const firstEntry = article.bezirke[0]
+    const { slug, name } = firstEntry.bezirk
+
+    if (!result.has(slug)) {
+      result.set(slug, { name, articles: [] })
+    }
+    result.get(slug)!.articles.push(article)
+  }
+
+  // Add stateWide articles to every existing group
+  for (const [, group] of result) {
+    group.articles.push(...stateWide)
+  }
+
+  return result
+}
+
+// ─── Bezirk-specific article queries ─────────────────────────────────────────
 
 export async function getArticlesByBezirk(
   bezirkSlug: string,

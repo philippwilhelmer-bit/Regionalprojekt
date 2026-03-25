@@ -69,6 +69,8 @@ model Article {
   publishedAt     DateTime?
   isPinned        Boolean          @default(false)
   isFeatured      Boolean          @default(false)
+  isEilmeldung    Boolean          @default(false)
+  imageUrl        String?
   retryCount      Int              @default(0)
   errorMessage    String?
   createdAt       DateTime         @default(now())
@@ -80,6 +82,7 @@ model Article {
   @@index([source, externalId])
   @@index([publicId])
   @@index([isPinned, isFeatured])
+  @@index([isEilmeldung])
   @@index([source, status])
   @@index([sourceId])
 }
