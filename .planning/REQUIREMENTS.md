@@ -11,7 +11,7 @@ Requirements for the Design Overhaul milestone. Each maps to roadmap phases.
 
 - [x] **DS-01**: Site uses Newsreader for headlines, Inter for body text, Work Sans for labels/uppercase text
 - [x] **DS-02**: Color palette uses Styrian green (#2D5A27), warm cream (#fbfaee), alpine red (#8b0000), muted sage (#4a5d4e)
-- [ ] **DS-03**: Icons use Material Symbols Outlined throughout the reader frontend
+- [x] **DS-03**: Icons use Material Symbols Outlined throughout the reader frontend
 - [x] **DS-04**: Border radius defaults to 2px (sharp editorial corners)
 
 ### Header & Identity
@@ -70,7 +70,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | DS-01 | Phase 16 | Complete |
 | DS-02 | Phase 16 | Complete |
-| DS-03 | Phase 16 | Pending |
+| DS-03 | Phase 16 | Complete |
 | DS-04 | Phase 16 | Complete |
 | HDR-01 | Phase 17 | Pending |
 | HDR-02 | Phase 17 | Pending |
