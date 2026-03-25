@@ -36,7 +36,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 
 - [x] **Phase 16: Design System Foundation** - Install fonts, define color tokens, icon library, border radius defaults (completed 2026-03-25)
 - [x] **Phase 17: Header & Identity** - Styrian identity bar, dark green header, serif branding, location badge, search icon (completed 2026-03-25)
-- [ ] **Phase 18: Homepage Editorial Layout** - Hero article, top-stories scroller, topic sections, Eilmeldung banner
+- [x] **Phase 18: Homepage Editorial Layout** - Hero article, top-stories scroller, topic sections, Eilmeldung banner (completed 2026-03-25)
 - [ ] **Phase 19: Article Detail & Bottom Navigation** - Editorial typography on article page, bottom nav restyling
 - [ ] **Phase 20: Search & Categories** - Search input, trending pills, category grid, recommended articles
 
@@ -78,7 +78,7 @@ Plans:
   2. Below the hero, a row of cards labeled "Top-Meldungen" scrolls horizontally and each card has a colored bottom-border accent
   3. Topic sections below display an editorial grid with wood-divider separators and Styrian flag accents between sections
   4. When at least one article has the Eilmeldung flag set, a red "Eilmeldung" banner appears at the top of the homepage content area; when no article is flagged the banner is absent
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
 - [ ] 18-01-PLAN.md — Prisma migration (isEilmeldung, imageUrl), new query functions, unit tests
 - [ ] 18-02-PLAN.md — Hero, Top-Meldungen, BezirkSection components + HomepageLayout + page.tsx rewire
@@ -127,6 +127,6 @@ Plans:
 | 15. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-03-25 |
 | 16. Design System Foundation | v1.1 | 2/2 | Complete | 2026-03-25 |
 | 17. Header & Identity | 1/1 | Complete    | 2026-03-25 | - |
-| 18. Homepage Editorial Layout | 2/3 | In Progress|  | - |
+| 18. Homepage Editorial Layout | 3/3 | Complete   | 2026-03-25 | - |
 | 19. Article Detail & Bottom Navigation | v1.1 | 0/TBD | Not started | - |
 | 20. Search & Categories | v1.1 | 0/TBD | Not started | - |

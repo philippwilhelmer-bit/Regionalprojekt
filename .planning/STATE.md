@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Design Overhaul
 status: planning
-stopped_at: Completed 18-homepage-editorial-layout 18-03-PLAN.md
-last_updated: "2026-03-25T21:07:20.696Z"
+stopped_at: Completed 18-homepage-editorial-layout 18-02-PLAN.md
+last_updated: "2026-03-25T21:07:57.621Z"
 last_activity: 2026-03-25 — Roadmap created for v1.1
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
   percent: 0
 ---
 
@@ -50,6 +50,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 17-header-identity P01 | 2 | 2 tasks | 3 files |
 | Phase 18-homepage-editorial-layout P01 | 15 | 2 tasks | 5 files |
 | Phase 18 P03 | 5 | 1 tasks | 2 files |
+| Phase 18-homepage-editorial-layout P02 | 10 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,8 @@ Carried from v1.0 (see PROJECT.md Key Decisions):
 - [Phase 18-homepage-editorial-layout]: getPinnedArticles falls back to newest published when none pinned — top-stories row always populated
 - [Phase 18-homepage-editorial-layout]: Phase 18 migration created manually: migrate dev --create-only unavailable due to dev DB migration mismatch (20260321_ingestion)
 - [Phase 18]: EilmeldungBanner uses visible=false on mount to avoid hydration mismatch — useEffect sets true only when sessionStorage key absent
+- [Phase 18-homepage-editorial-layout]: Plain img tag in HeroArticle (not next/image) — unpredictable external image domains per research
+- [Phase 18-homepage-editorial-layout]: HomepageLayout mounted flag prevents bezirk filter from running during SSR hydration
 
 ### Pending Todos
 
@@ -83,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T21:07:20.694Z
-Stopped at: Completed 18-homepage-editorial-layout 18-03-PLAN.md
+Last session: 2026-03-25T21:07:57.619Z
+Stopped at: Completed 18-homepage-editorial-layout 18-02-PLAN.md
 Resume file: None
