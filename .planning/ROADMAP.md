@@ -78,7 +78,11 @@ Plans:
   2. Below the hero, a row of cards labeled "Top-Meldungen" scrolls horizontally and each card has a colored bottom-border accent
   3. Topic sections below display an editorial grid with wood-divider separators and Styrian flag accents between sections
   4. When at least one article has the Eilmeldung flag set, a red "Eilmeldung" banner appears at the top of the homepage content area; when no article is flagged the banner is absent
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 18-01-PLAN.md — Prisma migration (isEilmeldung, imageUrl), new query functions, unit tests
+- [ ] 18-02-PLAN.md — Hero, Top-Meldungen, BezirkSection components + HomepageLayout + page.tsx rewire
+- [ ] 18-03-PLAN.md — Eilmeldung banner component + layout.tsx wiring
 
 ### Phase 19: Article Detail & Bottom Navigation
 **Goal**: Article pages use full editorial typography on a warm cream canvas, and the bottom navigation matches the new design system with a clear active-state pill
@@ -123,6 +127,6 @@ Plans:
 | 15. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-03-25 |
 | 16. Design System Foundation | v1.1 | 2/2 | Complete | 2026-03-25 |
 | 17. Header & Identity | 1/1 | Complete    | 2026-03-25 | - |
-| 18. Homepage Editorial Layout | v1.1 | 0/TBD | Not started | - |
+| 18. Homepage Editorial Layout | v1.1 | 0/3 | Not started | - |
 | 19. Article Detail & Bottom Navigation | v1.1 | 0/TBD | Not started | - |
 | 20. Search & Categories | v1.1 | 0/TBD | Not started | - |
