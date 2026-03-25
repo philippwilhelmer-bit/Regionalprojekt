@@ -68,32 +68,32 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DS-01 | — | Pending |
-| DS-02 | — | Pending |
-| DS-03 | — | Pending |
-| DS-04 | — | Pending |
-| HDR-01 | — | Pending |
-| HDR-02 | — | Pending |
-| HDR-03 | — | Pending |
-| HDR-04 | — | Pending |
-| HOME-01 | — | Pending |
-| HOME-02 | — | Pending |
-| HOME-03 | — | Pending |
-| HOME-04 | — | Pending |
-| ART-01 | — | Pending |
-| ART-02 | — | Pending |
-| SRCH-01 | — | Pending |
-| SRCH-02 | — | Pending |
-| SRCH-03 | — | Pending |
-| SRCH-04 | — | Pending |
-| NAV-01 | — | Pending |
-| NAV-02 | — | Pending |
+| DS-01 | Phase 16 | Pending |
+| DS-02 | Phase 16 | Pending |
+| DS-03 | Phase 16 | Pending |
+| DS-04 | Phase 16 | Pending |
+| HDR-01 | Phase 17 | Pending |
+| HDR-02 | Phase 17 | Pending |
+| HDR-03 | Phase 17 | Pending |
+| HDR-04 | Phase 17 | Pending |
+| HOME-01 | Phase 18 | Pending |
+| HOME-02 | Phase 18 | Pending |
+| HOME-03 | Phase 18 | Pending |
+| HOME-04 | Phase 18 | Pending |
+| ART-01 | Phase 19 | Pending |
+| ART-02 | Phase 19 | Pending |
+| NAV-01 | Phase 19 | Pending |
+| NAV-02 | Phase 19 | Pending |
+| SRCH-01 | Phase 20 | Pending |
+| SRCH-02 | Phase 20 | Pending |
+| SRCH-03 | Phase 20 | Pending |
+| SRCH-04 | Phase 20 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 20 total
-- Mapped to phases: 0
-- Unmapped: 20
+- Mapped to phases: 20
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-25 after initial definition*
+*Last updated: 2026-03-25 after roadmap creation*
