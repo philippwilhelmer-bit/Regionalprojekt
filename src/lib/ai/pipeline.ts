@@ -121,27 +121,44 @@ export async function processArticles(
         totalInputTokens += step1.inputTokens
         totalOutputTokens += step1.outputTokens
 
-        // 5c. Map bezirkSlugs → Bezirk IDs
-        const matchedBezirke = step1.bezirkSlugs
-          .map((slug) => bezirkBySlug.get(slug))
-          .filter((b): b is NonNullable<typeof b> => b !== undefined)
+        // 5c. Detect steiermark-weit before slug→ID mapping
+        const isStateWide = step1.bezirkSlugs.includes('steiermark-weit')
 
-        // 5d. Write TAGGED status + ArticleBezirk rows in a single transaction
-        await db.$transaction([
-          db.article.update({
+        if (isStateWide && step1.bezirkSlugs.length > 1) {
+          console.warn(
+            `[ai-pipeline] article id=${article.id} — 'steiermark-weit' returned alongside other slugs: ${step1.bezirkSlugs.join(', ')} — check Step 1 prompt`
+          )
+        }
+
+        // 5d. Write TAGGED status + bezirk associations
+        let matchedBezirke: (typeof allBezirke)[number][] = []
+        if (isStateWide) {
+          await db.article.update({
             where: { id: article.id },
-            data: { status: 'TAGGED' },
-          }),
-          ...matchedBezirke.map((bezirk) =>
-            db.articleBezirk.upsert({
-              where: {
-                articleId_bezirkId: { articleId: article.id, bezirkId: bezirk.id },
-              },
-              create: { articleId: article.id, bezirkId: bezirk.id, taggedAt: new Date() },
-              update: { taggedAt: new Date() },
-            })
-          ),
-        ])
+            data: { status: 'TAGGED', isStateWide: true },
+          })
+          // No ArticleBezirk rows for state-wide articles
+        } else {
+          matchedBezirke = step1.bezirkSlugs
+            .map((slug) => bezirkBySlug.get(slug))
+            .filter((b): b is NonNullable<typeof b> => b !== undefined)
+
+          await db.$transaction([
+            db.article.update({
+              where: { id: article.id },
+              data: { status: 'TAGGED' },
+            }),
+            ...matchedBezirke.map((bezirk) =>
+              db.articleBezirk.upsert({
+                where: {
+                  articleId_bezirkId: { articleId: article.id, bezirkId: bezirk.id },
+                },
+                create: { articleId: article.id, bezirkId: bezirk.id, taggedAt: new Date() },
+                update: { taggedAt: new Date() },
+              })
+            ),
+          ])
+        }
 
         // 5e. Step 2: Write & SEO
         const matchedBezirkNames = matchedBezirke.map((b) => b.name)

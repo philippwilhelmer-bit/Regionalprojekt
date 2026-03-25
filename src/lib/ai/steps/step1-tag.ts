@@ -66,6 +66,7 @@ function buildSystemPrompt(bezirkContext: string): string {
   return `You are a regional news classifier for Steiermark, Austria.
 Classify the provided news article into the relevant Bezirke using ONLY the slugs listed below.
 Return 'steiermark-weit' if the article is state-wide and not specific to any Bezirk.
+When returning 'steiermark-weit', do not include any other Bezirk slugs — it is exclusive.
 Return an empty array only if the article has no geographic relevance to Steiermark.
 
 Available Bezirke:

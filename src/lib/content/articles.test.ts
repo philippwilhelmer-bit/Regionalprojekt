@@ -257,8 +257,38 @@ describe('listArticlesReader', () => {
   // State-wide article OR clause (Phase 11-01)
   // ---------------------------------------------------------------------------
 
-  it.todo('listArticlesReader includes isStateWide articles when bezirkIds filter active')
-  it.todo('listArticlesReader excludes non-matching non-state-wide articles when bezirkIds filter active')
+  it('listArticlesReader includes isStateWide articles when bezirkIds filter active', async () => {
+    const stateWide = await prisma.article.create({
+      data: {
+        source: 'OTS_AT',
+        title: 'Steiermark-weit Article',
+        status: 'PUBLISHED',
+        isStateWide: true,
+        publicId: 'sw-reader-1',
+      },
+    })
+
+    const results = await listArticlesReader(prisma, { bezirkIds: [liezerId] })
+    const ids = results.map((a) => a.id)
+    expect(ids).toContain(stateWide.id)
+  })
+
+  it('listArticlesReader excludes non-matching non-state-wide articles when bezirkIds filter active', async () => {
+    await prisma.article.create({
+      data: {
+        source: 'OTS_AT',
+        title: 'Graz-only Article',
+        status: 'PUBLISHED',
+        isStateWide: false,
+        publicId: 'graz-only-1',
+        bezirke: { create: [{ bezirkId: grazId }] },
+      },
+    })
+
+    const results = await listArticlesReader(prisma, { bezirkIds: [liezerId] })
+    const titles = results.map((a) => a.title)
+    expect(titles).not.toContain('Graz-only Article')
+  })
 
   it('supports limit and offset pagination', async () => {
     // Create 10 published articles

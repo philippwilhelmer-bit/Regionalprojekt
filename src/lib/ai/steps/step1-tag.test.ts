@@ -114,7 +114,16 @@ describe('runStep1Tag()', () => {
     expect(callArgs.model).toBe('claude-haiku-4-5-20251001')
   })
 
-  it.todo('system prompt contains steiermark-weit exclusivity instruction')
+  it('system prompt contains steiermark-weit exclusivity instruction', async () => {
+    const client = makeMockClient()
+    const mockCreate = vi.spyOn(client.messages, 'create')
+
+    await runStep1Tag(client, 'Ein Artikel über ganz Steiermark.', TEST_BEZIRKE)
+
+    const callArgs = mockCreate.mock.calls[0][0] as Anthropic.Messages.MessageCreateParamsNonStreaming
+    expect(callArgs.system).toContain('exclusive')
+    expect(callArgs.system).toContain("do not include any other Bezirk slugs — it is exclusive")
+  })
 
   it('calls messages.create with output_config json_schema format', async () => {
     const client = makeMockClient()

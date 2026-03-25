@@ -167,7 +167,12 @@ export async function listArticlesReader(
     where: {
       status: 'PUBLISHED',
       ...(bezirkIds !== undefined && bezirkIds.length > 0
-        ? { bezirke: { some: { bezirkId: { in: bezirkIds } } } }
+        ? {
+            OR: [
+              { bezirke: { some: { bezirkId: { in: bezirkIds } } } },
+              { isStateWide: true },
+            ],
+          }
         : {}),
     },
     include: {

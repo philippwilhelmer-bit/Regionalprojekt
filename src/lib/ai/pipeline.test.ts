@@ -389,9 +389,43 @@ describe('processArticles()', () => {
   // State-wide article pipeline (Phase 11-01)
   // ---------------------------------------------------------------------------
 
-  it.todo('sets isStateWide=true when step1 returns steiermark-weit')
-  it.todo('creates no ArticleBezirk rows for state-wide article')
-  it.todo('logs console.warn when steiermark-weit co-returned with other slugs')
+  it('sets isStateWide=true when step1 returns steiermark-weit', async () => {
+    const { article } = await seedFetchedArticle()
+    _clientFactory.create = () =>
+      makeMockAnthropicClient(makeStep1Response(['steiermark-weit'], false)) as any
+
+    await processArticles(db)
+
+    const updated = await db.article.findUniqueOrThrow({ where: { id: article.id } })
+    expect(updated.isStateWide).toBe(true)
+    expect(updated.status).toBe('WRITTEN')
+  })
+
+  it('creates no ArticleBezirk rows for state-wide article', async () => {
+    const { article } = await seedFetchedArticle()
+    _clientFactory.create = () =>
+      makeMockAnthropicClient(makeStep1Response(['steiermark-weit'], false)) as any
+
+    await processArticles(db)
+
+    const rows = await db.articleBezirk.findMany({ where: { articleId: article.id } })
+    expect(rows).toEqual([])
+  })
+
+  it('logs console.warn when steiermark-weit co-returned with other slugs', async () => {
+    const { article } = await seedFetchedArticle()
+    _clientFactory.create = () =>
+      makeMockAnthropicClient(makeStep1Response(['steiermark-weit', 'liezen'], false)) as any
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    await processArticles(db)
+
+    expect(warnSpy).toHaveBeenCalled()
+    const warnArg = warnSpy.mock.calls[0][0] as string
+    expect(warnArg).toContain('steiermark-weit')
+    expect(warnArg).toContain(String(article.id))
+  })
 
   it('one failing article does not prevent other articles in the batch from succeeding', async () => {
     await db.bezirk.upsert({
