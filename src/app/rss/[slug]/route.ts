@@ -1,3 +1,4 @@
+import config from '@/../bundesland.config'
 import { getArticlesByBezirk, listArticles } from '@/lib/content/articles'
 import { getBezirkBySlug } from '@/lib/content/bezirke'
 import { generateBezirkRssFeed } from '@/lib/reader/rss'
@@ -14,6 +15,10 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+  if (!config.features.rss) {
+    return new Response(null, { status: 404 })
+  }
+
   // Resolve slug: strip optional .xml suffix (e.g. "liezen.xml" → "liezen")
   const { slug: rawSlug } = await params
   const slug = rawSlug.replace(/\.xml$/, '')
