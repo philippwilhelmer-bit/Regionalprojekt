@@ -234,7 +234,13 @@ Plans:
   3. Setting `config.features.rss: false` causes all `/rss/[slug]` routes to return 404
   4. Adding a new Bundesland with a different region set requires only `bundesland.config.ts` + seed changes — no UI file edits
 
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 12-01-PLAN.md — Type contract + config: BezirkItem interface, regions field on BundeslandConfig, regions array in bundesland.config.ts
+- [ ] 12-02-PLAN.md — Seed refactor (TDD): seedBezirke reads config.regions, remove steiermarkBezirke import, update seed tests
+- [ ] 12-03-PLAN.md — UI wiring: (public)/layout.tsx async + listBezirke(), Header bezirke prop, BezirkModal bezirke prop
+- [ ] 12-04-PLAN.md — RSS feature flag: route.test.ts (Wave 0), config.features.rss guard in rss/[slug]/route.ts
 
 ## Progress
 
@@ -254,4 +260,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 9. Ad Config Wiring + Auth Hardening | 3/3 | Complete    | 2026-03-24 |
 | 10. Wire Config Site Name into UI | 1/1 | Complete    | 2026-03-24 |
 | 11. Fix State-Wide Article Pipeline | 2/2 | Complete    | 2026-03-25 |
-| 12. Config-Driven Region List + RSS Feature Flag | 0/TBD | Not started | - |
+| 12. Config-Driven Region List + RSS Feature Flag | 0/4 | Not started | - |
