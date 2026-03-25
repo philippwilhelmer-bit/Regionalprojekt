@@ -31,14 +31,14 @@ export function Header({ bezirke }: { bezirke: BezirkItem[] }) {
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-zinc-200 px-4 h-14 flex items-center justify-between">
-      <span className="font-bold text-zinc-900">{config.siteName}</span>
+      <span className="font-label font-bold text-zinc-900">{config.siteName}</span>
       <button
         onClick={handleBezirkClick}
         className="text-sm text-zinc-600 flex items-center gap-1 hover:text-zinc-900 transition-colors"
         aria-label="Bezirk auswählen"
       >
         {bezirkLabel}
-        <span aria-hidden="true">▾</span>
+        <span className="material-symbols-outlined text-base" aria-hidden="true">arrow_drop_down</span>
       </button>
     </header>
   );

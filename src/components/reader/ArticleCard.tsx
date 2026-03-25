@@ -116,7 +116,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
       <div className="p-3">
         <h2
           className={
-            "font-semibold text-zinc-900 leading-snug mb-1" +
+            "font-headline font-semibold text-zinc-900 leading-snug mb-1" +
             (featured ? " text-lg" : " text-sm")
           }
         >

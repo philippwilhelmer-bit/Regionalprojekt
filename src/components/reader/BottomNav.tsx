@@ -7,10 +7,8 @@ export function BottomNav() {
         href="/"
         className="flex flex-col items-center gap-0.5 text-zinc-600 hover:text-zinc-900 transition-colors"
       >
-        <span className="text-xl leading-none" aria-hidden="true">
-          ◎
-        </span>
-        <span className="text-xs font-medium">Nachrichten</span>
+        <span className="material-symbols-outlined text-xl" aria-hidden="true">newspaper</span>
+        <span className="font-label text-xs font-medium">Nachrichten</span>
       </Link>
     </nav>
   );

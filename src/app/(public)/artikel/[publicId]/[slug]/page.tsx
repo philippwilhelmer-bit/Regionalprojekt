@@ -103,11 +103,11 @@ export default async function ArticlePage({ params }: Props) {
 
         {/* Article header */}
         <header className="mb-6">
-          <h1 className="text-2xl font-bold text-zinc-900 leading-tight mb-2">
+          <h1 className="font-headline text-2xl font-bold text-zinc-900 leading-tight mb-2">
             {article.title}
           </h1>
           {publishedAt && (
-            <p className="text-sm text-zinc-500">{publishedAt} Uhr</p>
+            <p className="font-label text-sm text-zinc-500">{publishedAt} Uhr</p>
           )}
         </header>
 
@@ -149,7 +149,7 @@ export default async function ArticlePage({ params }: Props) {
           <section aria-labelledby="related-heading">
             <h2
               id="related-heading"
-              className="text-lg font-semibold text-zinc-800 mb-4"
+              className="font-label text-lg font-semibold text-zinc-800 mb-4"
             >
               Weitere Artikel
             </h2>
