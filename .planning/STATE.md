@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 12 context gathered
-last_updated: "2026-03-25T11:21:12.861Z"
+stopped_at: "Completed 12-01-PLAN.md: BundeslandConfig.regions field + all 13 Bezirke in bundesland.config.ts"
+last_updated: "2026-03-25T11:41:53.180Z"
 last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 12
   completed_phases: 11
-  total_plans: 45
-  completed_plans: 45
+  total_plans: 49
+  completed_plans: 46
   percent: 88
 ---
 
@@ -90,6 +90,7 @@ Progress: [████████░░] 88%
 | Phase 10-config-branding-wiring P01 | 4 | 2 tasks | 5 files |
 | Phase 11-fix-state-wide-article-pipeline P01 | 12min | 3 tasks | 6 files |
 | Phase 11-fix-state-wide-article-pipeline P02 | 3 | 1 tasks | 1 files |
+| Phase 12-config-driven-region-list-rss-feature-flag P01 | 5 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -189,6 +190,7 @@ Recent decisions affecting current work:
 - [Phase 11-fix-state-wide-article-pipeline]: isStateWide branch uses single db.article.update (no transaction) — no ArticleBezirk upserts needed for state-wide articles
 - [Phase 11-fix-state-wide-article-pipeline]: console.warn for mixed slug case is non-fatal — pipeline continues, bad LLM response flagged in logs
 - [Phase 11-fix-state-wide-article-pipeline]: No test file for backfill script — one-time operator tool analogous to ai-run.ts which also has no dedicated test
+- [Phase 12-config-driven-region-list-rss-feature-flag]: BezirkItem { slug, name } as typed config value object — canonical Bezirk reference shape in config layer
 
 ### Pending Todos
 
@@ -202,6 +204,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T11:21:12.853Z
-Stopped at: Phase 12 context gathered
-Resume file: .planning/phases/12-config-driven-region-list-rss-feature-flag/12-CONTEXT.md
+Last session: 2026-03-25T11:41:53.177Z
+Stopped at: Completed 12-01-PLAN.md: BundeslandConfig.regions field + all 13 Bezirke in bundesland.config.ts
+Resume file: None

@@ -7,7 +7,7 @@
 
 ### Configuration
 
-- [ ] **CONF-01**: Platform is deployable for any Bundesland by changing a single config file (regions, branding, sources)
+- [x] **CONF-01**: Platform is deployable for any Bundesland by changing a single config file (regions, branding, sources)
 - [x] **CONF-02**: Steiermark deployment ships with all 13 regions pre-configured (12 Bezirke + Graz)
 
 ### Ingestion
@@ -85,7 +85,7 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CONF-01 | Phase 12 | Pending |
+| CONF-01 | Phase 12 | Complete |
 | CONF-02 | Phase 10 | Complete |
 | ING-01 | Phase 2 | Complete |
 | ING-02 | Phase 2 | Complete |

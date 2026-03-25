@@ -260,4 +260,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 9. Ad Config Wiring + Auth Hardening | 3/3 | Complete    | 2026-03-24 |
 | 10. Wire Config Site Name into UI | 1/1 | Complete    | 2026-03-24 |
 | 11. Fix State-Wide Article Pipeline | 2/2 | Complete    | 2026-03-25 |
-| 12. Config-Driven Region List + RSS Feature Flag | 0/4 | Not started | - |
+| 12. Config-Driven Region List + RSS Feature Flag | 1/4 | In Progress|  |
