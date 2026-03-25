@@ -12,8 +12,6 @@
  */
 import { PrismaClient } from '@prisma/client'
 import config from '../bundesland.config'
-import { steiermarkBezirke } from './seed-data/bezirke'
-import type { BezirkSeedEntry } from './seed-data/bezirke'
 import { steiermarkSources } from './seed-data/sources'
 import type { SourceSeedEntry } from './seed-data/sources'
 
@@ -21,31 +19,34 @@ import type { SourceSeedEntry } from './seed-data/sources'
  * Seed Bezirke for a given bundesland into the provided Prisma client.
  * Exported for testing — tests pass a pgLite-backed client and a bundesland name.
  *
+ * Reads the region list from config.regions — no hardcoded data in this file.
+ * If the bundesland param does not match config.bundesland, seeds 0 rows (early return).
+ *
  * Uses upsert (not create) so the seed is idempotent and safe to re-run.
+ * The update path only touches name — existing gemeindeSynonyms in production are preserved.
  */
 export async function seedBezirke(
   prisma: PrismaClient,
   bundesland: string
 ): Promise<void> {
-  const seedData: BezirkSeedEntry[] =
-    bundesland === 'steiermark' ? steiermarkBezirke : []
+  if (bundesland !== config.bundesland) {
+    console.log(`Skipping seedBezirke: bundesland mismatch (${bundesland} vs ${config.bundesland})`)
+    return
+  }
 
-  for (const bezirk of seedData) {
+  for (const region of config.regions) {
     await prisma.bezirk.upsert({
-      where: { slug: bezirk.slug },
-      update: {
-        name: bezirk.name,
-        gemeindeSynonyms: bezirk.gemeindeSynonyms,
-      },
+      where: { slug: region.slug },
+      update: { name: region.name },
       create: {
-        slug: bezirk.slug,
-        name: bezirk.name,
-        gemeindeSynonyms: bezirk.gemeindeSynonyms,
+        slug: region.slug,
+        name: region.name,
+        gemeindeSynonyms: [],
       },
     })
   }
 
-  console.log(`Seeded ${seedData.length} Bezirke for ${bundesland}`)
+  console.log(`Seeded ${config.regions.length} Bezirke for ${bundesland}`)
 }
 
 /**
