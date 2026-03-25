@@ -207,6 +207,31 @@ Plans:
 - [ ] 09-02-PLAN.md — Auth hardening: requireAuth() in auth-node.ts + wire into all admin Server Action wrappers
 - [ ] 09-03-PLAN.md — Impressum + JSON-LD wiring: wire config.branding.impressum fields into impressum/page.tsx and article detail JSON-LD
 
+### Phase 11: Fix State-Wide Article Pipeline
+**Goal:** State-wide articles are correctly identified by the AI pipeline and appear in all per-Bezirk feeds and RSS feeds — closing the broken `isStateWide` mapping that leaves all state-wide content invisible to readers
+**Depends on**: Phase 10
+**Requirements**: AI-02, READ-06
+**Gap Closure**: Closes AI-02, READ-06, integration gap (pipeline.ts 'steiermark-weit' → isStateWide=true), and flow "State-wide article → AI tags 'steiermark-weit' → appears in all Bezirk feeds"
+**Success Criteria** (what must be TRUE):
+  1. When step1-tag.ts returns `bezirkSlugs=['steiermark-weit']`, `pipeline.ts` sets `Article.isStateWide=true` in the database
+  2. A state-wide article appears in the feed and RSS output for every Bezirk
+  3. Existing per-Bezirk tagging (non-state-wide articles) is unaffected
+
+**Plans**: TBD
+
+### Phase 12: Config-Driven Region List + RSS Feature Flag
+**Goal:** The Bundesland config file is the single source of truth for the region list — BezirkModal and Header load Bezirke from the database rather than hardcoded arrays, and the `features.rss` flag is enforced by the RSS route handler
+**Depends on**: Phase 11
+**Requirements**: CONF-01
+**Gap Closure**: Closes CONF-01, integration gap (BezirkModal/Header not sourced from config/DB), integration gap (features.rss not enforced), and flow "Deploy new Bundesland → change bundesland.config.ts → all UI updates"
+**Success Criteria** (what must be TRUE):
+  1. `BezirkModal.tsx` loads its region list from a server-provided prop (DB query) — no hardcoded array
+  2. `Header.tsx` loads its region list from a server-provided prop (DB query) — no hardcoded array
+  3. Setting `config.features.rss: false` causes all `/rss/[slug]` routes to return 404
+  4. Adding a new Bundesland with a different region set requires only `bundesland.config.ts` + seed changes — no UI file edits
+
+**Plans**: TBD
+
 ## Progress
 
 **Execution Order:**
@@ -224,3 +249,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 8. Phase 7 Verification + Per-Source AI Config Wiring | 3/3 | Complete   | 2026-03-23 |
 | 9. Ad Config Wiring + Auth Hardening | 3/3 | Complete    | 2026-03-24 |
 | 10. Wire Config Site Name into UI | 1/1 | Complete    | 2026-03-24 |
+| 11. Fix State-Wide Article Pipeline | 0/TBD | Not started | - |
+| 12. Config-Driven Region List + RSS Feature Flag | 0/TBD | Not started | - |

@@ -7,7 +7,7 @@
 
 ### Configuration
 
-- [x] **CONF-01**: Platform is deployable for any Bundesland by changing a single config file (regions, branding, sources)
+- [ ] **CONF-01**: Platform is deployable for any Bundesland by changing a single config file (regions, branding, sources)
 - [x] **CONF-02**: Steiermark deployment ships with all 13 regions pre-configured (12 Bezirke + Graz)
 
 ### Ingestion
@@ -21,7 +21,7 @@
 ### AI Pipeline
 
 - [x] **AI-01**: System rewrites ingested content into clean German-language news articles via AI
-- [x] **AI-02**: System automatically tags each article with the relevant Bezirk(e)
+- [ ] **AI-02**: System automatically tags each article with the relevant Bezirk(e)
 - [x] **AI-03**: System flags articles mentioning real named persons and routes them to an exception queue before auto-publishing
 - [x] **AI-04**: System halts AI generation and alerts operator if LLM costs exceed a configurable threshold (cost circuit-breaker)
 - [x] **AI-05**: All AI-generated articles display an "Automatisch erstellt" disclosure label
@@ -64,7 +64,7 @@
 - [x] **READ-03**: Reader can open a full article detail page with source attribution
 - [x] **READ-04**: Site is mobile-optimized (existing alpine-themed HTML design is the visual reference)
 - [x] **READ-05**: Site includes a legally compliant Impressum page (Austrian Mediengesetz / ECG)
-- [x] **READ-06**: Each Bezirk has its own subscribable RSS feed for readers
+- [ ] **READ-06**: Each Bezirk has its own subscribable RSS feed for readers
 
 ## v2 Requirements
 
@@ -85,7 +85,7 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CONF-01 | Phase 10 | Complete |
+| CONF-01 | Phase 12 | Pending |
 | CONF-02 | Phase 10 | Complete |
 | ING-01 | Phase 2 | Complete |
 | ING-02 | Phase 2 | Complete |
@@ -93,7 +93,7 @@
 | ING-04 | Phase 2 | Complete |
 | ING-05 | Phase 2 | Complete |
 | AI-01 | Phase 3 | Complete |
-| AI-02 | Phase 3 | Complete |
+| AI-02 | Phase 11 | Pending |
 | AI-03 | Phase 3 | Complete |
 | AI-04 | Phase 3 | Complete |
 | AI-05 | Phase 3 | Complete |
@@ -109,7 +109,7 @@
 | READ-03 | Phase 6 | Complete |
 | READ-04 | Phase 6 | Complete |
 | READ-05 | Phase 6 | Complete |
-| READ-06 | Phase 10 | Complete |
+| READ-06 | Phase 11 | Pending |
 | AICONF-01 | Phase 5 | Complete |
 | AICONF-02 | Phase 8 | Complete |
 | AICONF-03 | Phase 5 | Complete |
@@ -124,7 +124,7 @@
 - v1 requirements: 35 total
 - Mapped to phases: 35
 - Unmapped: 0 ✓
-- Pending (gap closure): CONF-01, CONF-02, READ-06 (Phase 10)
+- Pending (gap closure): AI-02, READ-06 (Phase 11), CONF-01 (Phase 12)
 
 **Note on Phase 7:** Phase 7 (Extensibility and Quality Validation) is a validation phase — it does not introduce new requirements. It verifies that ING-02 (RSS extensibility), ING-03 (cross-source deduplication), and all monitoring requirements are correct end-to-end under real conditions.
 
