@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: "Completed 12-01-PLAN.md: BundeslandConfig.regions field + all 13 Bezirke in bundesland.config.ts"
-last_updated: "2026-03-25T11:41:53.180Z"
+stopped_at: "Completed 12-02-PLAN.md: config-driven seedBezirke using config.regions, steiermarkBezirke import removed"
+last_updated: "2026-03-25T11:45:05.651Z"
 last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 12
   completed_phases: 11
   total_plans: 49
-  completed_plans: 46
+  completed_plans: 47
   percent: 88
 ---
 
@@ -91,6 +91,7 @@ Progress: [████████░░] 88%
 | Phase 11-fix-state-wide-article-pipeline P01 | 12min | 3 tasks | 6 files |
 | Phase 11-fix-state-wide-article-pipeline P02 | 3 | 1 tasks | 1 files |
 | Phase 12-config-driven-region-list-rss-feature-flag P01 | 5 | 2 tasks | 2 files |
+| Phase 12-config-driven-region-list-rss-feature-flag P02 | 5 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -191,6 +192,9 @@ Recent decisions affecting current work:
 - [Phase 11-fix-state-wide-article-pipeline]: console.warn for mixed slug case is non-fatal — pipeline continues, bad LLM response flagged in logs
 - [Phase 11-fix-state-wide-article-pipeline]: No test file for backfill script — one-time operator tool analogous to ai-run.ts which also has no dedicated test
 - [Phase 12-config-driven-region-list-rss-feature-flag]: BezirkItem { slug, name } as typed config value object — canonical Bezirk reference shape in config layer
+- [Phase 12-02]: seedBezirke guards by bundesland !== config.bundesland early return — preserves existing test contract where 'tirol' produces 0 rows
+- [Phase 12-02]: seed.ts update path only touches name (not gemeindeSynonyms) — existing synonym data in production DB is preserved on re-seed
+- [Phase 12-02]: gemeindeSynonyms >= 1 test assertion removed — config.regions has no synonym data; synonyms are populated separately by AI pipeline
 
 ### Pending Todos
 
@@ -204,6 +208,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T11:41:53.177Z
-Stopped at: Completed 12-01-PLAN.md: BundeslandConfig.regions field + all 13 Bezirke in bundesland.config.ts
+Last session: 2026-03-25T11:45:05.649Z
+Stopped at: Completed 12-02-PLAN.md: config-driven seedBezirke using config.regions, steiermarkBezirke import removed
 Resume file: None
