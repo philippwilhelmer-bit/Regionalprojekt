@@ -32,7 +32,7 @@ export function ShareButton({ title, url }: ShareButtonProps) {
   return (
     <button
       onClick={handleShare}
-      className="inline-flex items-center gap-2 rounded-full border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
+      className="inline-flex items-center gap-2 rounded-sm border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
     >
       {copied ? "Link kopiert!" : "Teilen"}
     </button>

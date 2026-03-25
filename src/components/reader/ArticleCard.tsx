@@ -3,35 +3,35 @@ import type { ArticleWithBezirke } from "@/lib/content/articles";
 import { slugify } from "@/lib/reader/slug";
 
 const BEZIRK_COLORS: Record<string, string> = {
-  graz: "from-blue-600 to-blue-400",
-  "graz-umgebung": "from-sky-500 to-sky-300",
-  liezen: "from-emerald-600 to-emerald-400",
-  "bruck-muerzzuschlag": "from-teal-600 to-teal-400",
-  leoben: "from-cyan-700 to-cyan-500",
-  murau: "from-violet-600 to-violet-400",
-  murtal: "from-purple-600 to-purple-400",
-  voitsberg: "from-indigo-500 to-indigo-300",
-  deutschlandsberg: "from-amber-600 to-amber-400",
-  weiz: "from-orange-600 to-orange-400",
-  "hartberg-fuerstenfeld": "from-rose-600 to-rose-400",
-  suedoststeiermark: "from-red-600 to-red-400",
-  leibnitz: "from-lime-700 to-lime-500",
+  graz: "from-styrian-green to-[#3a6b33]",
+  "graz-umgebung": "from-[#3a6b33] to-styrian-green",
+  liezen: "from-sage to-[#5a7d54]",
+  "bruck-muerzzuschlag": "from-[#5a7d54] to-sage",
+  leoben: "from-styrian-green to-sage",
+  murau: "from-[#244d20] to-styrian-green",
+  murtal: "from-sage to-styrian-green",
+  voitsberg: "from-[#4a6e44] to-[#3a6b33]",
+  deutschlandsberg: "from-styrian-green to-[#4a6e44]",
+  weiz: "from-[#3a6b33] to-[#5a7d54]",
+  "hartberg-fuerstenfeld": "from-[#5a7d54] to-[#3a6b33]",
+  suedoststeiermark: "from-[#244d20] to-[#3a6b33]",
+  leibnitz: "from-sage to-[#244d20]",
 };
 
 const BEZIRK_BADGE_COLORS: Record<string, string> = {
-  graz: "text-blue-700 bg-blue-100",
-  "graz-umgebung": "text-sky-700 bg-sky-100",
-  liezen: "text-emerald-700 bg-emerald-100",
-  "bruck-muerzzuschlag": "text-teal-700 bg-teal-100",
-  leoben: "text-cyan-800 bg-cyan-100",
-  murau: "text-violet-700 bg-violet-100",
-  murtal: "text-purple-700 bg-purple-100",
-  voitsberg: "text-indigo-700 bg-indigo-100",
-  deutschlandsberg: "text-amber-700 bg-amber-100",
-  weiz: "text-orange-700 bg-orange-100",
-  "hartberg-fuerstenfeld": "text-rose-700 bg-rose-100",
-  suedoststeiermark: "text-red-700 bg-red-100",
-  leibnitz: "text-lime-800 bg-lime-100",
+  graz: "text-styrian-green bg-cream",
+  "graz-umgebung": "text-styrian-green bg-cream",
+  liezen: "text-sage bg-cream",
+  "bruck-muerzzuschlag": "text-sage bg-cream",
+  leoben: "text-styrian-green bg-cream",
+  murau: "text-[#244d20] bg-cream",
+  murtal: "text-sage bg-cream",
+  voitsberg: "text-styrian-green bg-cream",
+  deutschlandsberg: "text-styrian-green bg-cream",
+  weiz: "text-[#3a6b33] bg-cream",
+  "hartberg-fuerstenfeld": "text-sage bg-cream",
+  suedoststeiermark: "text-[#244d20] bg-cream",
+  leibnitz: "text-sage bg-cream",
 };
 
 export function formatRelativeTime(date: Date): string {
@@ -62,8 +62,8 @@ interface ArticleCardProps {
 export function ArticleCard({ article, featured = false }: ArticleCardProps) {
   const firstBezirk = article.bezirke[0]?.bezirk;
   const gradientColor = firstBezirk
-    ? (BEZIRK_COLORS[firstBezirk.slug] ?? "from-zinc-400 to-zinc-300")
-    : "from-zinc-400 to-zinc-300";
+    ? (BEZIRK_COLORS[firstBezirk.slug] ?? "from-sage to-[#5a7d54]")
+    : "from-sage to-[#5a7d54]";
 
   const articleSlug = slugify(article.title ?? "artikel");
   const href = `/artikel/${article.publicId}/${articleSlug}`;
@@ -78,7 +78,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
     <Link
       href={href}
       className={
-        "block bg-white rounded-xl shadow-sm border border-zinc-100 overflow-hidden hover:shadow-md transition-shadow" +
+        "block bg-white rounded-sm shadow-sm border border-zinc-100 overflow-hidden hover:shadow-md transition-shadow" +
         (featured ? " col-span-full" : "")
       }
     >
@@ -136,9 +136,9 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
                 href={`/bezirk/${bezirk.slug}`}
                 onClick={(e) => e.stopPropagation()}
                 className={
-                  "inline-block text-xs px-2 py-0.5 rounded-full font-medium " +
+                  "inline-block text-xs px-2 py-0.5 rounded-sm font-medium " +
                   (BEZIRK_BADGE_COLORS[bezirk.slug] ??
-                    "text-zinc-600 bg-zinc-100")
+                    "text-sage bg-cream")
                 }
               >
                 {bezirk.name}

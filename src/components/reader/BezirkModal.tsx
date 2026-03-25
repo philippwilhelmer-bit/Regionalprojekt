@@ -98,17 +98,17 @@ export function BezirkModal({ bezirke }: { bezirke: BezirkItem[] }) {
       />
 
       {/* Modal panel */}
-      <div className="relative z-10 w-full max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+      <div className="relative z-10 w-full max-w-md bg-white rounded-t-sm sm:rounded-sm p-6 shadow-xl max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold text-zinc-900 mb-4">Mein Bezirk</h2>
 
         {/* "Alle Bezirke" toggle */}
         <button
           onClick={toggleAll}
           className={
-            "w-full mb-4 py-2 px-4 rounded-lg border-2 text-sm font-medium transition-colors " +
+            "w-full mb-4 py-2 px-4 rounded-sm border-2 text-sm font-medium transition-colors " +
             (allSelected
-              ? "border-blue-600 bg-blue-600 text-white"
-              : "border-zinc-300 bg-white text-zinc-700 hover:border-blue-400")
+              ? "border-styrian-green bg-styrian-green text-white"
+              : "border-zinc-300 bg-white text-zinc-700 hover:border-sage")
           }
         >
           Alle Bezirke
@@ -123,9 +123,9 @@ export function BezirkModal({ bezirke }: { bezirke: BezirkItem[] }) {
                 key={bezirk.slug}
                 onClick={() => toggleBezirk(bezirk.slug)}
                 className={
-                  "py-2 px-3 rounded-lg border-2 text-xs font-medium transition-colors text-left " +
+                  "py-2 px-3 rounded-sm border-2 text-xs font-medium transition-colors text-left " +
                   (isSelected
-                    ? "border-blue-600 bg-blue-50 text-blue-700"
+                    ? "border-styrian-green bg-cream text-styrian-green"
                     : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-400")
                 }
               >
@@ -139,13 +139,13 @@ export function BezirkModal({ bezirke }: { bezirke: BezirkItem[] }) {
         <div className="flex flex-col gap-2">
           <button
             onClick={handleSave}
-            className="w-full py-3 px-4 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors"
+            className="w-full py-3 px-4 rounded-sm bg-styrian-green text-white font-semibold text-sm hover:bg-[#244d20] transition-colors"
           >
             Übernehmen
           </button>
           <button
             onClick={handleDismiss}
-            className="w-full py-2 px-4 rounded-xl text-zinc-500 text-sm hover:text-zinc-700 transition-colors"
+            className="w-full py-2 px-4 rounded-sm text-zinc-500 text-sm hover:text-zinc-700 transition-colors"
           >
             Später
           </button>
