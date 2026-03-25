@@ -4,7 +4,7 @@ milestone: v1.1
 milestone_name: Design Overhaul
 status: planning
 stopped_at: Completed 18-homepage-editorial-layout 18-02-PLAN.md
-last_updated: "2026-03-25T21:07:57.621Z"
+last_updated: "2026-03-25T21:10:59.900Z"
 last_activity: 2026-03-25 — Roadmap created for v1.1
 progress:
   total_phases: 5
