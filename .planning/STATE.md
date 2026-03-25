@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Design Overhaul
 status: planning
-stopped_at: Completed 18-homepage-editorial-layout 18-01-PLAN.md
-last_updated: "2026-03-25T21:03:53.694Z"
+stopped_at: Completed 18-homepage-editorial-layout 18-03-PLAN.md
+last_updated: "2026-03-25T21:07:20.696Z"
 last_activity: 2026-03-25 — Roadmap created for v1.1
 progress:
   total_phases: 5
   completed_phases: 2
   total_plans: 6
-  completed_plans: 4
+  completed_plans: 5
   percent: 0
 ---
 
@@ -49,6 +49,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 16-design-system-foundation P02 | 5 | 2 tasks | 8 files |
 | Phase 17-header-identity P01 | 2 | 2 tasks | 3 files |
 | Phase 18-homepage-editorial-layout P01 | 15 | 2 tasks | 5 files |
+| Phase 18 P03 | 5 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,7 @@ Carried from v1.0 (see PROJECT.md Key Decisions):
 - [Phase 18-homepage-editorial-layout]: groupArticlesByBezirk is a pure function — callers have fetched articles already, no DB access needed
 - [Phase 18-homepage-editorial-layout]: getPinnedArticles falls back to newest published when none pinned — top-stories row always populated
 - [Phase 18-homepage-editorial-layout]: Phase 18 migration created manually: migrate dev --create-only unavailable due to dev DB migration mismatch (20260321_ingestion)
+- [Phase 18]: EilmeldungBanner uses visible=false on mount to avoid hydration mismatch — useEffect sets true only when sessionStorage key absent
 
 ### Pending Todos
 
@@ -81,6 +83,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T21:03:53.692Z
-Stopped at: Completed 18-homepage-editorial-layout 18-01-PLAN.md
+Last session: 2026-03-25T21:07:20.694Z
+Stopped at: Completed 18-homepage-editorial-layout 18-03-PLAN.md
 Resume file: None
