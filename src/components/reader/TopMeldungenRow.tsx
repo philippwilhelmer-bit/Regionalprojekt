@@ -38,16 +38,17 @@ const BEZIRK_BADGE_COLORS: Record<string, string> = {
 
 interface TopMeldungenRowProps {
   articles: ArticleWithBezirke[];
+  heading?: string;
 }
 
-export function TopMeldungenRow({ articles }: TopMeldungenRowProps) {
+export function TopMeldungenRow({ articles, heading = "Top-Meldungen" }: TopMeldungenRowProps) {
   return (
     <section className="py-3">
       {/* Section label with thin divider */}
       <div className="px-4">
-        <div className="border-t border-zinc-200 mb-2" />
+        <div className="border-t border-sage/20 mb-2" />
         <span className="font-label font-semibold uppercase tracking-wide text-xs text-styrian-green">
-          Top-Meldungen
+          {heading}
         </span>
       </div>
 
