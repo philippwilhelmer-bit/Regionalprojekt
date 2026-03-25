@@ -51,7 +51,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
   2. Styrian green (#2D5A27), warm cream (#fbfaee), alpine red (#8b0000), and muted sage (#4a5d4e) are available as Tailwind tokens and applied consistently
   3. Material Symbols Outlined icon font is loaded and an icon renders correctly in at least one reader frontend location
   4. All card and UI elements show sharp 2px border radius — no rounded corners remain from the old default
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
 - [ ] 16-01-PLAN.md — Define design tokens (fonts, colors, radius) in Tailwind v4 theme and root layout
 - [ ] 16-02-PLAN.md — Apply tokens across all reader components (icons, fonts, colors, border-radius)
@@ -119,7 +119,7 @@ Plans:
 | 13. Production Readiness | v1.0 | 1/1 | Complete | 2026-03-25 |
 | 14. CMS Acceptance Gate | v1.0 | 1/1 | Complete | 2026-03-25 |
 | 15. Tech Debt Cleanup | v1.0 | 1/1 | Complete | 2026-03-25 |
-| 16. Design System Foundation | v1.1 | 0/2 | Not started | - |
+| 16. Design System Foundation | 1/2 | In Progress|  | - |
 | 17. Header & Identity | v1.1 | 0/TBD | Not started | - |
 | 18. Homepage Editorial Layout | v1.1 | 0/TBD | Not started | - |
 | 19. Article Detail & Bottom Navigation | v1.1 | 0/TBD | Not started | - |

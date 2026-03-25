@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Design Overhaul
 status: planning
-stopped_at: Phase 16 context gathered
-last_updated: "2026-03-25T18:52:56.003Z"
+stopped_at: Completed 16-01-PLAN.md
+last_updated: "2026-03-25T19:04:48.133Z"
 last_activity: 2026-03-25 — Roadmap created for v1.1
 progress:
   total_phases: 5
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
   percent: 0
 ---
 
@@ -45,6 +45,7 @@ Progress: [░░░░░░░░░░] 0%
 | - | - | - | - |
 
 *Updated after each plan completion*
+| Phase 16-design-system-foundation P01 | 2 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -54,6 +55,8 @@ Carried from v1.0 (see PROJECT.md Key Decisions):
 - Tailwind CSS v4 is the styling foundation — design tokens go into the Tailwind config
 - Next.js 15 with Server Components — reader pages are SSR/RSC
 - Mobile-first — bottom nav pattern established, must be preserved
+- [Phase 16]: Tailwind v4 @theme block in globals.css is the single source of truth for design tokens
+- [Phase 16]: CSS variable bridge: next/font sets --font-* on html element, @theme references those for Tailwind utility classes
 
 ### Pending Todos
 
@@ -66,6 +69,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T18:52:55.993Z
-Stopped at: Phase 16 context gathered
-Resume file: .planning/phases/16-design-system-foundation/16-CONTEXT.md
+Last session: 2026-03-25T19:04:48.132Z
+Stopped at: Completed 16-01-PLAN.md
+Resume file: None
