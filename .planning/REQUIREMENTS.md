@@ -21,7 +21,7 @@
 ### AI Pipeline
 
 - [x] **AI-01**: System rewrites ingested content into clean German-language news articles via AI
-- [ ] **AI-02**: System automatically tags each article with the relevant Bezirk(e)
+- [x] **AI-02**: System automatically tags each article with the relevant Bezirk(e)
 - [x] **AI-03**: System flags articles mentioning real named persons and routes them to an exception queue before auto-publishing
 - [x] **AI-04**: System halts AI generation and alerts operator if LLM costs exceed a configurable threshold (cost circuit-breaker)
 - [x] **AI-05**: All AI-generated articles display an "Automatisch erstellt" disclosure label
@@ -64,7 +64,7 @@
 - [x] **READ-03**: Reader can open a full article detail page with source attribution
 - [x] **READ-04**: Site is mobile-optimized (existing alpine-themed HTML design is the visual reference)
 - [x] **READ-05**: Site includes a legally compliant Impressum page (Austrian Mediengesetz / ECG)
-- [ ] **READ-06**: Each Bezirk has its own subscribable RSS feed for readers
+- [x] **READ-06**: Each Bezirk has its own subscribable RSS feed for readers
 
 ## v2 Requirements
 
@@ -93,7 +93,7 @@
 | ING-04 | Phase 2 | Complete |
 | ING-05 | Phase 2 | Complete |
 | AI-01 | Phase 3 | Complete |
-| AI-02 | Phase 11 | Pending |
+| AI-02 | Phase 11 | Complete |
 | AI-03 | Phase 3 | Complete |
 | AI-04 | Phase 3 | Complete |
 | AI-05 | Phase 3 | Complete |
@@ -109,7 +109,7 @@
 | READ-03 | Phase 6 | Complete |
 | READ-04 | Phase 6 | Complete |
 | READ-05 | Phase 6 | Complete |
-| READ-06 | Phase 11 | Pending |
+| READ-06 | Phase 11 | Complete |
 | AICONF-01 | Phase 5 | Complete |
 | AICONF-02 | Phase 8 | Complete |
 | AICONF-03 | Phase 5 | Complete |
