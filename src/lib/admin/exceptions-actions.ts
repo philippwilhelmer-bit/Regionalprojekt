@@ -9,6 +9,7 @@
 import type { Article, PrismaClient } from '@prisma/client'
 import { prisma as defaultPrisma } from '../prisma'
 import { requireAuth } from './auth-node'
+import { revalidatePath } from 'next/cache'
 
 // ─── DB-layer functions (pure, injectable, no auth) ──────────────────────────
 
@@ -72,12 +73,14 @@ export async function approveArticleForm(formData: FormData): Promise<void> {
   await requireAuth()
   const id = Number(formData.get('id'))
   await approveArticleDb(defaultPrisma, id)
+  revalidatePath('/admin/exceptions')
 }
 
 export async function rejectArticleForm(formData: FormData): Promise<void> {
   await requireAuth()
   const id = Number(formData.get('id'))
   await rejectArticleDb(defaultPrisma, id)
+  revalidatePath('/admin/exceptions')
 }
 
 export async function listExceptionQueue(): Promise<Article[]> {
