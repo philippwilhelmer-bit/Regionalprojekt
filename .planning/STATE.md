@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: "Completed 12-02-PLAN.md: config-driven seedBezirke using config.regions, steiermarkBezirke import removed"
-last_updated: "2026-03-25T11:45:05.651Z"
+stopped_at: "Completed 12-04-PLAN.md: RSS feature flag guard, config.features.rss enforced in route handler"
+last_updated: "2026-03-25T12:20:36.092Z"
 last_activity: "2026-03-22 — Phase 6 Plan 03 executed: public layout shell, Header, BottomNav, Footer, CookieBanner, AdUnit — next build success"
 progress:
   total_phases: 12
-  completed_phases: 11
+  completed_phases: 12
   total_plans: 49
-  completed_plans: 47
+  completed_plans: 49
   percent: 88
 ---
 
@@ -92,6 +92,8 @@ Progress: [████████░░] 88%
 | Phase 11-fix-state-wide-article-pipeline P02 | 3 | 1 tasks | 1 files |
 | Phase 12-config-driven-region-list-rss-feature-flag P01 | 5 | 2 tasks | 2 files |
 | Phase 12-config-driven-region-list-rss-feature-flag P02 | 5 | 2 tasks | 2 files |
+| Phase 12-config-driven-region-list-rss-feature-flag P03 | 2 | 2 tasks | 3 files |
+| Phase 12-config-driven-region-list-rss-feature-flag P04 | 2 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -195,6 +197,8 @@ Recent decisions affecting current work:
 - [Phase 12-02]: seedBezirke guards by bundesland !== config.bundesland early return — preserves existing test contract where 'tirol' produces 0 rows
 - [Phase 12-02]: seed.ts update path only touches name (not gemeindeSynonyms) — existing synonym data in production DB is preserved on re-seed
 - [Phase 12-02]: gemeindeSynonyms >= 1 test assertion removed — config.regions has no synonym data; synonyms are populated separately by AI pipeline
+- [Phase 12-config-driven-region-list-rss-feature-flag]: Async Server Component layout calls listBezirke() once and passes Bezirk[] to both Header and BezirkModal via props
+- [Phase 12-config-driven-region-list-rss-feature-flag]: new Response(null, { status: 404 }) for silent RSS 404 — empty body without leaking feature existence; guard before await params fires synchronously before any DB work
 
 ### Pending Todos
 
@@ -208,6 +212,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T11:45:05.649Z
-Stopped at: Completed 12-02-PLAN.md: config-driven seedBezirke using config.regions, steiermarkBezirke import removed
+Last session: 2026-03-25T12:20:36.089Z
+Stopped at: Completed 12-04-PLAN.md: RSS feature flag guard, config.features.rss enforced in route handler
 Resume file: None
