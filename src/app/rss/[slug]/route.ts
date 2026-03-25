@@ -35,9 +35,7 @@ export async function GET(
       return new Response('Feed not found', { status: 404 })
     }
 
-    // getArticlesByBezirk does not filter by status — filter to PUBLISHED only
-    const raw = await getArticlesByBezirk(slug, { limit: 20 })
-    articles = raw.filter(a => a.status === 'PUBLISHED')
+    articles = await getArticlesByBezirk(slug, { limit: 20 })
   }
 
   const xml = generateBezirkRssFeed(articles, slug, BASE_URL)

@@ -225,9 +225,10 @@ export async function getArticlesByBezirk(
   const bezirk = await db.bezirk.findUnique({ where: { slug: bezirkSlug } })
   if (!bezirk) return []
 
-  // Return articles tagged to this Bezirk OR Steiermark-weit articles
+  // Return only PUBLISHED articles tagged to this Bezirk OR Steiermark-weit articles
   return db.article.findMany({
     where: {
+      status: 'PUBLISHED',
       OR: [
         // Tagged to this specific Bezirk
         { bezirke: { some: { bezirkId: bezirk.id } } },

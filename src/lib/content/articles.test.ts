@@ -57,7 +57,7 @@ describe('Article DAL', () => {
       data: {
         source: 'OTS_AT',
         title: 'Liezen News',
-        status: 'FETCHED',
+        status: 'PUBLISHED',
         isStateWide: false,
         bezirke: { create: [{ bezirkId: liezen!.id }] },
       },
@@ -67,7 +67,7 @@ describe('Article DAL', () => {
       data: {
         source: 'OTS_AT',
         title: 'Graz News',
-        status: 'FETCHED',
+        status: 'PUBLISHED',
         isStateWide: false,
         bezirke: {
           create: [
@@ -94,7 +94,7 @@ describe('Article DAL', () => {
       data: {
         source: 'OTS_AT',
         title: 'Steiermark-weit News',
-        status: 'FETCHED',
+        status: 'PUBLISHED',
         isStateWide: true,
       },
     })
@@ -102,6 +102,56 @@ describe('Article DAL', () => {
     const articles = await getArticlesByBezirk(prisma, 'weiz')
     const ids = articles.map((a) => a.id)
     expect(ids).toContain(stateWide.id)
+  })
+
+  it("getArticlesByBezirk() returns only PUBLISHED articles — DRAFT/ERROR/FETCHED excluded", async () => {
+    const liezen = await prisma.bezirk.findUnique({ where: { slug: 'liezen' } })
+    expect(liezen).not.toBeNull()
+
+    const published = await prisma.article.create({
+      data: {
+        source: 'OTS_AT',
+        title: 'Published Article',
+        status: 'PUBLISHED',
+        isStateWide: false,
+        bezirke: { create: [{ bezirkId: liezen!.id }] },
+      },
+    })
+
+    await prisma.article.create({
+      data: {
+        source: 'OTS_AT',
+        title: 'Written Article',
+        status: 'WRITTEN',
+        isStateWide: false,
+        bezirke: { create: [{ bezirkId: liezen!.id }] },
+      },
+    })
+
+    await prisma.article.create({
+      data: {
+        source: 'OTS_AT',
+        title: 'Error Article',
+        status: 'ERROR',
+        isStateWide: false,
+        bezirke: { create: [{ bezirkId: liezen!.id }] },
+      },
+    })
+
+    await prisma.article.create({
+      data: {
+        source: 'OTS_AT',
+        title: 'Fetched Article',
+        status: 'FETCHED',
+        isStateWide: false,
+        bezirke: { create: [{ bezirkId: liezen!.id }] },
+      },
+    })
+
+    const articles = await getArticlesByBezirk(prisma, 'liezen')
+    expect(articles).toHaveLength(1)
+    expect(articles[0].id).toBe(published.id)
+    expect(articles[0].title).toBe('Published Article')
   })
 })
 

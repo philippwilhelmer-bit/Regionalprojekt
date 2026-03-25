@@ -11,8 +11,11 @@ export async function loginAction(
 ): Promise<LoginState> {
   const password = formData.get('password')?.toString() ?? ''
   const adminPassword = process.env.ADMIN_PASSWORD
-  if (!adminPassword || password !== adminPassword) {
-    // Return error — do NOT use redirect here
+  if (!adminPassword) {
+    console.error('[login-action] ADMIN_PASSWORD env var is not set — check server configuration')
+    return { error: 'Login derzeit nicht möglich.' }
+  }
+  if (password !== adminPassword) {
     return { error: 'Falsches Passwort. Bitte erneut versuchen.' }
   }
   const cookieStore = await cookies()  // MUST await in Next.js 15
