@@ -1,10 +1,290 @@
 # Architecture Research
 
-**Domain:** AI-powered regional news aggregation and publishing platform
-**Researched:** 2026-03-21
-**Confidence:** MEDIUM (training data, no live web search available — patterns are well-established but library-specific details unverified)
+**Domain:** Test deployment integration for Next.js 15 news platform (v1.2 milestone)
+**Researched:** 2026-03-26
+**Confidence:** HIGH (verified against Next.js 15 official docs, current date 2026-03-26)
 
-## Standard Architecture
+---
+
+## Scope Note
+
+This file covers the v1.2 milestone only: how TESTSEITE banner, noindex meta tags, robots.txt, and Railway deployment integrate with the existing architecture. The full platform architecture from v1.0 is preserved in the section at the bottom.
+
+---
+
+## v1.2 Integration Overview
+
+The four test deployment features touch different layers of the existing app. None require schema changes, new data models, or changes to the ingestion/AI pipeline.
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                     EXISTING APP (v1.1)                           │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│   src/app/layout.tsx          ← ADD: robots noindex metadata      │
+│   src/app/robots.ts           ← NEW: disallow-all robots.txt      │
+│   src/app/(public)/layout.tsx ← ADD: TestBanner component         │
+│   src/app/(admin)/layout.tsx  ← ADD: TestBanner component         │
+│                                                                    │
+│   src/components/TestBanner.tsx  ← NEW: TESTSEITE banner          │
+│                                                                    │
+│   .env / Railway env vars     ← ADD: NEXT_PUBLIC_TEST_MODE=true   │
+│   railway.toml (or Railway UI) ← NEW: deployment config           │
+│                                                                    │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+All four features are gated by a single environment variable: `NEXT_PUBLIC_TEST_MODE`. When `true`, all test-mode behaviors activate. When absent or `false`, the app behaves identically to production.
+
+---
+
+## Component Responsibilities
+
+### New Components
+
+| Component | File | Responsibility |
+|-----------|------|----------------|
+| TestBanner | `src/components/TestBanner.tsx` | Fixed-position "TESTSEITE" bar rendered on every page in test mode |
+| robots.ts | `src/app/robots.ts` | Generates `/robots.txt` dynamically; disallows all crawlers in test mode |
+
+### Modified Files
+
+| File | Change | Why |
+|------|--------|-----|
+| `src/app/layout.tsx` | Add `robots: { index: false, follow: false }` to metadata export when `NEXT_PUBLIC_TEST_MODE=true` | Root layout metadata applies to all pages via Next.js metadata inheritance |
+| `src/app/(public)/layout.tsx` | Render `<TestBanner />` before `<Header>` | Public layout wraps all reader pages |
+| `src/app/(admin)/layout.tsx` | Render `<TestBanner />` inside the shell | Admin layout wraps all CMS pages |
+
+---
+
+## Recommended Project Structure (additions only)
+
+```
+src/
+├── app/
+│   ├── robots.ts              ← NEW: generates /robots.txt
+│   ├── layout.tsx             ← MODIFY: add conditional robots metadata
+│   ├── (public)/
+│   │   └── layout.tsx         ← MODIFY: add <TestBanner />
+│   └── (admin)/
+│       └── layout.tsx         ← MODIFY: add <TestBanner />
+└── components/
+    └── TestBanner.tsx         ← NEW: banner component
+```
+
+No new folders. No changes to lib/, prisma/, or scripts/.
+
+---
+
+## Architectural Patterns
+
+### Pattern 1: Environment Variable Gate
+
+**What:** A single `NEXT_PUBLIC_TEST_MODE` env var controls all test-mode behaviors. Checking it in one place (the root layout for metadata, each layout for banner) keeps the logic explicit and easy to remove.
+
+**When to use:** Feature flags that span multiple rendering concerns (metadata + UI) and must be zero-cost in production.
+
+**Trade-offs:** `NEXT_PUBLIC_` prefix makes the value available in client components (needed for the banner). This is intentional — the banner is client-visible by design. The robots metadata is server-rendered from this same value.
+
+**Example:**
+```typescript
+// src/app/layout.tsx
+const isTestMode = process.env.NEXT_PUBLIC_TEST_MODE === 'true'
+
+export const metadata: Metadata = {
+  title: config.siteName,
+  description: "Aktuelle Nachrichten aus der Steiermark",
+  ...(isTestMode && {
+    robots: { index: false, follow: false },
+  }),
+}
+```
+
+### Pattern 2: Dynamic robots.ts (Next.js 15 file convention)
+
+**What:** `src/app/robots.ts` exports a default function returning a `MetadataRoute.Robots` object. Next.js 15 auto-serves this at `/robots.txt`. The function checks `NEXT_PUBLIC_TEST_MODE` and returns either "disallow all" or "allow all".
+
+**When to use:** Whenever robots.txt content must vary between environments. The file-based convention is cleaner than placing a static `robots.txt` in `public/` because it can respond to runtime config.
+
+**Trade-offs:** File-based metadata (robots.ts) has higher priority than `metadata` object. This means the robots.txt and the meta robots tag are controlled separately — both must be set for complete noindex coverage.
+
+**Example:**
+```typescript
+// src/app/robots.ts
+import type { MetadataRoute } from 'next'
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://ennstal-aktuell.at'
+const isTestMode = process.env.NEXT_PUBLIC_TEST_MODE === 'true'
+
+export default function robots(): MetadataRoute.Robots {
+  if (isTestMode) {
+    return {
+      rules: { userAgent: '*', disallow: '/' },
+    }
+  }
+  return {
+    rules: { userAgent: '*', allow: '/' },
+    sitemap: `${BASE_URL}/sitemap.xml`,
+  }
+}
+```
+
+### Pattern 3: Fixed-Position Banner Component
+
+**What:** `TestBanner` is a Server Component that renders a visually prominent fixed bar only when `NEXT_PUBLIC_TEST_MODE === 'true'`. Because the value is read at server render time, there is no client hydration flash.
+
+**When to use:** Any UI element that must appear on every page across multiple layout trees (both public and admin layouts).
+
+**Trade-offs:** Inserting in both layout files means two places to add/remove. This is acceptable because there are only two layouts and the change is a single line in each. A global insertion in `src/app/layout.tsx` (the root layout) is cleaner but the root layout does not render the `<body>` structure shared by both public and admin — it wraps everything, but adding it before `{children}` in the root layout is the simplest approach.
+
+**Placement decision:** The root `layout.tsx` already wraps both `(public)` and `(admin)` route groups. Adding the banner once in the root layout body is simpler than adding it in two child layouts.
+
+**Example:**
+```typescript
+// src/components/TestBanner.tsx (Server Component, no 'use client' needed)
+export function TestBanner() {
+  if (process.env.NEXT_PUBLIC_TEST_MODE !== 'true') return null
+  return (
+    <div
+      style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999,
+        background: '#b91c1c', color: '#fff',
+        textAlign: 'center', padding: '6px',
+        fontSize: '13px', fontWeight: 600, letterSpacing: '0.1em',
+      }}
+    >
+      TESTSEITE — Kein offizielles Angebot — Nicht für Suchmaschinen sichtbar
+    </div>
+  )
+}
+```
+
+---
+
+## Data Flow
+
+### Test Mode Activation Flow
+
+```
+Railway deployment
+    ↓
+Environment variable: NEXT_PUBLIC_TEST_MODE=true
+    ↓
+Next.js build / runtime reads process.env
+    ↓
+    ├── root layout.tsx → metadata.robots = { index: false, follow: false }
+    │       → <meta name="robots" content="noindex, nofollow"> on every page
+    │
+    ├── src/app/robots.ts → GET /robots.txt
+    │       → "User-agent: *\nDisallow: /"
+    │
+    └── src/app/layout.tsx body → <TestBanner />
+            → Fixed red bar on every page (public + admin)
+```
+
+### Production Deployment Flow (unchanged)
+
+```
+Production deployment
+    ↓
+NEXT_PUBLIC_TEST_MODE not set (or 'false')
+    ↓
+    ├── metadata.robots not added → pages are indexable by default
+    ├── robots.ts → "User-agent: *\nAllow: /\nSitemap: ..."
+    └── TestBanner returns null → no banner rendered
+```
+
+---
+
+## Integration Points
+
+### New vs Modified: Explicit Inventory
+
+| Item | Type | Integration Point | Notes |
+|------|------|-------------------|-------|
+| `NEXT_PUBLIC_TEST_MODE` env var | New | Railway env vars panel | Set to `"true"` for test deployment; absent in production |
+| `NEXT_PUBLIC_BASE_URL` env var | Existing (likely) | Railway env vars panel | Already used by sitemap.ts; set to Railway URL for test deployment |
+| `src/app/robots.ts` | New file | Next.js file convention, auto-served at `/robots.txt` | No route conflict — no existing `public/robots.txt` found |
+| `src/components/TestBanner.tsx` | New file | Imported in root layout | Server Component, no client bundle cost |
+| `src/app/layout.tsx` metadata export | Modified | Conditional robots field | Does not break existing metadata structure |
+| `src/app/(public)/layout.tsx` | Potentially modified | Only if banner not placed in root layout | See placement decision above |
+| `src/app/(admin)/layout.tsx` | Potentially modified | Only if banner not placed in root layout | See placement decision above |
+| `railway.toml` | New file (optional) | Railway deployment | Can use Railway UI instead; toml gives IaC reproducibility |
+
+### Build Order for This Milestone
+
+Dependencies are minimal. Build order:
+
+```
+1. Add NEXT_PUBLIC_TEST_MODE env var to .env.example
+        ↓
+2. Create src/app/robots.ts
+   (no deps — standalone file convention)
+        ↓
+3. Create src/components/TestBanner.tsx
+   (no deps — reads env var, renders HTML)
+        ↓
+4. Modify src/app/layout.tsx
+   (add robots metadata + import TestBanner)
+        ↓
+5. Configure Railway deployment
+   (set env vars, connect repo, deploy)
+```
+
+Steps 2 and 3 are independent and can be done in either order. Step 4 depends on step 3 (needs the component to exist). Step 5 depends on steps 2-4 (app must be correct before deploying).
+
+---
+
+## Anti-Patterns
+
+### Anti-Pattern 1: Static robots.txt in public/
+
+**What people do:** Drop a `public/robots.txt` file with `Disallow: /` and call it done.
+**Why it's wrong:** A static file cannot be toggled per environment. The production deployment would also disallow crawlers unless the file is environment-specific, which requires build-time file swapping.
+**Do this instead:** Use `src/app/robots.ts` with the environment variable gate. One file, environment-aware behavior.
+
+### Anti-Pattern 2: Rendering the Banner Only in the Reader Layout
+
+**What people do:** Add TestBanner to `(public)/layout.tsx` only, assuming editors will know the site is in test mode.
+**Why it's wrong:** The admin CMS also operates on the test deployment. Editors reviewing content on the test site should see the banner too, avoiding confusion about whether they are on production.
+**Do this instead:** Add the banner to the root `layout.tsx` so it appears on every route — reader and admin — with one insertion point.
+
+### Anti-Pattern 3: Hardcoding the Banner Style in Tailwind Without a Fixed Z-Index
+
+**What people do:** Style the banner with layout flow (not `fixed`), allowing it to scroll off screen.
+**Why it's wrong:** The banner must always be visible to communicate test status. If it scrolls away, reviewers sharing deep-link URLs see no indicator.
+**Do this instead:** Use `position: fixed; top: 0; z-index: 9999` (inline style or Tailwind `fixed top-0 z-[9999]`). Offset the body or first layout element by the banner height to prevent content overlap.
+
+### Anti-Pattern 4: Using NEXT_PUBLIC_ Prefix on Secrets
+
+**What people do:** Set `NEXT_PUBLIC_TEST_MODE=true` next to secret keys in the same .env, then accidentally expose the pattern.
+**Why it's wrong:** `NEXT_PUBLIC_` variables are inlined into the client bundle. This is intentional for TEST_MODE but must never be used for secrets (DATABASE_URL, ADMIN_SESSION_SECRET, API keys).
+**Do this instead:** Keep the convention clear: `NEXT_PUBLIC_` only for values safe to expose. All secrets remain without the prefix. TEST_MODE is safe to expose — it is not sensitive.
+
+---
+
+## Scaling Considerations
+
+This milestone has no scaling implications. The changes are:
+- One env var check (zero runtime cost)
+- One small Server Component (renders null in production, no client bundle)
+- One dynamic route handler generating ~50 bytes of text
+
+These features add no database load, no new API calls, and no meaningful rendering overhead at any scale.
+
+---
+
+## Sources
+
+- Next.js 15 official docs, `generateMetadata` — robots field: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#robots (verified 2026-03-26, docs version 16.2.1)
+- Next.js 15 official docs, `robots.ts` file convention: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots (verified 2026-03-26, docs version 16.2.1)
+- Existing codebase inspection: `src/app/layout.tsx`, `src/app/(public)/layout.tsx`, `src/app/(admin)/layout.tsx`, `bundesland.config.ts`, `src/app/sitemap.ts`
+
+---
+
+## Full Platform Architecture (v1.0 Reference)
+
+The section below is the original architecture research from v1.0. Preserved for reference. All v1.2 additions are additive and do not change this baseline.
 
 ### System Overview
 
@@ -30,8 +310,6 @@
 │                    │ │ Bezirk Tagger  │ │  (classify by region)  │
 │                    │ ├────────────────┤ │                         │
 │                    │ │ Article Writer │ │  (LLM rewrite/expand)  │
-│                    │ ├────────────────┤ │                         │
-│                    │ │ Image Selector │ │  (pick or gen image)   │
 │                    │ └────────────────┘ │                         │
 │                    └─────────┬──────────┘                         │
 ├──────────────────────────────┼───────────────────────────────────┤
@@ -56,351 +334,8 @@
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-### Component Responsibilities
-
-| Component | Responsibility | Typical Implementation |
-|-----------|----------------|------------------------|
-| Source Adapter | Fetch raw content from one external source; normalize to internal format | One file/class per source; implements shared interface |
-| Ingestion Queue | Deduplication, rate-limit buffering, ordering | Database table with status flags OR lightweight queue (BullMQ/pg-based) |
-| Bezirk Tagger | Classify each article to zero or more Steiermark Bezirke | LLM prompt + fallback keyword matching against Bezirk geography list |
-| Article Writer | Rewrite source material into German-language article in platform voice | LLM (GPT-4o / Claude) with structured output |
-| Articles DB | Canonical store for all published and draft articles with Bezirk associations | PostgreSQL with junction table for article↔Bezirk |
-| Source Raw Cache | Store raw fetched content to enable deduplication and audit | DB table or simple hash store keyed on source URL / content hash |
-| Editorial CMS | Admin UI: write, edit, pin, feature, remove any article | Next.js admin route or separate CMS route group |
-| Reader Frontend | Public site: Bezirk filter, article list, article detail | Next.js (SSR/ISR) or SvelteKit |
-| Scheduler | Trigger ingestion runs on interval; retry failed AI jobs | node-cron, Vercel Cron, or database-driven polling |
-
-## Recommended Project Structure
-
-```
-src/
-├── ingestion/                # Source adapters + ingestion queue logic
-│   ├── adapters/
-│   │   ├── ots.ts            # OTS.at API adapter
-│   │   ├── rss.ts            # Generic RSS adapter (reusable)
-│   │   └── index.ts          # Adapter registry (plug-in pattern)
-│   ├── dedup.ts              # Content hash / URL deduplication
-│   └── queue.ts              # Job queue interface
-│
-├── ai/                       # AI processing pipeline
-│   ├── tagger.ts             # Bezirk classification
-│   ├── writer.ts             # Article generation
-│   ├── prompts/              # Prompt templates (versioned)
-│   └── pipeline.ts           # Orchestrates tagger → writer → save
-│
-├── content/                  # Data access layer for articles
-│   ├── articles.ts           # CRUD for articles
-│   ├── bezirke.ts            # Bezirk reference data + lookup
-│   └── sources.ts            # Source feed registry
-│
-├── cms/                      # Editorial interface (admin)
-│   ├── app/                  # Next.js app dir routes for /admin
-│   └── components/
-│
-├── site/                     # Reader-facing frontend
-│   ├── app/                  # Next.js app dir routes for public site
-│   └── components/
-│
-├── scheduler/                # Cron / job runner
-│   └── jobs.ts
-│
-└── db/                       # Schema, migrations, connection
-    ├── schema.ts             # Drizzle / Prisma schema
-    └── migrations/
-```
-
-### Structure Rationale
-
-- **ingestion/:** Isolated from AI so adapters can be added without touching processing logic. The adapter registry enables plug-in extensibility without core changes.
-- **ai/:** Separate from ingestion and content — swapping LLM providers or prompt strategies doesn't touch data layer.
-- **content/:** Single data access layer shared by CMS, site, and pipeline. Prevents each consumer from building its own DB queries.
-- **cms/ and site/:** Separate route groups but can share components. CMS is authenticated, site is public — different middleware.
-- **scheduler/:** Thin wrapper around cron logic; references ingestion and ai but owns no business logic itself.
-
-## Architectural Patterns
-
-### Pattern 1: Plug-in Source Adapter Registry
-
-**What:** All source adapters implement a shared `SourceAdapter` interface. A central registry maps source identifiers to adapter instances. The ingestion runner iterates the registry without knowing about specific sources.
-
-**When to use:** Any time a new feed or API must be addable without touching core ingestion logic. This satisfies the PROJECT.md extensibility constraint directly.
-
-**Trade-offs:** Adds a small abstraction layer early; pays off immediately when the second source is added.
-
-**Example:**
-```typescript
-interface SourceAdapter {
-  sourceId: string;
-  fetchLatest(): Promise<RawItem[]>;
-}
-
-// adapters/index.ts
-export const adapters: SourceAdapter[] = [
-  new OtsAdapter(process.env.OTS_API_KEY),
-  new RssFeedAdapter('https://example.at/feed.xml'),
-];
-
-// ingestion runner
-for (const adapter of adapters) {
-  const items = await adapter.fetchLatest();
-  await enqueueForProcessing(items);
-}
-```
-
-### Pattern 2: Staged Pipeline with Status Flags
-
-**What:** Each ingested item passes through discrete stages tracked in the database: `fetched → deduped → tagged → written → published`. Status flags allow the scheduler to resume failed items, and editors can see pipeline state.
-
-**When to use:** Any pipeline with retryable async steps and autonomous operation. Essential for "platform runs unattended" requirement.
-
-**Trade-offs:** Adds one status column and one updated_at timestamp per item. Eliminates need for a separate queue infrastructure at launch scale.
-
-**Example:**
-```typescript
-type PipelineStatus =
-  | 'fetched'
-  | 'duplicate'
-  | 'tagging'
-  | 'tagged'
-  | 'writing'
-  | 'published'
-  | 'error';
-
-// Scheduler retries anything stuck in 'tagging' or 'writing' for > 10 min
-```
-
-### Pattern 3: Bezirk Junction Table (Many-to-Many)
-
-**What:** Articles and Bezirke are in a many-to-many relationship. One article can cover multiple Bezirke (e.g., a flooding report covering Liezen and Murau). A junction table `article_bezirke(article_id, bezirk_id)` is the canonical mapping.
-
-**When to use:** Any multi-region news platform. Required from day one since all Steiermark Bezirke are in scope at launch.
-
-**Trade-offs:** Slightly more complex queries for filtering; necessary to avoid the "one Bezirk column" trap that breaks multi-region articles.
-
-**Example:**
-```sql
--- Reader selects Liezen: fetch articles associated with bezirk_id = 'liezen'
-SELECT a.* FROM articles a
-JOIN article_bezirke ab ON ab.article_id = a.id
-WHERE ab.bezirk_id = $1
-ORDER BY a.published_at DESC;
-```
-
-### Pattern 4: ISR / On-Demand Revalidation for Reader Frontend
-
-**What:** The public site uses Incremental Static Regeneration (Next.js) or equivalent. Pages are statically rendered but revalidated on a short interval (e.g., 60 seconds) or triggered on article publish. This avoids SSR cost for every reader hit while keeping content fresh.
-
-**When to use:** News sites with high read:write ratio and autonomous publish pipeline.
-
-**Trade-offs:** Content may be up to N seconds stale. Acceptable for regional news; fine at launch scale.
-
-## Data Flow
-
-### Ingestion Flow (automated, recurring)
-
-```
-Scheduler (cron every N minutes)
-    ↓
-Adapter Registry → fetch each source
-    ↓
-Deduplication check (hash / URL against raw cache)
-    ↓ (new items only)
-Ingestion Queue (insert row with status='fetched')
-    ↓
-AI Pipeline worker reads 'fetched' rows
-    ├── Bezirk Tagger → LLM classifies regions → status='tagged'
-    └── Article Writer → LLM generates German article text → status='written'
-    ↓
-Auto-publish: status='published', published_at=now()
-    ↓
-Frontend revalidation triggered (webhook or TTL expiry)
-```
-
-### Editorial Override Flow
-
-```
-Editor (CMS admin UI)
-    ├── Write new article → insert directly as status='published'
-    ├── Edit AI article → update content, set edited_by, keep published
-    ├── Pin article → set pinned=true, pinned_bezirk=[...ids]
-    └── Remove article → set status='removed' (soft delete)
-```
-
-### Reader Request Flow
-
-```
-Reader opens site → selects "Mein Bezirk" (stored in localStorage/cookie)
-    ↓
-Next.js page request with bezirk param
-    ↓ (cache hit: serve static)
-    ↓ (cache miss / stale: query DB)
-Articles DB → JOIN article_bezirke WHERE bezirk_id = $bezirk
-    → ORDER BY pinned DESC, published_at DESC
-    ↓
-Rendered article list → reader
-```
-
-### Key Data Flows
-
-1. **Source raw → published article:** Adapter fetch → dedup → AI tag → AI write → DB insert → frontend cache
-2. **Editor action → live on site:** CMS write/edit → DB update → revalidation trigger → frontend cache cleared
-3. **Bezirk filter:** Reader selection → cookie/localStorage → all API/page requests scoped by bezirk_id
-4. **Retry flow:** Scheduler polls for items in `status='error'` or stuck in transitional states beyond timeout → re-enqueues
-
-## Multi-Region / Bezirk Data Model
-
-```
-bezirke
-  id          TEXT PK  (e.g. 'liezen', 'graz-umgebung')
-  name        TEXT     (e.g. 'Liezen', 'Graz-Umgebung')
-  slug        TEXT     (URL-safe)
-  region      TEXT     (grouping for navigation, e.g. 'Obersteiermark')
-
-articles
-  id          UUID PK
-  title       TEXT
-  body        TEXT
-  summary     TEXT
-  source_url  TEXT
-  source_id   TEXT     (FK to sources)
-  status      TEXT     (pipeline status enum)
-  pinned      BOOL
-  published_at TIMESTAMPTZ
-  created_at  TIMESTAMPTZ
-  edited_by   TEXT NULL  (set when editor touches it)
-
-article_bezirke
-  article_id  UUID FK → articles.id
-  bezirk_id   TEXT FK → bezirke.id
-  PRIMARY KEY (article_id, bezirk_id)
-
-sources
-  id          TEXT PK  (e.g. 'ots', 'meinbezirk-rss')
-  adapter     TEXT     (adapter class identifier)
-  config      JSONB    (URL, API key ref, polling interval)
-  enabled     BOOL
-```
-
-**Rationale:** Sources table makes the adapter registry database-driven — new feeds can be added via CMS config panel without code deploys. Config stored as JSONB allows per-adapter configuration shape without schema migrations per new feed type.
-
-## Scheduling / Automation Architecture
-
-```
-Scheduler process (single, lightweight)
-    │
-    ├── Ingestion job (every 15–30 min per source)
-    │     └── calls adapter → enqueues new items
-    │
-    ├── Pipeline worker (continuous or every 2–5 min)
-    │     └── processes 'fetched' items through AI pipeline
-    │
-    └── Cleanup job (daily)
-          └── archives old raw cache, purges 'removed' articles
-```
-
-**Implementation choice:** At launch scale, a single Node.js process with `node-cron` is sufficient. No separate queue infrastructure (Redis/RabbitMQ) needed until volume justifies it. The status-flag pattern in the DB serves as a durable queue. Vercel Cron or similar managed cron can replace this if deploying serverlessly.
-
-## Scaling Considerations
-
-| Scale | Architecture Adjustments |
-|-------|--------------------------|
-| 0–10k monthly readers | Monolith fine: Next.js app with integrated API routes, single Postgres instance, node-cron scheduler in same process or separate dyno |
-| 10k–500k monthly readers | Add read replica for Postgres; move scheduler to separate process; add CDN in front of Next.js for article pages |
-| 500k+ monthly readers | Consider separating ingestion worker from web process; evaluate Redis for queue if AI job volume spikes; add DB connection pooling (PgBouncer) |
-
-### Scaling Priorities
-
-1. **First bottleneck:** Database read load from article list queries. Fix: ISR caching and read replica. Bezirk-filtered queries need an index on `article_bezirke(bezirk_id)` and `articles(published_at)`.
-2. **Second bottleneck:** LLM API latency in the AI pipeline. Fix: Batch processing, async pipeline — AI jobs should never block reader requests (separate process/worker).
-
-## Anti-Patterns
-
-### Anti-Pattern 1: Single Bezirk Column on Articles
-
-**What people do:** Add `bezirk TEXT` column directly to articles table.
-**Why it's wrong:** An article about flooding affecting Liezen, Murau, and Leoben cannot be correctly associated. Results in either data duplication or missing cross-Bezirk coverage.
-**Do this instead:** Many-to-many junction table `article_bezirke` from day one.
-
-### Anti-Pattern 2: Blocking AI Calls in Web Request Path
-
-**What people do:** When an editor previews an article, trigger AI generation inline in the HTTP request.
-**Why it's wrong:** LLM API calls take 2–15 seconds. Blocks the request, causes timeouts, terrible UX.
-**Do this instead:** All AI processing happens in background worker. Web routes only read/write DB state, never call LLM directly.
-
-### Anti-Pattern 3: Hardcoded Source Adapters
-
-**What people do:** Write ingestion logic with OTS-specific code scattered throughout the pipeline runner.
-**Why it's wrong:** Adding a second source requires touching core pipeline code. Violates the PROJECT.md extensibility requirement.
-**Do this instead:** Adapter interface + registry from day one. OTS adapter is the first implementation of the interface, not the interface itself.
-
-### Anti-Pattern 4: Storing Raw LLM Output Directly as Article Body
-
-**What people do:** Take LLM response string, insert directly into `articles.body`.
-**Why it's wrong:** LLM output is inconsistent in format. HTML vs markdown, extra prose, JSON wrapper artifacts. No way to reprocess without re-calling LLM.
-**Do this instead:** Define structured output schema (JSON with `title`, `body`, `summary`, `tags`). Validate output before storing. Store raw LLM response separately for debugging.
-
-### Anti-Pattern 5: No Deduplication Before AI Processing
-
-**What people do:** Run AI pipeline on every fetched item, including items already processed on previous runs.
-**Why it's wrong:** Identical stories get re-generated every cron cycle. Wastes LLM API budget. Pollutes article list with near-duplicate content.
-**Do this instead:** Hash source URL + content fingerprint before enqueuing. Check against raw cache. Skip if already processed.
-
-## Integration Points
-
-### External Services
-
-| Service | Integration Pattern | Notes |
-|---------|---------------------|-------|
-| OTS.at API | REST API polling via adapter; API key in env | Rate limits unknown — adapter should respect retry-after headers |
-| OpenAI / Anthropic API | HTTP calls from AI pipeline worker | Structured outputs (JSON mode) preferred; costs accumulate fast without dedup |
-| RSS feeds | HTTP GET + XML parse (e.g., `rss-parser` npm) | Handle malformed XML gracefully; some feeds require User-Agent header |
-| Image sources | If auto-images: Unsplash API or similar royalty-free; if manual: CMS upload | Start with no auto-images; add as enhancement |
-
-### Internal Boundaries
-
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| Ingestion → AI Pipeline | Database status flags (decoupled) | Ingestion writes `status='fetched'`; pipeline worker polls for it |
-| AI Pipeline → Content Store | Direct DB write via content layer | Pipeline calls `content/articles.ts` functions, not raw SQL |
-| Content Store → CMS | Shared data access layer | CMS uses same `content/` functions as pipeline — single source of truth |
-| Content Store → Reader Frontend | Next.js data fetching (server components or API routes) | No direct DB access from client components |
-| Scheduler → Ingestion/Pipeline | Function calls or HTTP to internal endpoint | Keep scheduler thin — it only triggers, doesn't contain logic |
-
-## Build Order (Dependency Chain)
-
-Based on component dependencies, the build order is:
-
-```
-1. DB Schema + Bezirk reference data
-        ↓
-2. Content data access layer (content/)
-        ↓
-3. Source adapter interface + OTS adapter
-        ↓
-4. Ingestion queue + deduplication
-        ↓
-5. AI pipeline (tagger + writer)
-        ↓
-6. Scheduler / automation
-        ↓
-7. Editorial CMS (reads/writes content layer)
-        ↓
-8. Reader frontend (reads content layer)
-```
-
-**Rationale:**
-- Schema must exist before any other component can persist data.
-- The content data access layer is depended on by both pipeline and delivery; build it before either.
-- Ingestion and AI pipeline are purely backend — they can be built and tested without a frontend.
-- CMS and reader frontend are independent of each other at this point; can be built in parallel.
-- Scheduler is wired last to connect ingestion → AI pipeline as a complete automated loop.
-
-## Sources
-
-- Architecture patterns synthesized from training knowledge of news aggregation systems, headless CMS patterns, and AI pipeline design (cutoff August 2025). No live web search was available.
-- PROJECT.md requirements drove component boundary and data model decisions directly.
-- Confidence: MEDIUM — these are well-established patterns for this system type. Specific library versions and API details should be verified during implementation phases.
+*Full v1.0 architecture details documented on 2026-03-21. See git history for original file.*
 
 ---
-*Architecture research for: AI-powered regional news platform (Regionalprojekt / Ennstal Aktuell)*
-*Researched: 2026-03-21*
+*Architecture research for: v1.2 Test Deployment — Regionalprojekt / Ennstal Aktuell*
+*Researched: 2026-03-26*

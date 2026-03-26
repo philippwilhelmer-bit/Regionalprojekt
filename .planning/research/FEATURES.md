@@ -1,150 +1,110 @@
 # Feature Research
 
-**Domain:** AI-powered regional/hyperlocal news platform (Steiermark, Austria)
-**Researched:** 2026-03-21
-**Confidence:** MEDIUM — all external tools restricted; findings based on training knowledge of the domain (AP Automation, Axios Local, hyperlocal CMS/AI platforms through mid-2025). Flag for verification in phase-specific research.
+**Domain:** Test/staging deployment infrastructure for Next.js 15 news platform
+**Researched:** 2026-03-26
+**Confidence:** HIGH — verified against official Next.js 15 docs (last updated 2026-03-20), Railway documentation, and multi-source SEO staging patterns
+
+---
+
+## Context
+
+This is milestone v1.2 added to an existing platform. All reader features, CMS, SEO, AdSense, and AI pipeline are already shipped. The scope of this research is limited to the four features defined in PROJECT.md for v1.2.
+
+**Existing infrastructure relevant to this milestone:**
+- `src/app/layout.tsx` exports a `metadata` object (no `robots` field yet)
+- `src/app/sitemap.ts` exists and is conditionally disabled for search — no `robots.ts` exists yet
+- `process.env.NEXT_PUBLIC_BASE_URL` already used in `sitemap.ts`
+- Both reader (`(public)`) and CMS (`(admin)`) route groups are wrapped by the root layout
 
 ---
 
 ## Feature Landscape
 
-### Table Stakes (Users Expect These)
+### Table Stakes (Testers/Operators Expect These)
 
-Features users assume exist. Missing these = product feels incomplete or broken.
+Features the test deployment must have to be useful and safe. Missing any = the deployment is either dangerous (could be indexed) or uninformative (testers don't know it's a test site).
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Article list by Bezirk | Users come specifically for their region — undifferentiated national feed defeats the purpose | LOW | Must be the primary view, not a filter on top of everything |
-| "Mein Bezirk" region selector | Hyperlocal = the core promise; without persistent region selection, users re-select every visit | LOW | Store in localStorage/cookie; no account required |
-| Article detail page | Standard news reading UX; must be shareable via URL | LOW | Stable slugged URLs for sharing; OG tags for social previews |
-| Readable mobile layout | >70% of regional news consumption is mobile; cramped layout kills retention | LOW | Bottom nav pattern (already in design reference), large tap targets, comfortable reading line length |
-| Article publication timestamp | Readers need to know if news is current; regional readers especially distrust stale content | LOW | Relative time ("vor 2 Stunden") plus absolute date on hover/tap |
-| Source attribution | Readers need to know origin (OTS.at, etc.); builds trust for AI-generated content | LOW | Visible per article; links to original source where available |
-| AI-generation disclosure | Legally and ethically required in EU context; readers distrust undisclosed automation | LOW | "Automatisch erstellt" label per article; required for Austrian media law compliance |
-| Search within platform | Users looking for specific topics or Bezirke expect to find them | MEDIUM | At minimum: full-text search across articles; Bezirk filter in search |
-| RSS feed per Bezirk | Power users and aggregators expect machine-readable feeds; standard for any news site | LOW | One feed per Bezirk + a global feed |
-| Responsive images | News without images feels unfinished; slow-loading images on mobile kills engagement | LOW | Lazy loading, WebP format, appropriate srcset breakpoints |
-| Consistent German-language UI | Platform serves Steiermark; any English UI strings feel foreign and unprofessional | LOW | All labels, navigation, error messages, and metadata in German |
+| Visible "TESTSEITE" banner on every page | Testers and any accidental visitors must immediately know this is not production; prevents false editorial decisions on test data | LOW | Fixed-position element in root layout; conditional on `NEXT_PUBLIC_IS_TEST_DEPLOYMENT=true`; covers both reader and CMS route groups via root `layout.tsx` |
+| `robots` noindex/nofollow on all pages | Prevents Google indexing test content before launch; duplicate content penalty risk otherwise | LOW | Add `robots: { index: false, follow: false }` to root layout metadata, env-conditional; Next.js 15 Metadata API propagates to all child pages automatically |
+| `robots.txt` disallowing all crawlers | Belt-and-suspenders; noindex meta can be ignored by non-compliant bots; robots.txt is the canonical crawl control signal | LOW | New `src/app/robots.ts` file (Next.js 15 App Router convention); env-conditional: disallow `/` in test, normal rules in production |
+| Railway deployment with live shareable URL | Goal of the milestone: a URL collaborators can visit to review the platform | MEDIUM | Railway auto-detects Next.js via Nixpacks; requires replication of all existing env vars plus the new `NEXT_PUBLIC_IS_TEST_DEPLOYMENT=true`; Railway provides `*.up.railway.app` URL automatically |
 
 ### Differentiators (Competitive Advantage)
 
-Features that set this platform apart from generic news aggregators or manual regional newsrooms.
+This is infrastructure, not a user-facing product. There are no competitive differentiators to optimize for. The goal is correct, minimal, and reversible behavior.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Fully autonomous content pipeline | Platform publishes without any human intervention; enables operation at scale no traditional newsroom can match | HIGH | Cron/queue-based ingestion → AI generation → auto-publish; requires robust error handling and deduplication |
-| Bezirk-aware AI article generation | AI rewrites source articles with explicit geographic framing ("In Liezen...") rather than generic summaries | MEDIUM | Prompt engineering: inject Bezirk context; geo-tagging logic to assign articles to correct Bezirke |
-| Multi-Bezirk coverage at launch | All Steiermark Bezirke covered from day one; competitor hyperlocal sites usually start with one area | HIGH | Data model and routing must be multi-Bezirk by design, not retrofitted |
-| Pluggable content source architecture | New RSS feeds and APIs can be added without core changes; enables rapid expansion | HIGH | Adapter pattern per source; each source is a plugin; OTS.at is first adapter |
-| Editor override layer (optional, not required) | Editors can curate/pin/edit/remove without blocking the autonomous pipeline; human-in-the-loop is additive | MEDIUM | Admin interface with article CRUD, pin/feature controls, source management; platform continues running without editor action |
-| AI-powered article deduplication | Same story from multiple sources does not appear multiple times; keeps feeds clean | MEDIUM | Semantic similarity check (embedding-based or keyword fingerprint) before publishing |
-| Contextual Bezirk enrichment | Articles automatically tagged with relevant Bezirke based on content analysis, not just source metadata | MEDIUM | NLP-based location extraction (spaCy/GLiNER or LLM-based) to detect Bezirk mentions; allows one article to appear in multiple Bezirks feeds |
-| Automated publishing cadence | Articles spread across time to maintain fresh feed appearance, not all published in a burst after ingestion | LOW | Simple time-delay queue; configurable spread window (e.g., max 3 articles/hour per Bezirk) |
+| Single env var gates all test behavior | One `NEXT_PUBLIC_IS_TEST_DEPLOYMENT=true` flag controls banner, noindex meta, and robots.txt simultaneously; no code changes needed to go from test to production | LOW | `NEXT_PUBLIC_` prefix means the value is inlined at build time; Railway rebuilds on deploy, so flipping the var and redeploying is the launch action |
+| Banner covers CMS, not just reader | Editors reviewing the CMS on the test URL don't forget they're in a test environment | LOW | Root `app/layout.tsx` already wraps both `(public)` and `(admin)` groups; no separate implementation needed |
 
 ### Anti-Features (Commonly Requested, Often Problematic)
 
-Features that seem like natural additions but create disproportionate complexity or conflict with the product's core design.
-
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| Reader accounts / registration | Personalization, saved articles, notifications | Adds auth complexity, GDPR surface area, password reset flows; readers come for content not community; "Mein Bezirk" can work without accounts | Persist Bezirk selection in localStorage; no account needed for core value |
-| Real-time push notifications | Keeps readers engaged, drives return visits | Requires service worker + push subscription management + a reason to grant permission; most regional readers don't grant push to small-brand sites | RSS feed (already table stakes) satisfies power users; browser-based refresh is sufficient for casual readers |
-| Comment sections / reader forums | Community engagement, letters to the editor pattern | Moderation burden, spam, legal liability (§ 1330 ABGB defamation risk); toxic content can destroy brand for small platform | "Leserbriefe"-style email contact; social sharing links per article |
-| Paywall / premium content | Revenue model | Contradicts "content is public" constraint; adds subscription infrastructure; kills organic reach for AI-generated content | Establish traffic and trust first; paywall is a v2+ consideration after product-market fit |
-| Native iOS/Android app | Better push notifications, home screen presence | Build + App Store review + maintenance cost; mobile web with PWA gives 90% of the value; explicitly out of scope per PROJECT.md | Mobile-optimized web; optionally PWA installability (add to home screen) as low-cost enhancement |
-| AI chatbot / Q&A interface | "Ask about your Bezirk" seems compelling | Requires RAG pipeline on top of article corpus, hallucination risk, liability for AI stating incorrect local facts, support burden | Good search + well-structured articles serve the same need without risk |
-| Automated social media posting | Drive traffic from Facebook/Instagram/Twitter | Requires OAuth token management, per-platform formatting, error handling per platform API; distraction from core product | Shareable URLs with OG tags let editors share manually; automation adds complexity for uncertain gain in v1 |
-| Multi-language support | Austria has Hungarian/Slovenian minorities in Steiermark | Very low usage volume; translating AI-generated German articles adds cost and QA overhead | German-only is correct for v1; add if specific minority-language demand is validated |
-| Real-time article updates | "Breaking news" ticker, live-updating feeds | Adds WebSocket/SSE infrastructure; for regional news the velocity doesn't justify it; most stories don't break within the same browser session | Periodic page refresh or simple pull-to-refresh on mobile is sufficient |
+| HTTP Basic Auth on test site | Extra protection from accidental indexing | Breaks Railway health checks, blocks AI pipeline cron jobs from running, creates CORS issues with AdSense script already in layout, adds friction for testers | noindex + robots.txt is sufficient for search engine protection; share URL only with intended testers |
+| Separate Railway project/repo | Clean isolation | Doubles maintenance burden; env vars drift between environments; bugs found in test may not reproduce in production if codebases diverge | Use same codebase, different Railway environment or service, with different env vars |
+| Disabling AdSense on test deployment | Prevent test traffic from affecting ad metrics | AdSense script is already in the root layout tied to `NEXT_PUBLIC_ADSENSE_PUB_ID`; AdSense silently no-ops on unverified domains — no real ads will serve | No action needed; AdSense ignores non-verified Railway domains automatically |
+| Test-only database with seed data | Cleaner isolated testing | Requires schema migration sync, seed script maintenance, and a second PostgreSQL instance; for a shareable review deployment, the real (or a dump of the real) database is appropriate | Use a Railway PostgreSQL add-on with a database dump from production, or share the production database read-write for the test milestone |
+| Environment-specific sitemap | Prevent test URLs appearing in sitemap crawl | sitemap.ts is only linked from robots.txt in production mode; in test mode robots.txt disallows everything so sitemap is unreachable by design | The env-conditional `robots.ts` handles this implicitly — no sitemap change needed |
 
 ---
 
 ## Feature Dependencies
 
 ```
-[Bezirk Selector — "Mein Bezirk"]
-    └──requires──> [Bezirk Data Model] (list of all Steiermark Bezirke)
-                       └──enables──> [Bezirk-Filtered Article Feed]
-                                         └──requires──> [Bezirk Tagging on Articles]
-                                                            └──requires──> [Content Ingestion Pipeline]
-                                                                               └──requires──> [Source Adapters (OTS.at first)]
+[Railway Deployment]
+    └──requires──> [DATABASE_URL set in Railway]
+    └──requires──> [HMAC_SECRET set in Railway]
+    └──requires──> [ANTHROPIC_API_KEY set in Railway]
+    └──requires──> [NEXT_PUBLIC_IS_TEST_DEPLOYMENT=true set in Railway]
+    └──requires──> [NEXT_PUBLIC_BASE_URL set in Railway]
 
-[AI Article Generation]
-    └──requires──> [Content Ingestion Pipeline]
-    └──requires──> [LLM API Integration]
-    └──requires──> [Bezirk Context Injection in Prompts]
-                       └──requires──> [Bezirk Data Model]
+[TESTSEITE Banner]
+    └──requires──> [NEXT_PUBLIC_IS_TEST_DEPLOYMENT env var]
+    └──enhances──> [noindex meta] (visual + technical together signal "not production")
 
-[AI Disclosure Label]
-    └──requires──> [AI Article Generation]
-    └──requires──> [Article metadata flag: ai_generated=true]
+[robots noindex meta]
+    └──requires──> [root layout.tsx metadata object updated with conditional robots field]
+    └──conflicts──> [existing SEO metadata in layout.tsx] (must be additive/conditional, not permanent override)
 
-[Deduplication]
-    └──requires──> [Content Ingestion Pipeline]
-    └──enhances──> [AI Article Generation] (prevents duplicate articles being generated)
-
-[Editor Override Layer]
-    └──requires──> [Article data model with editable fields]
-    └──requires──> [Admin authentication (internal only)]
-    └──enhances──> [Bezirk-Filtered Article Feed] (pinned/featured articles appear top)
-
-[RSS Feeds per Bezirk]
-    └──requires──> [Bezirk-Filtered Article Feed]
-    └──requires──> [Stable article URLs]
-
-[Search]
-    └──requires──> [Article corpus in searchable store]
-    └──enhances──> [Bezirk Selector] (can filter search by Bezirk)
+[robots.txt disallow all]
+    └──requires──> [src/app/robots.ts created] (does not yet exist in project)
+    └──references──> [NEXT_PUBLIC_BASE_URL] (same var already used in sitemap.ts)
+    └──compatible──> [existing sitemap.ts] (robots.ts conditionally omits sitemap reference in test mode)
 ```
 
 ### Dependency Notes
 
-- **Bezirk Data Model is foundational:** Nearly every feature depends on the canonical list of Steiermark Bezirke with consistent slugs/IDs. This must be defined first and must not change later (URL stability).
-- **Content Ingestion Pipeline gates everything:** AI generation, deduplication, geo-tagging, and publishing all depend on a working ingestion pipeline. This is the highest-priority infrastructure piece.
-- **AI generation requires Bezirk context:** Without Bezirk injection in prompts, generated articles are generic; the core value proposition is lost.
-- **Editor Override enhances but does not gate:** The platform must function without editor action. The override layer is additive.
-- **Deduplication should precede publishing:** Running dedup after AI generation wastes LLM API cost. Check for duplicates at ingestion time, before generation is triggered.
+- **Railway Deployment requires all existing env vars:** The AI pipeline cron, HMAC session auth, database connection, AdSense publisher ID, and Anthropic API key are all required for the app to function on Railway. These must be replicated from the production environment.
+- **noindex is additive, not a replacement:** The existing `metadata` export in `layout.tsx` has no `robots` field (currently defaults to index/follow). Adding a conditional `robots` field does not affect production builds where `NEXT_PUBLIC_IS_TEST_DEPLOYMENT` is unset.
+- **robots.ts is a new file:** No `src/app/robots.ts` or `public/robots.txt` exists yet. The Next.js 15 App Router convention (`src/app/robots.ts` returning `MetadataRoute.Robots`) is the correct approach and takes precedence over a static `public/robots.txt` file if both exist.
+- **Banner must be server-side:** `NEXT_PUBLIC_IS_TEST_DEPLOYMENT` is inlined at build time, so the banner can be a simple Server Component with a build-time conditional — no client-side hydration or useEffect needed.
 
 ---
 
 ## MVP Definition
 
-### Launch With (v1)
+### Launch With (v1.2)
 
-Minimum viable product — what's needed to validate that Steiermark residents use an autonomous hyperlocal news platform.
+All four features are required for a safe, shareable test deployment. None can be deferred.
 
-- [ ] **Content ingestion pipeline with OTS.at adapter** — without this nothing is published; must run on schedule without manual triggering
-- [ ] **AI article generation with Bezirk context** — the core value proposition; generic summaries are not enough
-- [ ] **AI-generation disclosure label** — legally required in EU/Austria; non-negotiable
-- [ ] **Bezirk data model (all Steiermark Bezirke)** — multi-region from day one per project decision
-- [ ] **"Mein Bezirk" region selector** — the primary reader personalization; persisted in localStorage
-- [ ] **Bezirk-filtered article feed** — homepage is the Bezirk feed; not a global feed with filters
-- [ ] **Article detail page with stable URLs** — required for sharing and for RSS
-- [ ] **Source attribution per article** — trust signal; links back to OTS.at source
-- [ ] **Article timestamp (relative + absolute)** — freshness signal; critical for news
-- [ ] **Mobile-optimized layout** — bottom nav pattern per existing design; >70% of users are mobile
-- [ ] **Editor admin interface** — pin, feature, edit, remove, manual publish; makes the platform manageable
-- [ ] **Auto-publish pipeline (no draft queue)** — per project decision; platform runs autonomously
-- [ ] **RSS feed per Bezirk** — standard expectation for any news site; low implementation cost
+- [ ] TESTSEITE banner visible on every page (reader + CMS) — prevents tester confusion and false editorial decisions
+- [ ] `robots: { index: false, follow: false }` in root layout metadata, conditional on `NEXT_PUBLIC_IS_TEST_DEPLOYMENT` — blocks search engine indexing
+- [ ] `src/app/robots.ts` disallowing all crawlers in test mode — belt-and-suspenders crawl block
+- [ ] Railway deployment producing a shareable `*.up.railway.app` URL — the delivery vehicle for the test milestone
 
-### Add After Validation (v1.x)
+### Add After Validation (post-v1.2)
 
-Features to add once the autonomous pipeline is proven and readers are returning.
-
-- [ ] **Article deduplication** — important for quality but not strictly required for initial validation; add when content volume grows
-- [ ] **Contextual Bezirk enrichment (multi-Bezirk tagging)** — improves coverage breadth; add when OTS.at volume is understood
-- [ ] **Full-text search** — add when article corpus is large enough to justify (>500 articles)
-- [ ] **Additional source adapters (RSS feeds beyond OTS.at)** — expand after OTS.at pipeline is stable
-- [ ] **Automated publishing cadence / time-spread queue** — add when burst publishing is observed as a problem
+- [ ] Remove test banner and noindex for production launch — trigger: launch decision made; handled by removing or setting `NEXT_PUBLIC_IS_TEST_DEPLOYMENT=false` and redeploying — no code changes required
+- [ ] Custom domain configuration on Railway — trigger: public launch; requires `NEXT_PUBLIC_BASE_URL` update for sitemap and canonical URL correctness
 
 ### Future Consideration (v2+)
 
-Features to defer until product-market fit is established.
-
-- [ ] **PWA installability ("Add to Home Screen")** — low cost enhancement but not required for v1 validation
-- [ ] **Per-article OG images (AI-generated or sourced)** — improves social sharing; adds image generation cost; defer until sharing is validated as a traffic source
-- [ ] **Analytics dashboard for editors** — which Bezirke, which topics get engagement; needs traffic first to be meaningful
-- [ ] **Paywall / monetization** — explicitly out of scope per PROJECT.md; revisit after establishing readership
+- [ ] Automated Railway preview deployments per PR — trigger: team grows beyond solo operator; adds CI/CD overhead not needed now
+- [ ] Password-protected staging environment — trigger: external stakeholders who should not see unfinished features; current milestone is for trusted collaborators only
 
 ---
 
@@ -152,75 +112,94 @@ Features to defer until product-market fit is established.
 
 | Feature | User Value | Implementation Cost | Priority |
 |---------|------------|---------------------|----------|
-| Content ingestion pipeline (OTS.at) | HIGH | HIGH | P1 |
-| AI article generation with Bezirk context | HIGH | HIGH | P1 |
-| "Mein Bezirk" selector + Bezirk feed | HIGH | LOW | P1 |
-| Article detail + stable URLs | HIGH | LOW | P1 |
-| AI disclosure label | HIGH | LOW | P1 |
-| Mobile-optimized layout | HIGH | LOW | P1 |
-| Source attribution | MEDIUM | LOW | P1 |
-| Article timestamp | MEDIUM | LOW | P1 |
-| Editor admin interface | MEDIUM | MEDIUM | P1 |
-| Auto-publish pipeline | HIGH | MEDIUM | P1 |
-| RSS feed per Bezirk | MEDIUM | LOW | P1 |
-| Article deduplication | MEDIUM | MEDIUM | P2 |
-| Multi-Bezirk tagging (NLP) | MEDIUM | MEDIUM | P2 |
-| Full-text search | MEDIUM | MEDIUM | P2 |
-| Additional source adapters | HIGH | MEDIUM | P2 |
-| Publishing cadence / spread queue | LOW | LOW | P2 |
-| PWA installability | LOW | LOW | P3 |
-| AI-generated OG images | LOW | MEDIUM | P3 |
-| Editor analytics dashboard | LOW | MEDIUM | P3 |
+| Railway deployment | HIGH — enables all sharing | MEDIUM | P1 |
+| TESTSEITE banner | HIGH — tester safety | LOW | P1 |
+| noindex robots meta | HIGH — SEO safety | LOW | P1 |
+| robots.txt disallow | MEDIUM — redundant but belt-and-suspenders | LOW | P1 |
 
-**Priority key:**
-- P1: Must have for launch
-- P2: Should have, add when possible
-- P3: Nice to have, future consideration
+All four features are P1. This is the entire scope of v1.2.
 
 ---
 
-## Competitor Feature Analysis
+## Implementation Notes for Next.js 15
 
-Note: Direct competitors operating AI-autonomous regional news platforms in German-language Austria are not known to this researcher as of mid-2025 (LOW confidence on this claim — verify). The comparison below draws from analogous platforms.
+### robots metadata in layout.tsx
 
-| Feature | AP Automated Insights (US) | Axios Local | Broadsheet / AI-local startups | Our Approach |
-|---------|----------------------------|-------------|-------------------------------|--------------|
-| AI content generation | Template-based NLG from structured data | Human-written; AI assist only | LLM-based full generation | LLM-based with Bezirk context injection |
-| Region coverage | National sports/finance, not hyperlocal | Single-city newsletters | Varies (usually single city) | All Steiermark Bezirke from day one |
-| Content sources | Proprietary data feeds | Reporters + wire services | RSS/scraping | OTS.at API + extensible RSS adapters |
-| Editorial control | None (fully automated) | Human-first | Varies | Optional human override; autonomous default |
-| Reader personalization | None | Newsletter subscription = region | App-based, limited | Bezirk selector, no account required |
-| Business model | B2B licensing | Sponsorships/subscriptions | Ads/subscriptions | TBD (not v1 concern) |
-| Mobile UX | Web/app | Email newsletter primary | Web | Mobile-optimized web, bottom nav |
+The existing `layout.tsx` exports a static `metadata` object with `title` and `description`. The `robots` field is not yet set (defaults to index/follow). Extend conditionally:
 
----
+```typescript
+export const metadata: Metadata = {
+  title: config.siteName,
+  description: "Aktuelle Nachrichten aus der Steiermark",
+  ...(process.env.NEXT_PUBLIC_IS_TEST_DEPLOYMENT === 'true' && {
+    robots: { index: false, follow: false },
+  }),
+};
+```
 
-## Domain-Specific Considerations for Steiermark / Austria
+Output when test mode active: `<meta name="robots" content="noindex, nofollow" />` on every page. Verified against Next.js 15 Metadata API (official docs version 16.2.1, last updated 2026-03-20). The `robots` field in layout metadata propagates to all child routes unless a child page overrides it with its own `robots` field. None of the current page files set a `robots` field, so root layout is sufficient.
 
-These are not captured in generic hyperlocal platform research but are specific to this context:
+### robots.ts (new file at src/app/robots.ts)
 
-1. **OTS.at (Originaltext-Service):** Austrian press wire used by companies, government bodies, and organizations for official announcements. Content is press-release style, not breaking news. Articles generated from OTS will lean institutional/official — AI prompting should adapt tone for a general readership.
+```typescript
+import type { MetadataRoute } from 'next'
 
-2. **Bezirk as the unit of geography:** Steiermark has 12 Bezirke. "Mein Bezirk" maps cleanly to this administrative unit. Articles about "Graz" must be tagged to "Graz-Stadt" and/or "Graz-Umgebung" depending on content. This disambiguation is a known complexity.
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://ennstal-aktuell.at'
+const isTest = process.env.NEXT_PUBLIC_IS_TEST_DEPLOYMENT === 'true'
 
-3. **Austrian media law (MedienG, ECG):** AI-generated content disclosure is required. The "Impressum" (legal notice) is mandatory for Austrian news sites. This is a hard launch requirement, not optional.
+export default function robots(): MetadataRoute.Robots {
+  if (isTest) {
+    return {
+      rules: { userAgent: '*', disallow: '/' },
+    }
+  }
+  return {
+    rules: { userAgent: '*', allow: '/' },
+    sitemap: `${BASE_URL}/sitemap.xml`,
+  }
+}
+```
 
-4. **German compound nouns and regional dialect:** Standard High German is appropriate. AI generation prompts should specify "klares Hochdeutsch, kein Dialekt" to avoid Styrian dialect expressions in generated articles.
+The test version intentionally omits the sitemap reference — linking a sitemap in a disallow-all robots.txt is contradictory and confusing to crawlers.
 
-5. **Trust gap for AI news in German-language markets:** German-speaking audiences are known to be skeptical of AI-generated content (Vertrauensfrage). Transparent labeling and visible source attribution are trust-critical, not just ethical nice-to-haves.
+### TESTSEITE banner component
+
+Fixed-position element in root layout body, rendered only in test mode. Should be visually prominent. Use warning amber rather than Styrian green to distinguish it from production UI elements. As a Server Component, it can read the build-time env var directly without client-side code:
+
+```typescript
+// In layout.tsx body:
+{process.env.NEXT_PUBLIC_IS_TEST_DEPLOYMENT === 'true' && <TestBanner />}
+```
+
+The `TestBanner` component itself requires no state, hooks, or client-side interactivity.
+
+### Railway deployment
+
+Railway's Nixpacks builder auto-detects Next.js and runs `next build` + serves via standalone output. Key env vars to set in Railway dashboard:
+
+| Var | Value |
+|-----|-------|
+| `DATABASE_URL` | Railway PostgreSQL connection string |
+| `HMAC_SECRET` | Copy from production env |
+| `ANTHROPIC_API_KEY` | Copy from production env |
+| `NEXT_PUBLIC_BASE_URL` | Railway-provided URL (e.g. `https://regionalprojekt.up.railway.app`) |
+| `NEXT_PUBLIC_ADSENSE_PUB_ID` | Copy from production env (will no-op on unverified domain) |
+| `NEXT_PUBLIC_IS_TEST_DEPLOYMENT` | `true` |
+
+Railway provides health checks and automatic HTTPS for `*.up.railway.app` domains. No custom Dockerfile needed for a standard Next.js app.
 
 ---
 
 ## Sources
 
-- Domain knowledge: AP Automated Insights, Axios Local, hyperlocal news industry through mid-2025 (MEDIUM confidence — training data)
-- Austrian regulatory context: Mediengesetz (MedienG), ECG (E-Commerce-Gesetz) (HIGH confidence for requirement existence; verify specific provisions)
-- OTS.at product characteristics: training knowledge (MEDIUM confidence — verify with OTS.at API documentation during implementation)
-- Competitor analysis: inference from publicly documented platforms, no direct competitive intelligence on Austrian German-language AI news (LOW confidence — verify pre-launch)
-- Bezirk geography: Steiermark has 12 Bezirke — verify exact slugs/IDs with official Statistik Austria data during Bezirk data model implementation
-
-**Note:** All external research tools (WebSearch, WebFetch, Bash, Context7) were restricted during this research session. All findings derive from training knowledge. Every claim should be re-verified during phase-specific research when tools are available.
+- [Next.js generateMetadata API Reference (v16.2.1, last updated 2026-03-20)](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#robots) — `robots` field in Metadata object confirmed, HIGH confidence
+- [Next.js Metadata Files: robots.txt](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots) — `src/app/robots.ts` App Router convention confirmed
+- [Railway Next.js Deployment Guide](https://docs.railway.com/guides/nextjs) — Nixpacks auto-detection, env var support confirmed
+- [Railway Environments](https://docs.railway.com/environments) — parallel environment support for test/production separation
+- [searchviu.com: robots.txt and noindex for staging environments](https://www.searchviu.com/en/robots-txt-staging-environment/) — dual-protection rationale (robots.txt + noindex meta)
+- [Search Engine Journal: Google on Staging Sites](https://www.searchenginejournal.com/google-on-staging-sites-preventing-accidental-indexing/484257/) — confirmed pattern: use both robots.txt AND noindex meta for staging
 
 ---
-*Feature research for: AI-powered regional news platform (Ennstal Aktuell / Regionalprojekt)*
-*Researched: 2026-03-21*
+
+*Feature research for: test/staging deployment infrastructure (v1.2 milestone)*
+*Researched: 2026-03-26*

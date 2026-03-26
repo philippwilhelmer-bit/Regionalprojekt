@@ -1,318 +1,231 @@
 # Pitfalls Research
 
-**Domain:** AI-powered regional news aggregation and publishing platform
-**Researched:** 2026-03-21
-**Confidence:** MEDIUM (training knowledge; WebSearch unavailable — critical items flagged for validation)
+**Domain:** Adding test deployment features to a Next.js 15 app (banners, noindex/robots.txt, Railway hosting)
+**Milestone:** v1.2 Test Deployment
+**Researched:** 2026-03-26
+**Confidence:** HIGH (Next.js and Railway official docs; Google Search Central official guidance; verified across multiple sources)
 
 ---
 
 ## Critical Pitfalls
 
-### Pitfall 1: Auto-publishing Hallucinated or Factually Wrong Content
+### Pitfall 1: robots.txt Disallow Alone Does Not Prevent Indexing
 
 **What goes wrong:**
-The AI generates an article that attributes a statement to a real named person or real local authority that they never made, or inverts facts from the source (e.g., "construction begins" becomes "construction cancelled"). With no human review gate before publish, this goes live immediately and can cause legal exposure or credibility damage in a small regional community where the named person is likely to see it.
+The robots.txt blocks crawling but Google can still index any page that is linked from elsewhere. If the Railway test URL leaks (shared in a Slack message, a tweet, a GitHub README, etc.), Google can find the URL via that external link, index the page title and snippet, and show it in search results — even though robots.txt says `Disallow: /`. The test deployment appears in search results for the brand name.
 
 **Why it happens:**
-LLMs summarize and rephrase; they do not verify. When source material is ambiguous, poorly structured, or contains negation-heavy German grammar, the model can flip the meaning. The "auto-publish by default" requirement removes the only natural safety valve.
+`robots.txt` is a crawling directive, not an indexing block. Google distinguishes between "we couldn't crawl it" and "we won't show it". A URL that appears in external link text can be indexed without the page ever being crawled. This is documented behavior in Google Search Central, not an edge case.
 
 **How to avoid:**
-- Treat AI-generated content as a draft unless the source article passes a confidence gate (structured data from wire service > unstructured RSS blog post)
-- Implement a hallucination-reduction prompt pattern: instruct the model to quote the original source for every factual claim, and to refuse to infer facts not present in the source
-- For any article mentioning a named real person (Persönlichkeit), flag it for a brief editorial spot-check queue even in autonomous mode — this is the highest-risk content category
-- Log the full source text alongside every generated article so any inaccuracy can be traced and corrected within minutes
+Use both layers simultaneously:
+1. `robots.txt` (via `app/robots.ts`) — `Disallow: /` for all user agents when `NEXT_PUBLIC_DEPLOYMENT_ENV !== 'production'`
+2. `noindex, nofollow` meta tag on every page — set via `metadata.robots` in the root `layout.tsx` when the same env flag is set
+
+Both layers must be active. Neither is sufficient alone. The robots.txt stops crawling; the noindex meta tag stops indexing of any URL Google discovers through links.
 
 **Warning signs:**
-- Generated articles consistently longer than source material (padding = invention)
-- Articles contain specific figures (dates, amounts, vote counts) not present in the source
-- High variance in tone between source language and generated German
+- Test URL shows up in Google Search Console impressions
+- Google Search Console reports "Indexed, though blocked by robots.txt" (a known issue — indicates a URL was indexed without crawling)
 
 **Phase to address:**
-AI content generation pipeline (core automation phase)
+Phase that implements robots.txt and the noindex meta tag — these must ship together in the same phase, not sequentially.
 
 ---
 
-### Pitfall 2: Duplicate Article Flooding
+### Pitfall 2: NEXT_PUBLIC_ Variables Are Baked at Build Time
 
 **What goes wrong:**
-The same OTS press release gets ingested multiple times — once from the OTS API, once from an RSS feed that syndicates OTS, and again when the RSS poll runs a second time before deduplication logic runs. The platform publishes three nearly-identical articles about the same Bezirk event within an hour. This destroys reader trust in the "curated local news" promise.
+`NEXT_PUBLIC_DEPLOYMENT_ENV=test` is set in Railway's Variables tab. The team expects the banner to appear. The build runs. The banner does not appear — because Railway's build container did not have the variable injected during `next build`. The JavaScript bundle has `undefined` baked in where the variable should be. The test banner never renders.
 
 **Why it happens:**
-Deduplication is treated as a nice-to-have and implemented after ingestion rather than as a gate. RSS feeds for regional news frequently syndicate the same wire content. URL-based deduplication fails because syndicated versions have different URLs.
+`NEXT_PUBLIC_` variables are string-inlined into the JavaScript bundle at `next build` time, not at server start time. Railway's Variables tab sets environment variables for the running container, but by then the bundle is already compiled. The variable must be available to the build process itself.
 
 **How to avoid:**
-- Implement content fingerprinting (e.g., MinHash or simhash on normalized source text) at ingestion time, before any AI processing happens
-- Use a canonical source registry: if an article's OTS ID or a known wire ID is already recorded, reject it at the ingest gate regardless of URL
-- Per-source deduplication windows: for any single feed, enforce a minimum time gap between articles about the same entity (Bezirk + topic hash)
-- Track the relationship between sources — mark OTS.at as canonical; any RSS feed that syndicates OTS should be checked against the OTS ID registry first
+In Railway, set `NEXT_PUBLIC_DEPLOYMENT_ENV` as a build-time variable (in the service's "Variables" section, which Railway does make available during Railpack/Nixpacks builds). Verify by checking Railway's build logs for the variable appearing in the build context. Alternatively, do not use `NEXT_PUBLIC_` for the banner at all: read a server-only `DEPLOYMENT_ENV` variable in a Server Component and pass it as a prop to the banner. This is more explicit and avoids the build-time trap entirely.
 
 **Warning signs:**
-- Multiple articles with >80% textual overlap published in the same hour
-- Feed poll logs showing the same item ID appearing across multiple fetch cycles
-- RSS feed URLs resolving to the same OTS article IDs
+- Banner does not render on the live Railway deployment
+- `console.log(process.env.NEXT_PUBLIC_DEPLOYMENT_ENV)` in the browser shows `undefined`
+- Railway build logs do not show the variable being set before `next build`
 
 **Phase to address:**
-Source ingestion and RSS pipeline phase (before AI generation is enabled)
+The phase that implements the test banner and wires up Railway environment variables. Must verify in the Railway build log, not just the Variables UI.
 
 ---
 
-### Pitfall 3: Bezirk Attribution Getting It Wrong
+### Pitfall 3: sitemap.ts Still Serves All Article URLs on the Test Deployment
 
 **What goes wrong:**
-An OTS press release about a Landesregierung Steiermark decision affecting Bezirk Liezen gets tagged to all 13 Bezirke, or worse, to none. The "Mein Bezirk" feature becomes useless if articles aren't attributed to the right geographic unit, and this is a silent failure — no error is thrown, articles just appear in the wrong (or all) feeds.
+robots.txt blocks crawling and noindex blocks indexing. But the sitemap at `/sitemap.xml` still lists all 1,000+ article URLs with full production-style entries. A crawler or SEO tool that ignores robots.txt will find every article URL. More practically: sharing the sitemap URL with a test reviewer accidentally reveals the full URL structure and article count of a "non-public" deployment.
 
 **Why it happens:**
-Geographic entity extraction is harder than it looks for Austrian regional content. OTS press releases frequently name multiple Bezirke, reference Gemeinden that belong to Bezirke, or use informal regional names (e.g., "Ennstal" instead of "Bezirk Liezen"). Naive keyword matching and LLM geo-extraction both fail in different ways: keyword matching misses synonyms and over-matches partial strings; LLMs hallucinate administrative boundaries.
+`sitemap.ts` has no environment guard — it was built for production. It's easy to forget that the sitemap is also a public endpoint that needs suppression in test mode.
 
 **How to avoid:**
-- Build a canonical Bezirk-Gemeinde lookup table at project start (all 13 Bezirke, all Gemeinden, known synonyms like "Ennstal" → Liezen) as a static reference fixture — this is foundational data
-- Geo-tagging should be a deterministic rule-based pass first (lookup table match), with LLM extraction only as a fallback for ambiguous cases
-- When multiple Bezirke match, tag all of them — false positives in personalization are less damaging than false negatives
-- Add a confidence score to the geo-tag; articles below a threshold get a "Steiermark" catch-all tag and are surfaced in a general feed, not buried
+In `app/sitemap.ts`, check `process.env.DEPLOYMENT_ENV`. If not production, return an empty array (`return []`). This is a server-side variable check (not `NEXT_PUBLIC_`), so it works correctly at runtime without build-time injection concerns.
 
 **Warning signs:**
-- High percentage of articles tagged to "Steiermark" catch-all (indicates geo-extraction is failing)
-- User feedback that their Bezirk feed shows irrelevant statewide content
-- Articles about clearly local events appearing in multiple Bezirk feeds simultaneously without being genuinely cross-Bezirk
+- `/sitemap.xml` on the Railway test URL returns a populated list of article URLs
+- The sitemap contains the Railway `.up.railway.app` domain mixed with `ennstal-aktuell.at` base URLs (caused by `NEXT_PUBLIC_BASE_URL` not being set for the test environment)
 
 **Phase to address:**
-Source ingestion phase AND "Mein Bezirk" personalization phase — the lookup table must be built before ingestion is active
+The phase that implements robots.txt / noindex — sitemap suppression should be part of the same SEO-blocking work, not a separate task.
 
 ---
 
-### Pitfall 4: Rate Limit and API Quota Exhaustion Causing Silent Gaps
+### Pitfall 4: Next.js start Command Does Not Respect the PORT Environment Variable
 
 **What goes wrong:**
-The OTS.at API (or any paid news wire) has rate limits or daily call quotas. The ingestion pipeline hits the limit, the API returns a 429 or quota-exceeded error, and the system silently stops ingesting. No new articles are published for hours. Editors don't know; readers don't know. The autonomous platform appears to be running but is actually dead.
+Railway assigns a dynamic `$PORT` to the service. The `next start` command in `package.json` is `"start": "next start"` with no port flag. Next.js defaults to port 3000. Railway's health checks and routing target `$PORT`, not 3000. The deployment appears to succeed (build passes) but the service is unreachable — Railway shows the deployment as crashed or unhealthy.
 
 **Why it happens:**
-Rate limiting is handled as an exception (try/catch, log and continue) rather than as a monitored system state. Developers test with low volume and never trigger the limit during development.
+Unlike most Node.js frameworks, Next.js does not read `PORT` from the environment automatically. The port must be passed explicitly as a CLI flag: `next start -p $PORT`. This is a documented Railway/Next.js integration requirement and a consistently reported first-deploy gotcha.
 
 **How to avoid:**
-- Treat API quota as a first-class monitored resource: track calls per hour/day, alert when 80% consumed
-- Implement circuit-breaker behavior: after N consecutive 429s, pause the feed, increment a dead-feed counter, and surface a visible warning in the admin/editor CMS dashboard
-- Design the polling schedule to stay well under quota — calculate the maximum sustainable poll frequency at the OTS API tier being used and hard-code it
-- Never swallow HTTP errors silently in ingestion workers; every error must update an observable feed health status
+Change `package.json` start script to:
+```json
+"start": "next start -p ${PORT:-3000}"
+```
+The `${PORT:-3000}` fallback ensures local development still works without setting `PORT`.
 
 **Warning signs:**
-- Article publication rate drops to zero without any errors in the application log
-- Ingestion worker logs show escalating 429 responses
-- Time gaps in the article publication timeline that don't correspond to natural quiet periods
+- Railway deployment shows "crashed" or repeated health check failures immediately after a successful build
+- Railway logs show `next start` listening on port 3000 while Railway expects a different port
+- Service shows "Service Unavailable" at the Railway URL despite a green build
 
 **Phase to address:**
-Source ingestion and OTS.at integration phase; monitoring must be built alongside the ingestion pipeline, not added later
+The Railway deployment phase — this must be verified before marking the deployment as successful.
 
 ---
 
-### Pitfall 5: AI Generation Costs Exploding at Scale
+### Pitfall 5: Prisma Migrate Runs Against Production Database if DATABASE_URL Points to Wrong Environment
 
 **What goes wrong:**
-The platform is designed around LLM calls per article. With multiple RSS feeds running and OTS.at delivering bursts of 20-30 press releases per hour around major regional events (elections, floods, infrastructure announcements), the LLM API cost per day can spike by 10-20x unexpectedly. For a lean regional news platform with no revenue model in v1, this is a project-stopper.
+The developer has the production `DATABASE_URL` in their local `.env` (or accidentally sets it in Railway for the test service). Running `prisma migrate deploy` applies pending migrations to the production database. For an autonomous news platform, this can drop columns or alter tables affecting live published articles.
 
 **Why it happens:**
-Cost is measured per-article in development (tiny volume) and never modeled at production ingestion rates. Burst event scenarios (a major Bezirk event triggers 40 press releases in 2 hours) are not load-tested.
+Railway makes it easy to copy-paste the PostgreSQL connection string. If the Railway project has both a production service and a test service, and the test service's `DATABASE_URL` points to the production database (easy copy/paste mistake), any migration run in CI or release commands hits production.
 
 **How to avoid:**
-- Implement a cost gate: before calling the LLM, check if the article is substantive enough to justify generation (minimum source word count, not already covered in last 6 hours for same topic)
-- Set hard daily/hourly LLM call budgets with automatic circuit-breaker that falls back to publishing the original source excerpt (no AI generation) when the budget is exhausted
-- Use a tiered approach: short summaries for most articles (cheap), long-form generation only for manually flagged or high-engagement topics
-- Model costs at 3 burst scenarios before launch: average day, major local event, crisis event
+- The Railway test service must have its own dedicated PostgreSQL addon — not a shared connection to the production database.
+- Add a `release` command in Railway that runs `prisma migrate deploy` only, and verify in the Railway Variables UI that `DATABASE_URL` resolves to the test-service Postgres addon (`${{Postgres.DATABASE_URL}}`), not a hard-coded production URL.
+- Never hard-code a `DATABASE_URL` value — always use Railway's variable references.
 
 **Warning signs:**
-- LLM API billing spikes during regional events
-- No maximum daily call cap exists in the code
-- All articles regardless of source length are sent through full-generation pipeline
+- `DATABASE_URL` in the test service Variables tab contains a hard-coded hostname (e.g., `monorail.proxy.rlwy.net`) rather than a Railway reference (`${{Postgres.DATABASE_URL}}`)
+- Migration logs reference tables or data volumes that seem too large for a freshly seeded test DB
 
 **Phase to address:**
-AI content generation phase — cost controls are a required feature of the pipeline, not an optimization
-
----
-
-### Pitfall 6: The CMS Becomes Unmanageable When AI Content Volumes Are High
-
-**What goes wrong:**
-The editorial CMS is designed around the assumption that editors occasionally review content. At full automation with multiple feeds active, the CMS article list fills with hundreds of AI-generated articles per day. Editors trying to pin, feature, or remove specific content can't find it in the stream. The "editorial override" feature becomes practically unusable.
-
-**Why it happens:**
-CMS interfaces are designed for manual publishing workflows. When 95% of content is AI-generated, the editor's workflow is fundamentally different: they need to filter by source, by Bezirk, by publication status, and quickly find the few articles they want to touch — not scroll through a chronological feed.
-
-**How to avoid:**
-- Design the CMS with the high-volume AI scenario as the primary use case, not an edge case
-- Required CMS filters from day one: by Bezirk, by source (OTS vs RSS), by generation status (AI/manual), by publication time range, by presence in a pinned/featured slot
-- "Exceptions queue": a separate inbox for articles that triggered warning flags during generation (low confidence geo-tag, named-person mention, below-threshold source quality) — editors only need to look at exceptions, not the full stream
-- Bulk actions: mark-as-reviewed, unpublish by source, archive by date range
-
-**Warning signs:**
-- CMS page 1 of the article list is more than 2 days old
-- Editors report they "can't find" specific articles
-- No filtering exists beyond chronological sort
-
-**Phase to address:**
-Editorial CMS phase — filters and exceptions queue are not optional
-
----
-
-### Pitfall 7: Schema/Data Model Lock-in That Blocks Adding New Sources
-
-**What goes wrong:**
-The initial data model is built tightly around OTS.at's API response shape (specific field names, OTS-specific metadata). When adding the second RSS feed source, the ingest logic requires significant refactoring because the model doesn't have a clean source-agnostic abstraction. This gets worse with each new source and eventually the "extensible source system" requirement is technically violated.
-
-**Why it happens:**
-It's faster to ship with a concrete model. Developers hardcode `ots_id`, `ots_category`, `ots_distributor` etc. directly in the article schema rather than building a normalized source record plus a generic raw-payload store.
-
-**How to avoid:**
-- Design the canonical article schema to contain only source-agnostic fields: `source_id`, `source_name`, `external_id`, `raw_payload` (JSON blob), `ingest_timestamp`, `canonical_url`
-- Each source type gets a Source Adapter that maps its native format to the canonical schema — OTS adapter, RSS adapter, etc.
-- The adapter pattern must be enforced as the only path to article creation; no code outside adapters should know what OTS fields look like
-- Test source extensibility by implementing two sources before calling the architecture "done"
-
-**Warning signs:**
-- Article database schema contains fields like `ots_*` or `rss_*` (source-specific prefixes in the canonical model)
-- Adding a new RSS feed requires modifying the Article model
-- Ingestion code contains `if source == 'ots' ... else if source == 'rss'` branching logic in the core pipeline
-
-**Phase to address:**
-Source ingestion architecture phase — this is a foundational decision that is expensive to reverse
+The Railway deployment setup phase — database isolation must be confirmed before running any migrations.
 
 ---
 
 ## Technical Debt Patterns
 
-Shortcuts that seem reasonable but create long-term problems.
-
 | Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
 |----------|-------------------|----------------|-----------------|
-| Hardcode OTS field names in article model | Faster first integration | Every new source requires model migration | Never — use adapter pattern from day one |
-| Skip deduplication until "it becomes a problem" | Save 1-2 days | Duplicate flood damages user trust irreversibly at launch | Never — build before enabling auto-publish |
-| Single LLM prompt for all article types | Simple to implement | Short press releases and long investigative pieces need different prompting; quality suffers | Acceptable for MVP, refactor by Phase 3 |
-| Store Bezirk as free-text string | Quick to implement | Querying, filtering, and consistency break immediately | Never — use canonical Bezirk enum/table |
-| Polling RSS feeds on a fixed short interval (e.g., every 5 min) | Fresh content | API abuse flags, rate limiting, unnecessary load | Use feed-declared `<ttl>` or minimum 15-min intervals |
-| No AI generation cost cap | One less feature to build | Single burst event can exhaust monthly API budget | Never — always cap |
-| CMS is just a chronological article list | Fast to build | Unusable at any real automation volume | Acceptable for manual-only phase; must be refactored before automation goes live |
+| Hard-code `NEXT_PUBLIC_DEPLOYMENT_ENV=test` in `next.config.ts` | Avoids Railway variable setup | Test banner appears in all environments including production after config change | Never — always use env var |
+| Use a single Railway Postgres addon for both test and production | Saves a few euros/month | Schema migrations on test break production | Never |
+| Only implement robots.txt without noindex meta tag | Simpler code | Test pages indexable via external links | Never for a public-URL deployment |
+| Suppress AdSense script globally on non-production without checking pub ID env var | Simpler banner logic | AdSense fires on test if env var check is forgotten on redeploy | Acceptable short-term if AdSense pub ID env var is simply not set on test service |
 
 ---
 
 ## Integration Gotchas
 
-Common mistakes when connecting to external services.
-
 | Integration | Common Mistake | Correct Approach |
 |-------------|----------------|------------------|
-| OTS.at API | Assuming OTS content is always structured and clean | OTS press releases are authored by PR agencies — expect inconsistent formatting, embedded HTML, mixed German/English, and varying quality. Normalize aggressively |
-| OTS.at API | Not handling authentication token expiry | OTS API tokens expire; implement proactive token refresh and test expiry handling explicitly |
-| OTS.at API | Fetching full article bodies on every poll | Use `If-Modified-Since` or ETag headers where available; cache OTS IDs to skip already-ingested items |
-| RSS feeds | Treating RSS `<pubDate>` as reliable | Many regional Austrian news sites publish with wrong or missing dates; fall back to ingest timestamp, never trust `pubDate` for deduplication |
-| RSS feeds | Assuming valid XML | RSS feeds in the wild frequently have encoding errors, invalid entities, or unclosed tags. Use a lenient XML parser with fallback to html-parser |
-| LLM API (OpenAI/Anthropic) | Not setting `max_tokens` | Without a cap, a malformed prompt or unusually long source article can produce a runaway generation that costs 10x normal |
-| LLM API | Synchronous blocking generation in the ingestion worker | If the LLM call takes 8-15 seconds, synchronous processing blocks the entire ingestion queue. Use async/queue architecture |
-| Any external API | No dead-man monitoring | If no article has been published in X hours during normal operating hours, alert — don't wait for users to notice |
+| Railway + Next.js | `next start` without `-p $PORT` — service unreachable | `next start -p ${PORT:-3000}` in package.json start script |
+| Railway + Prisma | Running migrations against wrong database | Use `${{Postgres.DATABASE_URL}}` reference, never hard-coded URL |
+| Next.js robots.ts | Reading `NEXT_PUBLIC_BASE_URL` inside `robots.ts` — variable may be wrong host for test env | Use a server-only `SITE_URL` env var in robots.ts, or explicitly return the disallow-all config when not production |
+| Next.js metadata + robots | Setting robots only in `generateMetadata` per-page — root layout robots override not set | Set `robots: { index: false, follow: false }` in root `layout.tsx` metadata export so every page inherits it |
+| Google AdSense on test | AdSense script loads on test deployment — generates invalid traffic impressions from reviewers | Gate the AdSense `<Script>` in `layout.tsx` behind `process.env.DEPLOYMENT_ENV === 'production'` |
+| Railway Railpack/Nixpacks + Next.js | Build tool doesn't detect `NEXT_PUBLIC_` vars need to be available at build time | Confirm all `NEXT_PUBLIC_` vars are set in Railway Variables before triggering a build, not after |
 
 ---
 
 ## Performance Traps
 
-Patterns that work at small scale but fail as usage grows.
-
-| Trap | Symptoms | Prevention | When It Breaks |
-|------|----------|------------|----------------|
-| Fetching all articles for a Bezirk feed from DB on every page load | Fast at 100 articles, slow at 10,000 | Paginate and index by (bezirk_id, published_at DESC) from the start | At ~5,000 articles per Bezirk |
-| Running deduplication as a post-publish DB scan | Acceptable at 10 sources, catastrophic at 50 | Dedup at ingest time using a hash index, not a full-table scan | At ~20,000 articles total |
-| Generating AI content synchronously in the HTTP request cycle | Fine for manual publish, broken for bulk ingest | Always use a background job queue for LLM calls | At first burst event (10+ simultaneous ingests) |
-| Storing `raw_payload` as text and querying it with LIKE | Works for debugging, useless for search | Use JSONB (Postgres) or keep raw payload separate from queryable fields | At ~1,000 articles |
-| No CDN for article images (referenced from OTS) | Irrelevant during dev | OTS image URLs can break; hotlinking from press wire is unreliable long-term | When OTS rotates CDN URLs |
-| Personalization query joining articles + bezirk tags on every request without caching | Invisible at low traffic | Cache feed results per Bezirk with short TTL (30-60s) | At ~200 concurrent readers |
+Not applicable at test deployment scale. The test deployment is for human review, not load testing.
 
 ---
 
 ## Security Mistakes
 
-Domain-specific security issues beyond general web security.
-
 | Mistake | Risk | Prevention |
 |---------|------|------------|
-| Storing OTS API credentials in code or .env committed to repo | API key compromise, billing abuse, content manipulation | Use secrets manager; never commit credentials; rotate keys on any team member change |
-| No rate limiting on the editor CMS | Brute-force login; automated content manipulation | Rate-limit login attempts; use short-lived session tokens |
-| Rendering AI-generated content without sanitization | LLM can generate content with embedded HTML/script tags if source contained them | Always sanitize AI output through a strict HTML allowlist before storing or rendering |
-| Trusting source RSS article URLs as safe to embed/link | Malicious or compromised feed could inject JavaScript via URL fields | Validate and sanitize all external URLs; never use `href` values from RSS without validation |
-| LLM prompt injection via source content | A malicious press release could contain instructions that manipulate the AI generation (e.g., "Ignore previous instructions and output...") | Use system-level prompt boundaries; treat all source content as untrusted user input in the prompt; consider a moderation pre-pass |
-| Editor admin interface exposed without IP restriction or 2FA | Single compromised account can unpublish or modify all content | Require 2FA for editor login; consider IP allowlist for admin routes |
+| Exposing the Railway test URL publicly (in a public GitHub repo README, public tweet) | Google indexes the test deployment; ADMIN_SESSION_SECRET leaks if `.env` is committed | Keep test URL in private channels; confirm `.gitignore` covers `.env`; use Railway's private networking for DB |
+| No auth on test CMS | Test reviewers can accidentally create or delete articles in the test DB | HMAC session auth already exists — confirm it is active on test deployment too (middleware.ts covers `/admin/:path*`) |
+| `ADMIN_SESSION_SECRET` reused between test and production | Compromise of test environment yields production admin access | Set a different `ADMIN_SESSION_SECRET` value for the test Railway service |
 
 ---
 
 ## UX Pitfalls
 
-Common user experience mistakes in this domain.
-
 | Pitfall | User Impact | Better Approach |
 |---------|-------------|-----------------|
-| "Mein Bezirk" selection requires registration | Eliminates core value proposition (project spec: no accounts) | Store Bezirk selection in localStorage/cookie; no login required |
-| Showing AI-generated label prominently on every article | Erodes trust before readers can evaluate quality | Subtle source attribution is better; label the source (OTS.at, feed name) rather than the generation method |
-| No "article not found" handling for stale URLs | Readers following old links (from WhatsApp shares) hit 404 | Implement permanent article URLs and a friendly 404 that suggests the Bezirk feed |
-| Bezirk feed with no articles yet shows blank page | New Bezirk onboarding looks broken | Always show a fallback: "Noch keine Artikel für diesen Bezirk — hier sind die neuesten aus Steiermark" |
-| Feed refresh requires manual page reload | Mobile readers miss new articles | Implement a soft refresh indicator ("X neue Artikel") that reloads the feed without losing scroll position |
-| Article list shows truncated AI-generated previews that are cut mid-sentence | Looks low-quality, especially in German where compound sentences are long | Use a sentence-aware truncation that ends at a full stop within the character limit |
+| Test banner is same color as editorial header (dark green) | Reviewers may not notice it, defeating its purpose | Use a high-contrast color (amber/yellow) that clearly distinguishes test mode from production chrome |
+| Banner only appears on reader pages, not in CMS | Editor reviewing CMS on test thinks they are on production | Render banner in the admin layout (`app/(admin)/layout.tsx`) as well as root layout |
+| Banner text is in English ("TEST ENVIRONMENT") | German-language platform; reviewers may be Austrian stakeholders | Use German: "TESTSEITE — Kein öffentliches Angebot" |
+| Banner is dismissible on test deployment | Reviewer dismisses it, then forgets it is a test site | Make test banner non-dismissible (unlike EilmeldungBanner which uses sessionStorage dismiss) |
 
 ---
 
 ## "Looks Done But Isn't" Checklist
 
-Things that appear complete but are missing critical pieces.
-
-- [ ] **OTS.at integration:** Appears to fetch articles — verify that token expiry, quota exhaustion, and HTTP 5xx responses all surface in the admin dashboard as visible feed health status, not just in logs
-- [ ] **AI content generation:** Appears to produce articles — verify that a test article with a named real person triggers the exceptions queue flag, and that a malformed source produces a fallback rather than a broken article
-- [ ] **Deduplication:** Appears to prevent duplicates — verify by submitting the same article via OTS API and a syndicated RSS feed simultaneously; only one article should publish
-- [ ] **Bezirk personalization:** Appears to show local content — verify that a press release mentioning only a Gemeinde (not the Bezirk by name) is correctly attributed to the right Bezirk via the lookup table
-- [ ] **Auto-publish pipeline:** Appears to run autonomously — verify that a 6-hour silence period (no new articles) triggers a monitoring alert, not just log entries
-- [ ] **Editorial CMS override:** Appears to let editors manage content — verify that an editor can find and unpublish a specific article in a feed of 500+ items within 60 seconds using filters
-- [ ] **Source extensibility:** Appears to support multiple sources — verify by adding a second RSS feed source without modifying the Article model or the core ingestion worker
-- [ ] **Mobile optimization:** Appears to work on mobile — verify on actual German-language article titles (long compound nouns) that text doesn't overflow or truncate in unexpected places
+- [ ] **robots.txt blocking:** Verify `/robots.txt` on the Railway URL returns `Disallow: /` — not just that `robots.ts` exists
+- [ ] **noindex meta tag:** Inspect page source of a live Railway page and confirm `<meta name="robots" content="noindex,nofollow">` is present
+- [ ] **Sitemap suppression:** Confirm `/sitemap.xml` on Railway returns an empty or minimal response, not 1,000 article URLs
+- [ ] **PORT binding:** Confirm the Railway deployment is healthy (green checkmark) and the service URL loads — not just that the build succeeded
+- [ ] **Test banner visibility:** Confirm banner renders on both a reader page AND the `/admin` CMS dashboard on the Railway URL
+- [ ] **AdSense disabled on test:** Inspect page source on Railway URL and confirm no `pagead2.googlesyndication.com` script tag loads
+- [ ] **Separate DB:** Confirm the Railway test service's `DATABASE_URL` resolves to a different Postgres instance than any production environment
+- [ ] **Admin auth active:** Confirm `/admin` redirects to `/admin/login` on the Railway test URL (middleware is working)
+- [ ] **ADMIN_SESSION_SECRET differs:** Confirm the secret set in the Railway test service Variables is not the same value as production
 
 ---
 
 ## Recovery Strategies
 
-When pitfalls occur despite prevention, how to recover.
-
 | Pitfall | Recovery Cost | Recovery Steps |
 |---------|---------------|----------------|
-| Hallucinated article published about a real named person | HIGH | Immediate unpublish via CMS; add named-person article type to exceptions queue; audit all articles from same source in last 24h; consider public correction note if article was widely read |
-| Duplicate flood | MEDIUM | Bulk-unpublish by source + time range (CMS bulk action); run deduplication backfill job; add fingerprinting logic; check all RSS sources for OTS syndication |
-| Wrong Bezirk attribution for published articles | MEDIUM | Bulk re-tag job (if canonical lookup table is now fixed); add missing synonyms to lookup table; republication of corrected articles |
-| API quota exhausted, hours of silence | LOW | Manually reduce poll frequency; upgrade API tier or add rate headroom; backfill articles from API once quota resets; communicate gap in admin dashboard |
-| LLM cost spike from burst event | MEDIUM | Immediately enable cost circuit-breaker (publish source excerpts instead of AI-generated); audit which event triggered the burst; model future event costs and add pre-emptive daily cap |
-| Source model lock-in discovered when adding second source | HIGH | Full ingestion layer refactor; requires downtime or careful migration; all existing articles need source metadata backfill |
+| Test deployment indexed by Google | MEDIUM | Add noindex immediately; submit URL removal request in Google Search Console; wait up to 2 weeks for de-indexing |
+| Wrong DATABASE_URL — migration hit production | HIGH | Restore from Railway's automatic Postgres backup; audit what migration changed; roll back manually if needed |
+| PORT mismatch — deployment unreachable | LOW | Fix `package.json` start script, push, Railway auto-redeploys |
+| NEXT_PUBLIC_ var not baked into build | LOW | Set variable in Railway Variables, trigger a manual redeploy (forces rebuild) |
+| AdSense running on test deployment | LOW | Remove or gate the Script tag, redeploy; no AdSense account action expected for brief accidental impressions from known reviewers |
 
 ---
 
 ## Pitfall-to-Phase Mapping
 
-How roadmap phases should address these pitfalls.
-
 | Pitfall | Prevention Phase | Verification |
 |---------|------------------|--------------|
-| Hallucinated/wrong content auto-published | AI content generation pipeline | Test suite: known-bad sources produce flagged articles, not clean publications |
-| Duplicate article flooding | Source ingestion phase (before AI enabled) | Integration test: same article via two sources → one publish |
-| Bezirk attribution errors | Ingestion phase + Bezirk/Gemeinde lookup table built first | Test: Gemeinden-only mentions correctly resolve to Bezirk |
-| API quota/rate limit silent failure | OTS.at integration phase | Simulate 429 response: verify visible admin alert is raised |
-| AI generation cost explosion | AI content generation phase | Cost cap exists in code with circuit-breaker; tested with burst simulation |
-| Unmanageable CMS at high volume | Editorial CMS phase | Verify: editor can find specific article in 500-item feed within 60s using filters |
-| Source schema lock-in | Source ingestion architecture (foundational, first phase) | Verify: second source added without Article model changes |
-| Prompt injection via source content | AI content generation phase | Test: source containing "ignore previous instructions" produces normal output |
-| LLM sync blocking ingestion | AI content generation phase | Load test: 20 simultaneous ingests do not block each other |
-| Silent ingestion outage | Monitoring phase (must ship alongside automation, not after) | Test: 6-hour silence triggers alert |
+| robots.txt alone insufficient | SEO blocking phase (robots.ts + noindex meta tag together) | Inspect live page source for noindex meta; check robots.txt endpoint |
+| NEXT_PUBLIC_ baked at build time | Railway environment setup phase (set vars before first build) | Check Railway build logs; inspect deployed page for banner |
+| sitemap.ts exposes all URLs | SEO blocking phase (same phase as robots.ts) | Request `/sitemap.xml` on Railway URL; confirm empty/minimal |
+| PORT not respected | Railway deployment phase (fix start script first) | Confirm healthy service in Railway dashboard |
+| Wrong DB for migrations | Railway deployment setup phase (create dedicated Postgres addon) | Inspect Variables tab for `${{Postgres.DATABASE_URL}}` reference |
+| AdSense on test | Banner/layout phase (gate Script tag by env) | Inspect page source for absence of AdSense script |
+| Test banner missing from CMS | Banner implementation phase (add to admin layout) | Manually navigate to `/admin` on Railway URL and verify banner |
 
 ---
 
 ## Sources
 
-- Training knowledge: AI content pipeline failure patterns (post-mortems from automated journalism projects, 2023-2025)
-- Training knowledge: RSS/feed ingestion at scale — deduplication, rate limiting, XML parsing edge cases
-- Training knowledge: LLM hallucination failure modes in summarization tasks, especially for named entities
-- Training knowledge: Austrian administrative geography (Steiermark Bezirke/Gemeinden structure)
-- Training knowledge: OTS.at (Austria Presse Agentur press wire) API behavior patterns
-- Training knowledge: CMS design patterns for high-volume automated content
-- NOTE: WebSearch was unavailable during this research session. Confidence is MEDIUM. Pitfalls related to OTS.at API specifics (exact quota limits, authentication mechanism) should be verified against OTS.at developer documentation before the integration phase begins.
+- [Next.js robots.txt file conventions](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots) — official docs, current
+- [Next.js generateMetadata / metadata.robots](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) — official docs
+- [Railway: Deploy a Next.js App](https://docs.railway.com/guides/nextjs) — official Railway guide
+- [Railway: Deploy Prisma app](https://www.prisma.io/docs/orm/prisma-client/deployment/traditional/deploy-to-railway) — Prisma official docs
+- [Google Search Central: Block indexing with noindex](https://developers.google.com/search/docs/crawling-indexing/block-indexing) — authoritative on noindex vs disallow distinction
+- [Google Search Central: robots.txt introduction](https://developers.google.com/search/docs/crawling-indexing/robots/intro) — robots.txt crawling vs indexing distinction
+- [Next.js: NEXT_PUBLIC_ baked at build time](https://nextjs.org/docs/pages/guides/environment-variables) — official docs on build-time inlining
+- [Next.js: PORT environment variable not respected natively](https://github.com/vercel/next.js/discussions/23978) — community-confirmed, requires `-p $PORT` flag
+- [Google on Disallow vs noindex](https://support.google.com/webmasters/thread/101742927) — Google Search Central Community
+- [Indexed though blocked by robots.txt (Google)](https://www.siteguru.co/seo-academy/indexed-blocked-by-robots-txt) — explains why robots.txt alone fails
 
 ---
-*Pitfalls research for: AI-powered regional news platform (Ennstal Aktuell / Steiermark)*
-*Researched: 2026-03-21*
+*Pitfalls research for: Next.js 15 test deployment (banners, noindex, robots.txt, Railway)*
+*Milestone: v1.2 Test Deployment*
+*Researched: 2026-03-26*
