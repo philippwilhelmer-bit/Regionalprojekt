@@ -2,7 +2,7 @@
 
 ## What This Is
 
-An autonomous AI-powered regional news platform covering all 13 Bezirke of Steiermark, Austria. The platform ingests content from OTS.at and RSS feeds, generates localized German-language articles via AI, and publishes them without manual intervention. Readers personalize their feed by selecting their Bezirk ("Mein Bezirk"). Editors can manually post, curate, pin, feature, and override any automated content through a full CMS. The architecture is config-driven — deploying for a new Bundesland requires only changing `bundesland.config.ts` and re-seeding.
+An autonomous AI-powered regional news platform covering all 13 Bezirke of Steiermark, Austria. The platform ingests content from OTS.at and RSS feeds, generates localized German-language articles via AI, and publishes them without manual intervention. Readers personalize their feed by selecting their Bezirk ("Mein Bezirk") and discover content through a newspaper-style editorial homepage and a search/category page. Editors can manually post, curate, pin, feature, and override any automated content through a full CMS. The architecture is config-driven — deploying for a new Bundesland requires only changing `bundesland.config.ts` and re-seeding.
 
 ## Core Value
 
@@ -47,21 +47,16 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 - ✓ Austrian Impressum (MedienG/ECG) — v1.0
 - ✓ Per-Bezirk subscribable RSS feeds — v1.0
 
+- ✓ Design system: Newsreader/Inter/Work Sans fonts, Styrian green + warm cream palette, Material Symbols, 2px radius — v1.1
+- ✓ Styrian identity bar (white/green flag stripe) + dark green editorial header — v1.1
+- ✓ Homepage editorial layout: hero article, top-stories scroller, topic sections, Eilmeldung banner — v1.1
+- ✓ Article detail restyling: editorial typography on warm cream canvas — v1.1
+- ✓ Bottom nav: cream background, Material Symbols, active green pill — v1.1
+- ✓ Search & discovery page: text + Bezirk filtering, trending pills, category grid, recommended articles — v1.1
+
 ### Active
 
-## Current Milestone: v1.1 Design Overhaul
-
-**Goal:** Restyle the reader frontend with a premium editorial design — Styrian identity, serif headlines, warm cream palette, and newspaper-like layouts.
-
-**Target features:**
-- Design system (Newsreader/Inter/Work Sans fonts, Styrian green + warm cream palette, Material Symbols, sharp corners)
-- Styrian identity bar (white/green flag stripe)
-- Header redesign (dark green, italic serif branding, location badge)
-- Homepage editorial layout (hero featured article, scrollable top stories, topic sections with wood dividers)
-- Article detail page restyling (editorial typography, warm cream)
-- Bottom nav restyling (active pill state)
-- Breaking news banner ("Eilmeldung" flagging from CMS)
-- Search/categories page (article search, trending topics, category grid)
+(No active milestone — run `/gsd:new-milestone` to start next)
 
 ### Out of Scope
 
@@ -73,9 +68,10 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 
 ## Context
 
-Shipped v1.0 with 10,303 LOC TypeScript/TSX in 5 days.
+Shipped v1.1 Design Overhaul on 2026-03-26 (2 days, 5 phases, 10 plans).
 Tech stack: Next.js 15, Prisma v6, PostgreSQL, Anthropic Claude API, Tailwind CSS v4, Vitest with pgLite.
 Architecture: Config-driven Bundesland deployment, adapter-pattern ingestion, Server Component CMS with HMAC auth.
+Reader frontend: Premium editorial design with Styrian identity, serif typography (Newsreader/Inter/Work Sans), warm cream palette, Material Symbols icons, newspaper-style layouts, and search/discovery page.
 Known pre-launch items: Impressum fields need real publisher data (TODO: placeholders in bundesland.config.ts), OTS.at API access requires APA-OTS credentials.
 
 ## Key Decisions
@@ -101,5 +97,10 @@ Known pre-launch items: Impressum fields need real publisher data (TODO: placeho
 - **German-language**: All user-facing content in Hochdeutsch
 - **Austrian legal**: Impressum must satisfy MedienG/ECG; AI disclosure required on generated articles
 
+| Design system foundation via Tailwind v4 @theme | Tokens as single source of truth for all components | ✓ Good — consistent across 5 phases |
+| Serif typography (Newsreader) for editorial feel | Differentiates from generic news sites | ✓ Good — strong brand identity |
+| Client-side search (no server API) | 200 article limit keeps it simple | ⚠️ Revisit if article count exceeds 200 |
+| EilmeldungBanner sessionStorage dismiss | Session-scoped, no server state needed | ✓ Good — lightweight UX |
+
 ---
-*Last updated: 2026-03-25 after v1.1 milestone start*
+*Last updated: 2026-03-26 after v1.1 milestone completion*

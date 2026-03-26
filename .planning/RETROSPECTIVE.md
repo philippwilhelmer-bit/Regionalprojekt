@@ -2,6 +2,50 @@
 
 *A living document updated after each milestone. Lessons feed forward into future planning.*
 
+## Milestone: v1.1 — Design Overhaul
+
+**Shipped:** 2026-03-26
+**Phases:** 5 | **Plans:** 10 | **Timeline:** 2 days
+
+### What Was Built
+- Design system foundation: Newsreader/Inter/Work Sans fonts, Styrian green + warm cream palette, Material Symbols, 2px radius
+- Editorial header with Styrian identity stripe, serif branding, and location badge
+- Newspaper-style homepage: full-bleed hero, top-stories scroller, Bezirk-grouped sections, Eilmeldung banner
+- Article detail restyling: hero image, editorial typography, warm cream canvas
+- Bottom nav with active green pill state
+- Search/discovery page: text + Bezirk AND filtering, trending pills, category grid, recommended articles
+
+### What Worked
+- Phase sequencing was well-designed — design tokens first, then components, then pages — zero rework
+- RSC page + client layout pattern consistent across homepage, article detail, and search page
+- DAL overload pattern scaled cleanly — adding listArticlesForSearch was trivial following established pattern
+- TDD on DAL functions caught edge cases (status filter, ordering) before UI integration
+- UAT after final phase caught missing back navigation — fixed immediately before milestone close
+
+### What Was Inefficient
+- Dev server management during UAT required manual restarts — port conflicts from stale processes
+- Pre-existing /impressum build error surfaced during verification but was unrelated to v1.1 work
+- Phase 18 required a manual Prisma migration due to dev DB migration mismatch — could have been documented earlier
+
+### Patterns Established
+- `SearchPageLayout` pattern: RSC page fetches data in parallel, passes to "use client" layout component with filter state
+- `toggleBezirk` single handler shared between pill and grid — single source of truth for activeBezirkId
+- Discovery → Filtered transition: `isFiltered` boolean conditionally shows/hides entire UI zones
+- `type="text"` over `type="search"` for cross-browser clear button consistency
+
+### Key Lessons
+1. Frontend redesign milestones benefit from strict phase ordering (tokens → components → pages) — prevents rework
+2. Pure frontend phases execute faster than mixed data+UI phases — v1.1 was 2 days vs v1.0's 5 days
+3. UAT catches UX gaps that automated tests miss (back navigation) — always run before milestone close
+4. Client-side search works well at 200-article scale but needs server-side API planning for growth
+
+### Cost Observations
+- Model mix: sonnet for execution, opus for orchestration
+- Sessions: ~5 across 2 days
+- Notable: pure UI phases averaged 2-3 plans each — much smaller than v1.0 data+logic phases
+
+---
+
 ## Milestone: v1.0 — MVP
 
 **Shipped:** 2026-03-25
@@ -54,14 +98,18 @@
 | Milestone | Timeline | Phases | Key Change |
 |-----------|----------|--------|------------|
 | v1.0 | 5 days | 15 | Initial build — gap-closure phases added mid-milestone |
+| v1.1 | 2 days | 5 | Pure frontend redesign — no gap-closure needed |
 
 ### Cumulative Quality
 
 | Milestone | LOC | Files | Architecture |
 |-----------|-----|-------|-------------|
 | v1.0 | 10,303 | 278 | Config-driven, adapter pattern, Server Components |
+| v1.1 | +8,357 | 67 | Design tokens, editorial components, RSC+client layouts |
 
 ### Top Lessons (Verified Across Milestones)
 
 1. Wave 0 test stubs before implementation catches integration issues early
 2. Config-driven architecture reduces per-deployment effort to near-zero
+3. Strict phase ordering (foundations first, then consumers) prevents rework — validated in both v1.0 and v1.1
+4. UAT after final phase catches UX gaps that automated tests miss — back navigation (v1.1), CMS acceptance (v1.0)
