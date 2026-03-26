@@ -98,6 +98,15 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
       {/* Filtered results or discovery zones */}
       {isFiltered ? (
         <>
+          <div className="px-4 pb-3">
+            <button
+              onClick={() => { setQuery(""); setActiveBezirkId(null); }}
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-sm border border-styrian-green text-styrian-green font-label text-sm font-medium hover:bg-styrian-green hover:text-white transition-colors"
+            >
+              <span className="material-symbols-outlined text-base" aria-hidden="true">arrow_back</span>
+              Alle Bezirke anzeigen
+            </button>
+          </div>
           <p className="px-4 pb-2 text-sm text-sage">{filtered.length} Artikel gefunden</p>
           {filtered.length === 0 ? (
             <div className="px-4 py-12 text-center">
