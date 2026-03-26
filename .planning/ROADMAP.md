@@ -4,6 +4,7 @@
 
 - ✅ **v1.0 MVP** — Phases 1-15 (shipped 2026-03-25)
 - ✅ **v1.1 Design Overhaul** — Phases 16-20 (shipped 2026-03-26)
+- 🚧 **v1.2 Test Deployment** — Phases 21-22 (in progress)
 
 ## Phases
 
@@ -43,9 +44,43 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
 
 </details>
 
+### 🚧 v1.2 Test Deployment (In Progress)
+
+**Milestone Goal:** Deploy a shareable test version on Railway that is clearly marked as non-production and invisible to search engines.
+
+- [ ] **Phase 21: Railway Infrastructure** - Deploy current app to Railway with correct DB isolation, PORT binding, and env var wiring
+- [ ] **Phase 22: Test Mode Implementation** - Add TESTSEITE banner, noindex meta, robots.txt disallow, sitemap suppression, AdSense gating — all gated by single env var
+
+## Phase Details
+
+### Phase 21: Railway Infrastructure
+**Goal**: A working Railway deployment of the current app with correct database isolation, PORT configuration, and environment variable wiring verified
+**Depends on**: Phase 20
+**Requirements**: DEPLOY-01, DEPLOY-02, DEPLOY-03
+**Success Criteria** (what must be TRUE):
+  1. The Railway service URL loads the homepage without error
+  2. Navigating to `/admin` redirects to `/admin/login` (CMS is live)
+  3. The Railway PostgreSQL addon is the active database (not a hard-coded connection string)
+  4. Prisma migrations have been applied and the schema is current
+**Plans**: TBD
+
+### Phase 22: Test Mode Implementation
+**Goal**: Every page on the live Railway deployment clearly signals "test site" to visitors and is comprehensively blocked from search engine indexing and crawling
+**Depends on**: Phase 21
+**Requirements**: SEO-01, SEO-02, SEO-03, TEST-01, TEST-02, SAFETY-01
+**Success Criteria** (what must be TRUE):
+  1. A visible "TESTSEITE" banner appears on every reader page (homepage, article detail, search)
+  2. A visible "TESTSEITE" banner appears on every CMS/admin page
+  3. Page source on any reader page contains `<meta name="robots" content="noindex, nofollow">`
+  4. `GET /robots.txt` on the Railway URL returns `Disallow: /`
+  5. `GET /sitemap.xml` on the Railway URL returns an empty or minimal response with no article URLs
+**Plans**: TBD
+
 ## Progress
 
-| Phase | Milestone | Plans | Status | Completed |
-|-------|-----------|-------|--------|-----------|
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
 | 1-15 | v1.0 | 52/52 | Complete | 2026-03-25 |
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
+| 21. Railway Infrastructure | v1.2 | 0/TBD | Not started | - |
+| 22. Test Mode Implementation | v1.2 | 0/TBD | Not started | - |

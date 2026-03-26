@@ -44,21 +44,21 @@ None — this is a focused deployment milestone.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SEO-01 | — | Pending |
-| SEO-02 | — | Pending |
-| SEO-03 | — | Pending |
-| TEST-01 | — | Pending |
-| TEST-02 | — | Pending |
-| DEPLOY-01 | — | Pending |
-| DEPLOY-02 | — | Pending |
-| DEPLOY-03 | — | Pending |
-| SAFETY-01 | — | Pending |
+| SEO-01 | Phase 22 | Pending |
+| SEO-02 | Phase 22 | Pending |
+| SEO-03 | Phase 22 | Pending |
+| TEST-01 | Phase 22 | Pending |
+| TEST-02 | Phase 22 | Pending |
+| DEPLOY-01 | Phase 21 | Pending |
+| DEPLOY-02 | Phase 21 | Pending |
+| DEPLOY-03 | Phase 21 | Pending |
+| SAFETY-01 | Phase 22 | Pending |
 
 **Coverage:**
 - v1.2 requirements: 9 total
-- Mapped to phases: 0
-- Unmapped: 9
+- Mapped to phases: 9
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-26*
-*Last updated: 2026-03-26 after initial definition*
+*Last updated: 2026-03-26 after roadmap creation*
