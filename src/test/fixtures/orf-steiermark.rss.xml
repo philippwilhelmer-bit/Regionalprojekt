@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>ORF Steiermark</title>
+    <link>https://steiermark.orf.at</link>
+    <description>Nachrichten aus der Steiermark</description>
+    <language>de</language>
+    <item>
+      <title>Unwetter in der Steiermark: Überflutungen im Murtal</title>
+      <description>Starke Regenfälle haben im Murtal zu Überflutungen geführt. Die Feuerwehr ist mit mehreren Einsatzkräften vor Ort, um betroffene Haushalte zu unterstützen.</description>
+      <link>https://steiermark.orf.at/stories/3123456</link>
+      <guid isPermaLink="false">https://steiermark.orf.at/stories/3123456</guid>
+      <pubDate>Mon, 23 Mar 2026 10:00:00 +0100</pubDate>
+    </item>
+    <item>
+      <title>Neues Forschungsprojekt an der TU Graz gestartet</title>
+      <description>Die Technische Universität Graz hat ein neues Forschungsprojekt im Bereich erneuerbare Energien gestartet. Das Projekt wird mit fünf Millionen Euro gefördert.</description>
+      <link>https://steiermark.orf.at/stories/3123457</link>
+      <guid isPermaLink="false">https://steiermark.orf.at/stories/3123457</guid>
+      <pubDate>Mon, 23 Mar 2026 09:30:00 +0100</pubDate>
+    </item>
+    <item>
+      <title>Grazer Innenstadt: Neue Fußgängerzone eröffnet</title>
+      <description>In der Grazer Innenstadt wurde heute eine neue Fußgängerzone eröffnet. Bürgermeister und Stadtrat feierten die Eröffnung mit zahlreichen Bewohnerinnen und Bewohnern.</description>
+      <link>https://steiermark.orf.at/stories/3123458</link>
+      <guid isPermaLink="false">https://steiermark.orf.at/stories/3123458</guid>
+      <pubDate>Mon, 23 Mar 2026 08:15:00 +0100</pubDate>
+    </item>
+  </channel>
+</rss>

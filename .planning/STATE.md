@@ -54,11 +54,9 @@ Progress: [░░░░░░░░░░] 0%
 Carried from v1.1 (see PROJECT.md Key Decisions):
 - NEXT_PUBLIC_IS_TEST_SITE is the canonical env var name (from research/SUMMARY.md)
 - All test-mode behaviors gated by a single env var — no code changes needed to go production, only redeploy
-- Railway PostgreSQL addon referenced via `${{Postgres.DATABASE_URL}}` — never a hard-coded connection string
-- start script must use `next start -p ${PORT:-3000}` — Railway assigns dynamic PORT, Next.js ignores it without explicit flag
-- NEXT_PUBLIC_ vars must be set in Railway Variables before the first build runs — not after
-- [Phase 21-railway-infrastructure]: prisma migrate deploy in startCommand only — Railway Postgres only available at runtime not build time
-- [Phase 21-railway-infrastructure]: Single railway-cron.ts consolidates ingest + AI pipeline into one Railway cron service
+- [Phase 21 DEVIATION]: Switched from Railway to Vercel + Neon. User requested Vercel as better fit for Next.js. Neon chosen for Postgres (free tier, serverless, native Vercel integration).
+- [Phase 21-vercel]: Cron runs via Vercel cron → /api/cron API route (replaces Railway cron service). Secured with CRON_SECRET bearer token.
+- [Phase 21-vercel]: Prisma migrations run via `npx prisma migrate deploy` before seed, not in start command (Vercel handles Next.js start automatically)
 
 ### Pending Todos
 
