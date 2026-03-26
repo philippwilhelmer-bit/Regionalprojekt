@@ -36,6 +36,7 @@ export async function GET(request: Request) {
     }
 
     log.push(`[ingest] found=${totalFound} new=${totalNew} errors=${errors.length}`)
+    if (errors.length > 0) log.push(...errors.map(e => `[ingest-err] ${e}`))
   } catch (err) {
     log.push(`[ingest] Fatal: ${err instanceof Error ? err.message : String(err)}`)
   }
