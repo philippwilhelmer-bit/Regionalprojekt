@@ -109,8 +109,8 @@ Plans:
   4. A "Empfohlene Artikel" section renders below the category grid with article recommendations when no active search or filter is applied
 **Plans:** 2 plans
 Plans:
-- [ ] 19-01-PLAN.md — Restyle article detail page (hero image, cream/sage palette, editorial typography, related articles scroll)
-- [ ] 19-02-PLAN.md — Rewrite bottom nav (four items, active green pill, disabled placeholders)
+- [ ] 20-01-PLAN.md — Add listArticlesForSearch() DAL function with unit test
+- [ ] 20-02-PLAN.md — Build /suche page (SearchPageLayout + page.tsx) and activate header search icon
 
 ## Progress
 
@@ -135,4 +135,4 @@ Plans:
 | 17. Header & Identity | 1/1 | Complete    | 2026-03-25 | - |
 | 18. Homepage Editorial Layout | 3/3 | Complete    | 2026-03-25 | - |
 | 19. Article Detail & Bottom Navigation | 2/2 | Complete    | 2026-03-25 | - |
-| 20. Search & Categories | v1.1 | 0/TBD | Not started | - |
+| 20. Search & Categories | v1.1 | 0/2 | Not started | - |
