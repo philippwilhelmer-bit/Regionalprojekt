@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import config from '@/../bundesland.config';
 import type { BezirkItem } from '@/types/bundesland';
 import { computeBezirkLabel } from '@/lib/bezirk-label';
@@ -51,11 +52,14 @@ export function Header({ bezirke }: { bezirke: BezirkItem[] }) {
             <span className="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_drop_down</span>
           </button>
 
-          {/* HDR-04: Disabled search icon — Phase 20 will activate this */}
-          <span
-            className="material-symbols-outlined text-white opacity-40 cursor-default"
-            aria-hidden="true"
-          >search</span>
+          {/* HDR-04: Search icon — links to /suche */}
+          <Link
+            href="/suche"
+            className="material-symbols-outlined text-white hover:opacity-80 transition-opacity"
+            aria-label="Zur Suche"
+          >
+            search
+          </Link>
         </div>
       </header>
     </div>
