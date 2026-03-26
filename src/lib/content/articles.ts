@@ -350,6 +350,44 @@ export async function listArticlesForHomepage(
   })
 }
 
+// TODO: If article count exceeds 200, consider server-side search API
+/**
+ * Returns all PUBLISHED articles with bezirke included, ordered by publishedAt desc.
+ * Intended for client-side full-text search — exhaustive, no featured/pinned filter.
+ * Default limit is 200.
+ */
+export async function listArticlesForSearch(options?: {
+  limit?: number
+}): Promise<ArticleWithBezirke[]>
+export async function listArticlesForSearch(
+  client: PrismaClient,
+  options?: { limit?: number }
+): Promise<ArticleWithBezirke[]>
+export async function listArticlesForSearch(
+  clientOrOptions?: PrismaClient | { limit?: number },
+  options?: { limit?: number }
+): Promise<ArticleWithBezirke[]> {
+  let db: PrismaClient
+  let opts: { limit?: number }
+
+  if (clientOrOptions !== undefined && clientOrOptions !== null && typeof clientOrOptions === 'object' && '$connect' in clientOrOptions) {
+    db = clientOrOptions as PrismaClient
+    opts = options ?? {}
+  } else {
+    db = defaultPrisma
+    opts = (clientOrOptions as { limit?: number }) ?? {}
+  }
+
+  const { limit = 200 } = opts
+
+  return db.article.findMany({
+    where: { status: 'PUBLISHED' },
+    include: { bezirke: { include: { bezirk: true } } },
+    orderBy: [{ publishedAt: 'desc' }],
+    take: limit,
+  })
+}
+
 /**
  * Pure function — no DB access.
  *
