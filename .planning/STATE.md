@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Design Overhaul
-status: completed
-stopped_at: Completed 20-02-PLAN.md
-last_updated: "2026-03-26T08:01:20.138Z"
-last_activity: 2026-03-26 — Phase 20 Plan 02 complete (/suche page, SearchPageLayout, header icon)
+milestone: v1.2
+milestone_name: Test Deployment
+status: active
+stopped_at: null
+last_updated: "2026-03-26T09:00:00.000Z"
+last_activity: 2026-03-26 — Milestone v1.2 started
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 10
-  completed_plans: 10
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-26)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** Planning next milestone (v1.1 Design Overhaul shipped 2026-03-26)
+**Current focus:** v1.2 Test Deployment — shareable test site on Railway
 
 ## Current Position
 
-Milestone: v1.1 Design Overhaul — SHIPPED 2026-03-26
-All phases complete (16-20), all plans complete (10/10)
-Status: Milestone archived, ready for next milestone
-Last activity: 2026-03-26 — Phase 20 Plan 02 complete (/suche page, SearchPageLayout, header icon)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-26 — Milestone v1.2 started
 
-Progress: [██████████] 100%
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 

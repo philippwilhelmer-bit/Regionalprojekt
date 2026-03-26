@@ -56,7 +56,15 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 
 ### Active
 
-(No active milestone — run `/gsd:new-milestone` to start next)
+**Current Milestone: v1.2 Test Deployment**
+
+**Goal:** Deploy a shareable test version on Railway that is clearly marked as non-production and invisible to search engines.
+
+**Target features:**
+- Visible "TESTSEITE" banner on every page (reader + CMS)
+- robots noindex/nofollow meta tags on all pages
+- robots.txt disallowing all crawlers
+- Railway deployment with live shareable URL
 
 ### Out of Scope
 
@@ -103,4 +111,4 @@ Known pre-launch items: Impressum fields need real publisher data (TODO: placeho
 | EilmeldungBanner sessionStorage dismiss | Session-scoped, no server state needed | ✓ Good — lightweight UX |
 
 ---
-*Last updated: 2026-03-26 after v1.1 milestone completion*
+*Last updated: 2026-03-26 after v1.2 milestone start*
