@@ -103,3 +103,13 @@ None - no external service configuration required.
 ---
 *Phase: 19-article-detail-bottom-navigation*
 *Completed: 2026-03-25*
+
+## Self-Check: PASSED
+
+- FOUND: src/app/(public)/artikel/[publicId]/[slug]/page.tsx
+- FOUND: src/components/reader/TopMeldungenRow.tsx
+- FOUND: src/components/reader/ShareButton.tsx
+- FOUND: .planning/phases/19-article-detail-bottom-navigation/19-01-SUMMARY.md
+- Commit 41125ca: feat(19-01): add heading prop to TopMeldungenRow and restyle ShareButton
+- Commit 6cbcbdd: feat(19-01): restructure article page with hero image, cream palette, and editorial layout
+- Commit c130522: docs(19-01): complete article detail restyle plan

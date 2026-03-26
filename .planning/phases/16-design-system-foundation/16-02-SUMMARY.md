@@ -117,3 +117,16 @@ None - no external service configuration required beyond the CDN link already ad
 ---
 *Phase: 16-design-system-foundation*
 *Completed: 2026-03-25*
+
+## Self-Check: PASSED
+
+- FOUND: src/app/layout.tsx
+- FOUND: src/components/reader/Header.tsx
+- FOUND: src/components/reader/BottomNav.tsx
+- FOUND: src/components/reader/ArticleCard.tsx
+- FOUND: src/components/reader/BezirkModal.tsx
+- FOUND: src/components/reader/ShareButton.tsx
+- FOUND: src/components/reader/CookieBanner.tsx
+- FOUND: .planning/phases/16-design-system-foundation/16-02-SUMMARY.md
+- FOUND: commit 7bd9998 (feat: Task 1)
+- FOUND: commit 3c6d07c (feat: Task 2)
