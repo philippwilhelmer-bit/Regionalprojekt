@@ -9,7 +9,7 @@ import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
 import { createTestDb, cleanDb } from '../../test/setup-db'
 import { seedBezirke } from '../../../prisma/seed'
 import type { PrismaClient } from '@prisma/client'
-import { listArticles, getArticleById, getArticlesByBezirk, getArticleByPublicId, listArticlesReader } from './articles'
+import { listArticles, getArticleById, getArticlesByBezirk, getArticleByPublicId, listArticlesReader, listArticlesForSearch } from './articles'
 
 describe('Article DAL', () => {
   let prisma: PrismaClient
@@ -359,5 +359,108 @@ describe('listArticlesReader', () => {
     const page1Ids = page1.map((a) => a.id)
     const page2Ids = page2.map((a) => a.id)
     expect(page1Ids.some((id) => page2Ids.includes(id))).toBe(false)
+  })
+})
+
+describe('listArticlesForSearch', () => {
+  let prisma: PrismaClient
+  let liezerId: number
+
+  beforeAll(async () => {
+    prisma = await createTestDb()
+    await seedBezirke(prisma, 'steiermark')
+    const liezen = await prisma.bezirk.findUnique({ where: { slug: 'liezen' } })
+    liezerId = liezen!.id
+  })
+
+  beforeEach(async () => {
+    await prisma.articleBezirk.deleteMany()
+    await prisma.article.deleteMany()
+  })
+
+  it('returns only PUBLISHED articles — DRAFT and PENDING_REVIEW excluded', async () => {
+    const published = await prisma.article.create({
+      data: { source: 'OTS_AT', title: 'Published', status: 'PUBLISHED', isStateWide: false, publicId: 'srch-pub-1' },
+    })
+    await prisma.article.create({
+      data: { source: 'OTS_AT', title: 'Written', status: 'WRITTEN', isStateWide: false, publicId: 'srch-wrt-1' },
+    })
+    await prisma.article.create({
+      data: { source: 'OTS_AT', title: 'Fetched', status: 'FETCHED', isStateWide: false, publicId: 'srch-ftc-1' },
+    })
+
+    const results = await listArticlesForSearch(prisma)
+    expect(results).toHaveLength(1)
+    expect(results[0].id).toBe(published.id)
+  })
+
+  it('includes bezirke relation — each article has bezirke array with bezirk objects', async () => {
+    await prisma.article.create({
+      data: {
+        source: 'OTS_AT', title: 'Liezen Article', status: 'PUBLISHED', isStateWide: false, publicId: 'srch-liez-1',
+        bezirke: { create: [{ bezirkId: liezerId }] },
+      },
+    })
+
+    const results = await listArticlesForSearch(prisma)
+    expect(results).toHaveLength(1)
+    expect(results[0].bezirke).toBeDefined()
+    expect(Array.isArray(results[0].bezirke)).toBe(true)
+    expect(results[0].bezirke).toHaveLength(1)
+    expect(results[0].bezirke[0].bezirk).toBeDefined()
+    expect(results[0].bezirke[0].bezirk.slug).toBe('liezen')
+  })
+
+  it('respects custom limit parameter', async () => {
+    for (let i = 1; i <= 5; i++) {
+      await prisma.article.create({
+        data: {
+          source: 'OTS_AT', title: `Article ${i}`, status: 'PUBLISHED', isStateWide: false,
+          publicId: `srch-lim-${i}`,
+          publishedAt: new Date(Date.now() - i * 1000),
+        },
+      })
+    }
+
+    const results = await listArticlesForSearch(prisma, { limit: 3 })
+    expect(results).toHaveLength(3)
+  })
+
+  it('defaults to limit=200 when no limit provided', async () => {
+    // Create 10 articles; with default limit=200 all should be returned
+    for (let i = 1; i <= 10; i++) {
+      await prisma.article.create({
+        data: {
+          source: 'OTS_AT', title: `Default Limit Article ${i}`, status: 'PUBLISHED', isStateWide: false,
+          publicId: `srch-def-${i}`,
+          publishedAt: new Date(Date.now() - i * 1000),
+        },
+      })
+    }
+
+    const results = await listArticlesForSearch(prisma)
+    expect(results).toHaveLength(10)
+  })
+
+  it('orders by publishedAt desc — newest articles first', async () => {
+    const now = new Date()
+    const older = new Date(now.getTime() - 10000)
+    const oldest = new Date(now.getTime() - 20000)
+
+    const newestArticle = await prisma.article.create({
+      data: { source: 'OTS_AT', title: 'Newest', status: 'PUBLISHED', isStateWide: false, publicId: 'srch-ord-1', publishedAt: now },
+    })
+    await prisma.article.create({
+      data: { source: 'OTS_AT', title: 'Middle', status: 'PUBLISHED', isStateWide: false, publicId: 'srch-ord-2', publishedAt: older },
+    })
+    await prisma.article.create({
+      data: { source: 'OTS_AT', title: 'Oldest', status: 'PUBLISHED', isStateWide: false, publicId: 'srch-ord-3', publishedAt: oldest },
+    })
+
+    const results = await listArticlesForSearch(prisma)
+    expect(results[0].id).toBe(newestArticle.id)
+    expect(results[0].title).toBe('Newest')
+    const titles = results.map((a) => a.title)
+    expect(titles).toEqual(['Newest', 'Middle', 'Oldest'])
   })
 })
