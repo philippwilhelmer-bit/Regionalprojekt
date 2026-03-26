@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { listBezirke } from "@/lib/content/bezirke";
 import { hasEilmeldung } from "@/lib/content/articles";
 import { Header } from "@/components/reader/Header";
