@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Design Overhaul
 status: planning
-stopped_at: Phase 20 context gathered
-last_updated: "2026-03-26T06:14:55.653Z"
-last_activity: 2026-03-25 — Roadmap created for v1.1
+stopped_at: Phase 20 Plan 01 complete — listArticlesForSearch DAL function
+last_updated: "2026-03-26T07:29:30Z"
+last_activity: 2026-03-26 — Phase 20 Plan 01 executed (listArticlesForSearch DAL)
 progress:
   total_phases: 5
   completed_phases: 4
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-25)
 
 ## Current Position
 
-Phase: 16 of 20 (Design System Foundation)
-Plan: —
-Status: Ready to plan
-Last activity: 2026-03-25 — Roadmap created for v1.1
+Phase: 20 of 20 (Search Categories)
+Plan: 01 complete
+Status: In progress
+Last activity: 2026-03-26 — Phase 20 Plan 01 complete (listArticlesForSearch DAL)
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 18-homepage-editorial-layout P02 | 10 | 2 tasks | 5 files |
 | Phase 19-article-detail-bottom-navigation P02 | 5 | 1 tasks | 2 files |
 | Phase 19-article-detail-bottom-navigation P01 | 2 | 2 tasks | 3 files |
+| Phase 20-search-categories P01 | 5 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,8 @@ Carried from v1.0 (see PROJECT.md Key Decisions):
 - [Phase 19-article-detail-bottom-navigation]: BottomNav.tsx replaced with single re-export line — keeps layout.tsx import unchanged, client/server boundary clean
 - [Phase 19]: h1 keeps text-zinc-800 on cream — near-black maximizes headline readability
 - [Phase 19]: TopMeldungenRow heading prop added for reuse — caller overrides default 'Top-Meldungen' without duplication
+- [Phase 20-search-categories]: listArticlesForSearch does not filter on isFeatured/isPinned — search must be exhaustive to find all PUBLISHED articles
+- [Phase 20-search-categories]: Default limit of 200 balances completeness with memory; TODO comment added for future server-side search API if needed
 
 ### Pending Todos
 
@@ -91,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T06:14:55.647Z
-Stopped at: Phase 20 context gathered
-Resume file: .planning/phases/20-search-categories/20-CONTEXT.md
+Last session: 2026-03-26T07:29:30Z
+Stopped at: Phase 20 Plan 01 complete — listArticlesForSearch DAL function
+Resume file: .planning/phases/20-search-categories/20-01-SUMMARY.md
