@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Design Overhaul
-status: planning
-stopped_at: Phase 20 Plan 01 complete — listArticlesForSearch DAL function
-last_updated: "2026-03-26T07:29:30Z"
-last_activity: 2026-03-26 — Phase 20 Plan 01 executed (listArticlesForSearch DAL)
+status: executing
+stopped_at: Phase 20 Plan 02 complete — /suche search page and activated header search icon
+last_updated: "2026-03-26T06:35:45.014Z"
+last_activity: 2026-03-26 — Phase 20 Plan 02 complete (/suche page, SearchPageLayout, header icon)
 progress:
   total_phases: 5
-  completed_phases: 4
-  total_plans: 8
-  completed_plans: 8
+  completed_phases: 5
+  total_plans: 10
+  completed_plans: 10
   percent: 0
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-25)
 ## Current Position
 
 Phase: 20 of 20 (Search Categories)
-Plan: 01 complete
+Plan: 02 complete — awaiting checkpoint:human-verify (Task 3)
 Status: In progress
-Last activity: 2026-03-26 — Phase 20 Plan 01 complete (listArticlesForSearch DAL)
+Last activity: 2026-03-26 — Phase 20 Plan 02 complete (/suche page, SearchPageLayout, header icon)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 19-article-detail-bottom-navigation P02 | 5 | 1 tasks | 2 files |
 | Phase 19-article-detail-bottom-navigation P01 | 2 | 2 tasks | 3 files |
 | Phase 20-search-categories P01 | 5 | 1 tasks | 2 files |
+| Phase 20-search-categories P02 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -82,6 +83,8 @@ Carried from v1.0 (see PROJECT.md Key Decisions):
 - [Phase 19]: TopMeldungenRow heading prop added for reuse — caller overrides default 'Top-Meldungen' without duplication
 - [Phase 20-search-categories]: listArticlesForSearch does not filter on isFeatured/isPinned — search must be exhaustive to find all PUBLISHED articles
 - [Phase 20-search-categories]: Default limit of 200 balances completeness with memory; TODO comment added for future server-side search API if needed
+- [Phase 20-search-categories P02]: type=text (not type=search) on search input avoids browser-native clear button inconsistency
+- [Phase 20-search-categories P02]: Bezirk pill and category grid share same toggleBezirk handler — single source of truth for activeBezirkId
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T07:29:30Z
-Stopped at: Phase 20 Plan 01 complete — listArticlesForSearch DAL function
-Resume file: .planning/phases/20-search-categories/20-01-SUMMARY.md
+Last session: 2026-03-26T06:34:59Z
+Stopped at: Phase 20 Plan 02 complete — awaiting checkpoint:human-verify (Task 3)
+Resume file: .planning/phases/20-search-categories/20-02-SUMMARY.md

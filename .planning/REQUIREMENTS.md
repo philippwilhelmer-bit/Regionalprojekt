@@ -36,9 +36,9 @@ Requirements for the Design Overhaul milestone. Each maps to roadmap phases.
 ### Search & Categories
 
 - [x] **SRCH-01**: Search page with large serif search input for filtering articles
-- [ ] **SRCH-02**: Trending topics displayed as pill-shaped tags
-- [ ] **SRCH-03**: Category grid with hover states for browsing by topic
-- [ ] **SRCH-04**: Recommended articles section below categories
+- [x] **SRCH-02**: Trending topics displayed as pill-shaped tags
+- [x] **SRCH-03**: Category grid with hover states for browsing by topic
+- [x] **SRCH-04**: Recommended articles section below categories
 
 ### Bottom Navigation
 
@@ -85,9 +85,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NAV-01 | Phase 19 | Complete |
 | NAV-02 | Phase 19 | Complete |
 | SRCH-01 | Phase 20 | Complete |
-| SRCH-02 | Phase 20 | Pending |
-| SRCH-03 | Phase 20 | Pending |
-| SRCH-04 | Phase 20 | Pending |
+| SRCH-02 | Phase 20 | Complete |
+| SRCH-03 | Phase 20 | Complete |
+| SRCH-04 | Phase 20 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 20 total

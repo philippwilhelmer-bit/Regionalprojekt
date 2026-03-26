@@ -38,7 +38,7 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
 - [x] **Phase 17: Header & Identity** - Styrian identity bar, dark green header, serif branding, location badge, search icon (completed 2026-03-25)
 - [x] **Phase 18: Homepage Editorial Layout** - Hero article, top-stories scroller, topic sections, Eilmeldung banner (completed 2026-03-25)
 - [x] **Phase 19: Article Detail & Bottom Navigation** - Editorial typography on article page, bottom nav restyling (completed 2026-03-25)
-- [ ] **Phase 20: Search & Categories** - Search input, trending pills, category grid, recommended articles
+- [x] **Phase 20: Search & Categories** - Search input, trending pills, category grid, recommended articles (completed 2026-03-26)
 
 ## Phase Details
 
@@ -107,7 +107,7 @@ Plans:
   2. Trending topics appear as pill-shaped tags below the search input and tapping one filters results to that topic
   3. A category grid below trending topics lists all topic categories with hover/tap states; selecting one shows relevant articles
   4. A "Empfohlene Artikel" section renders below the category grid with article recommendations when no active search or filter is applied
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 20-01-PLAN.md — Add listArticlesForSearch() DAL function with unit test
 - [ ] 20-02-PLAN.md — Build /suche page (SearchPageLayout + page.tsx) and activate header search icon
@@ -135,4 +135,4 @@ Plans:
 | 17. Header & Identity | 1/1 | Complete    | 2026-03-25 | - |
 | 18. Homepage Editorial Layout | 3/3 | Complete    | 2026-03-25 | - |
 | 19. Article Detail & Bottom Navigation | 2/2 | Complete    | 2026-03-25 | - |
-| 20. Search & Categories | 1/2 | In Progress|  | - |
+| 20. Search & Categories | 2/2 | Complete   | 2026-03-26 | - |
