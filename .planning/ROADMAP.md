@@ -62,7 +62,7 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
   2. Navigating to `/admin` redirects to `/admin/login` (CMS is live)
   3. The Railway PostgreSQL addon is the active database (not a hard-coded connection string)
   4. Prisma migrations have been applied and the schema is current
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
 - [ ] 21-01-PLAN.md — Prepare codebase for Railway (railway.toml, PORT binding, combined cron script)
 - [ ] 21-02-PLAN.md — Deploy to Railway and verify live site
@@ -85,5 +85,5 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 1-15 | v1.0 | 52/52 | Complete | 2026-03-25 |
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
-| 21. Railway Infrastructure | v1.2 | 0/2 | Planning | - |
+| 21. Railway Infrastructure | 1/2 | In Progress|  | - |
 | 22. Test Mode Implementation | v1.2 | 0/TBD | Not started | - |
