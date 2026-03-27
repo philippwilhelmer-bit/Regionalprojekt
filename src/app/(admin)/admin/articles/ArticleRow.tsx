@@ -1,6 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useTransition } from 'react'
 import { togglePinAction, toggleFeatureAction, softDeleteAction } from '@/lib/admin/article-form-actions'
 import type { ArticleWithBezirke } from '@/lib/content/articles'
 
@@ -32,6 +34,8 @@ interface ArticleRowProps {
 }
 
 export function ArticleRow({ article }: ArticleRowProps) {
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
   const statusColor = STATUS_COLORS[article.status] ?? 'bg-gray-100 text-gray-800'
   const title = article.title
     ? article.title.length > 80
@@ -39,8 +43,17 @@ export function ArticleRow({ article }: ArticleRowProps) {
       : article.title
     : '(Kein Titel)'
 
+  function handleAction(action: (formData: FormData) => Promise<void>, id: number) {
+    startTransition(async () => {
+      const fd = new FormData()
+      fd.set('id', String(id))
+      await action(fd)
+      router.refresh()
+    })
+  }
+
   return (
-    <tr className="border-b border-gray-100 hover:bg-gray-50">
+    <tr className={`border-b border-gray-100 hover:bg-gray-50 ${isPending ? 'opacity-50' : ''}`}>
       <td className="px-4 py-3 text-sm text-gray-900 max-w-xs">
         <Link
           href={`/admin/articles/${article.id}/edit`}
@@ -65,48 +78,44 @@ export function ArticleRow({ article }: ArticleRowProps) {
       </td>
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">
-          <form action={togglePinAction}>
-            <input type="hidden" name="id" value={article.id} />
-            <button
-              type="submit"
-              className={`text-xs px-2 py-1 rounded border ${
-                article.isPinned
-                  ? 'bg-orange-100 border-orange-300 text-orange-700 hover:bg-orange-200'
-                  : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              {article.isPinned ? 'Entpinnen' : 'Pinnen'}
-            </button>
-          </form>
-
-          <form action={toggleFeatureAction}>
-            <input type="hidden" name="id" value={article.id} />
-            <button
-              type="submit"
-              className={`text-xs px-2 py-1 rounded border ${
-                article.isFeatured
-                  ? 'bg-purple-100 border-purple-300 text-purple-700 hover:bg-purple-200'
-                  : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              {article.isFeatured ? 'Entfeaturen' : 'Featuren'}
-            </button>
-          </form>
-
-          <form
-            action={softDeleteAction}
-            onSubmit={(e) => {
-              if (!window.confirm('Artikel loeschen?')) e.preventDefault()
-            }}
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => handleAction(togglePinAction, article.id)}
+            className={`text-xs px-2 py-1 rounded border ${
+              article.isPinned
+                ? 'bg-orange-100 border-orange-300 text-orange-700 hover:bg-orange-200'
+                : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
+            } disabled:opacity-50`}
           >
-            <input type="hidden" name="id" value={article.id} />
-            <button
-              type="submit"
-              className="text-xs px-2 py-1 rounded border bg-white border-red-300 text-red-600 hover:bg-red-50"
-            >
-              Loeschen
-            </button>
-          </form>
+            {article.isPinned ? 'Entpinnen' : 'Pinnen'}
+          </button>
+
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => handleAction(toggleFeatureAction, article.id)}
+            className={`text-xs px-2 py-1 rounded border ${
+              article.isFeatured
+                ? 'bg-purple-100 border-purple-300 text-purple-700 hover:bg-purple-200'
+                : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
+            } disabled:opacity-50`}
+          >
+            {article.isFeatured ? 'Entfeaturen' : 'Featuren'}
+          </button>
+
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => {
+              if (window.confirm('Artikel loeschen?')) {
+                handleAction(softDeleteAction, article.id)
+              }
+            }}
+            className="text-xs px-2 py-1 rounded border bg-white border-red-300 text-red-600 hover:bg-red-50 disabled:opacity-50"
+          >
+            Loeschen
+          </button>
         </div>
       </td>
     </tr>
