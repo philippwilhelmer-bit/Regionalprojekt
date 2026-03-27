@@ -1,5 +1,6 @@
 import type { SourceAdminRow } from '@/lib/admin/sources-actions'
 import { updateSourceForm } from '@/lib/admin/sources-actions'
+import { SourceFormFields } from './SourceFormFields'
 
 const SOURCE_LABELS: Record<string, string> = {
   OTS_AT: 'OTS.at',
@@ -49,6 +50,16 @@ export function SourceCard({ source }: SourceCardProps) {
             <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${healthColor}`}>
               {source.healthStatus}
             </span>
+            {source.category && (
+              <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">
+                {source.category}
+              </span>
+            )}
+            {source.keywords.length > 0 && (
+              <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700">
+                {source.keywords.length} Stichwörter
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-4 mt-2 text-xs text-gray-700 flex-wrap">
             <span>Letzter Erfolg: {formatDateTime(source.lastSuccessAt)}</span>
@@ -125,6 +136,8 @@ export function SourceCard({ source }: SourceCardProps) {
               />
             </div>
           </div>
+
+          <SourceFormFields category={source.category} keywords={source.keywords} />
 
           <div className="flex gap-3">
             <button

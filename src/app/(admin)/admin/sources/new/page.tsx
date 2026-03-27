@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { createSourceForm } from '@/lib/admin/sources-actions'
+import { SourceFormFields } from '../SourceFormFields'
 
 export default function NewSourcePage() {
   return (
@@ -25,6 +26,9 @@ export default function NewSourcePage() {
             className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="https://..."
           />
+          <p className="text-xs text-gray-500 mt-1">
+            OTS-Kategorien: https://www.ots.at/rss/wirtschaft, /politik, /kultur, /medien, /chronik, /sport
+          </p>
         </div>
 
         {/* Typ */}
@@ -57,6 +61,8 @@ export default function NewSourcePage() {
             className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+
+        <SourceFormFields />
 
         {/* Actions */}
         <div className="flex gap-3 pt-2">

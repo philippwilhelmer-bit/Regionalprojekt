@@ -19,6 +19,16 @@ import { computeContentHash } from '../dedup'
  * - Returns empty array if feed parses successfully but has 0 items/entries
  * - externalId fallback chain: guid → link → computeContentHash(title, description)
  */
+/**
+ * Check if an item matches at least one keyword (case-insensitive).
+ * If no keywords configured, all items pass.
+ */
+function matchesKeywords(text: string, keywords: string[]): boolean {
+  if (keywords.length === 0) return true
+  const lower = text.toLowerCase()
+  return keywords.some((kw) => lower.includes(kw.toLowerCase()))
+}
+
 export async function rssAdapter(source: Source): Promise<RawItem[]> {
   const response = await fetch(source.url)
   if (!response.ok) {
@@ -29,30 +39,35 @@ export async function rssAdapter(source: Source): Promise<RawItem[]> {
 
   const xml = await response.text()
   const parsed = parseFeed(xml)
+  const keywords = source.keywords ?? []
 
   if (parsed.format === 'rss') {
     const items = parsed.feed.items ?? []
-    return items.map((item) => {
-      const title = item.title ?? ''
-      const description = item.description ?? ''
-      const guid = item.guid?.value
-      const link = item.link
-      const externalId = guid ?? link ?? computeContentHash(title, description)
+    return items
+      .filter((item) => matchesKeywords(`${item.title ?? ''} ${item.description ?? ''}`, keywords))
+      .map((item) => {
+        const title = item.title ?? ''
+        const description = item.description ?? ''
+        const guid = item.guid?.value
+        const link = item.link
+        const externalId = guid ?? link ?? computeContentHash(title, description)
 
-      return {
-        externalId,
-        sourceUrl: link ?? source.url,
-        title,
-        body: description,
-        publishedAt: item.pubDate ? new Date(item.pubDate) : null,
-        rawPayload: item,
-      } satisfies RawItem
-    })
+        return {
+          externalId,
+          sourceUrl: link ?? source.url,
+          title,
+          body: description,
+          publishedAt: item.pubDate ? new Date(item.pubDate) : null,
+          rawPayload: item,
+        } satisfies RawItem
+      })
   }
 
   if (parsed.format === 'atom') {
     const entries = parsed.feed.entries ?? []
-    return entries.map((entry) => {
+    return entries
+      .filter((entry) => matchesKeywords(`${entry.title ?? ''} ${entry.summary ?? ''}`, keywords))
+      .map((entry) => {
       const title = entry.title ?? ''
       const summary = entry.summary ?? ''
       // Prefer the first alternate link for sourceUrl

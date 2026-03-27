@@ -120,18 +120,28 @@ function extractBody(detail: Record<string, unknown>): string {
 export function createOtsAtAdapter(db?: PrismaClient): AdapterFn {
   const prismaClient = db ?? defaultPrisma
 
-  return async (_source): Promise<RawItem[]> => {
+  return async (source): Promise<RawItem[]> => {
     const apiKey = process.env.OTS_API_KEY
     if (!apiKey) {
       throw new Error('OTS_API_KEY environment variable is not set')
     }
 
+    const keywords = source.keywords ?? []
+
     // Step 1: Fetch the list of recent press releases
     const listItems = await fetchOtsList(apiKey)
 
+    // Step 1b: Pre-filter by keywords (before expensive detail fetches)
+    const filteredList = keywords.length > 0
+      ? listItems.filter((item) => {
+          const text = `${item.TITEL} ${item.UTL ?? ''}`.toLowerCase()
+          return keywords.some((kw) => text.includes(kw.toLowerCase()))
+        })
+      : listItems
+
     // Step 2: Deduplicate — filter out items already in Article DB by source+externalId
     const newItems: OtsListItem[] = []
-    for (const item of listItems) {
+    for (const item of filteredList) {
       const existing = await prismaClient.article.findFirst({
         where: { source: 'OTS_AT', externalId: item.OTSKEY },
         select: { id: true },

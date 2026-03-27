@@ -115,6 +115,8 @@ model Source {
   lastSuccessAt         DateTime?
   healthStatus          SourceHealth  @default(OK)
   healthFailureThreshold Int          @default(3)
+  category              String?       // OTS RSS category: politik, wirtschaft, kultur, medien, chronik, sport
+  keywords              String[]      @default([]) // Filter keywords — articles must contain at least one
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
   articles              Article[]

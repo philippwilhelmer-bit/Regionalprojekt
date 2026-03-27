@@ -22,6 +22,8 @@ export interface CreateSourceInput {
   url: string
   type: ArticleSource
   pollIntervalMinutes?: number
+  category?: string
+  keywords?: string[]
 }
 
 export interface UpdateSourceInput {
@@ -29,6 +31,8 @@ export interface UpdateSourceInput {
   pollIntervalMinutes?: number
   healthFailureThreshold?: number
   enabled?: boolean
+  category?: string | null
+  keywords?: string[]
 }
 
 export interface IngestionRunStats {
@@ -75,6 +79,8 @@ export async function createSourceDb(
       enabled: true,
       healthStatus: 'OK',
       healthFailureThreshold: 3,
+      category: opts.category || undefined,
+      keywords: opts.keywords ?? [],
     },
   })
 }
@@ -197,7 +203,16 @@ export async function createSourceForm(formData: FormData): Promise<void> {
   const type = formData.get('type')?.toString() as ArticleSource
   const pollIntervalMinutes = parseInt(formData.get('pollIntervalMinutes')?.toString() ?? '60', 10)
 
-  await createSourceDb({ url, type, pollIntervalMinutes: isNaN(pollIntervalMinutes) ? 60 : pollIntervalMinutes })
+  const category = formData.get('category')?.toString() || undefined
+  const keywordsRaw = formData.get('keywords')?.toString() ?? ''
+  const keywords = keywordsRaw.split(',').map(k => k.trim()).filter(Boolean)
+
+  await createSourceDb({
+    url, type,
+    pollIntervalMinutes: isNaN(pollIntervalMinutes) ? 60 : pollIntervalMinutes,
+    category,
+    keywords,
+  })
   redirect('/admin/sources')
 }
 
@@ -220,11 +235,20 @@ export async function updateSourceForm(formData: FormData): Promise<void> {
   const enabledRaw = formData.get('enabled')
   const enabled = enabledRaw !== null ? enabledRaw === 'true' || enabledRaw === 'on' : undefined
 
+  const categoryRaw = formData.get('category')
+  const category = categoryRaw !== null ? (categoryRaw.toString() || null) : undefined
+  const keywordsRaw = formData.get('keywords')
+  const keywords = keywordsRaw !== null
+    ? keywordsRaw.toString().split(',').map(k => k.trim()).filter(Boolean)
+    : undefined
+
   await updateSourceDb({
     id,
     pollIntervalMinutes: pollIntervalMinutes !== undefined && !isNaN(pollIntervalMinutes) ? pollIntervalMinutes : undefined,
     healthFailureThreshold: healthFailureThreshold !== undefined && !isNaN(healthFailureThreshold) ? healthFailureThreshold : undefined,
     enabled,
+    category,
+    keywords,
   })
   revalidatePath('/admin/sources')
 }
