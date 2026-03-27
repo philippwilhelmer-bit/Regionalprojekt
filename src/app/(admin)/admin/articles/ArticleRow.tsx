@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { togglePinForm, toggleFeatureForm, softDeleteForm } from '@/lib/admin/articles-actions'
+import { togglePinAction, toggleFeatureAction, softDeleteAction } from '@/lib/admin/article-form-actions'
 import type { ArticleWithBezirke } from '@/lib/content/articles'
 
 const STATUS_COLORS: Record<string, string> = {
@@ -65,7 +65,7 @@ export function ArticleRow({ article }: ArticleRowProps) {
       </td>
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">
-          <form action={togglePinForm}>
+          <form action={togglePinAction}>
             <input type="hidden" name="id" value={article.id} />
             <button
               type="submit"
@@ -79,7 +79,7 @@ export function ArticleRow({ article }: ArticleRowProps) {
             </button>
           </form>
 
-          <form action={toggleFeatureForm}>
+          <form action={toggleFeatureAction}>
             <input type="hidden" name="id" value={article.id} />
             <button
               type="submit"
@@ -94,7 +94,7 @@ export function ArticleRow({ article }: ArticleRowProps) {
           </form>
 
           <form
-            action={softDeleteForm}
+            action={softDeleteAction}
             onSubmit={(e) => {
               if (!window.confirm('Artikel loeschen?')) e.preventDefault()
             }}
