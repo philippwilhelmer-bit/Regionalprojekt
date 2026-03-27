@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { listBezirke } from '@/lib/content/bezirke'
 import { updateArticle } from '@/lib/admin/articles-actions'
 import { UnsplashPicker } from '@/components/admin/UnsplashPicker'
+import { slugify } from '@/lib/reader/slug'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
@@ -37,15 +38,60 @@ export default async function EditArticlePage({ params }: Props) {
   if (!article) notFound()
 
   const assignedBezirkIds = new Set(article.bezirke.map((ab) => ab.bezirkId))
+  const articleSlug = slugify(article.title ?? 'artikel')
+  const articleUrl = article.publicId ? `/artikel/${article.publicId}/${articleSlug}` : null
 
   return (
     <div className="max-w-2xl">
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-4 mb-4">
         <Link href="/admin/articles" className="text-sm text-gray-700 hover:text-gray-900">
           &larr; Zurueck
         </Link>
         <h1 className="text-2xl font-bold text-gray-900">Artikel bearbeiten</h1>
+        {articleUrl && (
+          <a
+            href={articleUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-auto text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
+          >
+            Artikel ansehen
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        )}
       </div>
+
+      {/* Preview */}
+      {article.status === 'PUBLISHED' && articleUrl && (
+        <div className="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-4">
+          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Vorschau</p>
+          <div className="flex gap-4">
+            {article.imageUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={article.imageUrl}
+                alt=""
+                className="w-32 h-20 object-cover rounded flex-shrink-0"
+              />
+            )}
+            <div className="min-w-0">
+              <h2 className="text-sm font-semibold text-gray-900 line-clamp-2">{article.title}</h2>
+              {article.metaDescription && (
+                <p className="text-xs text-gray-500 mt-1 line-clamp-2">{article.metaDescription}</p>
+              )}
+              <div className="flex items-center gap-2 mt-2">
+                {article.bezirke.map((ab) => (
+                  <span key={ab.bezirkId} className="text-[10px] px-1.5 py-0.5 rounded bg-green-100 text-green-700">
+                    {ab.bezirk.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <form action={updateArticleForm} className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
         <input type="hidden" name="_id" value={article.id} />
