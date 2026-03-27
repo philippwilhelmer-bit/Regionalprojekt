@@ -128,9 +128,19 @@ export async function toggleFeatureDb(
   articleId: number
 ): Promise<Article> {
   const current = await db.article.findUniqueOrThrow({ where: { id: articleId } })
+  const newFeatured = !current.isFeatured
+
+  // Only one article can be featured at a time — unfeatured all others first
+  if (newFeatured) {
+    await db.article.updateMany({
+      where: { isFeatured: true, id: { not: articleId } },
+      data: { isFeatured: false },
+    })
+  }
+
   return db.article.update({
     where: { id: articleId },
-    data: { isFeatured: !current.isFeatured },
+    data: { isFeatured: newFeatured },
   })
 }
 
