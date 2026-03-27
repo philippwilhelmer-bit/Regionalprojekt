@@ -37,7 +37,7 @@ export function BezirkSection({ bezirkName, articles, showDivider = false }: Bez
       />
 
       {/* Section heading */}
-      <h2 className="font-label font-semibold text-styrian-green uppercase tracking-wide text-xs mb-3">
+      <h2 className="font-headline font-semibold text-styrian-green text-lg mb-3">
         {bezirkName}
       </h2>
 

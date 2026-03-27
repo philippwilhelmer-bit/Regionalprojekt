@@ -3,19 +3,22 @@
 import { useEffect, useState } from "react";
 import type { ArticleWithBezirke } from "@/lib/content/articles";
 import { groupArticlesByBezirk } from "@/lib/content/articles";
+import type { BezirkItem } from "@/types/bundesland";
 import { HeroArticle } from "./HeroArticle";
 import { TopMeldungenRow } from "./TopMeldungenRow";
-import { BezirkSection } from "./BezirkSection";
 import { ArticleCard } from "./ArticleCard";
+import { ListItem } from "./ListItem";
+import { RegionalSelector } from "./RegionalSelector";
 import { AdUnit } from "./AdUnit";
 
 interface HomepageLayoutProps {
   hero: ArticleWithBezirke | null;
   pinnedArticles: ArticleWithBezirke[];
   allArticles: ArticleWithBezirke[];
+  bezirke?: BezirkItem[];
 }
 
-export function HomepageLayout({ hero, pinnedArticles, allArticles }: HomepageLayoutProps) {
+export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = [] }: HomepageLayoutProps) {
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
 
@@ -60,9 +63,66 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles }: HomepageLa
   // Empty state
   const isEmpty = allArticles.length === 0 && !hero;
 
+  function handleSelectionChange(slugs: string[]) {
+    setSelectedSlugs(slugs);
+  }
+
+  // Render a "Dein Bezirk" section with feature card + list items
+  function renderBezirkSection(
+    name: string,
+    articles: ArticleWithBezirke[],
+    showDivider: boolean,
+  ) {
+    if (articles.length === 0) return null;
+    const [featured, ...rest] = articles;
+    const listArticles = rest.slice(0, 4);
+
+    return (
+      <section className="px-4 py-4" key={name}>
+        {showDivider && (
+          <hr
+            className="border-0 h-px my-6"
+            style={{
+              background: "linear-gradient(to right, transparent, #8B7355 20%, #8B7355 80%, transparent)",
+            }}
+          />
+        )}
+
+        {/* Styrian flag accent */}
+        <div className="flex items-center gap-2 mb-2">
+          <div
+            className="rounded-sm flex-shrink-0"
+            style={{
+              width: 24,
+              height: 16,
+              background: "linear-gradient(to bottom, #fff 50%, #2D5A27 50%)",
+            }}
+          />
+          <h2 className="font-headline text-lg font-semibold text-styrian-green">
+            {name}
+          </h2>
+        </div>
+
+        {/* Feature Card — main local story */}
+        <div className="mb-3">
+          <ArticleCard article={featured} featured />
+        </div>
+
+        {/* Secondary stories as ListItems */}
+        {listArticles.length > 0 && (
+          <div className="bg-white rounded-sm border border-zinc-100 px-3">
+            {listArticles.map((article) => (
+              <ListItem key={article.id} article={article} />
+            ))}
+          </div>
+        )}
+      </section>
+    );
+  }
+
   return (
     <div className="max-w-2xl mx-auto">
-      {/* Hero zone */}
+      {/* Hero zone — Topmeldung */}
       {hero && <HeroArticle article={hero} />}
 
       {/* Top-Meldungen row */}
@@ -75,25 +135,29 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles }: HomepageLa
         <AdUnit zone="hero" />
       </div>
 
-      {/* Sections heading */}
+      {/* Regional Hierarchy Selector */}
+      {bezirke.length > 0 && (
+        <RegionalSelector
+          bezirke={bezirke}
+          onSelectionChange={handleSelectionChange}
+        />
+      )}
+
+      {/* "Dein Bezirk" heading */}
       <div className="px-4 pt-2 pb-1">
-        <h2 className="font-headline text-lg font-semibold text-zinc-900">
-          {hasBezirkSelection ? "Mein Bezirk" : "Alle Nachrichten"}
+        <h2 className="font-headline text-xl font-semibold text-zinc-900">
+          {hasBezirkSelection ? "Dein Bezirk" : "Alle Nachrichten"}
         </h2>
       </div>
 
       {/* Editorial sections */}
       {hasBezirkSelection ? (
-        /* Grouped by bezirk */
+        /* Grouped by bezirk — feature card + list items layout */
         <div>
           {bezirkSections.map(({ slug, name, articles }, index) => (
             <div key={slug}>
-              <BezirkSection
-                bezirkName={name}
-                articles={articles}
-                showDivider={index > 0}
-              />
-              {/* Ad every 2nd section (after sections 1, 3, 5 ...) */}
+              {renderBezirkSection(name, articles, index > 0)}
+              {/* Ad every 2nd section */}
               {(index + 1) % 2 === 0 && (
                 <div className="px-4 py-2">
                   <AdUnit zone="between-articles" />
@@ -119,7 +183,7 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles }: HomepageLa
           )}
         </div>
       ) : (
-        /* Flat grid — no bezirk selection */
+        /* Flat view — feature card + list items for all articles */
         <div>
           {isEmpty ? (
             <div className="px-4 py-8 text-center text-zinc-500">
@@ -127,18 +191,16 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles }: HomepageLa
             </div>
           ) : (
             <>
-              <BezirkSection
-                bezirkName="Alle Nachrichten"
-                articles={flatGrid}
-                showDivider={false}
-              />
+              {renderBezirkSection("Alle Nachrichten", flatGrid, false)}
 
-              {/* Remainder articles in simple card list */}
+              {/* Remainder articles in list format */}
               {flatRemainder.length > 0 && (
-                <div className="px-4 flex flex-col gap-3 pb-4">
-                  {flatRemainder.map((article) => (
-                    <ArticleCard key={article.id} article={article} />
-                  ))}
+                <div className="px-4 pb-4">
+                  <div className="bg-white rounded-sm border border-zinc-100 px-3">
+                    {flatRemainder.map((article) => (
+                      <ListItem key={article.id} article={article} />
+                    ))}
+                  </div>
                 </div>
               )}
             </>

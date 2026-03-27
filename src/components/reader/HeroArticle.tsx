@@ -35,9 +35,14 @@ export function HeroArticle({ article }: HeroArticleProps) {
 
       {/* Content: positioned at bottom */}
       <div className="relative z-10 flex flex-col justify-end min-h-[60vh] p-4 pb-6">
+        {/* Topmeldung label */}
+        <span className="inline-block self-start mb-2 px-2 py-0.5 rounded-sm font-label font-semibold uppercase text-xs tracking-wider text-cream bg-styrian-green">
+          Topmeldung
+        </span>
+
         {/* Bezirk badge */}
         {firstBezirk && (
-          <span className="inline-block self-start mb-2 px-2 py-0.5 rounded-sm font-label font-semibold uppercase text-xs text-styrian-green bg-cream">
+          <span className="inline-block self-start mb-1 px-2 py-0.5 rounded-sm font-label font-semibold uppercase text-xs text-styrian-green bg-cream">
             {firstBezirk.name}
           </span>
         )}
