@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { listBezirke } from '@/lib/content/bezirke'
 import { updateArticle } from '@/lib/admin/articles-actions'
+import { UnsplashPicker } from '@/components/admin/UnsplashPicker'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
@@ -99,6 +100,14 @@ export default async function EditArticlePage({ params }: Props) {
             </div>
           </fieldset>
         </div>
+
+        {/* Artikelbild (Unsplash) */}
+        <UnsplashPicker
+          articleId={article.id}
+          headline={article.title ?? ''}
+          currentImageUrl={article.imageUrl}
+          currentImageCredit={article.imageCredit}
+        />
 
         {/* SEO-Titel */}
         <div>
