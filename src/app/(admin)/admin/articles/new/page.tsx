@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { listBezirke } from '@/lib/content/bezirke'
 import { createManualArticleForm } from '@/lib/admin/articles-actions'
+import { UnsplashPickerNew } from '@/components/admin/UnsplashPickerNew'
 
 export default async function NewArticlePage() {
   const bezirke = await listBezirke()
@@ -64,6 +65,9 @@ export default async function NewArticlePage() {
             </div>
           </fieldset>
         </div>
+
+        {/* Artikelbild (Unsplash) */}
+        <UnsplashPickerNew />
 
         {/* SEO-Titel */}
         <div>

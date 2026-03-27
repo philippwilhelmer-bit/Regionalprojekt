@@ -26,6 +26,8 @@ export interface CreateManualArticleInput {
   metaDescription?: string
   isPinned?: boolean
   isFeatured?: boolean
+  imageUrl?: string
+  imageCredit?: string
 }
 
 export interface UpdateArticleInput {
@@ -57,7 +59,7 @@ export async function createManualArticleDb(
   db: PrismaClient,
   input: CreateManualArticleInput
 ): Promise<Article> {
-  const { title, content, bezirkIds, seoTitle, metaDescription, isPinned = false, isFeatured = false } = input
+  const { title, content, bezirkIds, seoTitle, metaDescription, isPinned = false, isFeatured = false, imageUrl, imageCredit } = input
 
   return db.article.create({
     data: {
@@ -71,6 +73,8 @@ export async function createManualArticleDb(
       publishedAt: new Date(),
       isPinned,
       isFeatured,
+      imageUrl: imageUrl || undefined,
+      imageCredit: imageCredit || undefined,
       bezirke: {
         create: bezirkIds.map((bezirkId) => ({ bezirkId })),
       },
@@ -278,6 +282,8 @@ export async function createManualArticleForm(formData: FormData): Promise<void>
     metaDescription: formData.get('metaDescription')?.toString() || undefined,
     isPinned: formData.get('isPinned') === 'on',
     isFeatured: formData.get('isFeatured') === 'on',
+    imageUrl: formData.get('imageUrl')?.toString() || undefined,
+    imageCredit: formData.get('imageCredit')?.toString() || undefined,
   })
   redirect('/admin/articles')
 }
