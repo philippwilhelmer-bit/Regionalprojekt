@@ -4,7 +4,7 @@
  * Production usage (no-arg client): functions use the singleton from src/lib/prisma.ts.
  * Test usage: pass a pgLite-backed PrismaClient as the first argument.
  */
-import type { Article, ArticleStatus, Prisma, PrismaClient } from '@prisma/client'
+import type { Article, ArticleSource, ArticleStatus, Prisma, PrismaClient } from '@prisma/client'
 import { prisma as defaultPrisma } from '../prisma'
 
 export type ArticleWithBezirke = Article & {
@@ -25,6 +25,7 @@ export type ArticleWithBezirke = Article & {
 export async function listArticles(options?: {
   bezirkId?: number
   status?: ArticleStatus
+  source?: ArticleSource
   limit?: number
   offset?: number
 }): Promise<ArticleWithBezirke[]>
@@ -33,6 +34,7 @@ export async function listArticles(
   options?: {
     bezirkId?: number
     status?: ArticleStatus
+    source?: ArticleSource
     limit?: number
     offset?: number
   }
@@ -43,28 +45,30 @@ export async function listArticles(
     | {
         bezirkId?: number
         status?: ArticleStatus
+        source?: ArticleSource
         limit?: number
         offset?: number
       },
   options?: {
     bezirkId?: number
     status?: ArticleStatus
+    source?: ArticleSource
     limit?: number
     offset?: number
   }
 ): Promise<ArticleWithBezirke[]> {
   let db: PrismaClient
-  let opts: { bezirkId?: number; status?: ArticleStatus; limit?: number; offset?: number }
+  let opts: { bezirkId?: number; status?: ArticleStatus; source?: ArticleSource; limit?: number; offset?: number }
 
   if (clientOrOptions !== null && typeof clientOrOptions === 'object' && '$connect' in clientOrOptions) {
     db = clientOrOptions as PrismaClient
     opts = options ?? {}
   } else {
     db = defaultPrisma
-    opts = (clientOrOptions as { bezirkId?: number; status?: ArticleStatus; limit?: number; offset?: number }) ?? {}
+    opts = (clientOrOptions as { bezirkId?: number; status?: ArticleStatus; source?: ArticleSource; limit?: number; offset?: number }) ?? {}
   }
 
-  const { bezirkId, status, limit = 20, offset = 0 } = opts
+  const { bezirkId, status, source, limit = 20, offset = 0 } = opts
 
   return db.article.findMany({
     where: {
@@ -72,6 +76,7 @@ export async function listArticles(
         ? { bezirke: { some: { bezirkId } } }
         : {}),
       ...(status !== undefined ? { status } : {}),
+      ...(source !== undefined ? { source } : {}),
     },
     include: {
       bezirke: {
