@@ -244,20 +244,26 @@ export async function softDelete(articleId: number): Promise<Article> {
 
 export async function togglePinForm(formData: FormData): Promise<void> {
   await requireAuth()
+  const { revalidatePath } = await import('next/cache')
   const id = Number(formData.get('id'))
   await togglePinDb(defaultPrisma, id)
+  revalidatePath('/admin/articles')
 }
 
 export async function toggleFeatureForm(formData: FormData): Promise<void> {
   await requireAuth()
+  const { revalidatePath } = await import('next/cache')
   const id = Number(formData.get('id'))
   await toggleFeatureDb(defaultPrisma, id)
+  revalidatePath('/admin/articles')
 }
 
 export async function softDeleteForm(formData: FormData): Promise<void> {
   await requireAuth()
+  const { revalidatePath } = await import('next/cache')
   const id = Number(formData.get('id'))
   await softDeleteDb(defaultPrisma, id)
+  revalidatePath('/admin/articles')
 }
 
 export async function createManualArticleForm(formData: FormData): Promise<void> {
