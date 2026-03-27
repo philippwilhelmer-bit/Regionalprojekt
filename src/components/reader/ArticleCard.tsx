@@ -82,14 +82,22 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
         (featured ? " col-span-full" : "")
       }
     >
-      {/* Gradient header */}
+      {/* Image or gradient header */}
       <div
         className={
-          "relative bg-gradient-to-br " +
-          gradientColor +
+          "relative " +
+          (article.imageUrl ? "" : "bg-gradient-to-br " + gradientColor) +
           (featured ? " aspect-video" : " aspect-square max-h-32")
         }
       >
+        {article.imageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={article.imageUrl}
+            alt={article.title ?? ""}
+            className="absolute inset-0 w-full h-full object-cover img-matte"
+          />
+        )}
         {article.isPinned && (
           <span
             className="absolute top-2 right-2 text-white"
