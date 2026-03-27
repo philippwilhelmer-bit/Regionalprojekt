@@ -74,10 +74,19 @@ export function TopMeldungenRow({ articles, heading = "Top-Meldungen" }: TopMeld
                 href={href}
                 className="flex-shrink-0 w-44 block border-b border-cream-dark pb-2"
               >
-                {/* Gradient thumbnail */}
-                <div
-                  className={`bg-gradient-to-br ${gradientColor} aspect-square max-h-28 rounded-sm mb-2`}
-                />
+                {/* Thumbnail: image or gradient fallback */}
+                {article.imageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={article.imageUrl}
+                    alt={article.title ?? ''}
+                    className="aspect-square max-h-28 w-full object-cover rounded-sm mb-2 img-matte"
+                  />
+                ) : (
+                  <div
+                    className={`bg-gradient-to-br ${gradientColor} aspect-square max-h-28 rounded-sm mb-2`}
+                  />
+                )}
 
                 {/* Headline */}
                 <h3 className="font-headline text-sm font-semibold text-zinc-900 leading-snug line-clamp-2 mb-1">
