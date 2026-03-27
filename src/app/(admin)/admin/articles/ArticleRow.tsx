@@ -55,12 +55,17 @@ export function ArticleRow({ article }: ArticleRowProps) {
   return (
     <tr className={`border-b border-gray-100 hover:bg-gray-50 ${isPending ? 'opacity-50' : ''}`}>
       <td className="px-4 py-3 text-sm text-gray-900 max-w-xs">
-        <Link
-          href={`/admin/articles/${article.id}/edit`}
-          className="hover:underline text-blue-700"
-        >
-          {title}
-        </Link>
+        <div className="flex items-center gap-2">
+          {article.imageUrl && (
+            <span className="inline-block w-2 h-2 rounded-full bg-green-400 flex-shrink-0" title="Hat Bild" />
+          )}
+          <Link
+            href={`/admin/articles/${article.id}/edit`}
+            className="hover:underline text-blue-700"
+          >
+            {title}
+          </Link>
+        </div>
       </td>
       <td className="px-4 py-3 text-sm">
         <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${statusColor}`}>
