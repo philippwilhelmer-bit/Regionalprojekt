@@ -16,7 +16,7 @@ const BEZIRK_SLUGS = [
 
 export function Footer() {
   return (
-    <footer className="bg-zinc-100 border-t border-zinc-200 px-4 py-6 text-sm text-zinc-500">
+    <footer className="bg-zinc-100 border-t border-zinc-200 px-4 pt-6 pb-24 text-sm text-zinc-500">
       <div className="max-w-3xl mx-auto space-y-4">
         <div>
           <a
