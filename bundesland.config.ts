@@ -2,7 +2,7 @@ import type { BundeslandConfig } from './src/types/bundesland'
 
 export default {
   bundesland: 'steiermark',
-  siteName: 'Ennstal Aktuell',
+  siteName: 'Steirer-News',
   tagline: 'Nachrichten aus der Steiermark',
   branding: {
     primaryColor: '#154212',

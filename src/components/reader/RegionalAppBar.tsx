@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import config from "@/../bundesland.config";
 import type { BezirkItem } from "@/types/bundesland";
 import { computeBezirkLabel } from "@/lib/bezirk-label";
@@ -56,8 +57,10 @@ export function RegionalAppBar({ bezirke }: RegionalAppBarProps) {
           </span>
         </button>
 
-        {/* Center-aligned title */}
-        <span className="font-headline italic text-white text-xl">{config.siteName}</span>
+        {/* Center-aligned title — links to homepage */}
+        <Link href="/" className="font-headline italic text-white text-xl hover:opacity-90 transition-opacity">
+          {config.siteName}
+        </Link>
 
         {/* Flag accent — right side */}
         <div className="absolute right-4 flex items-center gap-2">
