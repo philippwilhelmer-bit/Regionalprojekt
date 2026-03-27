@@ -40,10 +40,14 @@ export function UnsplashPicker({
     if (!query.trim()) return
     startTransition(async () => {
       setMessage('')
-      const images = await searchUnsplashImages(query.trim())
-      setResults(images)
-      if (images.length === 0) {
-        setMessage('Keine Ergebnisse gefunden.')
+      try {
+        const images = await searchUnsplashImages(query.trim())
+        setResults(images)
+        if (images.length === 0) {
+          setMessage('Keine Ergebnisse gefunden.')
+        }
+      } catch (err) {
+        setMessage(err instanceof Error ? err.message : 'Fehler bei der Suche.')
       }
     })
   }

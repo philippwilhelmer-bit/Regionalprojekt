@@ -21,7 +21,7 @@ export async function searchUnsplashImages(query: string): Promise<UnsplashSearc
 
   const accessKey = process.env.UNSPLASH_ACCESS_KEY
   if (!accessKey) {
-    return []
+    throw new Error('UNSPLASH_ACCESS_KEY ist nicht konfiguriert. Bitte in Vercel Environment Variables hinzufügen.')
   }
 
   const url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=6&orientation=landscape`
@@ -30,6 +30,8 @@ export async function searchUnsplashImages(query: string): Promise<UnsplashSearc
   })
 
   if (!response.ok) {
+    const body = await response.text().catch(() => '')
+    console.error(`[unsplash] HTTP ${response.status}: ${body}`)
     return []
   }
 
