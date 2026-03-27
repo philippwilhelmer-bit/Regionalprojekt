@@ -73,6 +73,23 @@ async function fetchOtsDetail(apiKey: string, otsKey: string): Promise<unknown> 
   return response.json()
 }
 
+/** Candidate field names for an image URL in the OTS detail response. */
+const CANDIDATE_IMAGE_FIELDS = ['BILD', 'IMAGE', 'FOTO', 'bild', 'image', 'foto', 'BILDURL', 'bildurl'] as const
+
+/**
+ * Extract an image URL from a detail response object.
+ * Returns the first non-empty URL string found, or undefined.
+ */
+function extractImageUrl(detail: Record<string, unknown>): string | undefined {
+  for (const field of CANDIDATE_IMAGE_FIELDS) {
+    const value = detail[field]
+    if (typeof value === 'string' && value.startsWith('http')) {
+      return value
+    }
+  }
+  return undefined
+}
+
 /**
  * Extract the body text from a detail response object.
  * Tries CANDIDATE_BODY_FIELDS in order; logs a warning and returns "" if none found.
@@ -136,6 +153,7 @@ export function createOtsAtAdapter(db?: PrismaClient): AdapterFn {
         sourceUrl: item.WEBLINK,
         publishedAt: new Date(item.ZEITSTEMPEL * 1000),
         body: extractBody(detailRecord),
+        imageUrl: extractImageUrl(detailRecord),
         rawPayload: detail,
       })
     }

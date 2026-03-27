@@ -71,6 +71,7 @@ model Article {
   isFeatured      Boolean          @default(false)
   isEilmeldung    Boolean          @default(false)
   imageUrl        String?
+  imageCredit     String?
   retryCount      Int              @default(0)
   errorMessage    String?
   createdAt       DateTime         @default(now())

@@ -21,6 +21,7 @@ import { checkCostCircuitBreaker } from './circuit-breaker'
 import { runStep1Tag } from './steps/step1-tag'
 import { runStep2Write } from './steps/step2-write'
 import { getPipelineConfig } from '../admin/pipeline-config-dal'
+import { fetchTopicImage } from '../images/unsplash'
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -166,7 +167,24 @@ export async function processArticles(
         totalInputTokens += step2.inputTokens
         totalOutputTokens += step2.outputTokens
 
-        // 5f. Write final status + content + SEO fields
+        // 5f. Fetch image — OTS/source image takes priority, Unsplash is fallback
+        let imageUrl = article.imageUrl ?? null
+        let imageCredit: string | null = null
+        if (!imageUrl) {
+          try {
+            const img = await fetchTopicImage(step2.headline)
+            if (img) {
+              imageUrl = img.url
+              imageCredit = img.credit
+            }
+          } catch (err) {
+            console.warn(
+              `[ai-pipeline] Unsplash fetch failed for article id=${article.id}: ${err instanceof Error ? err.message : String(err)}`
+            )
+          }
+        }
+
+        // 5g. Write final status + content + SEO fields + image
         const finalStatus = step1.hasNamedPerson ? 'REVIEW' : 'WRITTEN'
         await db.article.update({
           where: { id: article.id },
@@ -176,6 +194,8 @@ export async function processArticles(
             content: `${step2.lead}\n\n${step2.body}`,
             seoTitle: step2.seoTitle,
             metaDescription: step2.metaDescription,
+            ...(imageUrl ? { imageUrl } : {}),
+            ...(imageCredit ? { imageCredit } : {}),
           },
         })
 

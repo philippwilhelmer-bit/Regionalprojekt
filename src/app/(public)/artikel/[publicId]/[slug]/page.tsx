@@ -84,13 +84,20 @@ export default async function ArticlePage({ params }: Props) {
       <div className="bg-cream min-h-screen">
         {/* Hero image — full bleed, outside content column */}
         {article.imageUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={article.imageUrl}
-            alt={article.title ?? ""}
-            className="w-full object-cover max-h-[50vh]"
-            loading="eager"
-          />
+          <figure>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={article.imageUrl}
+              alt={article.title ?? ""}
+              className="w-full object-cover max-h-[50vh] img-matte"
+              loading="eager"
+            />
+            {article.imageCredit && (
+              <figcaption className="text-xs text-zinc-400 text-right px-4 py-1">
+                {article.imageCredit}
+              </figcaption>
+            )}
+          </figure>
         )}
 
         {/* Content column — constrained */}

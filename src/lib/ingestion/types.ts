@@ -7,6 +7,7 @@ export interface RawItem {
   body: string
   publishedAt: Date | null
   rawPayload: unknown
+  imageUrl?: string
 }
 
 export type AdapterFn = (source: Source) => Promise<RawItem[]>

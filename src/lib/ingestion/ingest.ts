@@ -123,6 +123,7 @@ export async function ingest(
         contentHash,
         rawPayload: item.rawPayload ?? undefined,
         publishedAt: item.publishedAt ?? undefined,
+        imageUrl: item.imageUrl ?? undefined,
       },
     })
     itemsNew++
