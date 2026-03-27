@@ -21,7 +21,7 @@ export function EditorialCard({ article, category }: EditorialCardProps) {
     : null;
 
   return (
-    <article className="bg-white rounded-sm border border-zinc-100 overflow-hidden shadow-sm">
+    <article className="bg-white rounded-sm border border-cream-dark overflow-hidden">
       {/* Image or gradient header */}
       {article.imageUrl ? (
         <Link href={href}>
@@ -30,12 +30,12 @@ export function EditorialCard({ article, category }: EditorialCardProps) {
             src={article.imageUrl}
             alt={article.title ?? ""}
             loading="lazy"
-            className="w-full h-48 object-cover"
+            className="w-full aspect-video object-cover img-matte"
           />
         </Link>
       ) : (
         <Link href={href}>
-          <div className="w-full h-32 bg-gradient-to-br from-styrian-green to-sage" />
+          <div className="w-full aspect-video bg-gradient-to-br from-styrian-green to-sage" />
         </Link>
       )}
 

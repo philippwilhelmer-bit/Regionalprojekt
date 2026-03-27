@@ -110,7 +110,7 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
 
         {/* Secondary stories as ListItems */}
         {listArticles.length > 0 && (
-          <div className="bg-white rounded-sm border border-zinc-100 px-3">
+          <div className="bg-white rounded-sm border border-cream-dark px-3">
             {listArticles.map((article) => (
               <ListItem key={article.id} article={article} />
             ))}
@@ -196,7 +196,7 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
               {/* Remainder articles in list format */}
               {flatRemainder.length > 0 && (
                 <div className="px-4 pb-4">
-                  <div className="bg-white rounded-sm border border-zinc-100 px-3">
+                  <div className="bg-white rounded-sm border border-cream-dark px-3">
                     {flatRemainder.map((article) => (
                       <ListItem key={article.id} article={article} />
                     ))}

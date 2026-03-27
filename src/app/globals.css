@@ -8,6 +8,7 @@
   --color-background: #FBFAEE;
   --color-alpine-red: #8b0000;
   --color-sage: #4a5d4e;
+  --color-cream-dark: #F5F4E8;
 
   /* Font family tokens */
   --font-headline: var(--font-newsreader), serif;
@@ -20,6 +21,10 @@
 
 body {
   font-family: var(--font-body);
+}
+
+.img-matte {
+  filter: saturate(0.9) brightness(0.97);
 }
 
 .scrollbar-none {

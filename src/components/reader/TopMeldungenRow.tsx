@@ -72,11 +72,11 @@ export function TopMeldungenRow({ articles, heading = "Top-Meldungen" }: TopMeld
               <Link
                 key={article.id}
                 href={href}
-                className="flex-shrink-0 w-44 block border-b-2 border-styrian-green pb-2"
+                className="flex-shrink-0 w-44 block border-b border-cream-dark pb-2"
               >
                 {/* Gradient thumbnail */}
                 <div
-                  className={`bg-gradient-to-br ${gradientColor} h-24 rounded-sm mb-2`}
+                  className={`bg-gradient-to-br ${gradientColor} aspect-square max-h-28 rounded-sm mb-2`}
                 />
 
                 {/* Headline */}

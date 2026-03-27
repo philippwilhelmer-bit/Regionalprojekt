@@ -24,7 +24,7 @@ export function HeroArticle({ article }: HeroArticleProps) {
           src={article.imageUrl}
           alt={article.title ?? ""}
           loading="eager"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover img-matte"
         />
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-styrian-green to-sage" />

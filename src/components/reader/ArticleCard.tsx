@@ -78,7 +78,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
     <Link
       href={href}
       className={
-        "block bg-white rounded-sm shadow-sm border border-zinc-100 overflow-hidden hover:shadow-md transition-shadow" +
+        "block bg-white rounded-sm border border-cream-dark overflow-hidden hover:bg-cream-dark/50 transition-colors" +
         (featured ? " col-span-full" : "")
       }
     >
@@ -87,7 +87,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
         className={
           "relative bg-gradient-to-br " +
           gradientColor +
-          (featured ? " h-40" : " h-24")
+          (featured ? " aspect-video" : " aspect-square max-h-32")
         }
       >
         {article.isPinned && (
