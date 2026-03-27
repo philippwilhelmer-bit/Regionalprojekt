@@ -57,7 +57,10 @@ export function ArticleRow({ article }: ArticleRowProps) {
       <td className="px-4 py-3 text-sm text-gray-900 max-w-xs">
         <div className="flex items-center gap-2">
           {article.imageUrl && (
-            <span className="inline-block w-2 h-2 rounded-full bg-green-400 flex-shrink-0" title="Hat Bild" />
+            <svg className="w-3.5 h-3.5 text-green-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" title="Hat Bild">
+              <path d="M12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z" />
+              <path fillRule="evenodd" d="M9.778 4l-1.5 2H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2h-4.278l-1.5-2H9.778zM12 16a4 4 0 100-8 4 4 0 000 8z" clipRule="evenodd" />
+            </svg>
           )}
           <Link
             href={`/admin/articles/${article.id}/edit`}
