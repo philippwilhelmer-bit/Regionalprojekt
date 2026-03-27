@@ -126,20 +126,6 @@ export function SourceCard({ source }: SourceCardProps) {
             </div>
           </div>
 
-          {/* Enabled toggle */}
-          <div>
-            <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
-              <input
-                type="checkbox"
-                name="enabled"
-                value="true"
-                defaultChecked={source.enabled}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              Quelle aktiviert
-            </label>
-          </div>
-
           <div className="flex gap-3">
             <button
               type="submit"
@@ -150,19 +136,17 @@ export function SourceCard({ source }: SourceCardProps) {
           </div>
         </form>
 
-        {/* Separate disable form */}
-        {source.enabled && (
-          <form action={updateSourceForm} className="mt-2">
-            <input type="hidden" name="id" value={source.id} />
-            <input type="hidden" name="enabled" value="false" />
-            <button
-              type="submit"
-              className="text-xs text-red-600 hover:text-red-800 underline"
-            >
-              Quelle deaktivieren
-            </button>
-          </form>
-        )}
+        {/* Toggle enabled/disabled */}
+        <form action={updateSourceForm} className="mt-2">
+          <input type="hidden" name="id" value={source.id} />
+          <input type="hidden" name="enabled" value={source.enabled ? 'false' : 'true'} />
+          <button
+            type="submit"
+            className={`text-xs underline ${source.enabled ? 'text-red-600 hover:text-red-800' : 'text-green-600 hover:text-green-800'}`}
+          >
+            {source.enabled ? 'Quelle deaktivieren' : 'Quelle aktivieren'}
+          </button>
+        </form>
       </details>
     </div>
   )
