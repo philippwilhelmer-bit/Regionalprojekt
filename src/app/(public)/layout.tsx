@@ -3,8 +3,8 @@ export const dynamic = 'force-dynamic'
 import type { Metadata } from 'next'
 import { listBezirke } from "@/lib/content/bezirke";
 import { hasEilmeldung } from "@/lib/content/articles";
-import { RegionalAppBar } from "@/components/reader/RegionalAppBar";
-import { RegionalNavBar } from "@/components/reader/RegionalNavBar";
+import { WurzelAppBar } from "@/components/reader/WurzelAppBar";
+import { WurzelNavBar } from "@/components/reader/WurzelNavBar";
 import { Footer } from "@/components/reader/Footer";
 import { CookieBanner } from "@/components/reader/CookieBanner";
 import { BezirkModal } from "@/components/reader/BezirkModal";
@@ -30,11 +30,11 @@ export default async function PublicLayout({
   return (
     <>
       <TestSiteBanner />
-      <RegionalAppBar bezirke={bezirke} />
+      <WurzelAppBar bezirke={bezirke} />
       {eilmeldungActive && <EilmeldungBanner />}
       <main className="flex-1 pb-20">{children}</main>
       <Footer />
-      <RegionalNavBar />
+      <WurzelNavBar />
       <CookieBanner />
       <BezirkModal bezirke={bezirke} />
     </>
