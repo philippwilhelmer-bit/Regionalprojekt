@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Wurzelwelt Rebrand
 status: planning
-stopped_at: Completed 26-03-PLAN.md — Wurzelwelt brand rename and mascot asset complete
-last_updated: "2026-03-28T21:20:07.406Z"
+stopped_at: Completed 26-02-PLAN.md — Reader component border migration to Wurzelwelt design language
+last_updated: "2026-03-28T21:28:34Z"
 last_activity: 2026-03-28 — Roadmap created for v2.0 (5 phases, 18 requirements mapped)
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 3
-  completed_plans: 2
-  percent: 0
+  completed_plans: 3
+  percent: 33
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 ## Current Position
 
 Phase: 26 of 30 (Design System & Brand Foundation)
-Plan: —
-Status: Ready to plan
-Last activity: 2026-03-28 — Roadmap created for v2.0 (5 phases, 18 requirements mapped)
+Plan: 02 complete
+Status: In progress
+Last activity: 2026-03-28 — Completed reader component migration to Wurzelwelt borderless design
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [███░░░░░░░] 33%
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Progress: [░░░░░░░░░░] 0%
 | v1.1 (16-20) | 10 | ~2 days | — |
 | v1.2 (21-25) | 7 | ~2 days | — |
 | Phase 26 P01 | 2 | 2 tasks | 2 files |
+| Phase 26 P02 | 7min | 2 tasks | 20 files |
 | Phase 26-design-system-brand-foundation P03 | 10min | 1 tasks | 8 files |
 | Phase 26-design-system-brand-foundation P03 | 30min | 2 tasks | 9 files |
 
@@ -65,6 +66,9 @@ Recent decisions affecting v2.0:
 - [Phase 26]: --radius-sm changed from 2px to 0.75rem as new rounded baseline for all interactive elements
 - [Phase 26-design-system-brand-foundation]: Geographic 'Ennstal' references in test fixtures preserved — these are Bezirk synonym data for Liezen region, not brand references
 - [Phase 26-design-system-brand-foundation]: Wurzelmann mascot PNG placed at public/images/wurzelmann.png via human-verify checkpoint — ready for Phase 27+ components
+- [Phase 26-02]: Functional spinner animation border preserved (border-t-primary on spin element) — only decorative borders removed
+- [Phase 26-02]: ListItem uses border-surface for row separators — tonal semantic token, not a legacy decorative border
+- [Phase 26-02]: CTA gradient pill pattern established: bg-gradient-to-br from-primary to-primary-container rounded-full
 
 ### Pending Todos
 
@@ -76,6 +80,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-28T21:20:07.404Z
-Stopped at: Completed 26-03-PLAN.md — Wurzelwelt brand rename and mascot asset complete
+Last session: 2026-03-28T21:28:34Z
+Stopped at: Completed 26-02-PLAN.md — Reader component border migration to Wurzelwelt design language
 Resume file: None
