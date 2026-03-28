@@ -8,6 +8,7 @@ import { Footer } from "@/components/reader/Footer";
 import { CookieBanner } from "@/components/reader/CookieBanner";
 import { BezirkModal } from "@/components/reader/BezirkModal";
 import { EilmeldungBanner } from "@/components/reader/EilmeldungBanner";
+import { TestSiteBanner } from "@/components/TestSiteBanner";
 
 export default async function PublicLayout({
   children,
@@ -20,6 +21,7 @@ export default async function PublicLayout({
   ]);
   return (
     <>
+      <TestSiteBanner />
       <RegionalAppBar bezirke={bezirke} />
       {eilmeldungActive && <EilmeldungBanner />}
       <main className="flex-1 pb-20">{children}</main>

@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { verifySessionCookie, SESSION_COOKIE_NAME } from '@/lib/admin/auth-node'
 import Link from 'next/link'
 import { LogoutButton } from '@/components/admin/LogoutButton'
+import { TestSiteBanner } from '@/components/TestSiteBanner'
 
 const navItems = [
   { href: '/admin/articles',   label: 'Artikel' },
@@ -18,7 +19,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect('/admin/login')
   }
   return (
-    <div className="flex h-screen bg-gray-100">
+    <>
+      <TestSiteBanner />
+      <div className="flex h-screen bg-gray-100">
       <aside className="w-56 bg-white border-r border-gray-200 flex flex-col py-6 px-4 shrink-0">
         <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-4">
           Regionencompass
@@ -37,6 +40,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <LogoutButton />
       </aside>
       <main className="flex-1 overflow-auto p-6">{children}</main>
-    </div>
+      </div>
+    </>
   )
 }
