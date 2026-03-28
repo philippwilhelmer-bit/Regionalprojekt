@@ -5,35 +5,35 @@ import type { ArticleWithBezirke } from "@/lib/content/articles";
 import { slugify } from "@/lib/reader/slug";
 
 const BEZIRK_COLORS: Record<string, string> = {
-  graz: "from-styrian-green to-[#3a6b33]",
-  "graz-umgebung": "from-[#3a6b33] to-styrian-green",
-  liezen: "from-sage to-[#5a7d54]",
-  "bruck-muerzzuschlag": "from-[#5a7d54] to-sage",
-  leoben: "from-styrian-green to-sage",
-  murau: "from-[#244d20] to-styrian-green",
-  murtal: "from-sage to-styrian-green",
+  graz: "from-primary to-[#3a6b33]",
+  "graz-umgebung": "from-[#3a6b33] to-primary",
+  liezen: "from-secondary to-[#5a7d54]",
+  "bruck-muerzzuschlag": "from-[#5a7d54] to-secondary",
+  leoben: "from-primary to-secondary",
+  murau: "from-[#244d20] to-primary",
+  murtal: "from-secondary to-primary",
   voitsberg: "from-[#4a6e44] to-[#3a6b33]",
-  deutschlandsberg: "from-styrian-green to-[#4a6e44]",
+  deutschlandsberg: "from-primary to-[#4a6e44]",
   weiz: "from-[#3a6b33] to-[#5a7d54]",
   "hartberg-fuerstenfeld": "from-[#5a7d54] to-[#3a6b33]",
   suedoststeiermark: "from-[#244d20] to-[#3a6b33]",
-  leibnitz: "from-sage to-[#244d20]",
+  leibnitz: "from-secondary to-[#244d20]",
 };
 
 const BEZIRK_BADGE_COLORS: Record<string, string> = {
-  graz: "text-styrian-green bg-cream",
-  "graz-umgebung": "text-styrian-green bg-cream",
-  liezen: "text-sage bg-cream",
-  "bruck-muerzzuschlag": "text-sage bg-cream",
-  leoben: "text-styrian-green bg-cream",
-  murau: "text-[#244d20] bg-cream",
-  murtal: "text-sage bg-cream",
-  voitsberg: "text-styrian-green bg-cream",
-  deutschlandsberg: "text-styrian-green bg-cream",
-  weiz: "text-[#3a6b33] bg-cream",
-  "hartberg-fuerstenfeld": "text-sage bg-cream",
-  suedoststeiermark: "text-[#244d20] bg-cream",
-  leibnitz: "text-sage bg-cream",
+  graz: "text-primary bg-background",
+  "graz-umgebung": "text-primary bg-background",
+  liezen: "text-secondary bg-background",
+  "bruck-muerzzuschlag": "text-secondary bg-background",
+  leoben: "text-primary bg-background",
+  murau: "text-[#244d20] bg-background",
+  murtal: "text-secondary bg-background",
+  voitsberg: "text-primary bg-background",
+  deutschlandsberg: "text-primary bg-background",
+  weiz: "text-[#3a6b33] bg-background",
+  "hartberg-fuerstenfeld": "text-secondary bg-background",
+  suedoststeiermark: "text-[#244d20] bg-background",
+  leibnitz: "text-secondary bg-background",
 };
 
 interface TopMeldungenRowProps {
@@ -44,10 +44,9 @@ interface TopMeldungenRowProps {
 export function TopMeldungenRow({ articles, heading = "Top-Meldungen" }: TopMeldungenRowProps) {
   return (
     <section className="py-3">
-      {/* Section label with thin divider */}
-      <div className="px-4">
-        <div className="border-t border-sage/20 mb-2" />
-        <span className="font-label font-semibold uppercase tracking-wide text-xs text-styrian-green">
+      {/* Section label */}
+      <div className="px-[var(--spacing-gutter)]">
+        <span className="font-label font-semibold uppercase tracking-wide text-xs text-primary">
           {heading}
         </span>
       </div>
@@ -55,24 +54,24 @@ export function TopMeldungenRow({ articles, heading = "Top-Meldungen" }: TopMeld
       {/* Horizontal scroll container with right-edge fade */}
       <div className="relative mt-2">
         <div
-          className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-none"
+          className="flex gap-3 overflow-x-auto px-[var(--spacing-gutter)] pb-3 scrollbar-none"
           style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
         >
           {articles.map((article) => {
             const firstBezirk = article.bezirke[0]?.bezirk;
             const gradientColor = firstBezirk
-              ? (BEZIRK_COLORS[firstBezirk.slug] ?? "from-sage to-[#5a7d54]")
-              : "from-sage to-[#5a7d54]";
+              ? (BEZIRK_COLORS[firstBezirk.slug] ?? "from-secondary to-[#5a7d54]")
+              : "from-secondary to-[#5a7d54]";
             const badgeColor = firstBezirk
-              ? (BEZIRK_BADGE_COLORS[firstBezirk.slug] ?? "text-sage bg-cream")
-              : "text-sage bg-cream";
+              ? (BEZIRK_BADGE_COLORS[firstBezirk.slug] ?? "text-secondary bg-background")
+              : "text-secondary bg-background";
             const href = `/artikel/${article.publicId}/${slugify(article.title ?? "artikel")}`;
 
             return (
               <Link
                 key={article.id}
                 href={href}
-                className="flex-shrink-0 w-44 block border-b border-cream-dark pb-2"
+                className="flex-shrink-0 w-44 block pb-2"
               >
                 {/* Thumbnail: image or gradient fallback */}
                 {article.imageUrl ? (
@@ -107,7 +106,7 @@ export function TopMeldungenRow({ articles, heading = "Top-Meldungen" }: TopMeld
         </div>
 
         {/* Right-edge fade hint */}
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-cream to-transparent z-10" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-10" />
       </div>
     </section>
   );

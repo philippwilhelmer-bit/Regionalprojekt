@@ -110,7 +110,7 @@ export function ArticleFeed({ initialArticles }: ArticleFeedProps) {
           </p>
           <button
             onClick={clearSelection}
-            className="text-blue-600 underline text-sm hover:text-blue-700"
+            className="text-primary underline text-sm hover:text-secondary"
           >
             Alle Nachrichten anzeigen
           </button>
@@ -134,10 +134,10 @@ export function ArticleFeed({ initialArticles }: ArticleFeedProps) {
         ))}
       </div>
 
-      {/* Loading spinner */}
+      {/* Loading spinner — functional border kept as-is */}
       {loading && (
         <div className="flex justify-center py-6" aria-label="Lädt…">
-          <div className="w-6 h-6 border-2 border-zinc-300 border-t-blue-600 rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-zinc-300 border-t-primary rounded-full animate-spin" />
         </div>
       )}
 

@@ -23,7 +23,7 @@ export function EilmeldungBanner() {
   if (!visible) return null;
 
   return (
-    <div className="sticky top-[60px] z-30 bg-alpine-red flex items-center justify-between px-4 py-2">
+    <div className="sticky top-[60px] z-30 bg-accent flex items-center justify-between px-4 py-2">
       <span className="font-label font-bold text-white uppercase tracking-widest text-sm">
         EILMELDUNG
       </span>

@@ -63,7 +63,7 @@ export function RegionalSelector({
   }
 
   return (
-    <div className="px-4 py-3">
+    <div className="px-[var(--spacing-gutter)] py-3">
       {/* Breadcrumb navigation */}
       <nav className="flex items-center gap-1 text-xs text-zinc-400 mb-3">
         <button
@@ -71,8 +71,8 @@ export function RegionalSelector({
           className={
             "transition-colors " +
             (level === "bundesland"
-              ? "text-styrian-green font-semibold"
-              : "hover:text-styrian-green")
+              ? "text-primary font-semibold"
+              : "hover:text-primary")
           }
         >
           {bundeslandName}
@@ -82,7 +82,7 @@ export function RegionalSelector({
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-            <span className="text-styrian-green font-semibold">Bezirk</span>
+            <span className="text-primary font-semibold">Bezirk</span>
           </>
         )}
       </nav>
@@ -90,7 +90,7 @@ export function RegionalSelector({
       {level === "bundesland" ? (
         <button
           onClick={drillDown}
-          className="w-full flex items-center justify-between py-3 px-4 bg-white border border-zinc-200 rounded-sm hover:border-styrian-green transition-colors"
+          className="w-full flex items-center justify-between py-3 px-4 bg-surface-elevated rounded-sm shadow-sm hover:bg-surface transition-colors"
         >
           <div className="flex items-center gap-3">
             {/* Styrian flag icon */}
@@ -117,10 +117,10 @@ export function RegionalSelector({
                 key={bezirk.slug}
                 onClick={() => selectBezirk(bezirk.slug)}
                 className={
-                  "py-1.5 px-3 rounded-sm border text-xs font-medium transition-colors " +
+                  "py-1.5 px-3 rounded-sm text-xs font-medium transition-colors " +
                   (isSelected
-                    ? "border-styrian-green bg-cream text-styrian-green"
-                    : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-400")
+                    ? "bg-primary/10 text-primary"
+                    : "bg-surface-elevated text-zinc-600 shadow-sm hover:bg-surface")
                 }
               >
                 {bezirk.name}

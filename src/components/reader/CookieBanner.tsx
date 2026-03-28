@@ -44,7 +44,7 @@ export function CookieBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-16 inset-x-0 z-50 bg-white border-t border-zinc-200 px-4 py-3 flex flex-col sm:flex-row gap-3 items-start sm:items-center shadow-lg">
+    <div className="fixed bottom-16 inset-x-0 z-50 bg-surface-elevated shadow-lg px-4 py-3 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
       <p className="flex-1 text-sm text-zinc-700">
         Wir verwenden Cookies für personalisierte Werbung.{" "}
         <a
@@ -57,13 +57,13 @@ export function CookieBanner() {
       <div className="flex gap-2 shrink-0">
         <button
           onClick={handleAccept}
-          className="px-4 py-1.5 rounded-sm bg-zinc-900 text-white text-sm font-medium hover:bg-zinc-700 transition-colors"
+          className="px-4 py-1.5 rounded-full bg-gradient-to-br from-primary to-primary-container text-white text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
         >
           Akzeptieren
         </button>
         <button
           onClick={handleReject}
-          className="px-4 py-1.5 rounded-sm border border-zinc-300 text-zinc-700 text-sm font-medium hover:bg-zinc-50 transition-colors"
+          className="px-4 py-1.5 rounded-sm bg-surface text-zinc-700 text-sm font-medium shadow-sm hover:bg-surface-elevated transition-colors"
         >
           Nur notwendige Cookies
         </button>

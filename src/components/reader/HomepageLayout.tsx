@@ -78,14 +78,9 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
     const listArticles = rest.slice(0, 4);
 
     return (
-      <section className="px-4 py-4" key={name}>
+      <section className="px-[var(--spacing-gutter)] py-[var(--spacing-section)]" key={name}>
         {showDivider && (
-          <hr
-            className="border-0 h-px my-6"
-            style={{
-              background: "linear-gradient(to right, transparent, #8B7355 20%, #8B7355 80%, transparent)",
-            }}
-          />
+          <div className="h-px bg-surface mb-[var(--spacing-section)]" aria-hidden="true" />
         )}
 
         {/* Styrian flag accent */}
@@ -98,7 +93,7 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
               background: "linear-gradient(to bottom, #fff 50%, #2D5A27 50%)",
             }}
           />
-          <h2 className="font-headline text-lg font-semibold text-styrian-green">
+          <h2 className="font-headline text-lg font-semibold text-primary">
             {name}
           </h2>
         </div>
@@ -110,7 +105,7 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
 
         {/* Secondary stories as ListItems */}
         {listArticles.length > 0 && (
-          <div className="bg-white rounded-sm border border-cream-dark px-3">
+          <div className="bg-surface-elevated rounded-sm shadow-sm px-3">
             {listArticles.map((article) => (
               <ListItem key={article.id} article={article} />
             ))}
@@ -121,17 +116,19 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto bg-background">
       {/* Hero zone — Topmeldung */}
       {hero && <HeroArticle article={hero} />}
 
       {/* Top-Meldungen row */}
       {filteredPinned.length > 0 && (
-        <TopMeldungenRow articles={filteredPinned} />
+        <section className="bg-surface py-[var(--spacing-section)]">
+          <TopMeldungenRow articles={filteredPinned} />
+        </section>
       )}
 
       {/* Ad slot between top-stories and editorial sections */}
-      <div className="px-4 pb-4">
+      <div className="px-[var(--spacing-gutter)] pb-4">
         <AdUnit zone="hero" />
       </div>
 
@@ -144,7 +141,7 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
       )}
 
       {/* "Dein Bezirk" heading */}
-      <div className="px-4 pt-2 pb-1">
+      <div className="px-[var(--spacing-gutter)] pt-2 pb-1">
         <h2 className="font-headline text-xl font-semibold text-zinc-900">
           {hasBezirkSelection ? "Dein Bezirk" : "Alle Nachrichten"}
         </h2>
@@ -155,11 +152,11 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
         /* Grouped by bezirk — feature card + list items layout */
         <div>
           {bezirkSections.map(({ slug, name, articles }, index) => (
-            <div key={slug}>
-              {renderBezirkSection(name, articles, index > 0)}
+            <div key={slug} className={index % 2 === 0 ? "bg-background" : "bg-surface"}>
+              {renderBezirkSection(name, articles, false)}
               {/* Ad every 2nd section */}
               {(index + 1) % 2 === 0 && (
-                <div className="px-4 py-2">
+                <div className="px-[var(--spacing-gutter)] py-2">
                   <AdUnit zone="between-articles" />
                 </div>
               )}
@@ -168,14 +165,14 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
 
           {/* Empty state for bezirk filter */}
           {bezirkSections.length === 0 && (
-            <div className="px-4 py-8 text-center text-zinc-500">
+            <div className="px-[var(--spacing-gutter)] py-8 text-center text-zinc-500">
               <p className="mb-3">Noch keine Nachrichten für deinen Bezirk.</p>
               <button
                 onClick={() => {
                   localStorage.removeItem("bezirk_selection");
                   setSelectedSlugs([]);
                 }}
-                className="text-sm text-styrian-green underline"
+                className="text-sm text-primary underline"
               >
                 Bezirksauswahl zurücksetzen
               </button>
@@ -186,17 +183,19 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
         /* Flat view — feature card + list items for all articles */
         <div>
           {isEmpty ? (
-            <div className="px-4 py-8 text-center text-zinc-500">
+            <div className="px-[var(--spacing-gutter)] py-8 text-center text-zinc-500">
               <p>Noch keine Nachrichten.</p>
             </div>
           ) : (
             <>
-              {renderBezirkSection("Alle Nachrichten", flatGrid, false)}
+              <div className="bg-background">
+                {renderBezirkSection("Alle Nachrichten", flatGrid, false)}
+              </div>
 
               {/* Remainder articles in list format */}
               {flatRemainder.length > 0 && (
-                <div className="px-4 pb-4">
-                  <div className="bg-white rounded-sm border border-cream-dark px-3">
+                <div className="px-[var(--spacing-gutter)] pb-4 bg-surface">
+                  <div className="bg-surface-elevated rounded-sm shadow-sm px-3">
                     {flatRemainder.map((article) => (
                       <ListItem key={article.id} article={article} />
                     ))}

@@ -21,7 +21,7 @@ export function EditorialCard({ article, category }: EditorialCardProps) {
     : null;
 
   return (
-    <article className="bg-white rounded-sm border border-cream-dark overflow-hidden">
+    <article className="bg-surface-elevated rounded-sm shadow-sm overflow-hidden">
       {/* Image or gradient header */}
       {article.imageUrl ? (
         <Link href={href}>
@@ -35,14 +35,14 @@ export function EditorialCard({ article, category }: EditorialCardProps) {
         </Link>
       ) : (
         <Link href={href}>
-          <div className="w-full aspect-video bg-gradient-to-br from-styrian-green to-sage" />
+          <div className="w-full aspect-video bg-gradient-to-br from-primary to-secondary" />
         </Link>
       )}
 
       {/* Card body */}
       <div className="p-4">
-        {/* Category label — uppercase Work Sans */}
-        <span className="font-label font-semibold uppercase tracking-wider text-xs text-styrian-green">
+        {/* Category label — uppercase Jakarta Sans */}
+        <span className="font-label font-semibold uppercase tracking-wider text-xs text-primary">
           {categoryLabel}
         </span>
 
@@ -68,7 +68,7 @@ export function EditorialCard({ article, category }: EditorialCardProps) {
 
           <Link
             href={href}
-            className="inline-flex items-center gap-1 text-sm font-medium text-styrian-green hover:text-[#244d20] transition-colors"
+            className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-secondary transition-colors"
           >
             Weiterlesen
             <svg

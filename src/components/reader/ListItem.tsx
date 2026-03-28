@@ -16,7 +16,7 @@ export function ListItem({ article }: ListItemProps) {
   return (
     <Link
       href={href}
-      className="flex items-start gap-3 py-3 border-b border-cream-dark last:border-b-0 hover:bg-cream-dark/50 transition-colors"
+      className="flex items-start gap-3 py-3 border-b border-surface last:border-b-0 hover:bg-surface/50 transition-colors"
     >
       <div className="flex-1 min-w-0">
         <h3 className="font-headline text-sm font-semibold text-zinc-900 leading-snug line-clamp-2">
@@ -24,7 +24,7 @@ export function ListItem({ article }: ListItemProps) {
         </h3>
         <div className="flex items-center gap-2 mt-1">
           {firstBezirk && (
-            <span className="text-xs font-medium text-styrian-green">
+            <span className="text-xs font-medium text-primary">
               {firstBezirk.name}
             </span>
           )}

@@ -3,35 +3,35 @@ import type { ArticleWithBezirke } from "@/lib/content/articles";
 import { slugify } from "@/lib/reader/slug";
 
 const BEZIRK_COLORS: Record<string, string> = {
-  graz: "from-styrian-green to-[#3a6b33]",
-  "graz-umgebung": "from-[#3a6b33] to-styrian-green",
-  liezen: "from-sage to-[#5a7d54]",
-  "bruck-muerzzuschlag": "from-[#5a7d54] to-sage",
-  leoben: "from-styrian-green to-sage",
-  murau: "from-[#244d20] to-styrian-green",
-  murtal: "from-sage to-styrian-green",
+  graz: "from-primary to-[#3a6b33]",
+  "graz-umgebung": "from-[#3a6b33] to-primary",
+  liezen: "from-secondary to-[#5a7d54]",
+  "bruck-muerzzuschlag": "from-[#5a7d54] to-secondary",
+  leoben: "from-primary to-secondary",
+  murau: "from-[#244d20] to-primary",
+  murtal: "from-secondary to-primary",
   voitsberg: "from-[#4a6e44] to-[#3a6b33]",
-  deutschlandsberg: "from-styrian-green to-[#4a6e44]",
+  deutschlandsberg: "from-primary to-[#4a6e44]",
   weiz: "from-[#3a6b33] to-[#5a7d54]",
   "hartberg-fuerstenfeld": "from-[#5a7d54] to-[#3a6b33]",
   suedoststeiermark: "from-[#244d20] to-[#3a6b33]",
-  leibnitz: "from-sage to-[#244d20]",
+  leibnitz: "from-secondary to-[#244d20]",
 };
 
 const BEZIRK_BADGE_COLORS: Record<string, string> = {
-  graz: "text-styrian-green bg-cream",
-  "graz-umgebung": "text-styrian-green bg-cream",
-  liezen: "text-sage bg-cream",
-  "bruck-muerzzuschlag": "text-sage bg-cream",
-  leoben: "text-styrian-green bg-cream",
-  murau: "text-[#244d20] bg-cream",
-  murtal: "text-sage bg-cream",
-  voitsberg: "text-styrian-green bg-cream",
-  deutschlandsberg: "text-styrian-green bg-cream",
-  weiz: "text-[#3a6b33] bg-cream",
-  "hartberg-fuerstenfeld": "text-sage bg-cream",
-  suedoststeiermark: "text-[#244d20] bg-cream",
-  leibnitz: "text-sage bg-cream",
+  graz: "text-primary bg-background",
+  "graz-umgebung": "text-primary bg-background",
+  liezen: "text-secondary bg-background",
+  "bruck-muerzzuschlag": "text-secondary bg-background",
+  leoben: "text-primary bg-background",
+  murau: "text-[#244d20] bg-background",
+  murtal: "text-secondary bg-background",
+  voitsberg: "text-primary bg-background",
+  deutschlandsberg: "text-primary bg-background",
+  weiz: "text-[#3a6b33] bg-background",
+  "hartberg-fuerstenfeld": "text-secondary bg-background",
+  suedoststeiermark: "text-[#244d20] bg-background",
+  leibnitz: "text-secondary bg-background",
 };
 
 export function formatRelativeTime(date: Date): string {
@@ -62,8 +62,8 @@ interface ArticleCardProps {
 export function ArticleCard({ article, featured = false }: ArticleCardProps) {
   const firstBezirk = article.bezirke[0]?.bezirk;
   const gradientColor = firstBezirk
-    ? (BEZIRK_COLORS[firstBezirk.slug] ?? "from-sage to-[#5a7d54]")
-    : "from-sage to-[#5a7d54]";
+    ? (BEZIRK_COLORS[firstBezirk.slug] ?? "from-secondary to-[#5a7d54]")
+    : "from-secondary to-[#5a7d54]";
 
   const articleSlug = slugify(article.title ?? "artikel");
   const href = `/artikel/${article.publicId}/${articleSlug}`;
@@ -78,7 +78,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
     <Link
       href={href}
       className={
-        "block bg-white rounded-sm border border-cream-dark overflow-hidden hover:bg-cream-dark/50 transition-colors" +
+        "block bg-surface-elevated rounded-sm shadow-sm overflow-hidden hover:bg-surface transition-colors" +
         (featured ? " col-span-full" : "")
       }
     >
@@ -146,7 +146,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
                 className={
                   "inline-block text-xs px-2 py-0.5 rounded-sm font-medium " +
                   (BEZIRK_BADGE_COLORS[bezirk.slug] ??
-                    "text-sage bg-cream")
+                    "text-secondary bg-background")
                 }
               >
                 {bezirk.name}

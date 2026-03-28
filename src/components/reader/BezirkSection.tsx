@@ -15,18 +15,13 @@ export function BezirkSection({ bezirkName, articles, showDivider = false }: Bez
   const sidebarArticles = rest.slice(0, 2);
 
   return (
-    <section className="px-4 py-4">
-      {/* Wood-textured divider */}
+    <section className="px-[var(--spacing-gutter)] py-4">
+      {/* Tonal spacing divider — no visible line */}
       {showDivider && (
-        <hr
-          className="border-0 h-px my-6"
-          style={{
-            background: "linear-gradient(to right, transparent, #8B7355 20%, #8B7355 80%, transparent)",
-          }}
-        />
+        <div className="h-px bg-surface my-6" aria-hidden="true" />
       )}
 
-      {/* Styrian flag accent: white top half, styrian-green bottom half */}
+      {/* Styrian flag accent: white top half, primary bottom half */}
       <div
         className="mb-2 rounded-sm"
         style={{
@@ -37,7 +32,7 @@ export function BezirkSection({ bezirkName, articles, showDivider = false }: Bez
       />
 
       {/* Section heading */}
-      <h2 className="font-headline font-semibold text-styrian-green text-lg mb-3">
+      <h2 className="font-headline font-semibold text-primary text-lg mb-3">
         {bezirkName}
       </h2>
 

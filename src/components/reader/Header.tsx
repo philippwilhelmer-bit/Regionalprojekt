@@ -37,7 +37,7 @@ export function Header({ bezirke }: { bezirke: BezirkItem[] }) {
       />
 
       {/* HDR-02: Dark green editorial header */}
-      <header className="bg-styrian-green px-4 h-14 flex items-center justify-between">
+      <header className="bg-primary px-4 h-14 flex items-center justify-between">
         <span className="font-headline italic text-white text-xl">{config.siteName}</span>
 
         <div className="flex items-center gap-3">

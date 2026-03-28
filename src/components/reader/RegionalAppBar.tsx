@@ -41,7 +41,7 @@ export function RegionalAppBar({ bezirke }: RegionalAppBarProps) {
       />
 
       {/* App bar */}
-      <header className="bg-styrian-green px-4 h-14 flex items-center justify-center relative">
+      <header className="bg-primary px-4 h-14 flex items-center justify-center relative">
         {/* Location label — left-aligned */}
         <button
           onClick={handleBezirkClick}

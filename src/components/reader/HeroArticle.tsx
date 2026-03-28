@@ -27,7 +27,7 @@ export function HeroArticle({ article }: HeroArticleProps) {
           className="absolute inset-0 w-full h-full object-cover img-matte"
         />
       ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-styrian-green to-sage" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary" />
       )}
 
       {/* Gradient overlay for text legibility */}
@@ -36,13 +36,13 @@ export function HeroArticle({ article }: HeroArticleProps) {
       {/* Content: positioned at bottom */}
       <div className="relative z-10 flex flex-col justify-end min-h-[60vh] p-4 pb-6">
         {/* Topmeldung label */}
-        <span className="inline-block self-start mb-2 px-2 py-0.5 rounded-sm font-label font-semibold uppercase text-xs tracking-wider text-cream bg-styrian-green">
+        <span className="inline-block self-start mb-2 px-2 py-0.5 rounded-sm font-label font-semibold uppercase text-xs tracking-wider text-background bg-primary">
           Topmeldung
         </span>
 
         {/* Bezirk badge */}
         {firstBezirk && (
-          <span className="inline-block self-start mb-1 px-2 py-0.5 rounded-sm font-label font-semibold uppercase text-xs text-styrian-green bg-cream">
+          <span className="inline-block self-start mb-1 px-2 py-0.5 rounded-sm font-label font-semibold uppercase text-xs text-primary bg-background">
             {firstBezirk.name}
           </span>
         )}
