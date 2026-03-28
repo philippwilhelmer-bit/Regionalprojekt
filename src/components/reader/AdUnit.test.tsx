@@ -72,4 +72,10 @@ describe('AdUnit Server wrapper', () => {
     expect(result).not.toBeNull()
     expect(result).toBeTruthy()
   })
+
+  it('returns null when NEXT_PUBLIC_IS_TEST_SITE is true', () => {
+    process.env.NEXT_PUBLIC_IS_TEST_SITE = 'true'
+    const result = AdUnit({ zone: 'hero' })
+    expect(result).toBeNull()
+  })
 })

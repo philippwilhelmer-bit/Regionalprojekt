@@ -9,6 +9,7 @@ interface AdUnitProps {
 }
 
 export function AdUnit({ zone }: AdUnitProps) {
+  if (process.env.NEXT_PUBLIC_IS_TEST_SITE === 'true') return null
   if (!config.features.ads) return null
 
   const zoneConfig = config.adZones.find(z => z.id === zone)
