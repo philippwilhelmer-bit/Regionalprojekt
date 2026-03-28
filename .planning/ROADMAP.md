@@ -77,7 +77,10 @@ Plans:
   3. Page source on any reader page contains `<meta name="robots" content="noindex, nofollow">`
   4. `GET /robots.txt` on the Railway URL returns `Disallow: /`
   5. `GET /sitemap.xml` on the Railway URL returns an empty or minimal response with no article URLs
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 22-01-PLAN.md — Create TestSiteBanner component and wire into both layouts
+- [ ] 22-02-PLAN.md — SEO suppression (robots.txt, sitemap, noindex) and AdSense gating
 
 ## Progress
 
@@ -86,4 +89,4 @@ Plans:
 | 1-15 | v1.0 | 52/52 | Complete | 2026-03-25 |
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21. Railway Infrastructure | 1/2 | In Progress|  | - |
-| 22. Test Mode Implementation | v1.2 | 0/TBD | Not started | - |
+| 22. Test Mode Implementation | v1.2 | 0/2 | Not started | - |
