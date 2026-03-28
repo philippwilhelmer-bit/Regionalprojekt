@@ -63,7 +63,7 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
 **Milestone Goal:** Full visual rebrand from "Ennstal Aktuell" to "Wurzelwelt" — new brand identity with Wurzelmann mascot, "Modern Mountain Folklore" design system, redesigned homepage components, and CMS restyling.
 
 - [x] **Phase 26: Design System & Brand Foundation** - New color palette, typography, icons, spacing, naming, mascot asset (completed 2026-03-28)
-- [ ] **Phase 27: App Chrome** - WurzelAppBar and WurzelNavBar replacing current header and bottom nav
+- [x] **Phase 27: App Chrome** - WurzelAppBar and WurzelNavBar replacing current header and bottom nav (completed 2026-03-28)
 - [ ] **Phase 28: Homepage Components** - MascotGreeting, Topmeldung, RegionalEditorialCard, Mein Bezirk section, tonal section separation
 - [ ] **Phase 29: Article Detail** - Article detail page restyled with new palette, typography, and spacing
 - [ ] **Phase 30: CMS Admin Restyling** - Admin pages restyled with Wurzelwelt brand tokens
@@ -95,7 +95,7 @@ Plans:
   1. The header shows "WURZELWELT" in bold uppercase Newsreader centered on the bar with the Wurzelmann avatar beside it
   2. The bottom navigation has exactly 4 tabs, each using rounded Material Symbols icons, with the active tab clearly indicated using the Wurzelwelt accent treatment
   3. Both the app bar and bottom nav are visible on every reader page (homepage, article detail, search)
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 27-01-PLAN.md — WurzelAppBar + WurzelNavBar components and layout wiring
@@ -140,7 +140,7 @@ Plans:
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26. Design System & Brand Foundation | v2.0 | Complete    | 2026-03-28 | 2026-03-28 |
-| 27. App Chrome | v2.0 | 0/1 | Planned | - |
+| 27. App Chrome | 1/1 | Complete   | 2026-03-28 | - |
 | 28. Homepage Components | v2.0 | 0/TBD | Not started | - |
 | 29. Article Detail | v2.0 | 0/TBD | Not started | - |
 | 30. CMS Admin Restyling | v2.0 | 0/TBD | Not started | - |

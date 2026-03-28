@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Wurzelwelt Rebrand
 status: executing
-stopped_at: Completed 26-02-PLAN.md — Reader component border migration to Wurzelwelt design language
-last_updated: "2026-03-28T21:42:54.024Z"
+stopped_at: "Completed 27-01 tasks 1-2, awaiting Task 3 checkpoint:human-verify for visual approval"
+last_updated: "2026-03-28T21:58:50.776Z"
 last_activity: 2026-03-28 — Completed reader component migration to Wurzelwelt borderless design
 progress:
   total_phases: 5
-  completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  completed_phases: 2
+  total_plans: 4
+  completed_plans: 4
   percent: 33
 ---
 
@@ -50,6 +50,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 26 P02 | 7min | 2 tasks | 20 files |
 | Phase 26-design-system-brand-foundation P03 | 10min | 1 tasks | 8 files |
 | Phase 26-design-system-brand-foundation P03 | 30min | 2 tasks | 9 files |
+| Phase 27-app-chrome P01 | 5min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,8 @@ Recent decisions affecting v2.0:
 - [Phase 26-02]: Functional spinner animation border preserved (border-t-primary on spin element) — only decorative borders removed
 - [Phase 26-02]: ListItem uses border-surface for row separators — tonal semantic token, not a legacy decorative border
 - [Phase 26-02]: CTA gradient pill pattern established: bg-gradient-to-br from-primary to-primary-container rounded-full
+- [Phase 27-app-chrome]: WurzelAppBar: no Styrian flag stripe — Wurzelwelt brand replaces regional flag accent
+- [Phase 27-app-chrome]: WurzelNavBar: active state uses bg-accent (terracotta #9F411E) instead of bg-primary
 
 ### Pending Todos
 
@@ -80,6 +83,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-28T21:28:34Z
-Stopped at: Completed 26-02-PLAN.md — Reader component border migration to Wurzelwelt design language
+Last session: 2026-03-28T21:58:50.774Z
+Stopped at: Completed 27-01 tasks 1-2, awaiting Task 3 checkpoint:human-verify for visual approval
 Resume file: None
