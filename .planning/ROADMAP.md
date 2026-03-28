@@ -121,6 +121,9 @@ Plans:
   2. DEPLOY-01/02/03 marked as Complete in REQUIREMENTS.md
   3. AdUnit.tsx returns null when NEXT_PUBLIC_IS_TEST_SITE is active (no cosmetic placeholders)
   4. All 9/9 v1.2 requirements satisfied
+**Plans:** 1 plan
+Plans:
+- [ ] 25-01-PLAN.md — Fix AdUnit.tsx test-mode gap, create VERIFICATION.md for Phases 21/23, close all DEPLOY requirements
 
 ## Progress
 
@@ -132,4 +135,4 @@ Plans:
 | 22. Test Mode Implementation | 2/2 | Complete    | 2026-03-28 | - |
 | 23. Deployment Verification | 1/1 | Complete | 2026-03-28 | - |
 | 24. Admin Login Banner Fix | 1/1 | Complete    | 2026-03-28 | - |
-| 25. Deployment Verification & Requirements Closure | 0/0 | Pending | - | - |
+| 25. Deployment Verification & Requirements Closure | 0/1 | Planned | - | - |
