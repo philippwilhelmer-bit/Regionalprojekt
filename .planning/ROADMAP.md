@@ -95,7 +95,10 @@ Plans:
   1. The header shows "WURZELWELT" in bold uppercase Newsreader centered on the bar with the Wurzelmann avatar beside it
   2. The bottom navigation has exactly 4 tabs, each using rounded Material Symbols icons, with the active tab clearly indicated using the Wurzelwelt accent treatment
   3. Both the app bar and bottom nav are visible on every reader page (homepage, article detail, search)
-**Plans**: TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 27-01-PLAN.md — WurzelAppBar + WurzelNavBar components and layout wiring
 
 ### Phase 28: Homepage Components
 **Goal**: The homepage delivers the full Wurzelwelt editorial experience — mascot greeting, featured top story with gradient overlay, regional editorial cards, a prioritized Mein Bezirk section, and tonal section alternation.
@@ -137,7 +140,7 @@ Plans:
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26. Design System & Brand Foundation | v2.0 | Complete    | 2026-03-28 | 2026-03-28 |
-| 27. App Chrome | v2.0 | 0/TBD | Not started | - |
+| 27. App Chrome | v2.0 | 0/1 | Planned | - |
 | 28. Homepage Components | v2.0 | 0/TBD | Not started | - |
 | 29. Article Detail | v2.0 | 0/TBD | Not started | - |
 | 30. CMS Admin Restyling | v2.0 | 0/TBD | Not started | - |
