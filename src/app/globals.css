@@ -1,22 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  /* Color tokens */
-  --color-styrian-green: #2D5A27;
-  --color-cream: #fbfaee;
-  --color-primary: #2D5A27;
-  --color-background: #FBFAEE;
-  --color-alpine-red: #8b0000;
-  --color-sage: #4a5d4e;
-  --color-cream-dark: #F5F4E8;
+  /* Color tokens — Wurzelwelt semantic palette */
+  --color-primary: #1B2D18;
+  --color-secondary: #4A5D23;
+  --color-accent: #9F411E;
+  --color-background: #FCF9EF;
+  --color-text: #071806;
+  --color-surface: #F6F4EA;
+  --color-surface-elevated: #FFFFFF;
+  --color-primary-container: #4A5D23;
 
   /* Font family tokens */
   --font-headline: var(--font-newsreader), serif;
-  --font-body: var(--font-inter), sans-serif;
-  --font-label: var(--font-work-sans), sans-serif;
+  --font-body: var(--font-jakarta), sans-serif;
+  --font-label: var(--font-jakarta), sans-serif;
 
-  /* Border radius override */
-  --radius-sm: 2px;
+  /* Border radius — new baseline for interactive elements */
+  --radius-sm: 0.75rem;
+
+  /* Spacing — organic scale */
+  --spacing-gutter: 1.7rem;
+  --spacing-section: 4rem;
 }
 
 body {
