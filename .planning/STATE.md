@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Test Deployment
 status: planning
-stopped_at: Completed 23-deployment-verification/23-01-PLAN.md
-last_updated: "2026-03-28T07:32:44.271Z"
-last_activity: 2026-03-26 — Roadmap created for v1.2
+stopped_at: Completed 24-admin-login-banner-fix/24-01-PLAN.md
+last_updated: "2026-03-28T09:05:03.144Z"
+last_activity: 2026-03-28 — Phase 23 Deployment Verification complete
 progress:
-  total_phases: 2
-  completed_phases: 3
-  total_plans: 5
-  completed_plans: 5
+  total_phases: 4
+  completed_phases: 4
+  total_plans: 6
+  completed_plans: 6
   percent: 0
 ---
 
@@ -48,6 +48,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 21-railway-infrastructure P01 | 3 | 2 tasks | 3 files |
 | Phase 22-test-mode-implementation P01 | 8 | 2 tasks | 4 files |
 | Phase 22-test-mode-implementation P02 | 4 | 2 tasks | 8 files |
+| Phase 24-admin-login-banner-fix P01 | 5 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -64,6 +65,8 @@ Carried from v1.1 (see PROJECT.md Key Decisions):
 - [Phase 22-01]: Admin layout wrapped in fragment to place TestSiteBanner above existing flex container
 - [Phase 22-02]: generateMetadata() uses named export function (not metadata const) to enable env var check at request time
 - [Phase 22-02]: All 4 SEO suppression points gate on single NEXT_PUBLIC_IS_TEST_SITE==='true' check — no code changes needed to go production, only redeploy without the env var
+- [Phase 24-admin-login-banner-fix]: React import required in page.tsx for Vitest JSX resolution (consistent with TestSiteBanner.tsx pattern)
+- [Phase 24-admin-login-banner-fix]: Test uses collectElementTypes() to verify TestSiteBanner is in page tree, then calls TestSiteBanner() directly for rendered output check
 
 ### Pending Todos
 
@@ -76,6 +79,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T07:29:13.115Z
-Stopped at: Completed 23-deployment-verification/23-01-PLAN.md
+Last session: 2026-03-28T09:05:03.142Z
+Stopped at: Completed 24-admin-login-banner-fix/24-01-PLAN.md
 Resume file: None
