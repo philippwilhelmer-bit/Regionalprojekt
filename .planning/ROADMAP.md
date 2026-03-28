@@ -140,7 +140,7 @@ Plans:
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26. Design System & Brand Foundation | v2.0 | Complete    | 2026-03-28 | 2026-03-28 |
-| 27. App Chrome | 1/1 | Complete   | 2026-03-28 | - |
+| 27. App Chrome | 1/1 | Complete    | 2026-03-28 | - |
 | 28. Homepage Components | v2.0 | 0/TBD | Not started | - |
 | 29. Article Detail | v2.0 | 0/TBD | Not started | - |
 | 30. CMS Admin Restyling | v2.0 | 0/TBD | Not started | - |
