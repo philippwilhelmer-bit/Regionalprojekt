@@ -62,7 +62,19 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 
 ### Active
 
-(To be defined in next milestone)
+<!-- v2.0 Wurzelwelt Rebrand -->
+- [ ] Full rebrand from "Ennstal Aktuell" to "Wurzelwelt" with Wurzelmann mascot
+- [ ] New color palette: forest green, moss, terracotta, warm cream
+- [ ] Typography: Newsreader headlines + Plus Jakarta Sans body/UI
+- [ ] Material Symbols Rounded icons
+- [ ] "Modern Mountain Folklore" design system: tonal layering, no borders, soft corners, organic spacing
+- [ ] WurzelAppBar with centered "WURZELWELT" logo + Wurzelmann avatar
+- [ ] MascotGreeting speech-bubble card ("Wurzelmann sagt:")
+- [ ] Topmeldung with dark gradient overlay
+- [ ] Prioritized "Mein Bezirk" section with featured card
+- [ ] RegionalEditorialCard: full-width images, serif headlines, uppercase labels
+- [ ] WurzelNavBar: 4-tab bottom nav with rounded icons
+- [ ] CMS admin restyled with Wurzelwelt brand
 
 ### Out of Scope
 
@@ -71,6 +83,18 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 - Paywalls — not in current scope
 - Multi-tenant single app — config-driven deployment per Bundesland is simpler and sufficient
 - Offline mode — real-time news is core value
+- Central Wurzelmann action button in bottom nav — functionality still in design, deferred past v2.0
+
+## Current Milestone: v2.0 Wurzelwelt Rebrand
+
+**Goal:** Full visual rebrand from "Ennstal Aktuell" to "Wurzelwelt" — new brand identity with Wurzelmann mascot, "Modern Mountain Folklore" design system, and CMS restyling.
+
+**Target features:**
+- Wurzelwelt brand identity (app bar, mascot, naming)
+- "Modern Mountain Folklore" design system (colors, typography, tonal layering, organic spacing)
+- Redesigned homepage (Topmeldung, MascotGreeting, Mein Bezirk section)
+- New component library (RegionalEditorialCard, WurzelNavBar, WurzelAppBar)
+- CMS admin restyled with new brand
 
 ## Context
 
@@ -115,4 +139,4 @@ Known items: Impressum fields need real publisher data, OTS source disabled (Clo
 | Vercel cron for pipeline | Replaces Railway cron service | ⚠️ Revisit — Hobby plan limits to 1/day |
 
 ---
-*Last updated: 2026-03-28 after v1.2 milestone*
+*Last updated: 2026-03-28 after v2.0 milestone started*
