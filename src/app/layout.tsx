@@ -1,3 +1,4 @@
+import React from "react";
 import type { Metadata } from "next";
 import { Newsreader, Inter, Work_Sans } from "next/font/google";
 import Script from "next/script";
@@ -36,6 +37,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isTestSite = process.env.NEXT_PUBLIC_IS_TEST_SITE === 'true'
   return (
     <html lang="de" className={`h-full antialiased ${newsreader.variable} ${inter.variable} ${workSans.variable}`}>
       <head>
@@ -46,11 +48,13 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-cream text-zinc-900 antialiased">
         {children}
-        <Script
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_PUB_ID}`}
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-        />
+        {!isTestSite && (
+          <Script
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_PUB_ID}`}
+            strategy="afterInteractive"
+            crossOrigin="anonymous"
+          />
+        )}
       </body>
     </html>
   );
