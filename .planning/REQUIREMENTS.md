@@ -9,9 +9,9 @@ Requirements for the Wurzelwelt rebrand. Each maps to roadmap phases.
 
 ### Design System
 
-- [ ] **DS-01**: Tailwind theme updated with new color palette (primary #1B2D18, secondary #4A5D23, accent #9F411E, background #FCF9EF, text #071806, surface hierarchy)
-- [ ] **DS-02**: Plus Jakarta Sans loaded and configured as body/UI font, replacing Inter and Work Sans
-- [ ] **DS-03**: Material Symbols Rounded variant replaces current Material Symbols
+- [x] **DS-01**: Tailwind theme updated with new color palette (primary #1B2D18, secondary #4A5D23, accent #9F411E, background #FCF9EF, text #071806, surface hierarchy)
+- [x] **DS-02**: Plus Jakarta Sans loaded and configured as body/UI font, replacing Inter and Work Sans
+- [x] **DS-03**: Material Symbols Rounded variant replaces current Material Symbols
 - [ ] **DS-04**: All 1px borders replaced with tonal background shifts for section separation
 - [ ] **DS-05**: Minimum 0.75rem corner radius on all interactive elements (no sharp corners)
 - [ ] **DS-06**: Organic spacing scale applied (1.7rem mobile gutters, 4rem section gaps)
@@ -63,9 +63,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DS-01 | Phase 26 | Pending |
-| DS-02 | Phase 26 | Pending |
-| DS-03 | Phase 26 | Pending |
+| DS-01 | Phase 26 | Complete |
+| DS-02 | Phase 26 | Complete |
+| DS-03 | Phase 26 | Complete |
 | DS-04 | Phase 26 | Pending |
 | DS-05 | Phase 26 | Pending |
 | DS-06 | Phase 26 | Pending |
