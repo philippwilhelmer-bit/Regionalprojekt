@@ -13,8 +13,8 @@
 
 ### Test Visibility
 
-- [ ] **TEST-01**: A visible "TESTSEITE" banner appears on every reader page when test mode is active
-- [ ] **TEST-02**: A visible "TESTSEITE" banner appears on every CMS/admin page when test mode is active
+- [x] **TEST-01**: A visible "TESTSEITE" banner appears on every reader page when test mode is active
+- [x] **TEST-02**: A visible "TESTSEITE" banner appears on every CMS/admin page when test mode is active
 
 ### Deployment
 
@@ -47,8 +47,8 @@ None — this is a focused deployment milestone.
 | SEO-01 | Phase 22 | Pending |
 | SEO-02 | Phase 22 | Pending |
 | SEO-03 | Phase 22 | Pending |
-| TEST-01 | Phase 22 | Pending |
-| TEST-02 | Phase 22 | Pending |
+| TEST-01 | Phase 22 | Complete |
+| TEST-02 | Phase 22 | Complete |
 | DEPLOY-01 | Phase 21 | Complete |
 | DEPLOY-02 | Phase 21 | Complete |
 | DEPLOY-03 | Phase 21 | Complete |
