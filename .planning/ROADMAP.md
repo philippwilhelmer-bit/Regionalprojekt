@@ -50,7 +50,7 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
 
 - [ ] **Phase 21: Railway Infrastructure** - Deploy current app to Railway with correct DB isolation, PORT binding, and env var wiring
 - [x] **Phase 22: Test Mode Implementation** - Add TESTSEITE banner, noindex meta, robots.txt disallow, sitemap suppression, AdSense gating — all gated by single env var (completed 2026-03-28)
-- [ ] **Phase 23: Deployment Verification** - Verify live Vercel+Neon deployment, set NEXT_PUBLIC_BASE_URL, close orphaned DEPLOY requirements
+- [x] **Phase 23: Deployment Verification** - Verify live Vercel+Neon deployment, set NEXT_PUBLIC_BASE_URL, close orphaned DEPLOY requirements (completed 2026-03-28)
 - [ ] **Phase 24: Admin Login Banner Fix** - Add TESTSEITE banner to /admin/login page to complete admin flow coverage
 
 ## Phase Details
@@ -94,9 +94,9 @@ Plans:
   2. `/admin` redirects to `/admin/login` (CMS is live)
   3. Neon PostgreSQL is the active database with current Prisma schema
   4. NEXT_PUBLIC_BASE_URL is set in Vercel environment variables
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 Plans:
-- [ ] 23-01-PLAN.md — Set NEXT_PUBLIC_BASE_URL and verify all deployment success criteria
+- [x] 23-01-PLAN.md — Set NEXT_PUBLIC_BASE_URL and verify all deployment success criteria
 
 ### Phase 24: Admin Login Banner Fix
 **Goal**: The /admin/login page shows the TESTSEITE banner, completing admin flow coverage for TEST-02
@@ -116,5 +116,5 @@ Plans:
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21. Railway Infrastructure | 1/2 | In Progress|  | - |
 | 22. Test Mode Implementation | 2/2 | Complete    | 2026-03-28 | - |
-| 23. Deployment Verification | 0/1 | Planned | - | - |
+| 23. Deployment Verification | 1/1 | Complete | 2026-03-28 | - |
 | 24. Admin Login Banner Fix | 0/0 | Pending | - | - |
