@@ -106,7 +106,9 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Visiting /admin/login shows the TESTSEITE banner when test mode is active
   2. The banner does not appear when test mode is inactive
-**Plans:** 0/0
+**Plans:** 1 plan
+Plans:
+- [ ] 24-01-PLAN.md — Add TestSiteBanner to login page with TDD test coverage
 
 ## Progress
 
@@ -117,4 +119,4 @@ Plans:
 | 21. Railway Infrastructure | 1/2 | In Progress|  | - |
 | 22. Test Mode Implementation | 2/2 | Complete    | 2026-03-28 | - |
 | 23. Deployment Verification | 1/1 | Complete | 2026-03-28 | - |
-| 24. Admin Login Banner Fix | 0/0 | Pending | - | - |
+| 24. Admin Login Banner Fix | 0/1 | Pending | - | - |
