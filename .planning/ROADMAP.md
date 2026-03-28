@@ -49,7 +49,7 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
 **Milestone Goal:** Deploy a shareable test version on Railway that is clearly marked as non-production and invisible to search engines.
 
 - [ ] **Phase 21: Railway Infrastructure** - Deploy current app to Railway with correct DB isolation, PORT binding, and env var wiring
-- [ ] **Phase 22: Test Mode Implementation** - Add TESTSEITE banner, noindex meta, robots.txt disallow, sitemap suppression, AdSense gating — all gated by single env var
+- [x] **Phase 22: Test Mode Implementation** - Add TESTSEITE banner, noindex meta, robots.txt disallow, sitemap suppression, AdSense gating — all gated by single env var (completed 2026-03-28)
 
 ## Phase Details
 
@@ -77,7 +77,7 @@ Plans:
   3. Page source on any reader page contains `<meta name="robots" content="noindex, nofollow">`
   4. `GET /robots.txt` on the Railway URL returns `Disallow: /`
   5. `GET /sitemap.xml` on the Railway URL returns an empty or minimal response with no article URLs
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 22-01-PLAN.md — Create TestSiteBanner component and wire into both layouts
 - [ ] 22-02-PLAN.md — SEO suppression (robots.txt, sitemap, noindex) and AdSense gating
@@ -89,4 +89,4 @@ Plans:
 | 1-15 | v1.0 | 52/52 | Complete | 2026-03-25 |
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21. Railway Infrastructure | 1/2 | In Progress|  | - |
-| 22. Test Mode Implementation | 1/2 | In Progress|  | - |
+| 22. Test Mode Implementation | 2/2 | Complete   | 2026-03-28 | - |

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Test Deployment
 status: planning
-stopped_at: Completed 22-test-mode-implementation/22-01-PLAN.md
-last_updated: "2026-03-28T07:23:27.008Z"
+stopped_at: Completed 22-test-mode-implementation/22-02-PLAN.md
+last_updated: "2026-03-28T07:29:13.116Z"
 last_activity: 2026-03-26 — Roadmap created for v1.2
 progress:
   total_phases: 2
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -47,6 +47,7 @@ Progress: [░░░░░░░░░░] 0%
 *Updated after each plan completion*
 | Phase 21-railway-infrastructure P01 | 3 | 2 tasks | 3 files |
 | Phase 22-test-mode-implementation P01 | 8 | 2 tasks | 4 files |
+| Phase 22-test-mode-implementation P02 | 4 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -61,6 +62,8 @@ Carried from v1.1 (see PROJECT.md Key Decisions):
 - [Phase 22-01]: Named export for TestSiteBanner to align with project component conventions
 - [Phase 22-01]: React import required in TestSiteBanner.tsx for Vitest JSX resolution even in Server Components
 - [Phase 22-01]: Admin layout wrapped in fragment to place TestSiteBanner above existing flex container
+- [Phase 22-02]: generateMetadata() uses named export function (not metadata const) to enable env var check at request time
+- [Phase 22-02]: All 4 SEO suppression points gate on single NEXT_PUBLIC_IS_TEST_SITE==='true' check — no code changes needed to go production, only redeploy without the env var
 
 ### Pending Todos
 
@@ -73,6 +76,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T07:23:27.007Z
-Stopped at: Completed 22-test-mode-implementation/22-01-PLAN.md
+Last session: 2026-03-28T07:29:13.115Z
+Stopped at: Completed 22-test-mode-implementation/22-02-PLAN.md
 Resume file: None

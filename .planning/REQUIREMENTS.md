@@ -7,9 +7,9 @@
 
 ### SEO Blocking
 
-- [ ] **SEO-01**: All pages serve `noindex, nofollow` meta tags when test mode is active
-- [ ] **SEO-02**: `robots.txt` disallows all crawlers when test mode is active
-- [ ] **SEO-03**: Sitemap returns empty/minimal response when test mode is active
+- [x] **SEO-01**: All pages serve `noindex, nofollow` meta tags when test mode is active
+- [x] **SEO-02**: `robots.txt` disallows all crawlers when test mode is active
+- [x] **SEO-03**: Sitemap returns empty/minimal response when test mode is active
 
 ### Test Visibility
 
@@ -24,7 +24,7 @@
 
 ### Production Safety
 
-- [ ] **SAFETY-01**: AdSense script tags do not load when test mode is active
+- [x] **SAFETY-01**: AdSense script tags do not load when test mode is active
 
 ## Future Requirements
 
@@ -44,15 +44,15 @@ None — this is a focused deployment milestone.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SEO-01 | Phase 22 | Pending |
-| SEO-02 | Phase 22 | Pending |
-| SEO-03 | Phase 22 | Pending |
+| SEO-01 | Phase 22 | Complete |
+| SEO-02 | Phase 22 | Complete |
+| SEO-03 | Phase 22 | Complete |
 | TEST-01 | Phase 22 | Complete |
 | TEST-02 | Phase 22 | Complete |
 | DEPLOY-01 | Phase 21 | Complete |
 | DEPLOY-02 | Phase 21 | Complete |
 | DEPLOY-03 | Phase 21 | Complete |
-| SAFETY-01 | Phase 22 | Pending |
+| SAFETY-01 | Phase 22 | Complete |
 
 **Coverage:**
 - v1.2 requirements: 9 total
