@@ -12,7 +12,7 @@ import config from "@/../bundesland.config";
 type Props = { params: Promise<{ publicId: string; slug: string }> };
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL ?? "https://www.ennstal-aktuell.at";
+  process.env.NEXT_PUBLIC_BASE_URL ?? "https://www.wurzelwelt.at";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { publicId } = await params;

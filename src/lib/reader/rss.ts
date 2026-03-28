@@ -8,7 +8,7 @@ import config from '@/../bundesland.config'
  *
  * @param articles - Array of published articles to include in the feed (max 20)
  * @param slug - Bezirk slug (e.g. 'liezen') or 'steiermark' for the all-regions feed
- * @param baseUrl - Base URL of the site (e.g. 'https://ennstal-aktuell.at')
+ * @param baseUrl - Base URL of the site (e.g. 'https://wurzelwelt.at')
  * @returns RSS XML string with Content-Type: application/rss+xml shape
  */
 export function generateBezirkRssFeed(

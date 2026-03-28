@@ -64,7 +64,7 @@ describe('sitemap', () => {
     mockListBezirke.mockResolvedValue(THIRTEEN_BEZIRKE)
 
     const entries = await sitemap()
-    const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://ennstal-aktuell.at'
+    const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wurzelwelt.at'
     const home = entries.find(e => e.url === base || e.url === `${base}/`)
     expect(home).toBeDefined()
     expect(home?.priority).toBe(1.0)
@@ -75,7 +75,7 @@ describe('sitemap', () => {
     mockListBezirke.mockResolvedValue(THIRTEEN_BEZIRKE)
 
     const entries = await sitemap()
-    const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://ennstal-aktuell.at'
+    const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wurzelwelt.at'
     const impressum = entries.find(e => e.url === `${base}/impressum`)
     expect(impressum).toBeDefined()
   })
@@ -85,7 +85,7 @@ describe('sitemap', () => {
     mockListBezirke.mockResolvedValue(THIRTEEN_BEZIRKE)
 
     const entries = await sitemap()
-    const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://ennstal-aktuell.at'
+    const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wurzelwelt.at'
     const liezene = entries.find(e => e.url === `${base}/bezirk/liezen`)
     expect(liezene).toBeDefined()
     // Count bezirk entries
@@ -99,7 +99,7 @@ describe('sitemap', () => {
     mockListBezirke.mockResolvedValue(THIRTEEN_BEZIRKE)
 
     const entries = await sitemap()
-    const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://ennstal-aktuell.at'
+    const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wurzelwelt.at'
     const articleEntry = entries.find(e => e.url.includes('/artikel/k7x9mn/'))
     expect(articleEntry).toBeDefined()
     expect(articleEntry?.url).toBe(`${base}/artikel/k7x9mn/liezen-unwetter-warnung`)

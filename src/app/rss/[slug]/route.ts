@@ -3,7 +3,7 @@ import { getArticlesByBezirk, listArticles } from '@/lib/content/articles'
 import { getBezirkBySlug } from '@/lib/content/bezirke'
 import { generateBezirkRssFeed } from '@/lib/reader/rss'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://ennstal-aktuell.at'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wurzelwelt.at'
 
 /** Map of source channel slugs to ArticleSource enum values */
 const SOURCE_CHANNELS: Record<string, 'OTS_AT' | 'RSS' | 'MANUAL'> = {

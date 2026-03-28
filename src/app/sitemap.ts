@@ -7,7 +7,7 @@ import { slugify } from '../lib/reader/slug'
 // Prevents Next.js from attempting to statically pre-render /sitemap.xml at build time.
 export const dynamic = 'force-dynamic'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://ennstal-aktuell.at'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wurzelwelt.at'
 
 /**
  * Next.js 15 sitemap.ts default export.
