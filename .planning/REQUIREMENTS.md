@@ -19,8 +19,8 @@ Requirements for the Wurzelwelt rebrand. Each maps to roadmap phases.
 
 ### Brand Identity
 
-- [ ] **BRAND-01**: All references to "Ennstal Aktuell" renamed to "Wurzelwelt" across reader and admin
-- [ ] **BRAND-02**: Wurzelmann mascot image added to repo and served from public assets
+- [x] **BRAND-01**: All references to "Ennstal Aktuell" renamed to "Wurzelwelt" across reader and admin
+- [x] **BRAND-02**: Wurzelmann mascot image added to repo and served from public assets
 
 ### Reader Components
 
@@ -70,8 +70,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DS-05 | Phase 26 | Pending |
 | DS-06 | Phase 26 | Pending |
 | DS-07 | Phase 26 | Pending |
-| BRAND-01 | Phase 26 | Pending |
-| BRAND-02 | Phase 26 | Pending |
+| BRAND-01 | Phase 26 | Complete |
+| BRAND-02 | Phase 26 | Complete |
 | COMP-01 | Phase 27 | Pending |
 | COMP-06 | Phase 27 | Pending |
 | COMP-02 | Phase 28 | Pending |

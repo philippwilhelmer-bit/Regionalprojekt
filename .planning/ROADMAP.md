@@ -80,7 +80,7 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
   3. All icons throughout the reader and admin are the Rounded variant of Material Symbols
   4. No visible 1px borders exist anywhere — section separation is achieved through tonal background differences
   5. All interactive elements (buttons, inputs, cards) have soft corners and the Wurzelwelt site name appears everywhere "Ennstal Aktuell" previously appeared; Wurzelmann mascot image is served from public assets
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 - [ ] 26-01-PLAN.md — Wurzelwelt color tokens, Plus Jakarta Sans font, Material Symbols Rounded
@@ -136,7 +136,7 @@ Plans:
 | 1-15 | v1.0 | 52/52 | Complete | 2026-03-25 |
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
-| 26. Design System & Brand Foundation | 1/3 | In Progress|  | - |
+| 26. Design System & Brand Foundation | 2/3 | In Progress|  | - |
 | 27. App Chrome | v2.0 | 0/TBD | Not started | - |
 | 28. Homepage Components | v2.0 | 0/TBD | Not started | - |
 | 29. Article Detail | v2.0 | 0/TBD | Not started | - |
