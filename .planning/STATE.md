@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Wurzelwelt Rebrand
-status: defining_requirements
-stopped_at: null
+status: ready_to_plan
+stopped_at: Phase 26
 last_updated: "2026-03-28T22:00:00.000Z"
-last_activity: 2026-03-28 — Milestone v2.0 started
+last_activity: 2026-03-28 — Roadmap created, 5 phases defined (26-30)
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -21,14 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-28)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** v2.0 Wurzelwelt Rebrand — defining requirements
+**Current focus:** v2.0 Wurzelwelt Rebrand — Phase 26: Design System & Brand Foundation
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 26 of 30 (Design System & Brand Foundation)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-03-28 — Milestone v2.0 started
+Status: Ready to plan
+Last activity: 2026-03-28 — Roadmap created for v2.0 (5 phases, 18 requirements mapped)
+
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -37,11 +39,24 @@ Last activity: 2026-03-28 — Milestone v2.0 started
 - v1.1: 10 plans over 2 days
 - v1.2: 7 plans over 2 days
 
+**By Phase:**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| v1.0 (1-15) | 52 | ~5 days | — |
+| v1.1 (16-20) | 10 | ~2 days | — |
+| v1.2 (21-25) | 7 | ~2 days | — |
+
 ## Accumulated Context
 
 ### Decisions
 
 See PROJECT.md Key Decisions for full history.
+
+Recent decisions affecting v2.0:
+- Design system uses Tailwind v4 @theme tokens as single source of truth (proven pattern from v1.1)
+- Plus Jakarta Sans replaces Inter + Work Sans; Newsreader headlines retained
+- Material Symbols Rounded replaces standard variant throughout
 
 ### Pending Todos
 
@@ -54,5 +69,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-28
-Stopped at: Milestone v2.0 started
+Stopped at: Roadmap v2.0 created — ready to plan Phase 26
 Resume file: None
