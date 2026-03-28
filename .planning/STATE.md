@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Test Deployment
 status: planning
-stopped_at: Completed 24-admin-login-banner-fix/24-01-PLAN.md
-last_updated: "2026-03-28T09:09:42.112Z"
-last_activity: 2026-03-28 — Phase 23 Deployment Verification complete
+stopped_at: Completed 25-deployment-verification-closure/25-01-PLAN.md
+last_updated: "2026-03-28T19:24:29Z"
+last_activity: 2026-03-28 — Phase 25 Deployment Verification Closure complete (v1.2 all 9/9 requirements satisfied)
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 6
-  completed_plans: 6
-  percent: 0
+  total_phases: 5
+  completed_phases: 5
+  total_plans: 7
+  completed_plans: 7
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-26)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** v1.2 Test Deployment — Phase 24: Admin Login Banner Fix
+**Current focus:** v1.2 Test Deployment — COMPLETE (all 9/9 requirements satisfied)
 
 ## Current Position
 
-Phase: 24 of 24 (Admin Login Banner Fix)
-Plan: — (not yet planned)
-Status: Ready to plan
-Last activity: 2026-03-28 — Phase 23 Deployment Verification complete
+Phase: 25 of 25 (Deployment Verification Closure)
+Plan: 01 of 01
+Status: Complete — v1.2 milestone closed
+Last activity: 2026-03-28 — Phase 25 complete; all DEPLOY requirements marked satisfied
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -49,6 +49,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 22-test-mode-implementation P01 | 8 | 2 tasks | 4 files |
 | Phase 22-test-mode-implementation P02 | 4 | 2 tasks | 8 files |
 | Phase 24-admin-login-banner-fix P01 | 5 | 1 tasks | 2 files |
+| Phase 25-deployment-verification-closure P01 | 4 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,8 @@ Carried from v1.1 (see PROJECT.md Key Decisions):
 - [Phase 22-02]: All 4 SEO suppression points gate on single NEXT_PUBLIC_IS_TEST_SITE==='true' check — no code changes needed to go production, only redeploy without the env var
 - [Phase 24-admin-login-banner-fix]: React import required in page.tsx for Vitest JSX resolution (consistent with TestSiteBanner.tsx pattern)
 - [Phase 24-admin-login-banner-fix]: Test uses collectElementTypes() to verify TestSiteBanner is in page tree, then calls TestSiteBanner() directly for rendered output check
+- [Phase 25-01]: Test-mode guard in AdUnit placed as first check (before config.features.ads) — env-var gates supersede config gates in Server Components
+- [Phase 25-01]: REQUIREMENTS.md DEPLOY wording kept as-is ('Railway') — intent satisfied by Vercel equivalent, no wording change needed
 
 ### Pending Todos
 
@@ -79,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T09:05:03.142Z
-Stopped at: Completed 24-admin-login-banner-fix/24-01-PLAN.md
+Last session: 2026-03-28T19:24:29Z
+Stopped at: Completed 25-deployment-verification-closure/25-01-PLAN.md
 Resume file: None
