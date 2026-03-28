@@ -21,6 +21,10 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://ennstal-aktuell.at
  * Served at /sitemap.xml by Next.js automatically.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  if (process.env.NEXT_PUBLIC_IS_TEST_SITE === 'true') {
+    return []
+  }
+
   const [articles, bezirke] = await Promise.all([
     listArticles({ status: 'PUBLISHED', limit: 1000 }),
     listBezirke(),
