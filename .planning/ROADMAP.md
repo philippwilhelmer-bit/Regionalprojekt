@@ -50,6 +50,8 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
 
 - [ ] **Phase 21: Railway Infrastructure** - Deploy current app to Railway with correct DB isolation, PORT binding, and env var wiring
 - [x] **Phase 22: Test Mode Implementation** - Add TESTSEITE banner, noindex meta, robots.txt disallow, sitemap suppression, AdSense gating — all gated by single env var (completed 2026-03-28)
+- [ ] **Phase 23: Deployment Verification** - Verify live Vercel+Neon deployment, set NEXT_PUBLIC_BASE_URL, close orphaned DEPLOY requirements
+- [ ] **Phase 24: Admin Login Banner Fix** - Add TESTSEITE banner to /admin/login page to complete admin flow coverage
 
 ## Phase Details
 
@@ -82,6 +84,28 @@ Plans:
 - [ ] 22-01-PLAN.md — Create TestSiteBanner component and wire into both layouts
 - [ ] 22-02-PLAN.md — SEO suppression (robots.txt, sitemap, noindex) and AdSense gating
 
+### Phase 23: Deployment Verification
+**Goal**: Formally verify the live Vercel+Neon deployment satisfies DEPLOY-01/02/03 and set NEXT_PUBLIC_BASE_URL to close the integration gap
+**Depends on**: Phase 21
+**Requirements**: DEPLOY-01, DEPLOY-02, DEPLOY-03
+**Gap Closure:** Closes orphaned requirements from v1.2 audit
+**Success Criteria** (what must be TRUE):
+  1. regionalprojekt.vercel.app loads the homepage without error
+  2. `/admin` redirects to `/admin/login` (CMS is live)
+  3. Neon PostgreSQL is the active database with current Prisma schema
+  4. NEXT_PUBLIC_BASE_URL is set in Vercel environment variables
+**Plans:** 0/0
+
+### Phase 24: Admin Login Banner Fix
+**Goal**: The /admin/login page shows the TESTSEITE banner, completing admin flow coverage for TEST-02
+**Depends on**: Phase 22
+**Requirements**: TEST-02
+**Gap Closure:** Closes admin flow gap from v1.2 audit
+**Success Criteria** (what must be TRUE):
+  1. Visiting /admin/login shows the TESTSEITE banner when test mode is active
+  2. The banner does not appear when test mode is inactive
+**Plans:** 0/0
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -90,3 +114,5 @@ Plans:
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21. Railway Infrastructure | 1/2 | In Progress|  | - |
 | 22. Test Mode Implementation | 2/2 | Complete    | 2026-03-28 | - |
+| 23. Deployment Verification | 0/0 | Pending | - | - |
+| 24. Admin Login Banner Fix | 0/0 | Pending | - | - |
