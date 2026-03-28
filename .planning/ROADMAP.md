@@ -94,7 +94,9 @@ Plans:
   2. `/admin` redirects to `/admin/login` (CMS is live)
   3. Neon PostgreSQL is the active database with current Prisma schema
   4. NEXT_PUBLIC_BASE_URL is set in Vercel environment variables
-**Plans:** 0/0
+**Plans:** 1 plan
+Plans:
+- [ ] 23-01-PLAN.md — Set NEXT_PUBLIC_BASE_URL and verify all deployment success criteria
 
 ### Phase 24: Admin Login Banner Fix
 **Goal**: The /admin/login page shows the TESTSEITE banner, completing admin flow coverage for TEST-02
@@ -114,5 +116,5 @@ Plans:
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21. Railway Infrastructure | 1/2 | In Progress|  | - |
 | 22. Test Mode Implementation | 2/2 | Complete    | 2026-03-28 | - |
-| 23. Deployment Verification | 0/0 | Pending | - | - |
+| 23. Deployment Verification | 0/1 | Planned | - | - |
 | 24. Admin Login Banner Fix | 0/0 | Pending | - | - |
