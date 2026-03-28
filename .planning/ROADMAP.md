@@ -52,6 +52,7 @@ Full details: `.planning/milestones/v1.1-ROADMAP.md`
 - [x] **Phase 22: Test Mode Implementation** - Add TESTSEITE banner, noindex meta, robots.txt disallow, sitemap suppression, AdSense gating — all gated by single env var (completed 2026-03-28)
 - [x] **Phase 23: Deployment Verification** - Verify live Vercel+Neon deployment, set NEXT_PUBLIC_BASE_URL, close orphaned DEPLOY requirements (completed 2026-03-28)
 - [x] **Phase 24: Admin Login Banner Fix** - Add TESTSEITE banner to /admin/login page to complete admin flow coverage (completed 2026-03-28)
+- [ ] **Phase 25: Deployment Verification & Requirements Closure** - Formally verify live Vercel+Neon deployment, fix AdUnit.tsx cosmetic gap, close DEPLOY-01/02/03
 
 ## Phase Details
 
@@ -110,6 +111,17 @@ Plans:
 Plans:
 - [ ] 24-01-PLAN.md — Add TestSiteBanner to login page with TDD test coverage
 
+### Phase 25: Deployment Verification & Requirements Closure
+**Goal**: Formally verify the live Vercel+Neon deployment satisfies DEPLOY-01/02/03, fix AdUnit.tsx cosmetic test-mode gap, and close all remaining v1.2 requirements
+**Depends on**: Phase 23, Phase 22
+**Requirements**: DEPLOY-01, DEPLOY-02, DEPLOY-03, SAFETY-01
+**Gap Closure:** Closes gaps from v1.2 milestone audit
+**Success Criteria** (what must be TRUE):
+  1. VERIFICATION.md exists for Phases 21 and 23 confirming deployment works
+  2. DEPLOY-01/02/03 marked as Complete in REQUIREMENTS.md
+  3. AdUnit.tsx returns null when NEXT_PUBLIC_IS_TEST_SITE is active (no cosmetic placeholders)
+  4. All 9/9 v1.2 requirements satisfied
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -120,3 +132,4 @@ Plans:
 | 22. Test Mode Implementation | 2/2 | Complete    | 2026-03-28 | - |
 | 23. Deployment Verification | 1/1 | Complete | 2026-03-28 | - |
 | 24. Admin Login Banner Fix | 1/1 | Complete    | 2026-03-28 | - |
+| 25. Deployment Verification & Requirements Closure | 0/0 | Pending | - | - |
