@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Wurzelwelt Rebrand
 status: executing
-stopped_at: "Completed 27-01 tasks 1-2, awaiting Task 3 checkpoint:human-verify for visual approval"
-last_updated: "2026-03-28T21:58:50.776Z"
+stopped_at: Completed 27-01-PLAN.md — Wurzelwelt app chrome verified on Vercel
+last_updated: "2026-03-28T22:05:13.590Z"
 last_activity: 2026-03-28 — Completed reader component migration to Wurzelwelt borderless design
 progress:
   total_phases: 5
@@ -51,6 +51,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 26-design-system-brand-foundation P03 | 10min | 1 tasks | 8 files |
 | Phase 26-design-system-brand-foundation P03 | 30min | 2 tasks | 9 files |
 | Phase 27-app-chrome P01 | 5min | 2 tasks | 3 files |
+| Phase 27-app-chrome P01 | 30min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,9 @@ Recent decisions affecting v2.0:
 - [Phase 26-02]: CTA gradient pill pattern established: bg-gradient-to-br from-primary to-primary-container rounded-full
 - [Phase 27-app-chrome]: WurzelAppBar: no Styrian flag stripe — Wurzelwelt brand replaces regional flag accent
 - [Phase 27-app-chrome]: WurzelNavBar: active state uses bg-accent (terracotta #9F411E) instead of bg-primary
+- [Phase 27-app-chrome]: WurzelAppBar: no Styrian flag stripe — Wurzelwelt brand replaces regional flag accent
+- [Phase 27-app-chrome]: WurzelNavBar: active state uses bg-accent (terracotta #9F411E) instead of bg-primary
+- [Phase 27-app-chrome]: Old RegionalAppBar/RegionalNavBar preserved (not deleted) for future tech debt cleanup
 
 ### Pending Todos
 
@@ -83,6 +87,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-28T21:58:50.774Z
-Stopped at: Completed 27-01 tasks 1-2, awaiting Task 3 checkpoint:human-verify for visual approval
+Last session: 2026-03-28T22:05:13.588Z
+Stopped at: Completed 27-01-PLAN.md — Wurzelwelt app chrome verified on Vercel
 Resume file: None
