@@ -1,5 +1,25 @@
 # Milestones
 
+## v1.2 Test Deployment (Shipped: 2026-03-28)
+
+**Phases completed:** 5 phases, 7 plans
+**Timeline:** 2 days (2026-03-27 → 2026-03-28)
+**Codebase:** 79 files changed, +4,976 / -187 lines
+**Git range:** feat(21-01) → docs(phase-25)
+
+**Delivered:** Shareable test deployment on Vercel + Neon, clearly marked as non-production with TESTSEITE banners, invisible to search engines, and AdSense-suppressed — all gated by a single environment variable.
+
+**Deviation:** Deployed to Vercel + Neon instead of Railway (user-requested, better Next.js fit). All original requirements satisfied.
+
+**Key accomplishments:**
+1. Live Vercel + Neon deployment at regionalprojekt.vercel.app with auto-deploy from main branch
+2. TestSiteBanner component on all reader and admin pages, gated by single NEXT_PUBLIC_IS_TEST_SITE env var
+3. Full SEO suppression: dynamic robots.txt Disallow, empty sitemap.xml, noindex/nofollow meta tags
+4. AdSense defense-in-depth: root layout script gate + AdUnit null guard in test mode
+5. Cron pipeline via Vercel cron → /api/cron with CRON_SECRET bearer auth
+
+---
+
 ## v1.1 Design Overhaul (Shipped: 2026-03-26)
 
 **Phases completed:** 5 phases, 10 plans

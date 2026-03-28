@@ -54,17 +54,15 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 - ✓ Bottom nav: cream background, Material Symbols, active green pill — v1.1
 - ✓ Search & discovery page: text + Bezirk filtering, trending pills, category grid, recommended articles — v1.1
 
+- ✓ Live Vercel + Neon deployment with shareable URL — v1.2
+- ✓ TESTSEITE banner on all reader and admin pages — v1.2
+- ✓ SEO suppression (noindex, robots.txt, sitemap) in test mode — v1.2
+- ✓ AdSense suppression in test mode (defense-in-depth) — v1.2
+- ✓ All test behaviors gated by single NEXT_PUBLIC_IS_TEST_SITE env var — v1.2
+
 ### Active
 
-**Current Milestone: v1.2 Test Deployment**
-
-**Goal:** Deploy a shareable test version on Railway that is clearly marked as non-production and invisible to search engines.
-
-**Target features:**
-- Visible "TESTSEITE" banner on every page (reader + CMS)
-- robots noindex/nofollow meta tags on all pages
-- robots.txt disallowing all crawlers
-- Railway deployment with live shareable URL
+(To be defined in next milestone)
 
 ### Out of Scope
 
@@ -76,11 +74,14 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 
 ## Context
 
-Shipped v1.1 Design Overhaul on 2026-03-26 (2 days, 5 phases, 10 plans).
-Tech stack: Next.js 15, Prisma v6, PostgreSQL, Anthropic Claude API, Tailwind CSS v4, Vitest with pgLite.
+Shipped v1.2 Test Deployment on 2026-03-28 (2 days, 5 phases, 7 plans).
+Live at: https://regionalprojekt.vercel.app (Vercel Hobby + Neon PostgreSQL).
+Tech stack: Next.js 15, Prisma v6, PostgreSQL (Neon), Anthropic Claude API, Tailwind CSS v4, Vitest with pgLite.
 Architecture: Config-driven Bundesland deployment, adapter-pattern ingestion, Server Component CMS with HMAC auth.
 Reader frontend: Premium editorial design with Styrian identity, serif typography (Newsreader/Inter/Work Sans), warm cream palette, Material Symbols icons, newspaper-style layouts, and search/discovery page.
-Known pre-launch items: Impressum fields need real publisher data (TODO: placeholders in bundesland.config.ts), OTS.at API access requires APA-OTS credentials.
+Test mode: Single env var (NEXT_PUBLIC_IS_TEST_SITE) gates banners, SEO suppression, and AdSense suppression.
+Cron: Vercel cron → /api/cron route (1/day on Hobby plan), secured with CRON_SECRET.
+Known items: Impressum fields need real publisher data, OTS source disabled (Cloudflare-blocked, using ORF RSS only), 12 pre-existing test failures (DB hooks + bezirke data).
 
 ## Key Decisions
 
@@ -109,6 +110,9 @@ Known pre-launch items: Impressum fields need real publisher data (TODO: placeho
 | Serif typography (Newsreader) for editorial feel | Differentiates from generic news sites | ✓ Good — strong brand identity |
 | Client-side search (no server API) | 200 article limit keeps it simple | ⚠️ Revisit if article count exceeds 200 |
 | EilmeldungBanner sessionStorage dismiss | Session-scoped, no server state needed | ✓ Good — lightweight UX |
+| Vercel + Neon instead of Railway | Better Next.js fit, user-requested | ✓ Good — auto-deploy, serverless Postgres, EU region |
+| Single env var for all test behaviors | No code changes to go production | ✓ Good — 6 files check one variable |
+| Vercel cron for pipeline | Replaces Railway cron service | ⚠️ Revisit — Hobby plan limits to 1/day |
 
 ---
-*Last updated: 2026-03-26 after v1.2 milestone start*
+*Last updated: 2026-03-28 after v1.2 milestone*
