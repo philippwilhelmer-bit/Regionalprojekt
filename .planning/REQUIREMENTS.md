@@ -18,9 +18,9 @@
 
 ### Deployment
 
-- [ ] **DEPLOY-01**: App deploys to Railway with a shareable public URL
-- [ ] **DEPLOY-02**: PostgreSQL database provisioned on Railway with Prisma migrations applied
-- [ ] **DEPLOY-03**: All test behaviors gated by single `NEXT_PUBLIC_IS_TEST_SITE` environment variable
+- [x] **DEPLOY-01**: App deploys to Railway with a shareable public URL
+- [x] **DEPLOY-02**: PostgreSQL database provisioned on Railway with Prisma migrations applied
+- [x] **DEPLOY-03**: All test behaviors gated by single `NEXT_PUBLIC_IS_TEST_SITE` environment variable
 
 ### Production Safety
 
@@ -49,18 +49,18 @@ None — this is a focused deployment milestone.
 | SEO-03 | Phase 22 | Complete |
 | TEST-01 | Phase 22 | Complete |
 | TEST-02 | Phase 22 | Complete |
-| DEPLOY-01 | Phase 25 | Pending |
-| DEPLOY-02 | Phase 25 | Pending |
-| DEPLOY-03 | Phase 25 | Pending |
+| DEPLOY-01 | Phase 21+23 | Complete |
+| DEPLOY-02 | Phase 21+23 | Complete |
+| DEPLOY-03 | Phase 21+23 | Complete |
 | SAFETY-01 | Phase 22 | Complete |
 
 **Coverage:**
 - v1.2 requirements: 9 total
 - Mapped to phases: 9
-- Satisfied: 6
-- Pending: 3 (DEPLOY-01, DEPLOY-02, DEPLOY-03 → Phase 25)
+- Satisfied: 9
+- Pending: 0
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-26*
-*Last updated: 2026-03-26 after roadmap creation*
+*Last updated: 2026-03-28 — DEPLOY-01/02/03 marked Complete after Phase 25-01 closure*
