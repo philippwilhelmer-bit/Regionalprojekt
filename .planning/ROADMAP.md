@@ -98,7 +98,7 @@ Plans:
 **Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 27-01-PLAN.md — WurzelAppBar + WurzelNavBar components and layout wiring
+- [x] 27-01-PLAN.md — WurzelAppBar + WurzelNavBar components and layout wiring
 
 ### Phase 28: Homepage Components
 **Goal**: The homepage delivers the full Wurzelwelt editorial experience — mascot greeting, featured top story with gradient overlay, regional editorial cards, a prioritized Mein Bezirk section, and tonal section alternation.
@@ -110,7 +110,11 @@ Plans:
   3. Article cards display full-width aspect-video images with Newsreader serif headlines and uppercase Jakarta Sans category labels
   4. The reader's selected Bezirk section appears at the top of the content area with a visually larger featured card compared to non-selected sections
   5. Alternating homepage sections are distinguished by tonal background shifts (#FCF9EF / #F6F4EA) with no border lines between them
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 28-01-PLAN.md — MascotGreeting, RegionalEditorialCard, and Topmeldung restyle
+- [ ] 28-02-PLAN.md — HomepageLayout rewiring with tonal sections and Mein Bezirk
 
 ### Phase 29: Article Detail
 **Goal**: The article detail page is fully restyled to match the Wurzelwelt design system — correct palette, typography, and spacing throughout.
@@ -141,6 +145,6 @@ Plans:
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26. Design System & Brand Foundation | v2.0 | Complete    | 2026-03-28 | 2026-03-28 |
 | 27. App Chrome | 1/1 | Complete    | 2026-03-28 | - |
-| 28. Homepage Components | v2.0 | 0/TBD | Not started | - |
+| 28. Homepage Components | v2.0 | 0/2 | Not started | - |
 | 29. Article Detail | v2.0 | 0/TBD | Not started | - |
 | 30. CMS Admin Restyling | v2.0 | 0/TBD | Not started | - |
