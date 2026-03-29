@@ -6,9 +6,9 @@ import { groupArticlesByBezirk } from "@/lib/content/articles";
 import type { BezirkItem } from "@/types/bundesland";
 import { HeroArticle } from "./HeroArticle";
 import { TopMeldungenRow } from "./TopMeldungenRow";
-import { ArticleCard } from "./ArticleCard";
+import { MascotGreeting } from "./MascotGreeting";
+import { RegionalEditorialCard } from "./RegionalEditorialCard";
 import { ListItem } from "./ListItem";
-import { RegionalSelector } from "./RegionalSelector";
 import { AdUnit } from "./AdUnit";
 
 interface HomepageLayoutProps {
@@ -56,54 +56,36 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
       .map(([slug, { name, articles }]) => ({ slug, name, articles }));
   }
 
-  // Flat grid articles (when no bezirk selected)
-  const flatGrid = allArticles.slice(0, 9);
-  const flatRemainder = allArticles.slice(9);
+  // Flat view articles (when no bezirk selected)
+  const flatFirst = allArticles.slice(0, 1);
+  const flatList = allArticles.slice(1, 4);
+  const flatRemainder = allArticles.slice(4);
 
   // Empty state
   const isEmpty = allArticles.length === 0 && !hero;
 
-  function handleSelectionChange(slugs: string[]) {
-    setSelectedSlugs(slugs);
-  }
-
-  // Render a "Dein Bezirk" section with feature card + list items
+  // Render a bezirk section: RegionalEditorialCard + up to 3 ListItems
   function renderBezirkSection(
     name: string,
     articles: ArticleWithBezirke[],
-    showDivider: boolean,
   ) {
     if (articles.length === 0) return null;
     const [featured, ...rest] = articles;
-    const listArticles = rest.slice(0, 4);
+    const listArticles = rest.slice(0, 3);
 
     return (
-      <section className="px-[var(--spacing-gutter)] py-[var(--spacing-section)]" key={name}>
-        {showDivider && (
-          <div className="h-px bg-surface mb-[var(--spacing-section)]" aria-hidden="true" />
-        )}
+      <section className="px-[var(--spacing-gutter)] py-[var(--spacing-section)]">
+        {/* Bezirk section heading — no Styrian flag */}
+        <h3 className="font-headline text-lg font-semibold text-primary mb-3 px-0">
+          {name}
+        </h3>
 
-        {/* Styrian flag accent */}
-        <div className="flex items-center gap-2 mb-2">
-          <div
-            className="rounded-sm flex-shrink-0"
-            style={{
-              width: 24,
-              height: 16,
-              background: "linear-gradient(to bottom, #fff 50%, #2D5A27 50%)",
-            }}
-          />
-          <h2 className="font-headline text-lg font-semibold text-primary">
-            {name}
-          </h2>
-        </div>
-
-        {/* Feature Card — main local story */}
+        {/* Featured card — RegionalEditorialCard */}
         <div className="mb-3">
-          <ArticleCard article={featured} featured />
+          <RegionalEditorialCard article={featured} />
         </div>
 
-        {/* Secondary stories as ListItems */}
+        {/* Compact list rows */}
         {listArticles.length > 0 && (
           <div className="bg-surface-elevated rounded-sm shadow-sm px-3">
             {listArticles.map((article) => (
@@ -116,44 +98,44 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
   }
 
   return (
-    <div className="max-w-2xl mx-auto bg-background">
-      {/* Hero zone — Topmeldung */}
+    <div className="max-w-2xl mx-auto">
+      {/* 1. Hero zone — Topmeldung (no bg needed, image fills) */}
       {hero && <HeroArticle article={hero} />}
 
-      {/* Top-Meldungen row */}
+      {/* 2. MascotGreeting — bg-surface for tonal contrast */}
+      <div className="bg-surface py-[var(--spacing-section)]">
+        <MascotGreeting />
+      </div>
+
+      {/* 3. TopMeldungenRow — bg-background */}
       {filteredPinned.length > 0 && (
-        <section className="bg-surface py-[var(--spacing-section)]">
+        <div className="bg-background py-[var(--spacing-section)]">
           <TopMeldungenRow articles={filteredPinned} />
-        </section>
+        </div>
       )}
 
-      {/* Ad slot between top-stories and editorial sections */}
-      <div className="px-[var(--spacing-gutter)] pb-4">
+      {/* 4. Ad slot — bg-surface */}
+      <div className="bg-surface px-[var(--spacing-gutter)] py-4">
         <AdUnit zone="hero" />
       </div>
 
-      {/* Regional Hierarchy Selector */}
-      {bezirke.length > 0 && (
-        <RegionalSelector
-          bezirke={bezirke}
-          onSelectionChange={handleSelectionChange}
-        />
-      )}
-
-      {/* "Dein Bezirk" heading */}
-      <div className="px-[var(--spacing-gutter)] pt-2 pb-1">
-        <h2 className="font-headline text-xl font-semibold text-zinc-900">
-          {hasBezirkSelection ? "Dein Bezirk" : "Alle Nachrichten"}
-        </h2>
-      </div>
-
-      {/* Editorial sections */}
+      {/* 5/6. Editorial sections */}
       {hasBezirkSelection ? (
-        /* Grouped by bezirk — feature card + list items layout */
+        /* Mein Bezirk — grouped by bezirk */
         <div>
+          {/* "Dein Bezirk" heading */}
+          <div className="px-[var(--spacing-gutter)] pt-4 pb-1 bg-background">
+            <h2 className="font-headline text-xl font-semibold text-primary">
+              Dein Bezirk
+            </h2>
+          </div>
+
           {bezirkSections.map(({ slug, name, articles }, index) => (
-            <div key={slug} className={index % 2 === 0 ? "bg-background" : "bg-surface"}>
-              {renderBezirkSection(name, articles, false)}
+            <div
+              key={slug}
+              className={index % 2 === 0 ? "bg-background" : "bg-surface"}
+            >
+              {renderBezirkSection(name, articles)}
               {/* Ad every 2nd section */}
               {(index + 1) % 2 === 0 && (
                 <div className="px-[var(--spacing-gutter)] py-2">
@@ -165,7 +147,7 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
 
           {/* Empty state for bezirk filter */}
           {bezirkSections.length === 0 && (
-            <div className="px-[var(--spacing-gutter)] py-8 text-center text-zinc-500">
+            <div className="px-[var(--spacing-gutter)] py-8 text-center text-zinc-500 bg-background">
               <p className="mb-3">Noch keine Nachrichten für deinen Bezirk.</p>
               <button
                 onClick={() => {
@@ -180,19 +162,38 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
           )}
         </div>
       ) : (
-        /* Flat view — feature card + list items for all articles */
+        /* Flat view — all articles */
         <div>
+          {/* "Alle Nachrichten" heading */}
+          <div className="px-[var(--spacing-gutter)] pt-4 pb-1 bg-background">
+            <h2 className="font-headline text-xl font-semibold text-primary">
+              Alle Nachrichten
+            </h2>
+          </div>
+
           {isEmpty ? (
-            <div className="px-[var(--spacing-gutter)] py-8 text-center text-zinc-500">
+            <div className="px-[var(--spacing-gutter)] py-8 text-center text-zinc-500 bg-background">
               <p>Noch keine Nachrichten.</p>
             </div>
           ) : (
             <>
-              <div className="bg-background">
-                {renderBezirkSection("Alle Nachrichten", flatGrid, false)}
+              {/* First article as RegionalEditorialCard + next 3 as ListItems */}
+              <div className="bg-background px-[var(--spacing-gutter)] py-[var(--spacing-section)]">
+                {flatFirst.length > 0 && (
+                  <div className="mb-3">
+                    <RegionalEditorialCard article={flatFirst[0]} />
+                  </div>
+                )}
+                {flatList.length > 0 && (
+                  <div className="bg-surface-elevated rounded-sm shadow-sm px-3">
+                    {flatList.map((article) => (
+                      <ListItem key={article.id} article={article} />
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* Remainder articles in list format */}
+              {/* Remainder articles in list format — bg-surface */}
               {flatRemainder.length > 0 && (
                 <div className="px-[var(--spacing-gutter)] pb-4 bg-surface">
                   <div className="bg-surface-elevated rounded-sm shadow-sm px-3">
