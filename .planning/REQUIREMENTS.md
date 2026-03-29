@@ -25,9 +25,9 @@ Requirements for the Wurzelwelt rebrand. Each maps to roadmap phases.
 ### Reader Components
 
 - [x] **COMP-01**: WurzelAppBar with centered "WURZELWELT" in bold uppercase Newsreader + Wurzelmann avatar
-- [ ] **COMP-02**: MascotGreeting speech-bubble card with "Wurzelmann sagt:" quote on tonal background
-- [ ] **COMP-03**: Topmeldung hero with full-bleed image and dark gradient overlay behind headline
-- [ ] **COMP-04**: RegionalEditorialCard with full-width aspect-video images, Newsreader headlines, uppercase Jakarta Sans labels
+- [x] **COMP-02**: MascotGreeting speech-bubble card with "Wurzelmann sagt:" quote on tonal background
+- [x] **COMP-03**: Topmeldung hero with full-bleed image and dark gradient overlay behind headline
+- [x] **COMP-04**: RegionalEditorialCard with full-width aspect-video images, Newsreader headlines, uppercase Jakarta Sans labels
 - [ ] **COMP-05**: Prioritized "Mein Bezirk" section with larger featured card
 - [x] **COMP-06**: WurzelNavBar 4-tab bottom nav with rounded Material Symbols icons
 - [ ] **COMP-07**: Homepage sections separated by tonal background shifts (#FCF9EF / #F6F4EA alternation)
@@ -74,9 +74,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BRAND-02 | Phase 26 | Complete |
 | COMP-01 | Phase 27 | Complete |
 | COMP-06 | Phase 27 | Complete |
-| COMP-02 | Phase 28 | Pending |
-| COMP-03 | Phase 28 | Pending |
-| COMP-04 | Phase 28 | Pending |
+| COMP-02 | Phase 28 | Complete |
+| COMP-03 | Phase 28 | Complete |
+| COMP-04 | Phase 28 | Complete |
 | COMP-05 | Phase 28 | Pending |
 | COMP-07 | Phase 28 | Pending |
 | ART-01 | Phase 29 | Pending |

@@ -113,7 +113,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 28-01-PLAN.md — MascotGreeting, RegionalEditorialCard, and Topmeldung restyle
+- [x] 28-01-PLAN.md — MascotGreeting, RegionalEditorialCard, and Topmeldung restyle
 - [ ] 28-02-PLAN.md — HomepageLayout rewiring with tonal sections and Mein Bezirk
 
 ### Phase 29: Article Detail
@@ -145,6 +145,6 @@ Plans:
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26. Design System & Brand Foundation | v2.0 | Complete    | 2026-03-28 | 2026-03-28 |
 | 27. App Chrome | 1/1 | Complete    | 2026-03-28 | - |
-| 28. Homepage Components | v2.0 | 0/2 | Not started | - |
+| 28. Homepage Components | v2.0 | 1/2 | In progress | - |
 | 29. Article Detail | v2.0 | 0/TBD | Not started | - |
 | 30. CMS Admin Restyling | v2.0 | 0/TBD | Not started | - |

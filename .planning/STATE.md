@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Wurzelwelt Rebrand
 status: executing
-stopped_at: Phase 28 context gathered
-last_updated: "2026-03-29T10:59:16.585Z"
-last_activity: 2026-03-28 — Completed reader component migration to Wurzelwelt borderless design
+stopped_at: "Completed 28-01-PLAN.md"
+last_updated: "2026-03-29T11:15:00Z"
+last_activity: 2026-03-29 — Created MascotGreeting, RegionalEditorialCard, restyled HeroArticle (Plan 28-01)
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
-  percent: 33
+  total_plans: 5
+  completed_plans: 5
+  percent: 38
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 
 ## Current Position
 
-Phase: 26 of 30 (Design System & Brand Foundation)
-Plan: 02 complete
+Phase: 28 of 30 (Homepage Components)
+Plan: 01 complete
 Status: In progress
-Last activity: 2026-03-28 — Completed reader component migration to Wurzelwelt borderless design
+Last activity: 2026-03-29 — Created MascotGreeting, RegionalEditorialCard, restyled HeroArticle (Plan 28-01)
 
-Progress: [███░░░░░░░] 33%
+Progress: [████░░░░░░] 38%
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [███░░░░░░░] 33%
 | Phase 26-design-system-brand-foundation P03 | 30min | 2 tasks | 9 files |
 | Phase 27-app-chrome P01 | 5min | 2 tasks | 3 files |
 | Phase 27-app-chrome P01 | 30min | 3 tasks | 3 files |
+| Phase 28-homepage-components P01 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,9 @@ Recent decisions affecting v2.0:
 - [Phase 27-app-chrome]: WurzelAppBar: no Styrian flag stripe — Wurzelwelt brand replaces regional flag accent
 - [Phase 27-app-chrome]: WurzelNavBar: active state uses bg-accent (terracotta #9F411E) instead of bg-primary
 - [Phase 27-app-chrome]: Old RegionalAppBar/RegionalNavBar preserved (not deleted) for future tech debt cleanup
+- [Phase 28-01]: MascotGreeting is "use client" — time-of-day detection requires getHours(), cannot SSR
+- [Phase 28-01]: RegionalEditorialCard has no bezirk gradient color maps — single text-primary label color per plan
+- [Phase 28-01]: HeroArticle Topmeldung badge uses gradient pill (from-primary to-primary-container rounded-full) matching CTA pattern
 
 ### Pending Todos
 
@@ -87,6 +91,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-29T10:59:16.575Z
-Stopped at: Phase 28 context gathered
-Resume file: .planning/phases/28-homepage-components/28-CONTEXT.md
+Last session: 2026-03-29T11:15:00Z
+Stopped at: Completed 28-01-PLAN.md
+Resume file: .planning/phases/28-homepage-components/28-02-PLAN.md
