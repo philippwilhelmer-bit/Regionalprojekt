@@ -64,7 +64,7 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
 
 - [x] **Phase 26: Design System & Brand Foundation** - New color palette, typography, icons, spacing, naming, mascot asset (completed 2026-03-28)
 - [x] **Phase 27: App Chrome** - WurzelAppBar and WurzelNavBar replacing current header and bottom nav (completed 2026-03-28)
-- [ ] **Phase 28: Homepage Components** - MascotGreeting, Topmeldung, RegionalEditorialCard, Mein Bezirk section, tonal section separation
+- [x] **Phase 28: Homepage Components** - MascotGreeting, Topmeldung, RegionalEditorialCard, Mein Bezirk section, tonal section separation (completed 2026-03-29)
 - [ ] **Phase 29: Article Detail** - Article detail page restyled with new palette, typography, and spacing
 - [ ] **Phase 30: CMS Admin Restyling** - Admin pages restyled with Wurzelwelt brand tokens
 
@@ -110,7 +110,7 @@ Plans:
   3. Article cards display full-width aspect-video images with Newsreader serif headlines and uppercase Jakarta Sans category labels
   4. The reader's selected Bezirk section appears at the top of the content area with a visually larger featured card compared to non-selected sections
   5. Alternating homepage sections are distinguished by tonal background shifts (#FCF9EF / #F6F4EA) with no border lines between them
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
 - [x] 28-01-PLAN.md — MascotGreeting, RegionalEditorialCard, and Topmeldung restyle
@@ -145,6 +145,6 @@ Plans:
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26. Design System & Brand Foundation | v2.0 | Complete    | 2026-03-28 | 2026-03-28 |
 | 27. App Chrome | 1/1 | Complete    | 2026-03-28 | - |
-| 28. Homepage Components | v2.0 | 1/2 | In progress | - |
+| 28. Homepage Components | 2/2 | Complete   | 2026-03-29 | - |
 | 29. Article Detail | v2.0 | 0/TBD | Not started | - |
 | 30. CMS Admin Restyling | v2.0 | 0/TBD | Not started | - |
