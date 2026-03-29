@@ -16,7 +16,7 @@ export function HeroArticle({ article }: HeroArticleProps) {
     : null;
 
   return (
-    <Link href={href} className="relative block overflow-hidden min-h-[60vh]">
+    <Link href={href} className="relative block rounded-sm overflow-hidden min-h-[60vh]">
       {/* Background: image or gradient fallback */}
       {article.imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -34,15 +34,15 @@ export function HeroArticle({ article }: HeroArticleProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
       {/* Content: positioned at bottom */}
-      <div className="relative z-10 flex flex-col justify-end min-h-[60vh] p-4 pb-6">
-        {/* Topmeldung label */}
-        <span className="inline-block self-start mb-2 px-2 py-0.5 rounded-sm font-label font-semibold uppercase text-xs tracking-wider text-background bg-primary">
+      <div className="relative z-10 flex flex-col justify-end min-h-[60vh] p-[var(--spacing-gutter)] pb-8">
+        {/* Topmeldung label — accent gradient pill */}
+        <span className="inline-block self-start mb-2 px-3 py-1 rounded-full font-label font-semibold uppercase text-xs tracking-wider text-white bg-gradient-to-br from-primary to-primary-container">
           Topmeldung
         </span>
 
         {/* Bezirk badge */}
         {firstBezirk && (
-          <span className="inline-block self-start mb-1 px-2 py-0.5 rounded-sm font-label font-semibold uppercase text-xs text-primary bg-background">
+          <span className="inline-block self-start mb-1 px-2 py-0.5 rounded-full font-label font-semibold uppercase text-xs text-primary bg-background">
             {firstBezirk.name}
           </span>
         )}
