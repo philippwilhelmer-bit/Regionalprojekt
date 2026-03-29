@@ -65,8 +65,8 @@ export function MascotGreeting() {
           <Image
             src="/images/wurzelmann.png"
             alt="Wurzelmann"
-            width={180}
-            height={180}
+            width={360}
+            height={360}
             className="object-contain"
             priority={false}
           />
