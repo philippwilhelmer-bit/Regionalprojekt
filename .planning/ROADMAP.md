@@ -66,7 +66,7 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
 - [x] **Phase 27: App Chrome** - WurzelAppBar and WurzelNavBar replacing current header and bottom nav (completed 2026-03-28)
 - [x] **Phase 28: Homepage Components** - MascotGreeting, Topmeldung, RegionalEditorialCard, Mein Bezirk section, tonal section separation (completed 2026-03-29)
 - [x] **Phase 29: Article Detail** - Article detail page restyled with new palette, typography, and spacing (completed 2026-03-30)
-- [ ] **Phase 30: CMS Admin Restyling** - Admin pages restyled with Wurzelwelt brand tokens
+- [x] **Phase 30: CMS Admin Restyling** - Admin pages restyled with Wurzelwelt brand tokens (completed 2026-03-30)
 
 ## Phase Details
 
@@ -137,7 +137,7 @@ Plans:
   1. CMS admin pages display the Wurzelwelt color palette (no legacy Styrian green or cream from v1.1)
   2. Admin typography uses Plus Jakarta Sans for body and labels, Newsreader for any headings
   3. Admin buttons, inputs, and interactive elements have rounded corners and gradient CTAs consistent with the design system
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 30-01-PLAN.md — Admin shell restyling (login, sidebar layout, Unsplash pickers)
@@ -154,4 +154,4 @@ Plans:
 | 27. App Chrome | 1/1 | Complete    | 2026-03-28 | - |
 | 28. Homepage Components | 2/2 | Complete   | 2026-03-29 | - |
 | 29. Article Detail | 1/1 | Complete    | 2026-03-30 | - |
-| 30. CMS Admin Restyling | 1/2 | In Progress|  | - |
+| 30. CMS Admin Restyling | 2/2 | Complete   | 2026-03-30 | - |

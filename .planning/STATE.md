@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Wurzelwelt Rebrand
 status: executing
-stopped_at: Completed 30-01-PLAN.md
-last_updated: "2026-03-30T12:32:24.975Z"
+stopped_at: Completed 30-02-PLAN.md
+last_updated: "2026-03-30T12:34:58.485Z"
 last_activity: 2026-03-30 — Migrated article detail page and TopMeldungenRow to Wurzelwelt semantic tokens (Plan 29-01)
 progress:
   total_phases: 5
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
   percent: 38
 ---
 
@@ -56,6 +56,7 @@ Progress: [████░░░░░░] 38%
 | Phase 28 P02 | 20min | 2 tasks | 2 files |
 | Phase 29-article-detail P01 | 5min | 2 tasks | 2 files |
 | Phase 30-cms-admin-restyling P01 | 3min | 2 tasks | 6 files |
+| Phase 30-cms-admin-restyling P02 | 5min | 2 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,8 @@ Recent decisions affecting v2.0:
 - [Phase Phase 28-02]: MascotGreeting motto updated to 'tief verwurzelt' for authentic German brand voice
 - [Phase 30-cms-admin-restyling]: Admin login error box uses tonal accent pattern (bg-accent/10 rounded-sm) instead of bordered red box for brand consistency
 - [Phase 30-cms-admin-restyling]: Admin sidebar label changed from 'Regionencompass' to 'Wurzelwelt' — aligns admin shell with rebrand
+- [Phase 30-cms-admin-restyling]: FETCHED status badge changed from bg-blue to bg-surface/text-text/70 — neutral Wurzelwelt token for pending state
+- [Phase 30-cms-admin-restyling]: Source type badges (OTS.at/RSS) retain bg-blue-100/text-blue-700 — semantic type indicator preserved per plan spec
 
 ### Pending Todos
 
@@ -98,6 +101,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-30T12:32:24.973Z
-Stopped at: Completed 30-01-PLAN.md
+Last session: 2026-03-30T12:34:58.483Z
+Stopped at: Completed 30-02-PLAN.md
 Resume file: None
