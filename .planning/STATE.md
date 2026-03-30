@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Wurzelwelt Rebrand
 status: executing
-stopped_at: Completed 29-01-PLAN.md
-last_updated: "2026-03-30T12:07:51.397Z"
+stopped_at: Completed 30-01-PLAN.md
+last_updated: "2026-03-30T12:32:24.975Z"
 last_activity: 2026-03-30 — Migrated article detail page and TopMeldungenRow to Wurzelwelt semantic tokens (Plan 29-01)
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 9
+  completed_plans: 8
   percent: 38
 ---
 
@@ -55,6 +55,7 @@ Progress: [████░░░░░░] 38%
 | Phase 28-homepage-components P01 | 2min | 2 tasks | 3 files |
 | Phase 28 P02 | 20min | 2 tasks | 2 files |
 | Phase 29-article-detail P01 | 5min | 2 tasks | 2 files |
+| Phase 30-cms-admin-restyling P01 | 3min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -84,6 +85,8 @@ Recent decisions affecting v2.0:
 - [Phase 28-01]: HeroArticle Topmeldung badge uses gradient pill (from-primary to-primary-container rounded-full) matching CTA pattern
 - [Phase Phase 28-02]: Wurzelmann avatar sized to 360px after iterative user feedback during visual review
 - [Phase Phase 28-02]: MascotGreeting motto updated to 'tief verwurzelt' for authentic German brand voice
+- [Phase 30-cms-admin-restyling]: Admin login error box uses tonal accent pattern (bg-accent/10 rounded-sm) instead of bordered red box for brand consistency
+- [Phase 30-cms-admin-restyling]: Admin sidebar label changed from 'Regionencompass' to 'Wurzelwelt' — aligns admin shell with rebrand
 
 ### Pending Todos
 
@@ -95,6 +98,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-30T00:05:00.000Z
-Stopped at: Completed 29-01-PLAN.md
+Last session: 2026-03-30T12:32:24.973Z
+Stopped at: Completed 30-01-PLAN.md
 Resume file: None

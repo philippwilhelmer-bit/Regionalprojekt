@@ -137,7 +137,7 @@ Plans:
   1. CMS admin pages display the Wurzelwelt color palette (no legacy Styrian green or cream from v1.1)
   2. Admin typography uses Plus Jakarta Sans for body and labels, Newsreader for any headings
   3. Admin buttons, inputs, and interactive elements have rounded corners and gradient CTAs consistent with the design system
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 30-01-PLAN.md — Admin shell restyling (login, sidebar layout, Unsplash pickers)
@@ -154,4 +154,4 @@ Plans:
 | 27. App Chrome | 1/1 | Complete    | 2026-03-28 | - |
 | 28. Homepage Components | 2/2 | Complete   | 2026-03-29 | - |
 | 29. Article Detail | 1/1 | Complete    | 2026-03-30 | - |
-| 30. CMS Admin Restyling | v2.0 | 0/2 | Not started | - |
+| 30. CMS Admin Restyling | 1/2 | In Progress|  | - |

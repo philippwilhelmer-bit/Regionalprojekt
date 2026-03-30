@@ -38,7 +38,7 @@ Requirements for the Wurzelwelt rebrand. Each maps to roadmap phases.
 
 ### CMS Admin
 
-- [ ] **CMS-01**: CMS admin pages restyled with Wurzelwelt brand colors, typography, and design tokens
+- [x] **CMS-01**: CMS admin pages restyled with Wurzelwelt brand colors, typography, and design tokens
 
 ## Future Requirements
 
@@ -80,7 +80,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COMP-05 | Phase 28 | Complete |
 | COMP-07 | Phase 28 | Complete |
 | ART-01 | Phase 29 | Complete |
-| CMS-01 | Phase 30 | Pending |
+| CMS-01 | Phase 30 | Complete |
 
 **Coverage:**
 - v2.0 requirements: 18 total
