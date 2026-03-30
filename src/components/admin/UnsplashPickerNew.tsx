@@ -37,8 +37,8 @@ export function UnsplashPickerNew() {
 
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-700">
-        Artikelbild <span className="text-xs text-gray-600">(optional)</span>
+      <label className="block text-sm font-medium text-text/70">
+        Artikelbild <span className="text-xs text-text/60">(optional)</span>
       </label>
 
       {/* Hidden fields for form submission */}
@@ -56,13 +56,13 @@ export function UnsplashPickerNew() {
           <img
             src={selected.thumb}
             alt="Ausgewähltes Bild"
-            className="w-full h-40 object-cover rounded border border-gray-200"
+            className="w-full h-40 object-cover rounded border border-surface"
           />
-          <p className="text-xs text-gray-400 mt-1">{selected.credit}</p>
+          <p className="text-xs text-text/40 mt-1">{selected.credit}</p>
           <button
             type="button"
             onClick={handleRemove}
-            className="absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700"
+            className="absolute top-2 right-2 px-2 py-1 bg-red-600 text-white text-xs rounded-sm hover:bg-red-700"
           >
             Entfernen
           </button>
@@ -77,19 +77,19 @@ export function UnsplashPickerNew() {
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleSearch())}
           placeholder="Bildersuche (z.B. Steiermark, Verkehr)..."
-          className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <button
           type="button"
           onClick={handleSearch}
           disabled={isPending || !query.trim()}
-          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 disabled:opacity-50"
+          className="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-white text-sm font-medium rounded-full hover:opacity-90 disabled:opacity-50"
         >
           {isPending ? '...' : 'Suchen'}
         </button>
       </div>
 
-      {message && <p className="text-sm text-gray-500">{message}</p>}
+      {message && <p className="text-sm text-text/50">{message}</p>}
 
       {/* Results grid */}
       {results.length > 0 && (
@@ -100,7 +100,7 @@ export function UnsplashPickerNew() {
               type="button"
               onClick={() => handleSelect(image)}
               disabled={isPending}
-              className="group relative overflow-hidden rounded border border-gray-200 hover:border-blue-500 transition-colors disabled:opacity-50"
+              className="group relative overflow-hidden rounded border border-surface hover:border-primary transition-colors disabled:opacity-50"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -113,7 +113,7 @@ export function UnsplashPickerNew() {
                   Auswählen
                 </span>
               </div>
-              <p className="text-[10px] text-gray-400 px-1 py-0.5 truncate">{image.credit}</p>
+              <p className="text-[10px] text-text/40 px-1 py-0.5 truncate">{image.credit}</p>
             </button>
           ))}
         </div>
