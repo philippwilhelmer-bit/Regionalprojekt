@@ -1,8 +1,8 @@
-# Regionalprojekt (Ennstal Aktuell)
+# Regionalprojekt (Wurzelwelt)
 
 ## What This Is
 
-An autonomous AI-powered regional news platform covering all 13 Bezirke of Steiermark, Austria. The platform ingests content from OTS.at and RSS feeds, generates localized German-language articles via AI, and publishes them without manual intervention. Readers personalize their feed by selecting their Bezirk ("Mein Bezirk") and discover content through a newspaper-style editorial homepage and a search/category page. Editors can manually post, curate, pin, feature, and override any automated content through a full CMS. The architecture is config-driven — deploying for a new Bundesland requires only changing `bundesland.config.ts` and re-seeding.
+An autonomous AI-powered regional news platform covering all 13 Bezirke of Steiermark, Austria, branded as "Wurzelwelt" with a "Modern Mountain Folklore" design identity. The platform ingests content from OTS.at and RSS feeds, generates localized German-language articles via AI, and publishes them without manual intervention. Readers personalize their feed by selecting their Bezirk ("Mein Bezirk") and discover content through the Wurzelwelt editorial homepage — featuring the Wurzelmann mascot, hero articles with gradient overlays, tonal section layering, and a 4-tab bottom navigation. Editors curate content through a fully branded CMS. The architecture is config-driven — deploying for a new Bundesland requires only changing `bundesland.config.ts` and re-seeding.
 
 ## Core Value
 
@@ -60,21 +60,24 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 - ✓ AdSense suppression in test mode (defense-in-depth) — v1.2
 - ✓ All test behaviors gated by single NEXT_PUBLIC_IS_TEST_SITE env var — v1.2
 
+- ✓ Wurzelwelt design system: forest green, moss, terracotta, warm cream palette — v2.0
+- ✓ Plus Jakarta Sans body/UI font + Newsreader headlines — v2.0
+- ✓ Material Symbols Rounded icons throughout — v2.0
+- ✓ "Modern Mountain Folklore" design: tonal layering, no borders, soft corners, organic spacing — v2.0
+- ✓ Brand rename from "Ennstal Aktuell" to "Wurzelwelt" with Wurzelmann mascot — v2.0
+- ✓ WurzelAppBar with centered logo + Wurzelmann avatar — v2.0
+- ✓ MascotGreeting speech-bubble card ("Wurzelmann sagt:") — v2.0
+- ✓ Topmeldung with dark gradient overlay — v2.0
+- ✓ RegionalEditorialCard: full-width images, serif headlines, uppercase labels — v2.0
+- ✓ Prioritized "Mein Bezirk" section with featured card — v2.0
+- ✓ WurzelNavBar: 4-tab bottom nav with rounded icons — v2.0
+- ✓ Homepage tonal section alternation (#FCF9EF / #F6F4EA) — v2.0
+- ✓ Article detail restyled with Wurzelwelt tokens — v2.0
+- ✓ CMS admin restyled with Wurzelwelt brand — v2.0
+
 ### Active
 
-<!-- v2.0 Wurzelwelt Rebrand -->
-- [ ] Full rebrand from "Ennstal Aktuell" to "Wurzelwelt" with Wurzelmann mascot
-- [ ] New color palette: forest green, moss, terracotta, warm cream
-- [ ] Typography: Newsreader headlines + Plus Jakarta Sans body/UI
-- [ ] Material Symbols Rounded icons
-- [ ] "Modern Mountain Folklore" design system: tonal layering, no borders, soft corners, organic spacing
-- [ ] WurzelAppBar with centered "WURZELWELT" logo + Wurzelmann avatar
-- [ ] MascotGreeting speech-bubble card ("Wurzelmann sagt:")
-- [ ] Topmeldung with dark gradient overlay
-- [ ] Prioritized "Mein Bezirk" section with featured card
-- [ ] RegionalEditorialCard: full-width images, serif headlines, uppercase labels
-- [ ] WurzelNavBar: 4-tab bottom nav with rounded icons
-- [ ] CMS admin restyled with Wurzelwelt brand
+(None yet — define with `/gsd:new-milestone`)
 
 ### Out of Scope
 
@@ -84,28 +87,19 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 - Multi-tenant single app — config-driven deployment per Bundesland is simpler and sufficient
 - Offline mode — real-time news is core value
 - Central Wurzelmann action button in bottom nav — functionality still in design, deferred past v2.0
-
-## Current Milestone: v2.0 Wurzelwelt Rebrand
-
-**Goal:** Full visual rebrand from "Ennstal Aktuell" to "Wurzelwelt" — new brand identity with Wurzelmann mascot, "Modern Mountain Folklore" design system, and CMS restyling.
-
-**Target features:**
-- Wurzelwelt brand identity (app bar, mascot, naming)
-- "Modern Mountain Folklore" design system (colors, typography, tonal layering, organic spacing)
-- Redesigned homepage (Topmeldung, MascotGreeting, Mein Bezirk section)
-- New component library (RegionalEditorialCard, WurzelNavBar, WurzelAppBar)
-- CMS admin restyled with new brand
+- Animation/motion design — kept scope to visual tokens and components in v2.0
 
 ## Context
 
-Shipped v1.2 Test Deployment on 2026-03-28 (2 days, 5 phases, 7 plans).
+Shipped v2.0 Wurzelwelt Rebrand on 2026-03-30 (3 days, 7 phases, 11 plans).
 Live at: https://regionalprojekt.vercel.app (Vercel Hobby + Neon PostgreSQL).
 Tech stack: Next.js 15, Prisma v6, PostgreSQL (Neon), Anthropic Claude API, Tailwind CSS v4, Vitest with pgLite.
 Architecture: Config-driven Bundesland deployment, adapter-pattern ingestion, Server Component CMS with HMAC auth.
-Reader frontend: Premium editorial design with Styrian identity, serif typography (Newsreader/Inter/Work Sans), warm cream palette, Material Symbols icons, newspaper-style layouts, and search/discovery page.
+Reader frontend: "Wurzelwelt" brand identity with Wurzelmann mascot, "Modern Mountain Folklore" design system — forest green/moss/terracotta/warm cream palette, Plus Jakarta Sans + Newsreader typography, Material Symbols Rounded, tonal section layering, organic spacing.
 Test mode: Single env var (NEXT_PUBLIC_IS_TEST_SITE) gates banners, SEO suppression, and AdSense suppression.
 Cron: Vercel cron → /api/cron route (1/day on Hobby plan), secured with CRON_SECRET.
-Known items: Impressum fields need real publisher data, OTS source disabled (Cloudflare-blocked, using ORF RSS only), 12 pre-existing test failures (DB hooks + bezirke data).
+Codebase: 13,341 LOC TypeScript across 4 milestones.
+Known items: Impressum fields need real publisher data, OTS source disabled (Cloudflare-blocked, using ORF RSS only), 12 pre-existing test failures (DB hooks + bezirke data), 9 non-blocking tech debt items from v2.0 audit.
 
 ## Key Decisions
 
@@ -121,6 +115,17 @@ Known items: Impressum fields need real publisher data, OTS source disabled (Clo
 | HMAC session auth (not OAuth/NextAuth) | Minimal dependency, single-admin use case | ✓ Good — lightweight, Edge-compatible |
 | Adapter pattern for ingestion | New sources added without core changes | ✓ Good — validated with ORF RSS second adapter |
 | Server Component CMS with FormData actions | No API layer needed for admin CRUD | ✓ Good — reduced boilerplate significantly |
+| Design system foundation via Tailwind v4 @theme | Tokens as single source of truth for all components | ✓ Good — consistent across v1.1 and v2.0 |
+| Serif typography (Newsreader) for editorial feel | Differentiates from generic news sites | ✓ Good — strong brand identity, retained in v2.0 |
+| Client-side search (no server API) | 200 article limit keeps it simple | ⚠️ Revisit if article count exceeds 200 |
+| Vercel + Neon instead of Railway | Better Next.js fit, user-requested | ✓ Good — auto-deploy, serverless Postgres, EU region |
+| Single env var for all test behaviors | No code changes to go production | ✓ Good — 6 files check one variable |
+| Vercel cron for pipeline | Replaces Railway cron service | ⚠️ Revisit — Hobby plan limits to 1/day |
+| Wurzelwelt rebrand over incremental v1.x updates | User wanted distinct brand identity, not generic regional news look | ✓ Good — "Modern Mountain Folklore" creates unique identity |
+| Plus Jakarta Sans replaces Inter + Work Sans | Single body/UI font simplifies stack, better geometric feel | ✓ Good — cleaner typography hierarchy |
+| Tonal layering over borders | Borderless design with bg shifts creates warmer, editorial feel | ✓ Good — consistent across all pages |
+| Terracotta accent for active nav state | Distinct from primary green, creates visual hierarchy | ✓ Good — visually clear active indication |
+| MascotGreeting as client component | Time-of-day detection requires getHours(), cannot SSR | ✓ Good — acceptable trade-off for dynamic greeting |
 
 ## Constraints
 
@@ -130,13 +135,5 @@ Known items: Impressum fields need real publisher data, OTS source disabled (Clo
 - **German-language**: All user-facing content in Hochdeutsch
 - **Austrian legal**: Impressum must satisfy MedienG/ECG; AI disclosure required on generated articles
 
-| Design system foundation via Tailwind v4 @theme | Tokens as single source of truth for all components | ✓ Good — consistent across 5 phases |
-| Serif typography (Newsreader) for editorial feel | Differentiates from generic news sites | ✓ Good — strong brand identity |
-| Client-side search (no server API) | 200 article limit keeps it simple | ⚠️ Revisit if article count exceeds 200 |
-| EilmeldungBanner sessionStorage dismiss | Session-scoped, no server state needed | ✓ Good — lightweight UX |
-| Vercel + Neon instead of Railway | Better Next.js fit, user-requested | ✓ Good — auto-deploy, serverless Postgres, EU region |
-| Single env var for all test behaviors | No code changes to go production | ✓ Good — 6 files check one variable |
-| Vercel cron for pipeline | Replaces Railway cron service | ⚠️ Revisit — Hobby plan limits to 1/day |
-
 ---
-*Last updated: 2026-03-28 after v2.0 milestone started*
+*Last updated: 2026-03-30 after v2.0 milestone*

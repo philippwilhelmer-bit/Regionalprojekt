@@ -1,5 +1,26 @@
 # Milestones
 
+## v2.0 Wurzelwelt Rebrand (Shipped: 2026-03-30)
+
+**Phases completed:** 7 phases, 11 plans
+**Timeline:** 3 days (2026-03-28 → 2026-03-30)
+**Codebase:** 129 files changed, +6,704 / -640 lines (13,341 LOC TypeScript)
+**Git range:** feat(26-01) → docs(phase-32)
+
+**Delivered:** Full visual rebrand from "Ennstal Aktuell" to "Wurzelwelt" — new brand identity with Wurzelmann mascot, "Modern Mountain Folklore" design system with tonal layering, redesigned homepage components, article detail and CMS admin restyling.
+
+**Key accomplishments:**
+1. Wurzelwelt design system: semantic color tokens (forest green, moss, terracotta, warm cream), Plus Jakarta Sans body font, Material Symbols Rounded icons, organic spacing scale
+2. WurzelAppBar with centered "WURZELWELT" branding and Wurzelmann avatar + WurzelNavBar 4-tab bottom nav with terracotta accent
+3. Homepage redesign: MascotGreeting speech-bubble, Topmeldung hero with gradient overlay, RegionalEditorialCard, prioritized "Mein Bezirk" section, tonal section alternation
+4. Article detail page migrated to Wurzelwelt semantic tokens and typography
+5. CMS admin fully restyled: login, sidebar, articles, exceptions, sources, AI config pages
+6. Icon/token consistency fix and independent verification of all 18 requirements (18/18 satisfied)
+
+**Tech debt:** 9 non-blocking items (zinc residuals in out-of-scope components, hardcoded BEZIRK_COLORS hex, CSS triangle white literal, SUMMARY frontmatter gaps)
+
+---
+
 ## v1.2 Test Deployment (Shipped: 2026-03-28)
 
 **Phases completed:** 5 phases, 7 plans

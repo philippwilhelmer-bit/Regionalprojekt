@@ -2,6 +2,52 @@
 
 *A living document updated after each milestone. Lessons feed forward into future planning.*
 
+## Milestone: v2.0 — Wurzelwelt Rebrand
+
+**Shipped:** 2026-03-30
+**Phases:** 7 | **Plans:** 11 | **Timeline:** 3 days
+
+### What Was Built
+- "Wurzelwelt" brand identity: forest green/moss/terracotta/warm cream palette, Plus Jakarta Sans + Newsreader typography, Material Symbols Rounded
+- WurzelAppBar + WurzelNavBar app chrome replacing Styrian-branded header and nav
+- Homepage redesign: MascotGreeting speech-bubble, Topmeldung hero with gradient overlay, RegionalEditorialCard, tonal section alternation, prioritized "Mein Bezirk"
+- Article detail page and CMS admin fully restyled with Wurzelwelt semantic tokens
+- Icon/token consistency fix and independent verification of all 18 requirements
+
+### What Worked
+- Design token foundation in Phase 26 enabled all subsequent phases to build cleanly — same pattern proven in v1.1, scaled again
+- Milestone audit caught 5 real gaps (icon class mismatch, missing verification, zinc residuals, traceability table) — gap-closure phases 31-32 resolved all
+- "Clean break" approach: replacing all legacy v1.1 tokens with new semantic names prevented token confusion across phases
+- Iterative visual review for Wurzelmann avatar size (6 iterations from 56px to 360px) — user feedback loop worked well
+- CTA gradient pill pattern established once (Phase 26-02) and reused consistently across homepage, article detail, and admin
+
+### What Was Inefficient
+- Phase 30 ROADMAP.md plan checkboxes not updated by CLI (30-01, 30-02, 31-01, 32-01 still show `[ ]` in roadmap despite SUMMARY.md existing) — cosmetic but confusing
+- Old RegionalAppBar/RegionalNavBar components preserved rather than deleted — added to tech debt
+- SUMMARY frontmatter gaps (DS-04-07 missing from 26-02-SUMMARY.md) — documentation drift not caught until audit
+- Nyquist validation missing for all 7 phases — skipped during fast execution cycle
+
+### Patterns Established
+- Semantic token naming: `text-text`, `bg-background`, `bg-surface`, `bg-surface-elevated` — role-based, not color-based
+- Tonal section separation: alternating `bg-background` / `bg-surface` with `py-[var(--spacing-section)]` gaps
+- CTA gradient pill: `bg-gradient-to-br from-primary to-primary-container rounded-full`
+- Admin tonal error: `bg-accent/10 text-accent rounded-sm` instead of bordered red boxes
+- Time-of-day client component: `"use client"` for `getHours()` detection in MascotGreeting
+
+### Key Lessons
+1. Design rebrand milestones execute fastest with foundation-first sequencing — same lesson as v1.1, now verified across two redesigns
+2. Milestone audits remain essential — v2.0 audit caught 5 gaps that gap-closure phases 31-32 resolved cleanly
+3. SUMMARY frontmatter should be validated against VERIFICATION.md during phase completion — audit found documentation drift
+4. Interactive visual review checkpoints (like avatar sizing) work well for subjective design decisions — worth the iteration cost
+5. "Preserve old components" adds tech debt — better to delete replaced components and let git history be the backup
+
+### Cost Observations
+- Model mix: balanced profile (opus orchestration, sonnet execution)
+- Sessions: ~4-5 across 3 days
+- Notable: gap-closure phases (31-32) executed in single session — very fast once audit identified specific issues
+
+---
+
 ## Milestone: v1.2 — Test Deployment
 
 **Shipped:** 2026-03-28
@@ -142,6 +188,7 @@
 | v1.0 | 5 days | 15 | Initial build — gap-closure phases added mid-milestone |
 | v1.1 | 2 days | 5 | Pure frontend redesign — no gap-closure needed |
 | v1.2 | 2 days | 5 | Deployment + test mode — 3 gap-closure phases from audit |
+| v2.0 | 3 days | 7 | Full rebrand — 2 gap-closure phases from audit |
 
 ### Cumulative Quality
 
@@ -150,12 +197,14 @@
 | v1.0 | 10,303 | 278 | Config-driven, adapter pattern, Server Components |
 | v1.1 | +8,357 | 67 | Design tokens, editorial components, RSC+client layouts |
 | v1.2 | +4,976 | 79 | Env-var test mode, Vercel+Neon deployment, defense-in-depth AdSense |
+| v2.0 | +6,704 | 129 | Wurzelwelt rebrand, semantic tokens, tonal design, mascot identity |
 
 ### Top Lessons (Verified Across Milestones)
 
 1. Wave 0 test stubs before implementation catches integration issues early
 2. Config-driven architecture reduces per-deployment effort to near-zero
-3. Strict phase ordering (foundations first, then consumers) prevents rework — validated in v1.0, v1.1
+3. Strict phase ordering (foundations first, then consumers) prevents rework — validated in v1.0, v1.1, v2.0
 4. UAT after final phase catches UX gaps that automated tests miss — back navigation (v1.1), CMS acceptance (v1.0)
-5. Milestone audits catch real gaps — v1.0 spawned 8 gap-closure phases, v1.2 spawned 3 — both essential
+5. Milestone audits catch real gaps — v1.0 spawned 8 gap-closure phases, v1.2 spawned 3, v2.0 spawned 2 — consistently essential
 6. Validate infrastructure decisions with user before planning — v1.2 Railway→Vercel pivot wasted one plan
+7. Design rebrand milestones execute fastest with foundation-first sequencing — verified across v1.1 and v2.0

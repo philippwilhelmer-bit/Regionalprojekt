@@ -2,35 +2,34 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Wurzelwelt Rebrand
-status: executing
-stopped_at: Completed 32-01-PLAN.md
-last_updated: "2026-03-30T13:56:22.957Z"
-last_activity: 2026-03-30 — Migrated article detail page and TopMeldungenRow to Wurzelwelt semantic tokens (Plan 29-01)
+status: complete
+stopped_at: Milestone v2.0 complete
+last_updated: "2026-03-30T16:00:00.000Z"
+last_activity: 2026-03-30 — Completed v2.0 Wurzelwelt Rebrand milestone (7 phases, 11 plans, 18/18 requirements)
 progress:
   total_phases: 7
   completed_phases: 7
   total_plans: 11
   completed_plans: 11
-  percent: 38
+  percent: 100
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-28)
+See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** v2.0 Wurzelwelt Rebrand — Phase 26: Design System & Brand Foundation
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 29 of 30 (Article Detail)
-Plan: 01 complete
-Status: In progress
-Last activity: 2026-03-30 — Migrated article detail page and TopMeldungenRow to Wurzelwelt semantic tokens (Plan 29-01)
+Milestone: v2.0 Wurzelwelt Rebrand — COMPLETE
+Status: Shipped 2026-03-30
+Next: `/gsd:new-milestone`
 
-Progress: [████░░░░░░] 38%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -38,63 +37,13 @@ Progress: [████░░░░░░] 38%
 - v1.0: 52 plans over 5 days
 - v1.1: 10 plans over 2 days
 - v1.2: 7 plans over 2 days
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| v1.0 (1-15) | 52 | ~5 days | — |
-| v1.1 (16-20) | 10 | ~2 days | — |
-| v1.2 (21-25) | 7 | ~2 days | — |
-| Phase 26 P01 | 2 | 2 tasks | 2 files |
-| Phase 26 P02 | 7min | 2 tasks | 20 files |
-| Phase 26-design-system-brand-foundation P03 | 10min | 1 tasks | 8 files |
-| Phase 26-design-system-brand-foundation P03 | 30min | 2 tasks | 9 files |
-| Phase 27-app-chrome P01 | 5min | 2 tasks | 3 files |
-| Phase 27-app-chrome P01 | 30min | 3 tasks | 3 files |
-| Phase 28-homepage-components P01 | 2min | 2 tasks | 3 files |
-| Phase 28 P02 | 20min | 2 tasks | 2 files |
-| Phase 29-article-detail P01 | 5min | 2 tasks | 2 files |
-| Phase 30-cms-admin-restyling P01 | 3min | 2 tasks | 6 files |
-| Phase 30-cms-admin-restyling P02 | 5min | 2 tasks | 14 files |
-| Phase 31-icon-token-consistency-fix P01 | 5min | 2 tasks | 15 files |
-| Phase 32-phase-28-verification P01 | 5 | 2 tasks | 2 files |
+- v2.0: 11 plans over 3 days
 
 ## Accumulated Context
 
 ### Decisions
 
 See PROJECT.md Key Decisions for full history.
-
-Recent decisions affecting v2.0:
-- Design system uses Tailwind v4 @theme tokens as single source of truth (proven pattern from v1.1)
-- Plus Jakarta Sans replaces Inter + Work Sans; Newsreader headlines retained
-- Material Symbols Rounded replaces standard variant throughout
-- [Phase 26]: Replaced all legacy v1.1 color names with semantic Wurzelwelt palette (clean break enables consistent rebrand)
-- [Phase 26]: Plus Jakarta Sans covers both body and label roles, eliminating Work Sans dependency
-- [Phase 26]: --radius-sm changed from 2px to 0.75rem as new rounded baseline for all interactive elements
-- [Phase 26-design-system-brand-foundation]: Geographic 'Ennstal' references in test fixtures preserved — these are Bezirk synonym data for Liezen region, not brand references
-- [Phase 26-design-system-brand-foundation]: Wurzelmann mascot PNG placed at public/images/wurzelmann.png via human-verify checkpoint — ready for Phase 27+ components
-- [Phase 26-02]: Functional spinner animation border preserved (border-t-primary on spin element) — only decorative borders removed
-- [Phase 26-02]: ListItem uses border-surface for row separators — tonal semantic token, not a legacy decorative border
-- [Phase 26-02]: CTA gradient pill pattern established: bg-gradient-to-br from-primary to-primary-container rounded-full
-- [Phase 27-app-chrome]: WurzelAppBar: no Styrian flag stripe — Wurzelwelt brand replaces regional flag accent
-- [Phase 27-app-chrome]: WurzelNavBar: active state uses bg-accent (terracotta #9F411E) instead of bg-primary
-- [Phase 27-app-chrome]: WurzelAppBar: no Styrian flag stripe — Wurzelwelt brand replaces regional flag accent
-- [Phase 27-app-chrome]: WurzelNavBar: active state uses bg-accent (terracotta #9F411E) instead of bg-primary
-- [Phase 27-app-chrome]: Old RegionalAppBar/RegionalNavBar preserved (not deleted) for future tech debt cleanup
-- [Phase 28-01]: MascotGreeting is "use client" — time-of-day detection requires getHours(), cannot SSR
-- [Phase 28-01]: RegionalEditorialCard has no bezirk gradient color maps — single text-primary label color per plan
-- [Phase 28-01]: HeroArticle Topmeldung badge uses gradient pill (from-primary to-primary-container rounded-full) matching CTA pattern
-- [Phase Phase 28-02]: Wurzelmann avatar sized to 360px after iterative user feedback during visual review
-- [Phase Phase 28-02]: MascotGreeting motto updated to 'tief verwurzelt' for authentic German brand voice
-- [Phase 30-cms-admin-restyling]: Admin login error box uses tonal accent pattern (bg-accent/10 rounded-sm) instead of bordered red box for brand consistency
-- [Phase 30-cms-admin-restyling]: Admin sidebar label changed from 'Regionencompass' to 'Wurzelwelt' — aligns admin shell with rebrand
-- [Phase 30-cms-admin-restyling]: FETCHED status badge changed from bg-blue to bg-surface/text-text/70 — neutral Wurzelwelt token for pending state
-- [Phase 30-cms-admin-restyling]: Source type badges (OTS.at/RSS) retain bg-blue-100/text-blue-700 — semantic type indicator preserved per plan spec
-- [Phase 31-icon-token-consistency-fix]: material-symbols-rounded class matches CDN font; all icon spans updated
-- [Phase 31-icon-token-consistency-fix]: text-zinc-900/800 maps to text-text; lighter zinc shades map to text-text/{opacity}
-- [Phase 32-phase-28-verification]: All 5 Phase 28 COMP requirements verified PASS by independent code inspection
 
 ### Pending Todos
 
@@ -106,6 +55,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-30T13:53:45.108Z
-Stopped at: Completed 32-01-PLAN.md
+Last session: 2026-03-30
+Stopped at: Milestone v2.0 complete
 Resume file: None

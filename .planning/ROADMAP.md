@@ -5,7 +5,7 @@
 - ✅ **v1.0 MVP** — Phases 1-15 (shipped 2026-03-25)
 - ✅ **v1.1 Design Overhaul** — Phases 16-20 (shipped 2026-03-26)
 - ✅ **v1.2 Test Deployment** — Phases 21-25 (shipped 2026-03-28)
-- 🚧 **v2.0 Wurzelwelt Rebrand** — Phases 26-30 (in progress)
+- ✅ **v2.0 Wurzelwelt Rebrand** — Phases 26-32 (shipped 2026-03-30)
 
 ## Phases
 
@@ -58,9 +58,8 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
 
 </details>
 
-### v2.0 Wurzelwelt Rebrand (In Progress)
-
-**Milestone Goal:** Full visual rebrand from "Ennstal Aktuell" to "Wurzelwelt" — new brand identity with Wurzelmann mascot, "Modern Mountain Folklore" design system, redesigned homepage components, and CMS restyling.
+<details>
+<summary>✅ v2.0 Wurzelwelt Rebrand (Phases 26-32) — SHIPPED 2026-03-30</summary>
 
 - [x] **Phase 26: Design System & Brand Foundation** - New color palette, typography, icons, spacing, naming, mascot asset (completed 2026-03-28)
 - [x] **Phase 27: App Chrome** - WurzelAppBar and WurzelNavBar replacing current header and bottom nav (completed 2026-03-28)
@@ -70,108 +69,9 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
 - [x] **Phase 31: Icon & Token Consistency Fix** - Fix icon class mismatch, replace residual zinc tokens, fix stale test mock (completed 2026-03-30)
 - [x] **Phase 32: Phase 28 Verification** - Independent verification of all Phase 28 homepage components (completed 2026-03-30)
 
-## Phase Details
+Full details: `.planning/milestones/v2.0-ROADMAP.md`
 
-### Phase 26: Design System & Brand Foundation
-**Goal**: The Wurzelwelt visual language is fully defined — every token, font, icon variant, spacing rule, and brand name is in place so all subsequent phases can build on a coherent foundation.
-**Depends on**: Phase 25
-**Requirements**: DS-01, DS-02, DS-03, DS-04, DS-05, DS-06, DS-07, BRAND-01, BRAND-02
-**Success Criteria** (what must be TRUE):
-  1. The site displays forest green / moss / terracotta / warm cream colors drawn from the Tailwind theme tokens (no hardcoded hex values in components)
-  2. Body text and UI labels render in Plus Jakarta Sans; headlines render in Newsreader
-  3. All icons throughout the reader and admin are the Rounded variant of Material Symbols
-  4. No visible 1px borders exist anywhere — section separation is achieved through tonal background differences
-  5. All interactive elements (buttons, inputs, cards) have soft corners and the Wurzelwelt site name appears everywhere "Ennstal Aktuell" previously appeared; Wurzelmann mascot image is served from public assets
-**Plans:** 3/3 plans complete
-
-Plans:
-- [x] 26-01-PLAN.md — Wurzelwelt color tokens, Plus Jakarta Sans font, Material Symbols Rounded
-- [x] 26-02-PLAN.md — Border-to-tonal migration, corner radius, organic spacing, CTA gradient
-- [x] 26-03-PLAN.md — Brand rename (Ennstal Aktuell to Wurzelwelt) and Wurzelmann mascot asset
-
-### Phase 27: App Chrome
-**Goal**: Every page is framed by the Wurzelwelt app chrome — the centered logo app bar at the top and the 4-tab rounded icon nav bar at the bottom.
-**Depends on**: Phase 26
-**Requirements**: COMP-01, COMP-06
-**Success Criteria** (what must be TRUE):
-  1. The header shows "WURZELWELT" in bold uppercase Newsreader centered on the bar with the Wurzelmann avatar beside it
-  2. The bottom navigation has exactly 4 tabs, each using rounded Material Symbols icons, with the active tab clearly indicated using the Wurzelwelt accent treatment
-  3. Both the app bar and bottom nav are visible on every reader page (homepage, article detail, search)
-**Plans:** 1/1 plans complete
-
-Plans:
-- [x] 27-01-PLAN.md — WurzelAppBar + WurzelNavBar components and layout wiring
-
-### Phase 28: Homepage Components
-**Goal**: The homepage delivers the full Wurzelwelt editorial experience — mascot greeting, featured top story with gradient overlay, regional editorial cards, a prioritized Mein Bezirk section, and tonal section alternation.
-**Depends on**: Phase 27
-**Requirements**: COMP-02, COMP-03, COMP-04, COMP-05, COMP-07
-**Success Criteria** (what must be TRUE):
-  1. A speech-bubble card with "Wurzelmann sagt:" and a quote from the mascot appears on the homepage above the main content
-  2. The top story renders as a full-bleed image with a dark gradient overlay behind the headline text (text is legible against any image)
-  3. Article cards display full-width aspect-video images with Newsreader serif headlines and uppercase Jakarta Sans category labels
-  4. The reader's selected Bezirk section appears at the top of the content area with a visually larger featured card compared to non-selected sections
-  5. Alternating homepage sections are distinguished by tonal background shifts (#FCF9EF / #F6F4EA) with no border lines between them
-**Plans:** 2/2 plans complete
-
-Plans:
-- [x] 28-01-PLAN.md — MascotGreeting, RegionalEditorialCard, and Topmeldung restyle
-- [x] 28-02-PLAN.md — HomepageLayout rewiring with tonal sections and Mein Bezirk
-
-### Phase 29: Article Detail
-**Goal**: The article detail page is fully restyled to match the Wurzelwelt design system — correct palette, typography, and spacing throughout.
-**Depends on**: Phase 26
-**Requirements**: ART-01
-**Success Criteria** (what must be TRUE):
-  1. The article page body uses Plus Jakarta Sans at the organic spacing scale with warm cream (#FCF9EF) as the canvas color
-  2. Article headlines render in Newsreader at the correct type scale with no legacy Styrian green colors visible
-  3. The article detail page is visually consistent with the homepage components (same tokens, same corner radius, same icon variant)
-**Plans:** 1/1 plans complete
-
-Plans:
-- [x] 29-01-PLAN.md — Replace legacy colors and spacing with Wurzelwelt semantic tokens
-
-### Phase 30: CMS Admin Restyling
-**Goal**: The CMS admin interface is restyled with Wurzelwelt brand tokens so the editor experience matches the reader-facing identity.
-**Depends on**: Phase 26
-**Requirements**: CMS-01
-**Success Criteria** (what must be TRUE):
-  1. CMS admin pages display the Wurzelwelt color palette (no legacy Styrian green or cream from v1.1)
-  2. Admin typography uses Plus Jakarta Sans for body and labels, Newsreader for any headings
-  3. Admin buttons, inputs, and interactive elements have rounded corners and gradient CTAs consistent with the design system
-**Plans:** 2/2 plans complete
-
-Plans:
-- [ ] 30-01-PLAN.md — Admin shell restyling (login, sidebar layout, Unsplash pickers)
-- [ ] 30-02-PLAN.md — CMS content pages restyling (Articles, Exceptions, Sources, AI Config)
-
-### Phase 31: Icon & Token Consistency Fix
-**Goal**: All icon classes match the CDN-loaded Rounded variant, all components use semantic design tokens instead of legacy zinc values, and stale test mocks are corrected.
-**Depends on**: Phase 30
-**Requirements**: DS-03
-**Gap Closure:** Closes gaps from v2.0 audit (DS-03 unsatisfied, DS-01 integration residual, stale test mock, REQUIREMENTS.md traceability fix)
-**Success Criteria** (what must be TRUE):
-  1. All components use `.material-symbols-rounded` class matching the CDN stylesheet
-  2. No `text-zinc-*` tokens remain in Phase 28 components or layout.tsx body
-  3. Test mocks reference current WurzelAppBar/WurzelNavBar components
-  4. REQUIREMENTS.md traceability table shows DS-04-07 as "Complete"
-**Plans:** 1/1 plans complete
-
-Plans:
-- [ ] 31-01-PLAN.md — Icon class fix, zinc token replacement, test mock update, traceability fix
-
-### Phase 32: Phase 28 Verification
-**Goal**: All 5 Phase 28 homepage component requirements are independently verified with a VERIFICATION.md report.
-**Depends on**: Phase 31
-**Requirements**: COMP-02, COMP-03, COMP-04, COMP-05, COMP-07
-**Gap Closure:** Closes verification gaps from v2.0 audit
-**Success Criteria** (what must be TRUE):
-  1. VERIFICATION.md exists in Phase 28 directory with pass/fail for each requirement
-  2. Each of COMP-02 through COMP-05 and COMP-07 has documented evidence of satisfaction
-**Plans:** 1/1 plans complete
-
-Plans:
-- [ ] 32-01-PLAN.md — Verify COMP-02 through COMP-07 via code inspection, produce 28-VERIFICATION.md
+</details>
 
 ## Progress
 
@@ -180,8 +80,4 @@ Plans:
 | 1-15 | v1.0 | 52/52 | Complete | 2026-03-25 |
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
-| 26. Design System & Brand Foundation | v2.0 | Complete    | 2026-03-28 | 2026-03-28 |
-| 27. App Chrome | 1/1 | Complete    | 2026-03-28 | - |
-| 28. Homepage Components | 2/2 | Complete   | 2026-03-29 | - |
-| 29. Article Detail | 1/1 | Complete    | 2026-03-30 | - |
-| 30. CMS Admin Restyling | 2/2 | Complete    | 2026-03-30 | - |
+| 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
