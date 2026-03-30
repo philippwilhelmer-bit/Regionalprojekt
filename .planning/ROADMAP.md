@@ -67,7 +67,7 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
 - [x] **Phase 28: Homepage Components** - MascotGreeting, Topmeldung, RegionalEditorialCard, Mein Bezirk section, tonal section separation (completed 2026-03-29)
 - [x] **Phase 29: Article Detail** - Article detail page restyled with new palette, typography, and spacing (completed 2026-03-30)
 - [x] **Phase 30: CMS Admin Restyling** - Admin pages restyled with Wurzelwelt brand tokens (completed 2026-03-30)
-- [ ] **Phase 31: Icon & Token Consistency Fix** - Fix icon class mismatch, replace residual zinc tokens, fix stale test mock
+- [x] **Phase 31: Icon & Token Consistency Fix** - Fix icon class mismatch, replace residual zinc tokens, fix stale test mock (completed 2026-03-30)
 - [ ] **Phase 32: Phase 28 Verification** - Independent verification of all Phase 28 homepage components
 
 ## Phase Details
@@ -155,7 +155,7 @@ Plans:
   2. No `text-zinc-*` tokens remain in Phase 28 components or layout.tsx body
   3. Test mocks reference current WurzelAppBar/WurzelNavBar components
   4. REQUIREMENTS.md traceability table shows DS-04-07 as "Complete"
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 31-01-PLAN.md — Icon class fix, zinc token replacement, test mock update, traceability fix
