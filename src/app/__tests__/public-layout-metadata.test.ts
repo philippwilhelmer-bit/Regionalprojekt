@@ -15,12 +15,12 @@ vi.mock('@/components/TestSiteBanner', () => ({
   TestSiteBanner: () => null,
 }))
 
-vi.mock('@/components/reader/RegionalAppBar', () => ({
-  RegionalAppBar: () => null,
+vi.mock('@/components/reader/WurzelAppBar', () => ({
+  WurzelAppBar: () => null,
 }))
 
-vi.mock('@/components/reader/RegionalNavBar', () => ({
-  RegionalNavBar: () => null,
+vi.mock('@/components/reader/WurzelNavBar', () => ({
+  WurzelNavBar: () => null,
 }))
 
 vi.mock('@/components/reader/Footer', () => ({
