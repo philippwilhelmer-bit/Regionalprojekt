@@ -114,7 +114,7 @@ Plans:
 
 Plans:
 - [x] 28-01-PLAN.md — MascotGreeting, RegionalEditorialCard, and Topmeldung restyle
-- [ ] 28-02-PLAN.md — HomepageLayout rewiring with tonal sections and Mein Bezirk
+- [x] 28-02-PLAN.md — HomepageLayout rewiring with tonal sections and Mein Bezirk
 
 ### Phase 29: Article Detail
 **Goal**: The article detail page is fully restyled to match the Wurzelwelt design system — correct palette, typography, and spacing throughout.
@@ -124,7 +124,10 @@ Plans:
   1. The article page body uses Plus Jakarta Sans at the organic spacing scale with warm cream (#FCF9EF) as the canvas color
   2. Article headlines render in Newsreader at the correct type scale with no legacy Styrian green colors visible
   3. The article detail page is visually consistent with the homepage components (same tokens, same corner radius, same icon variant)
-**Plans**: TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 29-01-PLAN.md — Replace legacy colors and spacing with Wurzelwelt semantic tokens
 
 ### Phase 30: CMS Admin Restyling
 **Goal**: The CMS admin interface is restyled with Wurzelwelt brand tokens so the editor experience matches the reader-facing identity.
@@ -146,5 +149,5 @@ Plans:
 | 26. Design System & Brand Foundation | v2.0 | Complete    | 2026-03-28 | 2026-03-28 |
 | 27. App Chrome | 1/1 | Complete    | 2026-03-28 | - |
 | 28. Homepage Components | 2/2 | Complete   | 2026-03-29 | - |
-| 29. Article Detail | v2.0 | 0/TBD | Not started | - |
+| 29. Article Detail | v2.0 | 0/1 | Not started | - |
 | 30. CMS Admin Restyling | v2.0 | 0/TBD | Not started | - |
