@@ -4,13 +4,13 @@ milestone: v2.0
 milestone_name: Wurzelwelt Rebrand
 status: executing
 stopped_at: Completed 29-01-PLAN.md
-last_updated: "2026-03-30T00:05:00.000Z"
+last_updated: "2026-03-30T12:07:51.397Z"
 last_activity: 2026-03-30 — Migrated article detail page and TopMeldungenRow to Wurzelwelt semantic tokens (Plan 29-01)
 progress:
   total_phases: 5
-  completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
+  completed_phases: 4
+  total_plans: 7
+  completed_plans: 7
   percent: 38
 ---
 
