@@ -47,15 +47,15 @@ export function Header({ bezirke }: { bezirke: BezirkItem[] }) {
             className="flex items-center gap-1 text-white text-sm hover:opacity-80 transition-opacity"
             aria-label="Bezirk auswählen"
           >
-            <span className="material-symbols-outlined text-[18px]" aria-hidden="true">location_on</span>
+            <span className="material-symbols-rounded text-[18px]" aria-hidden="true">location_on</span>
             <span>{bezirkLabel}</span>
-            <span className="material-symbols-outlined text-[18px]" aria-hidden="true">arrow_drop_down</span>
+            <span className="material-symbols-rounded text-[18px]" aria-hidden="true">arrow_drop_down</span>
           </button>
 
           {/* HDR-04: Search icon — links to /suche */}
           <Link
             href="/suche"
-            className="material-symbols-outlined text-white hover:opacity-80 transition-opacity"
+            className="material-symbols-rounded text-white hover:opacity-80 transition-opacity"
             aria-label="Zur Suche"
           >
             search

@@ -48,7 +48,7 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
         <h1 className="font-headline text-3xl text-zinc-900 mb-4">Suche</h1>
         <div className="relative">
           <span
-            className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary"
+            className="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-secondary"
             aria-hidden="true"
           >
             search
@@ -66,7 +66,7 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
               className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-zinc-700"
               aria-label="Suche löschen"
             >
-              <span className="material-symbols-outlined" aria-hidden="true">close</span>
+              <span className="material-symbols-rounded" aria-hidden="true">close</span>
             </button>
           )}
         </div>
@@ -103,7 +103,7 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
               onClick={() => { setQuery(""); setActiveBezirkId(null); }}
               className="flex items-center justify-center gap-2 w-full py-2.5 rounded-full bg-gradient-to-br from-primary to-primary-container text-white font-label text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
             >
-              <span className="material-symbols-outlined text-base" aria-hidden="true">arrow_back</span>
+              <span className="material-symbols-rounded text-base" aria-hidden="true">arrow_back</span>
               Alle Bezirke anzeigen
             </button>
           </div>
@@ -143,7 +143,7 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
                   }
                 >
                   <span
-                    className="material-symbols-outlined text-secondary text-lg block mb-1"
+                    className="material-symbols-rounded text-secondary text-lg block mb-1"
                     aria-hidden="true"
                   >
                     location_city

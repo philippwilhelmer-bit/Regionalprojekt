@@ -37,14 +37,14 @@ export function RegionalEditorialCard({ article }: RegionalEditorialCardProps) {
         )}
 
         {/* Newsreader headline */}
-        <h2 className="font-headline text-lg font-semibold text-zinc-900 leading-snug mb-1">
+        <h2 className="font-headline text-lg font-semibold text-text leading-snug mb-1">
           {article.title}
         </h2>
 
         {/* Relative timestamp */}
         <time
           dateTime={publishedAt.toISOString()}
-          className="text-xs text-zinc-400"
+          className="text-xs text-text/40"
         >
           {formatRelativeTime(publishedAt)}
         </time>

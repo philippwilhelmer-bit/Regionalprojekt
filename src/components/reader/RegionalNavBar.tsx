@@ -23,7 +23,7 @@ export function RegionalNavBar() {
               className="flex flex-col items-center gap-0.5 opacity-30 cursor-default"
             >
               <span
-                className="material-symbols-outlined text-xl text-secondary"
+                className="material-symbols-rounded text-xl text-secondary"
                 aria-hidden="true"
               >
                 {item.icon}
@@ -49,7 +49,7 @@ export function RegionalNavBar() {
               }`}
             >
               <span
-                className={`material-symbols-outlined text-xl transition-colors ${
+                className={`material-symbols-rounded text-xl transition-colors ${
                   isActive ? "text-background" : "text-primary"
                 }`}
                 aria-hidden="true"

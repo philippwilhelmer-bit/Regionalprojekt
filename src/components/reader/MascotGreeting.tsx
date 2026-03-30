@@ -41,10 +41,10 @@ export function MascotGreeting() {
 
           {/* Speech bubble */}
           <div className="bg-surface-elevated rounded-sm shadow-sm p-3 relative">
-            <p className="font-headline text-base font-semibold text-zinc-900 leading-snug">
+            <p className="font-headline text-base font-semibold text-text leading-snug">
               {greeting}!
             </p>
-            <p className="font-label text-sm text-zinc-600 mt-0.5">{quote}</p>
+            <p className="font-label text-sm text-text/60 mt-0.5">{quote}</p>
 
             {/* Triangular tail pointing down-left toward avatar */}
             <span

@@ -48,11 +48,11 @@ export function RegionalAppBar({ bezirke }: RegionalAppBarProps) {
           className="absolute left-4 flex items-center gap-1 text-white/80 text-xs hover:text-white transition-colors"
           aria-label="Bezirk auswählen"
         >
-          <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+          <span className="material-symbols-rounded text-[16px]" aria-hidden="true">
             location_on
           </span>
           <span className="font-label">{bezirkLabel}</span>
-          <span className="material-symbols-outlined text-[14px]" aria-hidden="true">
+          <span className="material-symbols-rounded text-[14px]" aria-hidden="true">
             arrow_drop_down
           </span>
         </button>

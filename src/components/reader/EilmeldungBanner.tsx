@@ -28,7 +28,7 @@ export function EilmeldungBanner() {
         EILMELDUNG
       </span>
       <button onClick={dismiss} aria-label="Schließen" className="text-white">
-        <span className="material-symbols-outlined text-[18px]">close</span>
+        <span className="material-symbols-rounded text-[18px]">close</span>
       </button>
     </div>
   );

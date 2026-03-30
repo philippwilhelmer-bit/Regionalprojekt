@@ -147,7 +147,7 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
 
           {/* Empty state for bezirk filter */}
           {bezirkSections.length === 0 && (
-            <div className="px-[var(--spacing-gutter)] py-8 text-center text-zinc-500 bg-background">
+            <div className="px-[var(--spacing-gutter)] py-8 text-center text-text/50 bg-background">
               <p className="mb-3">Noch keine Nachrichten für deinen Bezirk.</p>
               <button
                 onClick={() => {
@@ -172,7 +172,7 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
           </div>
 
           {isEmpty ? (
-            <div className="px-[var(--spacing-gutter)] py-8 text-center text-zinc-500 bg-background">
+            <div className="px-[var(--spacing-gutter)] py-8 text-center text-text/50 bg-background">
               <p>Noch keine Nachrichten.</p>
             </div>
           ) : (

@@ -23,7 +23,7 @@ export function BottomNavClient() {
               className="flex flex-col items-center gap-0.5 opacity-40 cursor-default"
             >
               <span
-                className="material-symbols-outlined text-xl text-secondary"
+                className="material-symbols-rounded text-xl text-secondary"
                 aria-hidden="true"
               >
                 {item.icon}
@@ -46,7 +46,7 @@ export function BottomNavClient() {
               className={`flex items-center justify-center w-16 h-8 rounded-full ${isActive ? "bg-primary" : ""}`}
             >
               <span
-                className={`material-symbols-outlined text-xl ${isActive ? "text-white" : "text-secondary"}`}
+                className={`material-symbols-rounded text-xl ${isActive ? "text-white" : "text-secondary"}`}
                 aria-hidden="true"
               >
                 {item.icon}

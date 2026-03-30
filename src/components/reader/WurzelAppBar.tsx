@@ -58,7 +58,7 @@ export function WurzelAppBar({ bezirke }: WurzelAppBarProps) {
         className="absolute right-4 flex items-center gap-1 text-white/80 text-xs font-label hover:text-white transition-colors"
         aria-label="Bezirk auswählen"
       >
-        <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+        <span className="material-symbols-rounded text-[16px]" aria-hidden="true">
           location_on
         </span>
         <span>{bezirkLabel}</span>
