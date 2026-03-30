@@ -65,7 +65,7 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
 - [x] **Phase 26: Design System & Brand Foundation** - New color palette, typography, icons, spacing, naming, mascot asset (completed 2026-03-28)
 - [x] **Phase 27: App Chrome** - WurzelAppBar and WurzelNavBar replacing current header and bottom nav (completed 2026-03-28)
 - [x] **Phase 28: Homepage Components** - MascotGreeting, Topmeldung, RegionalEditorialCard, Mein Bezirk section, tonal section separation (completed 2026-03-29)
-- [ ] **Phase 29: Article Detail** - Article detail page restyled with new palette, typography, and spacing
+- [x] **Phase 29: Article Detail** - Article detail page restyled with new palette, typography, and spacing (completed 2026-03-30)
 - [ ] **Phase 30: CMS Admin Restyling** - Admin pages restyled with Wurzelwelt brand tokens
 
 ## Phase Details
@@ -124,7 +124,7 @@ Plans:
   1. The article page body uses Plus Jakarta Sans at the organic spacing scale with warm cream (#FCF9EF) as the canvas color
   2. Article headlines render in Newsreader at the correct type scale with no legacy Styrian green colors visible
   3. The article detail page is visually consistent with the homepage components (same tokens, same corner radius, same icon variant)
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 29-01-PLAN.md — Replace legacy colors and spacing with Wurzelwelt semantic tokens
@@ -149,5 +149,5 @@ Plans:
 | 26. Design System & Brand Foundation | v2.0 | Complete    | 2026-03-28 | 2026-03-28 |
 | 27. App Chrome | 1/1 | Complete    | 2026-03-28 | - |
 | 28. Homepage Components | 2/2 | Complete   | 2026-03-29 | - |
-| 29. Article Detail | v2.0 | 0/1 | Not started | - |
+| 29. Article Detail | 1/1 | Complete   | 2026-03-30 | - |
 | 30. CMS Admin Restyling | v2.0 | 0/TBD | Not started | - |

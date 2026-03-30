@@ -34,7 +34,7 @@ Requirements for the Wurzelwelt rebrand. Each maps to roadmap phases.
 
 ### Article Detail
 
-- [ ] **ART-01**: Article detail page restyled with new color palette, typography, and spacing
+- [x] **ART-01**: Article detail page restyled with new color palette, typography, and spacing
 
 ### CMS Admin
 
@@ -79,7 +79,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COMP-04 | Phase 28 | Complete |
 | COMP-05 | Phase 28 | Complete |
 | COMP-07 | Phase 28 | Complete |
-| ART-01 | Phase 29 | Pending |
+| ART-01 | Phase 29 | Complete |
 | CMS-01 | Phase 30 | Pending |
 
 **Coverage:**

@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Wurzelwelt Rebrand
 status: executing
-stopped_at: Completed 28-02-PLAN.md
-last_updated: "2026-03-29T17:36:00.273Z"
-last_activity: 2026-03-29 — Created MascotGreeting, RegionalEditorialCard, restyled HeroArticle (Plan 28-01)
+stopped_at: Completed 29-01-PLAN.md
+last_updated: "2026-03-30T00:05:00.000Z"
+last_activity: 2026-03-30 — Migrated article detail page and TopMeldungenRow to Wurzelwelt semantic tokens (Plan 29-01)
 progress:
   total_phases: 5
   completed_phases: 3
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-28)
 
 ## Current Position
 
-Phase: 28 of 30 (Homepage Components)
+Phase: 29 of 30 (Article Detail)
 Plan: 01 complete
 Status: In progress
-Last activity: 2026-03-29 — Created MascotGreeting, RegionalEditorialCard, restyled HeroArticle (Plan 28-01)
+Last activity: 2026-03-30 — Migrated article detail page and TopMeldungenRow to Wurzelwelt semantic tokens (Plan 29-01)
 
 Progress: [████░░░░░░] 38%
 
@@ -54,6 +54,7 @@ Progress: [████░░░░░░] 38%
 | Phase 27-app-chrome P01 | 30min | 3 tasks | 3 files |
 | Phase 28-homepage-components P01 | 2min | 2 tasks | 3 files |
 | Phase 28 P02 | 20min | 2 tasks | 2 files |
+| Phase 29-article-detail P01 | 5min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-29T17:35:54.012Z
-Stopped at: Completed 28-02-PLAN.md
+Last session: 2026-03-30T00:05:00.000Z
+Stopped at: Completed 29-01-PLAN.md
 Resume file: None
