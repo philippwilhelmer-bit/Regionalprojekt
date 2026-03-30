@@ -67,6 +67,8 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
 - [x] **Phase 28: Homepage Components** - MascotGreeting, Topmeldung, RegionalEditorialCard, Mein Bezirk section, tonal section separation (completed 2026-03-29)
 - [x] **Phase 29: Article Detail** - Article detail page restyled with new palette, typography, and spacing (completed 2026-03-30)
 - [x] **Phase 30: CMS Admin Restyling** - Admin pages restyled with Wurzelwelt brand tokens (completed 2026-03-30)
+- [ ] **Phase 31: Icon & Token Consistency Fix** - Fix icon class mismatch, replace residual zinc tokens, fix stale test mock
+- [ ] **Phase 32: Phase 28 Verification** - Independent verification of all Phase 28 homepage components
 
 ## Phase Details
 
@@ -142,6 +144,26 @@ Plans:
 Plans:
 - [ ] 30-01-PLAN.md — Admin shell restyling (login, sidebar layout, Unsplash pickers)
 - [ ] 30-02-PLAN.md — CMS content pages restyling (Articles, Exceptions, Sources, AI Config)
+
+### Phase 31: Icon & Token Consistency Fix
+**Goal**: All icon classes match the CDN-loaded Rounded variant, all components use semantic design tokens instead of legacy zinc values, and stale test mocks are corrected.
+**Depends on**: Phase 30
+**Requirements**: DS-03
+**Gap Closure:** Closes gaps from v2.0 audit (DS-03 unsatisfied, DS-01 integration residual, stale test mock, REQUIREMENTS.md traceability fix)
+**Success Criteria** (what must be TRUE):
+  1. All components use `.material-symbols-rounded` class matching the CDN stylesheet
+  2. No `text-zinc-*` tokens remain in Phase 28 components or layout.tsx body
+  3. Test mocks reference current WurzelAppBar/WurzelNavBar components
+  4. REQUIREMENTS.md traceability table shows DS-04–07 as "Complete"
+
+### Phase 32: Phase 28 Verification
+**Goal**: All 5 Phase 28 homepage component requirements are independently verified with a VERIFICATION.md report.
+**Depends on**: Phase 31
+**Requirements**: COMP-02, COMP-03, COMP-04, COMP-05, COMP-07
+**Gap Closure:** Closes verification gaps from v2.0 audit
+**Success Criteria** (what must be TRUE):
+  1. VERIFICATION.md exists in Phase 28 directory with pass/fail for each requirement
+  2. Each of COMP-02 through COMP-05 and COMP-07 has documented evidence of satisfaction
 
 ## Progress
 

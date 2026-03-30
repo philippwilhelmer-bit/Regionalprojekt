@@ -11,7 +11,7 @@ Requirements for the Wurzelwelt rebrand. Each maps to roadmap phases.
 
 - [x] **DS-01**: Tailwind theme updated with new color palette (primary #1B2D18, secondary #4A5D23, accent #9F411E, background #FCF9EF, text #071806, surface hierarchy)
 - [x] **DS-02**: Plus Jakarta Sans loaded and configured as body/UI font, replacing Inter and Work Sans
-- [x] **DS-03**: Material Symbols Rounded variant replaces current Material Symbols
+- [ ] **DS-03**: Material Symbols Rounded variant replaces current Material Symbols
 - [x] **DS-04**: All 1px borders replaced with tonal background shifts for section separation
 - [x] **DS-05**: Minimum 0.75rem corner radius on all interactive elements (no sharp corners)
 - [x] **DS-06**: Organic spacing scale applied (1.7rem mobile gutters, 4rem section gaps)
@@ -25,12 +25,12 @@ Requirements for the Wurzelwelt rebrand. Each maps to roadmap phases.
 ### Reader Components
 
 - [x] **COMP-01**: WurzelAppBar with centered "WURZELWELT" in bold uppercase Newsreader + Wurzelmann avatar
-- [x] **COMP-02**: MascotGreeting speech-bubble card with "Wurzelmann sagt:" quote on tonal background
-- [x] **COMP-03**: Topmeldung hero with full-bleed image and dark gradient overlay behind headline
-- [x] **COMP-04**: RegionalEditorialCard with full-width aspect-video images, Newsreader headlines, uppercase Jakarta Sans labels
-- [x] **COMP-05**: Prioritized "Mein Bezirk" section with larger featured card
+- [ ] **COMP-02**: MascotGreeting speech-bubble card with "Wurzelmann sagt:" quote on tonal background
+- [ ] **COMP-03**: Topmeldung hero with full-bleed image and dark gradient overlay behind headline
+- [ ] **COMP-04**: RegionalEditorialCard with full-width aspect-video images, Newsreader headlines, uppercase Jakarta Sans labels
+- [ ] **COMP-05**: Prioritized "Mein Bezirk" section with larger featured card
 - [x] **COMP-06**: WurzelNavBar 4-tab bottom nav with rounded Material Symbols icons
-- [x] **COMP-07**: Homepage sections separated by tonal background shifts (#FCF9EF / #F6F4EA alternation)
+- [ ] **COMP-07**: Homepage sections separated by tonal background shifts (#FCF9EF / #F6F4EA alternation)
 
 ### Article Detail
 
@@ -65,20 +65,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | DS-01 | Phase 26 | Complete |
 | DS-02 | Phase 26 | Complete |
-| DS-03 | Phase 26 | Complete |
-| DS-04 | Phase 26 | Pending |
-| DS-05 | Phase 26 | Pending |
-| DS-06 | Phase 26 | Pending |
-| DS-07 | Phase 26 | Pending |
+| DS-03 | Phase 31 | Pending |
+| DS-04 | Phase 26 | Complete |
+| DS-05 | Phase 26 | Complete |
+| DS-06 | Phase 26 | Complete |
+| DS-07 | Phase 26 | Complete |
 | BRAND-01 | Phase 26 | Complete |
 | BRAND-02 | Phase 26 | Complete |
 | COMP-01 | Phase 27 | Complete |
 | COMP-06 | Phase 27 | Complete |
-| COMP-02 | Phase 28 | Complete |
-| COMP-03 | Phase 28 | Complete |
-| COMP-04 | Phase 28 | Complete |
-| COMP-05 | Phase 28 | Complete |
-| COMP-07 | Phase 28 | Complete |
+| COMP-02 | Phase 32 | Pending |
+| COMP-03 | Phase 32 | Pending |
+| COMP-04 | Phase 32 | Pending |
+| COMP-05 | Phase 32 | Pending |
+| COMP-07 | Phase 32 | Pending |
 | ART-01 | Phase 29 | Complete |
 | CMS-01 | Phase 30 | Complete |
 
@@ -89,4 +89,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-28*
-*Last updated: 2026-03-28 after roadmap creation (v2.0 phases 26-30)*
+*Last updated: 2026-03-30 after gap closure planning (v2.0 phases 31-32)*
