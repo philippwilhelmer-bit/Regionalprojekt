@@ -154,4 +154,4 @@ Plans:
 | 27. App Chrome | 1/1 | Complete    | 2026-03-28 | - |
 | 28. Homepage Components | 2/2 | Complete   | 2026-03-29 | - |
 | 29. Article Detail | 1/1 | Complete    | 2026-03-30 | - |
-| 30. CMS Admin Restyling | 2/2 | Complete   | 2026-03-30 | - |
+| 30. CMS Admin Restyling | 2/2 | Complete    | 2026-03-30 | - |
