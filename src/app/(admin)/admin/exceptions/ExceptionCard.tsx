@@ -28,15 +28,15 @@ export function ExceptionCard({ article }: ExceptionCardProps) {
     : '(kein Rohdaten vorhanden)'
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-6">
+    <div className="bg-surface-elevated rounded-sm overflow-hidden mb-6">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+      <div className="px-6 py-4 border-b border-surface flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold text-gray-900">
+          <h2 className="text-base font-semibold text-text">
             {article.title ?? '(Kein Titel)'}
           </h2>
           <div className="flex items-center gap-3 mt-1">
-            <span className="text-xs text-gray-700">
+            <span className="text-xs text-text/70">
               Erstellt: {formatDate(article.createdAt)}
             </span>
             <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
@@ -50,7 +50,7 @@ export function ExceptionCard({ article }: ExceptionCardProps) {
             <input type="hidden" name="id" value={article.id} />
             <button
               type="submit"
-              className="px-4 py-1.5 bg-green-600 text-white text-sm font-medium rounded hover:bg-green-700"
+              className="px-4 py-1.5 bg-green-600 text-white text-sm font-medium rounded-sm hover:bg-green-700"
             >
               Genehmigen
             </button>
@@ -59,7 +59,7 @@ export function ExceptionCard({ article }: ExceptionCardProps) {
             <input type="hidden" name="id" value={article.id} />
             <button
               type="submit"
-              className="px-4 py-1.5 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700"
+              className="px-4 py-1.5 bg-red-600 text-white text-sm font-medium rounded-sm hover:bg-red-700"
             >
               Ablehnen
             </button>
@@ -68,23 +68,23 @@ export function ExceptionCard({ article }: ExceptionCardProps) {
       </div>
 
       {/* Side-by-side content */}
-      <div className="grid grid-cols-2 divide-x divide-gray-100">
+      <div className="grid grid-cols-2 divide-x divide-surface">
         {/* Left: rewritten article content */}
         <div className="p-6">
-          <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">
+          <h3 className="text-xs font-semibold text-text/60 uppercase tracking-wide mb-3">
             KI-generierter Artikel
           </h3>
-          <div className="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed">
+          <div className="text-sm text-text whitespace-pre-wrap leading-relaxed">
             {article.content ?? '(Kein Inhalt)'}
           </div>
         </div>
 
         {/* Right: raw source payload */}
-        <div className="p-6 bg-gray-50">
-          <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">
+        <div className="p-6 bg-surface">
+          <h3 className="text-xs font-semibold text-text/60 uppercase tracking-wide mb-3">
             Rohdaten (Quelle)
           </h3>
-          <pre className="text-xs text-gray-600 overflow-auto max-h-96 leading-relaxed font-mono whitespace-pre-wrap">
+          <pre className="text-xs text-text/60 overflow-auto max-h-96 leading-relaxed font-mono whitespace-pre-wrap">
             {rawPayloadStr}
           </pre>
         </div>

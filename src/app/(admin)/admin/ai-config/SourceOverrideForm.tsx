@@ -19,11 +19,11 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
   const hasOverride = override !== null
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-4">
+    <div className="bg-surface-elevated rounded-sm overflow-hidden mb-4">
       {/* Source header */}
-      <div className="px-6 py-3 bg-gray-50 border-b border-gray-200 flex items-center gap-3">
+      <div className="px-6 py-3 bg-surface flex items-center gap-3">
         <span
-          className="text-sm font-mono text-gray-800 truncate max-w-xs"
+          className="text-sm font-mono text-text truncate max-w-xs"
           title={source.url}
         >
           {source.url}
@@ -36,7 +36,7 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
             Override aktiv
           </span>
         ) : (
-          <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+          <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-surface text-text/70">
             Globale Einstellungen
           </span>
         )}
@@ -44,13 +44,13 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
 
       <div className="px-6 py-4">
         {!hasOverride && (
-          <p className="text-sm text-gray-700 mb-3">
+          <p className="text-sm text-text/70 mb-3">
             Globale Einstellungen werden verwendet.
           </p>
         )}
 
         <details open={hasOverride}>
-          <summary className="text-sm text-blue-600 cursor-pointer hover:text-blue-800 select-none">
+          <summary className="text-sm text-secondary cursor-pointer hover:text-secondary/80 select-none">
             {hasOverride ? 'Override bearbeiten' : 'Override hinzufuegen'}
           </summary>
 
@@ -61,15 +61,15 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
             <div>
               <label
                 htmlFor={`tone-${source.id}`}
-                className="block text-xs font-medium text-gray-700 mb-1"
+                className="block text-xs font-medium text-text/70 mb-1"
               >
-                Ton <span className="text-xs text-gray-600">(leer = global)</span>
+                Ton <span className="text-xs text-text/60">(leer = global)</span>
               </label>
               <select
                 id={`tone-${source.id}`}
                 name="tone"
                 defaultValue={override?.tone ?? ''}
-                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-surface rounded-sm px-3 py-1.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">— Globaler Wert —</option>
                 <option value="NEUTRAL">Neutral</option>
@@ -82,15 +82,15 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
             <div>
               <label
                 htmlFor={`articleLength-${source.id}`}
-                className="block text-xs font-medium text-gray-700 mb-1"
+                className="block text-xs font-medium text-text/70 mb-1"
               >
-                Artikellaenge <span className="text-xs text-gray-600">(leer = global)</span>
+                Artikellaenge <span className="text-xs text-text/60">(leer = global)</span>
               </label>
               <select
                 id={`articleLength-${source.id}`}
                 name="articleLength"
                 defaultValue={override?.articleLength ?? ''}
-                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-surface rounded-sm px-3 py-1.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">— Globaler Wert —</option>
                 <option value="SHORT">Kurz (100-150 Woerter)</option>
@@ -103,16 +103,16 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
             <div>
               <label
                 htmlFor={`styleNotes-${source.id}`}
-                className="block text-xs font-medium text-gray-700 mb-1"
+                className="block text-xs font-medium text-text/70 mb-1"
               >
-                Stilhinweise <span className="text-xs text-gray-600">(optional)</span>
+                Stilhinweise <span className="text-xs text-text/60">(optional)</span>
               </label>
               <textarea
                 id={`styleNotes-${source.id}`}
                 name="styleNotes"
                 rows={2}
                 defaultValue={override?.styleNotes ?? ''}
-                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-surface rounded-sm px-3 py-1.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="z.B. Erwaehne immer den Bezirk im ersten Satz"
               />
             </div>
@@ -121,16 +121,16 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
             <div>
               <label
                 htmlFor={`modelOverride-${source.id}`}
-                className="block text-xs font-medium text-gray-700 mb-1"
+                className="block text-xs font-medium text-text/70 mb-1"
               >
-                Modell-Override <span className="text-xs text-gray-600">(optional)</span>
+                Modell-Override <span className="text-xs text-text/60">(optional)</span>
               </label>
               <input
                 id={`modelOverride-${source.id}`}
                 name="modelOverride"
                 type="text"
                 defaultValue={override?.modelOverride ?? ''}
-                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-surface rounded-sm px-3 py-1.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="leer = Standard (claude-haiku-4-5-20251001)"
               />
             </div>
@@ -138,7 +138,7 @@ export function SourceOverrideForm({ source, override }: SourceOverrideFormProps
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="px-4 py-1.5 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700"
+                className="px-4 py-1.5 bg-gradient-to-br from-primary to-primary-container text-white text-sm font-medium rounded-full hover:opacity-90"
               >
                 Speichern
               </button>
