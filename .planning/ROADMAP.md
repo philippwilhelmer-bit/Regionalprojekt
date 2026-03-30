@@ -127,7 +127,7 @@ Plans:
 **Plans:** 1/1 plans complete
 
 Plans:
-- [ ] 29-01-PLAN.md — Replace legacy colors and spacing with Wurzelwelt semantic tokens
+- [x] 29-01-PLAN.md — Replace legacy colors and spacing with Wurzelwelt semantic tokens
 
 ### Phase 30: CMS Admin Restyling
 **Goal**: The CMS admin interface is restyled with Wurzelwelt brand tokens so the editor experience matches the reader-facing identity.
@@ -137,7 +137,11 @@ Plans:
   1. CMS admin pages display the Wurzelwelt color palette (no legacy Styrian green or cream from v1.1)
   2. Admin typography uses Plus Jakarta Sans for body and labels, Newsreader for any headings
   3. Admin buttons, inputs, and interactive elements have rounded corners and gradient CTAs consistent with the design system
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 30-01-PLAN.md — Admin shell restyling (login, sidebar layout, Unsplash pickers)
+- [ ] 30-02-PLAN.md — CMS content pages restyling (Articles, Exceptions, Sources, AI Config)
 
 ## Progress
 
@@ -150,4 +154,4 @@ Plans:
 | 27. App Chrome | 1/1 | Complete    | 2026-03-28 | - |
 | 28. Homepage Components | 2/2 | Complete   | 2026-03-29 | - |
 | 29. Article Detail | 1/1 | Complete    | 2026-03-30 | - |
-| 30. CMS Admin Restyling | v2.0 | 0/TBD | Not started | - |
+| 30. CMS Admin Restyling | v2.0 | 0/2 | Not started | - |
