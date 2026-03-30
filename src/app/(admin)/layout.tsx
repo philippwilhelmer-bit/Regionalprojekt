@@ -21,17 +21,17 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <>
       <TestSiteBanner />
-      <div className="flex h-screen bg-gray-100">
-      <aside className="w-56 bg-white border-r border-gray-200 flex flex-col py-6 px-4 shrink-0">
-        <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-4">
-          Regionencompass
+      <div className="flex h-screen bg-background">
+      <aside className="w-56 bg-surface-elevated flex flex-col py-6 px-4 shrink-0">
+        <p className="text-xs font-semibold text-secondary uppercase tracking-wide mb-4">
+          Wurzelwelt
         </p>
         <nav className="space-y-1 flex-1">
           {navItems.map(item => (
             <Link
               key={item.href}
               href={item.href}
-              className="block px-3 py-2 rounded text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              className="block px-3 py-2 rounded-sm text-sm text-text/70 hover:bg-surface hover:text-text"
             >
               {item.label}
             </Link>
