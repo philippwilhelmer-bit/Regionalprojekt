@@ -58,7 +58,7 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
 
 </details>
 
-### 🚧 v2.0 Wurzelwelt Rebrand (In Progress)
+### v2.0 Wurzelwelt Rebrand (In Progress)
 
 **Milestone Goal:** Full visual rebrand from "Ennstal Aktuell" to "Wurzelwelt" — new brand identity with Wurzelmann mascot, "Modern Mountain Folklore" design system, redesigned homepage components, and CMS restyling.
 
@@ -154,7 +154,11 @@ Plans:
   1. All components use `.material-symbols-rounded` class matching the CDN stylesheet
   2. No `text-zinc-*` tokens remain in Phase 28 components or layout.tsx body
   3. Test mocks reference current WurzelAppBar/WurzelNavBar components
-  4. REQUIREMENTS.md traceability table shows DS-04–07 as "Complete"
+  4. REQUIREMENTS.md traceability table shows DS-04-07 as "Complete"
+**Plans:** 1 plan
+
+Plans:
+- [ ] 31-01-PLAN.md — Icon class fix, zinc token replacement, test mock update, traceability fix
 
 ### Phase 32: Phase 28 Verification
 **Goal**: All 5 Phase 28 homepage component requirements are independently verified with a VERIFICATION.md report.
