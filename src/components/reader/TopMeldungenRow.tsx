@@ -26,13 +26,13 @@ const BEZIRK_BADGE_COLORS: Record<string, string> = {
   liezen: "text-secondary bg-background",
   "bruck-muerzzuschlag": "text-secondary bg-background",
   leoben: "text-primary bg-background",
-  murau: "text-[#244d20] bg-background",
+  murau: "text-primary bg-background",
   murtal: "text-secondary bg-background",
   voitsberg: "text-primary bg-background",
   deutschlandsberg: "text-primary bg-background",
-  weiz: "text-[#3a6b33] bg-background",
+  weiz: "text-secondary bg-background",
   "hartberg-fuerstenfeld": "text-secondary bg-background",
-  suedoststeiermark: "text-[#244d20] bg-background",
+  suedoststeiermark: "text-primary bg-background",
   leibnitz: "text-secondary bg-background",
 };
 
@@ -88,7 +88,7 @@ export function TopMeldungenRow({ articles, heading = "Top-Meldungen" }: TopMeld
                 )}
 
                 {/* Headline */}
-                <h3 className="font-headline text-sm font-semibold text-zinc-900 leading-snug line-clamp-2 mb-1">
+                <h3 className="font-headline text-sm font-semibold text-text leading-snug line-clamp-2 mb-1">
                   {article.title}
                 </h3>
 

@@ -93,7 +93,7 @@ export default async function ArticlePage({ params }: Props) {
               loading="eager"
             />
             {article.imageCredit && (
-              <figcaption className="text-xs text-zinc-400 text-right px-4 py-1">
+              <figcaption className="text-xs text-secondary/60 text-right px-4 py-1">
                 {article.imageCredit}
               </figcaption>
             )}
@@ -101,7 +101,7 @@ export default async function ArticlePage({ params }: Props) {
         )}
 
         {/* Content column — constrained */}
-        <div className="max-w-2xl mx-auto px-4 py-6">
+        <div className="max-w-2xl mx-auto px-[var(--spacing-gutter)] py-[var(--spacing-section)]">
           {/* Breadcrumb */}
           <nav className="font-label text-sm text-secondary mb-4" aria-label="Breadcrumb">
             <Link href="/" className="hover:underline">
@@ -124,7 +124,7 @@ export default async function ArticlePage({ params }: Props) {
 
           {/* Article header */}
           <header className="mb-6">
-            <h1 className="font-headline text-2xl font-bold text-zinc-800 leading-tight mb-2">
+            <h1 className="font-headline text-2xl font-bold text-text leading-tight mb-2">
               {article.title}
             </h1>
             {publishedAt && (
@@ -141,7 +141,7 @@ export default async function ArticlePage({ params }: Props) {
           </div>
 
           {/* Article body */}
-          <article className="prose max-w-none mb-6 prose-p:text-[#2a2a2a] prose-headings:font-headline prose-a:text-primary prose-a:underline">
+          <article className="prose max-w-none mb-6 prose-p:text-text prose-headings:font-headline prose-a:text-primary prose-a:underline">
             {(article.content ?? "").split("\n\n").map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}
