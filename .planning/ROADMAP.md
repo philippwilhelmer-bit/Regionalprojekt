@@ -68,7 +68,7 @@ Full details: `.planning/milestones/v1.2-ROADMAP.md`
 - [x] **Phase 29: Article Detail** - Article detail page restyled with new palette, typography, and spacing (completed 2026-03-30)
 - [x] **Phase 30: CMS Admin Restyling** - Admin pages restyled with Wurzelwelt brand tokens (completed 2026-03-30)
 - [x] **Phase 31: Icon & Token Consistency Fix** - Fix icon class mismatch, replace residual zinc tokens, fix stale test mock (completed 2026-03-30)
-- [ ] **Phase 32: Phase 28 Verification** - Independent verification of all Phase 28 homepage components
+- [x] **Phase 32: Phase 28 Verification** - Independent verification of all Phase 28 homepage components (completed 2026-03-30)
 
 ## Phase Details
 
@@ -168,7 +168,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. VERIFICATION.md exists in Phase 28 directory with pass/fail for each requirement
   2. Each of COMP-02 through COMP-05 and COMP-07 has documented evidence of satisfaction
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] 32-01-PLAN.md — Verify COMP-02 through COMP-07 via code inspection, produce 28-VERIFICATION.md
