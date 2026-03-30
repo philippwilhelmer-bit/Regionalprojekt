@@ -44,16 +44,16 @@ export default async function EditArticlePage({ params }: Props) {
   return (
     <div className="max-w-2xl">
       <div className="flex items-center gap-4 mb-4">
-        <Link href="/admin/articles" className="text-sm text-gray-700 hover:text-gray-900">
+        <Link href="/admin/articles" className="text-sm text-text/70 hover:text-text">
           &larr; Zurueck
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900">Artikel bearbeiten</h1>
+        <h1 className="text-2xl font-bold text-text font-headline">Artikel bearbeiten</h1>
         {articleUrl && (
           <a
             href={articleUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-auto text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
+            className="ml-auto text-sm text-secondary hover:text-secondary/80 flex items-center gap-1"
           >
             Artikel ansehen
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -65,8 +65,8 @@ export default async function EditArticlePage({ params }: Props) {
 
       {/* Preview */}
       {article.status === 'PUBLISHED' && articleUrl && (
-        <div className="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-4">
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Vorschau</p>
+        <div className="bg-surface rounded-sm p-4 mb-4">
+          <p className="text-xs font-medium text-text/50 uppercase tracking-wide mb-3">Vorschau</p>
           <div className="flex gap-4">
             {article.imageUrl && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -77,9 +77,9 @@ export default async function EditArticlePage({ params }: Props) {
               />
             )}
             <div className="min-w-0">
-              <h2 className="text-sm font-semibold text-gray-900 line-clamp-2">{article.title}</h2>
+              <h2 className="text-sm font-semibold text-text line-clamp-2">{article.title}</h2>
               {article.metaDescription && (
-                <p className="text-xs text-gray-500 mt-1 line-clamp-2">{article.metaDescription}</p>
+                <p className="text-xs text-text/50 mt-1 line-clamp-2">{article.metaDescription}</p>
               )}
               <div className="flex items-center gap-2 mt-2">
                 {article.bezirke.map((ab) => (
@@ -93,12 +93,12 @@ export default async function EditArticlePage({ params }: Props) {
         </div>
       )}
 
-      <form action={updateArticleForm} className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
+      <form action={updateArticleForm} className="bg-surface-elevated rounded-sm p-6 space-y-5">
         <input type="hidden" name="_id" value={article.id} />
 
         {/* Titel */}
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="title" className="block text-sm font-medium text-text/70 mb-1">
             Titel <span className="text-red-500">*</span>
           </label>
           <input
@@ -107,13 +107,13 @@ export default async function EditArticlePage({ params }: Props) {
             type="text"
             required
             defaultValue={article.title ?? ''}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
 
         {/* Inhalt */}
         <div>
-          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="content" className="block text-sm font-medium text-text/70 mb-1">
             Inhalt <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -122,23 +122,23 @@ export default async function EditArticlePage({ params }: Props) {
             required
             rows={12}
             defaultValue={article.content ?? ''}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
 
         {/* Bezirke */}
         <div>
           <fieldset>
-            <legend className="block text-sm font-medium text-gray-700 mb-2">Bezirke</legend>
+            <legend className="block text-sm font-medium text-text/70 mb-2">Bezirke</legend>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {bezirke.map((bezirk) => (
-                <label key={bezirk.id} className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                <label key={bezirk.id} className="flex items-center gap-2 text-sm text-text/70 cursor-pointer">
                   <input
                     type="checkbox"
                     name="bezirkIds"
                     value={bezirk.id}
                     defaultChecked={assignedBezirkIds.has(bezirk.id)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-surface text-primary focus:ring-primary"
                   />
                   {bezirk.name}
                 </label>
@@ -157,29 +157,29 @@ export default async function EditArticlePage({ params }: Props) {
 
         {/* SEO-Titel */}
         <div>
-          <label htmlFor="seoTitle" className="block text-sm font-medium text-gray-700 mb-1">
-            SEO-Titel <span className="text-xs text-gray-600">(optional)</span>
+          <label htmlFor="seoTitle" className="block text-sm font-medium text-text/70 mb-1">
+            SEO-Titel <span className="text-xs text-text/60">(optional)</span>
           </label>
           <input
             id="seoTitle"
             name="seoTitle"
             type="text"
             defaultValue={article.seoTitle ?? ''}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
 
         {/* Meta-Beschreibung */}
         <div>
-          <label htmlFor="metaDescription" className="block text-sm font-medium text-gray-700 mb-1">
-            Meta-Beschreibung <span className="text-xs text-gray-600">(optional)</span>
+          <label htmlFor="metaDescription" className="block text-sm font-medium text-text/70 mb-1">
+            Meta-Beschreibung <span className="text-xs text-text/60">(optional)</span>
           </label>
           <textarea
             id="metaDescription"
             name="metaDescription"
             rows={3}
             defaultValue={article.metaDescription ?? ''}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
 
@@ -187,13 +187,13 @@ export default async function EditArticlePage({ params }: Props) {
         <div className="flex gap-3 pt-2">
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-white text-sm font-medium rounded-full hover:opacity-90"
           >
             Speichern
           </button>
           <Link
             href="/admin/articles"
-            className="px-4 py-2 border border-gray-300 text-sm text-gray-700 rounded hover:bg-gray-50"
+            className="px-4 py-2 border border-surface text-sm text-text/70 rounded-sm hover:bg-surface"
           >
             Abbrechen
           </Link>

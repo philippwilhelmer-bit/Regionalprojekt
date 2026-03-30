@@ -9,9 +9,9 @@ import type { ArticleWithBezirke } from '@/lib/content/articles'
 const STATUS_COLORS: Record<string, string> = {
   PUBLISHED: 'bg-green-100 text-green-800',
   REVIEW: 'bg-yellow-100 text-yellow-800',
-  FETCHED: 'bg-blue-100 text-blue-800',
+  FETCHED: 'bg-surface text-text/70',
   REJECTED: 'bg-red-100 text-red-800',
-  FAILED: 'bg-gray-100 text-gray-800',
+  FAILED: 'bg-surface text-text/70',
 }
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -36,7 +36,7 @@ interface ArticleRowProps {
 export function ArticleRow({ article }: ArticleRowProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
-  const statusColor = STATUS_COLORS[article.status] ?? 'bg-gray-100 text-gray-800'
+  const statusColor = STATUS_COLORS[article.status] ?? 'bg-surface text-text/70'
   const title = article.title
     ? article.title.length > 80
       ? article.title.slice(0, 80) + '…'
@@ -53,8 +53,8 @@ export function ArticleRow({ article }: ArticleRowProps) {
   }
 
   return (
-    <tr className={`border-b border-gray-100 hover:bg-gray-50 ${isPending ? 'opacity-50' : ''}`}>
-      <td className="px-4 py-3 text-sm text-gray-900 max-w-xs">
+    <tr className={`border-b border-surface hover:bg-surface ${isPending ? 'opacity-50' : ''}`}>
+      <td className="px-4 py-3 text-sm text-text max-w-xs">
         <div className="flex items-center gap-2">
           {article.imageUrl && (
             <svg className="w-3.5 h-3.5 text-green-500 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-label="Hat Bild">
@@ -64,7 +64,7 @@ export function ArticleRow({ article }: ArticleRowProps) {
           )}
           <Link
             href={`/admin/articles/${article.id}/edit`}
-            className="hover:underline text-blue-700"
+            className="hover:underline text-secondary"
           >
             {title}
           </Link>
@@ -75,13 +75,13 @@ export function ArticleRow({ article }: ArticleRowProps) {
           {article.status}
         </span>
       </td>
-      <td className="px-4 py-3 text-sm text-gray-700">
+      <td className="px-4 py-3 text-sm text-text/70">
         {SOURCE_LABELS[article.source] ?? article.source}
       </td>
-      <td className="px-4 py-3 text-sm text-gray-700">
+      <td className="px-4 py-3 text-sm text-text/70">
         {formatDate(article.publishedAt)}
       </td>
-      <td className="px-4 py-3 text-sm text-gray-700">
+      <td className="px-4 py-3 text-sm text-text/70">
         {article.bezirke.map((ab) => ab.bezirk.name).join(', ') || '—'}
       </td>
       <td className="px-4 py-3">
@@ -90,10 +90,10 @@ export function ArticleRow({ article }: ArticleRowProps) {
             type="button"
             disabled={isPending}
             onClick={() => handleAction(togglePinAction, article.id)}
-            className={`text-xs px-2 py-1 rounded border ${
+            className={`text-xs px-2 py-1 rounded-sm border ${
               article.isPinned
                 ? 'bg-orange-100 border-orange-300 text-orange-700 hover:bg-orange-200'
-                : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
+                : 'bg-surface-elevated border-surface text-text/60 hover:bg-surface'
             } disabled:opacity-50`}
           >
             {article.isPinned ? 'Entpinnen' : 'Pinnen'}
@@ -103,10 +103,10 @@ export function ArticleRow({ article }: ArticleRowProps) {
             type="button"
             disabled={isPending}
             onClick={() => handleAction(toggleFeatureAction, article.id)}
-            className={`text-xs px-2 py-1 rounded border ${
+            className={`text-xs px-2 py-1 rounded-sm border ${
               article.isFeatured
                 ? 'bg-purple-100 border-purple-300 text-purple-700 hover:bg-purple-200'
-                : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
+                : 'bg-surface-elevated border-surface text-text/60 hover:bg-surface'
             } disabled:opacity-50`}
           >
             {article.isFeatured ? 'Entfeaturen' : 'Featuren'}
@@ -120,7 +120,7 @@ export function ArticleRow({ article }: ArticleRowProps) {
                 handleAction(softDeleteAction, article.id)
               }
             }}
-            className="text-xs px-2 py-1 rounded border bg-white border-red-300 text-red-600 hover:bg-red-50 disabled:opacity-50"
+            className="text-xs px-2 py-1 rounded-sm border bg-surface-elevated border-red-300 text-red-600 hover:bg-red-50 disabled:opacity-50"
           >
             Loeschen
           </button>
