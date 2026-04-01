@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: The Modern Archivist
 status: executing
-stopped_at: Completed 34-01-PLAN.md
-last_updated: "2026-04-01T18:38:02.910Z"
+stopped_at: Completed 35-02-PLAN.md
+last_updated: "2026-04-01T19:34:06.909Z"
 last_activity: 2026-04-01 — Plan 33-03 complete — All reader components migrated to Archivist tokens; zero token violations across entire reader directory
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 8
+  completed_plans: 6
   percent: 8
 ---
 
@@ -63,6 +63,8 @@ Recent decisions relevant to v3.0:
 - [Phase 34-shell-components]: WurzelAppBar image avatar removed, replaced with left-aligned font-headline italic brand text
 - [Phase 34-shell-components]: Tailwind v4 auto-generates -webkit-backdrop-filter for backdrop-blur-md — no manual override needed (verified via grep on tailwindcss/dist/lib.js)
 - [Phase 34-shell-components]: [Plan 34-01]: WurzelNavBar aged-wood pill removed — top-border pattern (border-t-2 border-ink) replaces pill; inactive tabs use border-transparent for layout consistency
+- [Phase 35-homepage-feature-components]: FragDenWurzelmannCard: bg-ink dark wrapper deferred to HomepageLayout Plan 03 — card is content-only for reusability
+- [Phase 35-homepage-feature-components]: HeroArticle CTA: span (not button/Link) used inside outer Link — avoids nested interactives
 
 ### Pending Todos
 
@@ -76,6 +78,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01T18:34:44.743Z
-Stopped at: Completed 34-01-PLAN.md
+Last session: 2026-04-01T19:34:06.907Z
+Stopped at: Completed 35-02-PLAN.md
 Resume file: None

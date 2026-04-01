@@ -26,10 +26,10 @@ Requirements for "The Modern Archivist" design system overhaul. Each maps to roa
 
 ### Homepage
 
-- [ ] **HOME-01**: Topmeldung hero includes "VOLLSTÄNDIGEN ARTIKEL LESEN" CTA button with gradient overlay
-- [ ] **HOME-02**: MascotGreeting restyled as "Wurzel sagt..." tonal box (not speech bubble)
+- [x] **HOME-01**: Topmeldung hero includes "VOLLSTÄNDIGEN ARTIKEL LESEN" CTA button with gradient overlay
+- [x] **HOME-02**: MascotGreeting restyled as "Wurzel sagt..." tonal box (not speech bubble)
 - [ ] **HOME-03**: Weather widget displays current temperature and conditions for user's selected Bezirk via Open-Meteo API
-- [ ] **HOME-04**: "Frag den Wurzelmann" card with dark green background links to region selector
+- [x] **HOME-04**: "Frag den Wurzelmann" card with dark green background links to region selector
 - [ ] **HOME-05**: "Das Grüne der Woche" themed section displays nature/environment-tagged articles
 - [ ] **HOME-06**: Homepage sections use tonal background alternation per the Archivist palette
 
@@ -91,10 +91,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SHEL-03 | Phase 34 | Complete |
 | SHEL-04 | Phase 34 | Complete |
 | SHEL-05 | Phase 34 | Complete |
-| HOME-01 | Phase 35 | Pending |
-| HOME-02 | Phase 35 | Pending |
+| HOME-01 | Phase 35 | Complete |
+| HOME-02 | Phase 35 | Complete |
 | HOME-03 | Phase 35 | Pending |
-| HOME-04 | Phase 35 | Pending |
+| HOME-04 | Phase 35 | Complete |
 | HOME-05 | Phase 35 | Pending |
 | HOME-06 | Phase 35 | Pending |
 | ARTC-01 | Phase 36 | Pending |
