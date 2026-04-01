@@ -18,15 +18,15 @@ export default async function AiConfigPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text font-headline">KI-Konfiguration</h1>
-        <p className="text-sm text-text/70 mt-1">
+        <h1 className="text-2xl font-bold text-ink font-headline">KI-Konfiguration</h1>
+        <p className="text-sm text-ink-muted mt-1">
           Diese Einstellungen gelten ab dem naechsten Scheduler-Lauf.
         </p>
       </div>
 
       {/* Section 1: Global AI Settings */}
       <section className="mb-8">
-        <h2 className="text-lg font-semibold text-text font-headline mb-4">Globale KI-Einstellungen</h2>
+        <h2 className="text-lg font-semibold text-ink font-headline mb-4">Globale KI-Einstellungen</h2>
         <div className="bg-surface-elevated rounded-sm p-6">
           <GlobalAiConfigForm config={aiConfig} />
         </div>
@@ -34,9 +34,9 @@ export default async function AiConfigPage() {
 
       {/* Section 2: Per-source overrides */}
       <section className="mb-8">
-        <h2 className="text-lg font-semibold text-text font-headline mb-4">Quellen-Ueberschreibungen</h2>
+        <h2 className="text-lg font-semibold text-ink font-headline mb-4">Quellen-Ueberschreibungen</h2>
         {sources.length === 0 ? (
-          <p className="text-sm text-text/70">Keine Quellen konfiguriert.</p>
+          <p className="text-sm text-ink-muted">Keine Quellen konfiguriert.</p>
         ) : (
           <div>
             {sources.map((source) => (
@@ -52,14 +52,14 @@ export default async function AiConfigPage() {
 
       {/* Section 3: Pipeline Config */}
       <section className="mb-8">
-        <h2 className="text-lg font-semibold text-text font-headline mb-4">Pipeline-Konfiguration</h2>
+        <h2 className="text-lg font-semibold text-ink font-headline mb-4">Pipeline-Konfiguration</h2>
         <div className="bg-surface-elevated rounded-sm p-6">
           <form action={upsertPipelineConfigAction} className="space-y-5">
             {/* maxRetryCount */}
             <div>
               <label
                 htmlFor="maxRetryCount"
-                className="block text-sm font-medium text-text/70 mb-1"
+                className="block text-sm font-medium text-ink-muted mb-1"
               >
                 Max. Wiederholungsversuche
               </label>
@@ -69,9 +69,9 @@ export default async function AiConfigPage() {
                 type="number"
                 min={0}
                 defaultValue={pipelineConfig.maxRetryCount}
-                className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
               />
-              <p className="text-xs text-text/60 mt-1">
+              <p className="text-xs text-ink-dim mt-1">
                 Anzahl der Versuche, bevor ein Artikel als dauerhaft fehlgeschlagen markiert wird.
               </p>
             </div>
@@ -80,7 +80,7 @@ export default async function AiConfigPage() {
             <div>
               <label
                 htmlFor="deadManThresholdHours"
-                className="block text-sm font-medium text-text/70 mb-1"
+                className="block text-sm font-medium text-ink-muted mb-1"
               >
                 Dead-Man-Schwelle (Stunden)
               </label>
@@ -90,9 +90,9 @@ export default async function AiConfigPage() {
                 type="number"
                 min={1}
                 defaultValue={pipelineConfig.deadManThresholdHours}
-                className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
               />
-              <p className="text-xs text-text/60 mt-1">
+              <p className="text-xs text-ink-dim mt-1">
                 Maximale Zeit ohne neuen Artikel, bevor ein Alert ausgeloest wird.
               </p>
             </div>
@@ -100,7 +100,7 @@ export default async function AiConfigPage() {
             <div>
               <button
                 type="submit"
-                className="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-white text-sm font-medium rounded-full hover:opacity-90"
+                className="px-4 py-2 bg-gradient-to-br from-ink to-ink-soft text-parchment text-sm font-medium rounded-sm hover:opacity-90"
               >
                 Speichern
               </button>

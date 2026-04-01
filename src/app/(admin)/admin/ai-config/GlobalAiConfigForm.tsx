@@ -10,14 +10,14 @@ export function GlobalAiConfigForm({ config }: GlobalAiConfigFormProps) {
     <form action={upsertAiConfigAction} className="space-y-5">
       {/* Ton */}
       <div>
-        <label htmlFor="tone" className="block text-sm font-medium text-text/70 mb-1">
+        <label htmlFor="tone" className="block text-sm font-medium text-ink-muted mb-1">
           Ton
         </label>
         <select
           id="tone"
           name="tone"
           defaultValue={config.tone}
-          className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
         >
           <option value="NEUTRAL">Neutral</option>
           <option value="FORMAL">Formell</option>
@@ -27,14 +27,14 @@ export function GlobalAiConfigForm({ config }: GlobalAiConfigFormProps) {
 
       {/* Artikellaenge */}
       <div>
-        <label htmlFor="articleLength" className="block text-sm font-medium text-text/70 mb-1">
+        <label htmlFor="articleLength" className="block text-sm font-medium text-ink-muted mb-1">
           Artikellaenge
         </label>
         <select
           id="articleLength"
           name="articleLength"
           defaultValue={config.articleLength}
-          className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
         >
           <option value="SHORT">Kurz (100-150 Woerter)</option>
           <option value="MEDIUM">Mittel (150-250 Woerter)</option>
@@ -44,30 +44,30 @@ export function GlobalAiConfigForm({ config }: GlobalAiConfigFormProps) {
 
       {/* Stilhinweise */}
       <div>
-        <label htmlFor="styleNotes" className="block text-sm font-medium text-text/70 mb-1">
-          Stilhinweise <span className="text-xs text-text/60">(optional)</span>
+        <label htmlFor="styleNotes" className="block text-sm font-medium text-ink-muted mb-1">
+          Stilhinweise <span className="text-xs text-ink-dim">(optional)</span>
         </label>
         <textarea
           id="styleNotes"
           name="styleNotes"
           rows={3}
           defaultValue={config.styleNotes ?? ''}
-          className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
           placeholder="z.B. Erwaehne immer den Bezirk im ersten Satz"
         />
       </div>
 
       {/* Modell-Override */}
       <div>
-        <label htmlFor="modelOverride" className="block text-sm font-medium text-text/70 mb-1">
-          Modell-Override <span className="text-xs text-text/60">(optional)</span>
+        <label htmlFor="modelOverride" className="block text-sm font-medium text-ink-muted mb-1">
+          Modell-Override <span className="text-xs text-ink-dim">(optional)</span>
         </label>
         <input
           id="modelOverride"
           name="modelOverride"
           type="text"
           defaultValue={config.modelOverride ?? ''}
-          className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
           placeholder="leer = Standard (claude-haiku-4-5-20251001)"
         />
       </div>
@@ -75,7 +75,7 @@ export function GlobalAiConfigForm({ config }: GlobalAiConfigFormProps) {
       <div>
         <button
           type="submit"
-          className="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-white text-sm font-medium rounded-full hover:opacity-90"
+          className="px-4 py-2 bg-gradient-to-br from-ink to-ink-soft text-parchment text-sm font-medium rounded-sm hover:opacity-90"
         >
           Speichern
         </button>

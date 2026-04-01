@@ -30,16 +30,16 @@ export function ExceptionCard({ article }: ExceptionCardProps) {
   return (
     <div className="bg-surface-elevated rounded-sm overflow-hidden mb-6">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-surface flex items-center justify-between">
+      <div className="px-6 py-4 border-b border-parchment-dim flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold text-text">
+          <h2 className="text-base font-semibold text-ink">
             {article.title ?? '(Kein Titel)'}
           </h2>
           <div className="flex items-center gap-3 mt-1">
-            <span className="text-xs text-text/70">
+            <span className="text-xs text-ink-muted">
               Erstellt: {formatDate(article.createdAt)}
             </span>
-            <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+            <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-surface text-slate">
               {SOURCE_LABELS[article.source] ?? article.source}
             </span>
           </div>
@@ -71,20 +71,20 @@ export function ExceptionCard({ article }: ExceptionCardProps) {
       <div className="grid grid-cols-2 divide-x divide-surface">
         {/* Left: rewritten article content */}
         <div className="p-6">
-          <h3 className="text-xs font-semibold text-text/60 uppercase tracking-wide mb-3">
+          <h3 className="text-xs font-semibold text-ink-dim uppercase tracking-wide mb-3">
             KI-generierter Artikel
           </h3>
-          <div className="text-sm text-text whitespace-pre-wrap leading-relaxed">
+          <div className="text-sm text-ink whitespace-pre-wrap leading-relaxed">
             {article.content ?? '(Kein Inhalt)'}
           </div>
         </div>
 
         {/* Right: raw source payload */}
         <div className="p-6 bg-surface">
-          <h3 className="text-xs font-semibold text-text/60 uppercase tracking-wide mb-3">
+          <h3 className="text-xs font-semibold text-ink-dim uppercase tracking-wide mb-3">
             Rohdaten (Quelle)
           </h3>
-          <pre className="text-xs text-text/60 overflow-auto max-h-96 leading-relaxed font-mono whitespace-pre-wrap">
+          <pre className="text-xs text-ink-dim overflow-auto max-h-96 leading-relaxed font-mono whitespace-pre-wrap">
             {rawPayloadStr}
           </pre>
         </div>

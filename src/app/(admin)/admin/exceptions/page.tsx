@@ -7,14 +7,14 @@ export default async function ExceptionsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-text font-headline">Ausnahme-Queue</h1>
-        <span className="text-sm text-text/70">
+        <h1 className="text-2xl font-bold text-ink font-headline">Ausnahme-Queue</h1>
+        <span className="text-sm text-ink-muted">
           {articles.length} Artikel zur Ueberpruefung
         </span>
       </div>
 
       {articles.length === 0 ? (
-        <div className="text-center py-16 text-text/70">
+        <div className="text-center py-16 text-ink-muted">
           <p className="text-lg">Keine Artikel in der Ausnahme-Queue.</p>
         </div>
       ) : (

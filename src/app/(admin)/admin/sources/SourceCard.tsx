@@ -30,7 +30,7 @@ interface SourceCardProps {
 }
 
 export function SourceCard({ source }: SourceCardProps) {
-  const healthColor = HEALTH_COLORS[source.healthStatus] ?? 'bg-surface text-text/70'
+  const healthColor = HEALTH_COLORS[source.healthStatus] ?? 'bg-surface text-ink-muted'
 
   return (
     <div className="bg-surface-elevated rounded-sm overflow-hidden mb-4">
@@ -39,29 +39,29 @@ export function SourceCard({ source }: SourceCardProps) {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-3 flex-wrap">
             <span
-              className="text-sm font-mono text-text truncate max-w-xs"
+              className="text-sm font-mono text-ink truncate max-w-xs"
               title={source.url}
             >
               {source.url}
             </span>
-            <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">
+            <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-surface text-slate">
               {SOURCE_LABELS[source.type] ?? source.type}
             </span>
             <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${healthColor}`}>
               {source.healthStatus}
             </span>
             {source.category && (
-              <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">
+              <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-surface text-slate">
                 {source.category}
               </span>
             )}
             {source.keywords.length > 0 && (
-              <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700">
+              <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-surface text-slate">
                 {source.keywords.length} Stichwörter
               </span>
             )}
           </div>
-          <div className="flex items-center gap-4 mt-2 text-xs text-text/70 flex-wrap">
+          <div className="flex items-center gap-4 mt-2 text-xs text-ink-muted flex-wrap">
             <span>Letzter Erfolg: {formatDateTime(source.lastSuccessAt)}</span>
             {source.latestRun ? (
               <span>
@@ -84,7 +84,7 @@ export function SourceCard({ source }: SourceCardProps) {
               Aktiv
             </span>
           ) : (
-            <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-surface text-text/70">
+            <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-surface text-ink-muted">
               Deaktiviert
             </span>
           )}
@@ -93,7 +93,7 @@ export function SourceCard({ source }: SourceCardProps) {
 
       {/* Inline edit form in collapsible details */}
       <details className="px-6 py-3 border-t border-surface">
-        <summary className="text-sm text-text/70 cursor-pointer hover:text-text select-none">
+        <summary className="text-sm text-ink-muted cursor-pointer hover:text-ink select-none">
           Einstellungen bearbeiten
         </summary>
         <form action={updateSourceForm} className="mt-4 space-y-4">
@@ -104,7 +104,7 @@ export function SourceCard({ source }: SourceCardProps) {
             <div>
               <label
                 htmlFor={`poll-${source.id}`}
-                className="block text-xs font-medium text-text/70 mb-1"
+                className="block text-xs font-medium text-ink-muted mb-1"
               >
                 Poll-Intervall (Minuten)
               </label>
@@ -114,7 +114,7 @@ export function SourceCard({ source }: SourceCardProps) {
                 type="number"
                 min={1}
                 defaultValue={source.pollIntervalMinutes}
-                className="w-full border border-surface rounded-sm px-3 py-1.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full border border-surface rounded-sm px-3 py-1.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
               />
             </div>
 
@@ -122,7 +122,7 @@ export function SourceCard({ source }: SourceCardProps) {
             <div>
               <label
                 htmlFor={`threshold-${source.id}`}
-                className="block text-xs font-medium text-text/70 mb-1"
+                className="block text-xs font-medium text-ink-muted mb-1"
               >
                 Fehler-Schwellenwert
               </label>
@@ -132,7 +132,7 @@ export function SourceCard({ source }: SourceCardProps) {
                 type="number"
                 min={1}
                 defaultValue={source.healthFailureThreshold}
-                className="w-full border border-surface rounded-sm px-3 py-1.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full border border-surface rounded-sm px-3 py-1.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
               />
             </div>
           </div>
@@ -142,7 +142,7 @@ export function SourceCard({ source }: SourceCardProps) {
           <div className="flex gap-3">
             <button
               type="submit"
-              className="px-4 py-1.5 bg-gradient-to-br from-primary to-primary-container text-white text-sm font-medium rounded-full hover:opacity-90"
+              className="px-4 py-1.5 bg-gradient-to-br from-ink to-ink-soft text-parchment text-sm font-medium rounded-sm hover:opacity-90"
             >
               Speichern
             </button>
