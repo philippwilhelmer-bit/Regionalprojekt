@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: The Modern Archivist
-status: executing
+status: completed
 stopped_at: Completed 36-02-PLAN.md
-last_updated: "2026-04-01T22:50:00Z"
-last_activity: 2026-04-01 — Plan 36-02 complete — sticky desktop sidebar + mobile metadata strip landed on article detail page
+last_updated: "2026-04-01T21:32:14.735Z"
+last_activity: 2026-04-01 — Plan 36-02 complete — sticky desktop sidebar + mobile metadata strip with ShareButton landed on article detail page
 progress:
   total_phases: 5
-  completed_phases: 5
+  completed_phases: 4
   total_plans: 10
   completed_plans: 10
   percent: 100

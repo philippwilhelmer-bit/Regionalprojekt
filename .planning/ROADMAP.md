@@ -143,7 +143,7 @@ Plans:
   2. Blockquotes in article bodies render with large serif italic typography and tonal dividers — visually distinct from body prose
   3. On desktop, article pages show a sticky sidebar with author/source attribution, estimated reading time, and a share button; on mobile this collapses to a horizontal metadata strip
   4. The article header uses the Archival Header pattern — the article title overlaps the hero image rather than sitting below it
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 Plans:
 - [x] 36-01-PLAN.md — Archival Header, drop cap, blockquote styling, article utility functions
 - [x] 36-02-PLAN.md — Desktop sticky sidebar, mobile metadata strip, visual verification
@@ -169,5 +169,5 @@ Plans:
 | 33. Color Token Foundation | v3.0 | Complete    | 2026-04-01 | 2026-04-01 |
 | 34. Shell Components | 2/2 | Complete    | 2026-04-01 | - |
 | 35. Homepage Feature Components | 3/3 | Complete    | 2026-04-01 | - |
-| 36. Article Detail Redesign | v3.0 | 2/2 | Complete | 2026-04-01 |
+| 36. Article Detail Redesign | v3.0 | Complete    | 2026-04-01 | 2026-04-01 |
 | 37. Search and CMS Refresh | v3.0 | 0/TBD | Not started | - |
