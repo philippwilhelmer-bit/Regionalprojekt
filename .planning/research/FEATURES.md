@@ -1,110 +1,156 @@
 # Feature Research
 
-**Domain:** Test/staging deployment infrastructure for Next.js 15 news platform
-**Researched:** 2026-03-26
-**Confidence:** HIGH — verified against official Next.js 15 docs (last updated 2026-03-20), Railway documentation, and multi-source SEO staging patterns
+**Domain:** High-end editorial regional news — "The Modern Archivist" design system overhaul (v3.0)
+**Researched:** 2026-03-30
+**Confidence:** MEDIUM — patterns verified against editorial/news design literature, Open-Meteo official docs, MDN/caniuse for CSS features, and direct competitor observation. "Das Grüne der Woche" is a custom Wurzelwelt concept with no direct published analogues.
 
 ---
 
-## Context
+## Scope Note
 
-This is milestone v1.2 added to an existing platform. All reader features, CMS, SEO, AdSense, and AI pipeline are already shipped. The scope of this research is limited to the four features defined in PROJECT.md for v1.2.
-
-**Existing infrastructure relevant to this milestone:**
-- `src/app/layout.tsx` exports a `metadata` object (no `robots` field yet)
-- `src/app/sitemap.ts` exists and is conditionally disabled for search — no `robots.ts` exists yet
-- `process.env.NEXT_PUBLIC_BASE_URL` already used in `sitemap.ts`
-- Both reader (`(public)`) and CMS (`(admin)`) route groups are wrapped by the root layout
+This research covers ONLY new features for v3.0 "The Modern Archivist." The following already exist and are explicitly out of scope: homepage hero/Topmeldung base component, bottom nav base component, WurzelAppBar, MascotGreeting, Mein Bezirk section, article detail base layout, search/discovery page base, CMS admin base, Bezirk list, localStorage preference system.
 
 ---
 
 ## Feature Landscape
 
-### Table Stakes (Testers/Operators Expect These)
+### Table Stakes (Users Expect These)
 
-Features the test deployment must have to be useful and safe. Missing any = the deployment is either dangerous (could be indexed) or uninformative (testers don't know it's a test site).
+Features the "Modern Archivist" redesign must deliver to feel complete. Missing any of these makes the overhaul feel unfinished relative to high-end editorial peers.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Visible "TESTSEITE" banner on every page | Testers and any accidental visitors must immediately know this is not production; prevents false editorial decisions on test data | LOW | Fixed-position element in root layout; conditional on `NEXT_PUBLIC_IS_TEST_DEPLOYMENT=true`; covers both reader and CMS route groups via root `layout.tsx` |
-| `robots` noindex/nofollow on all pages | Prevents Google indexing test content before launch; duplicate content penalty risk otherwise | LOW | Add `robots: { index: false, follow: false }` to root layout metadata, env-conditional; Next.js 15 Metadata API propagates to all child pages automatically |
-| `robots.txt` disallowing all crawlers | Belt-and-suspenders; noindex meta can be ignored by non-compliant bots; robots.txt is the canonical crawl control signal | LOW | New `src/app/robots.ts` file (Next.js 15 App Router convention); env-conditional: disallow `/` in test, normal rules in production |
-| Railway deployment with live shareable URL | Goal of the milestone: a URL collaborators can visit to review the platform | MEDIUM | Railway auto-detects Next.js via Nixpacks; requires replication of all existing env vars plus the new `NEXT_PUBLIC_IS_TEST_DEPLOYMENT=true`; Railway provides `*.up.railway.app` URL automatically |
+| Drop cap on first article paragraph | Editorial/magazine standard; absence signals "blog not publication." Der Standard and Kleine Zeitung both omit this — immediate differentiator AND table stakes for "Archivist" brand claim | LOW | `::first-letter` pseudo-element with float fallback. Do NOT use `initial-letter` CSS property — Firefox unsupported as of 2026. Apply only when article body exceeds 300 chars. |
+| Blockquote / pull quote styling | Every premium editorial layout uses pull quotes to break long-form text. Reader expectation from any print-heritage publication | LOW | Pure CSS. Left border accent in Aged Wood token + oversized quotation glyph in Newsreader Italic. No JS needed. |
+| Article sidebar metadata (desktop) | Sidebar metadata placement is universal in print-heritage digital sites: date, author/source, Bezirk tag, read time. Inline placement feels web-1.0 | MEDIUM | Desktop: sticky right-column 240px. Mobile: collapses to horizontal metadata strip above article body. CSS Grid restructure of existing article detail layout. Data already exists — layout restructure only. |
+| Dark editorial footer with navigation columns | All premium news sites use dark footers as visual terminus. Multi-column nav links at bottom of page are a user wayfinding expectation | LOW | 4-column grid: Bezirke / Themen / Über uns / Rechtliches. Dark Ink background, Parchment text. Sub-footer: AI disclosure + copyright. |
+| Glassmorphic bottom nav | Frosted/translucent nav bar is now mainstream on mobile (iOS, Android, major news apps). Opaque nav against editorial imagery feels dated | LOW | `backdrop-filter: blur(10px)` + `-webkit-` prefix. Single blur element per viewport (performance constraint). Active state: 2px top-border in Ink color, not pill. |
+| Topmeldung with CTA button | Hero sections without an explicit call to action are display items, not editorial statements. Users expect a "read more" affordance on the lead story | LOW | Button variant added to existing Topmeldung component. Archivist typography treatment. |
+| "Frag den Wurzelmann" region selector card | Mein Bezirk is a core platform feature. Users who haven't selected a Bezirk need an inviting, prominent on-ramp. This card IS that on-ramp | MEDIUM | Shows current Bezirk if set; otherwise displays selectable Bezirk list. Reads/writes existing localStorage key. Dependency: existing Bezirk list from bundesland.config.ts. |
 
 ### Differentiators (Competitive Advantage)
 
-This is infrastructure, not a user-facing product. There are no competitive differentiators to optimize for. The goal is correct, minimal, and reversible behavior.
+Features that elevate Wurzelwelt above Der Standard, Kleine Zeitung, and generic Austrian regional news. These align directly with "Modern Mountain Folklore → Modern Archivist" identity evolution.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Single env var gates all test behavior | One `NEXT_PUBLIC_IS_TEST_DEPLOYMENT=true` flag controls banner, noindex meta, and robots.txt simultaneously; no code changes needed to go from test to production | LOW | `NEXT_PUBLIC_` prefix means the value is inlined at build time; Railway rebuilds on deploy, so flipping the var and redeploying is the launch action |
-| Banner covers CMS, not just reader | Editors reviewing the CMS on the test URL don't forget they're in a test environment | LOW | Root `app/layout.tsx` already wraps both `(public)` and `(admin)` groups; no separate implementation needed |
+| Weather widget tied to user's Bezirk | Der Standard shows Vienna weather. Kleine Zeitung shows Graz. Wurzelwelt shows YOUR district — hyperlocal relevance no competitor delivers | MEDIUM | Open-Meteo API (free, no key, Austria covered by ECMWF 1-2km model). Reads Mein Bezirk preference → looks up lat/lon from config. 15-min client-side cache. |
+| "Das Grüne der Woche" themed section | Curated weekly sustainability/environment section gives Wurzelwelt an editorial identity beyond "AI aggregator." Creates a branded recurring content slot — reason to return weekly | HIGH | Requires new CMS tagging field (schema migration). Weekly editorial slot concept. Distinct visual: muted green tonal skin, leaf/plant iconography, Newsreader serif headline. No competitor analogue — original differentiator. |
+| Color system overhaul: Ink/Parchment/Slate/Aged Wood | The existing forest-green/terracotta palette reads "folklore craft." Ink/Parchment reads "literary heritage." This token swap is the single biggest visual signal of the brand evolution | MEDIUM | MD3-style design tokens. Touches every component. High blast radius but entirely within Tailwind @theme — no logic changes. |
+| Search/discovery visual redesign | Existing search is functional but palette-generic. Archivist treatment (ink-on-parchment, tonal card grid, refined filter chips) makes discovery feel curated rather than utilitarian | MEDIUM | Data model and client-side filtering logic unchanged. Visual-only redesign of result cards, filter chips, category grid. |
+| CMS admin visual refresh | Editors use the brand daily. An Archivist-aligned admin signals craft and intentionality. Most competing platform CMS tools use generic Bootstrap blue | MEDIUM | Color token swap + typography update in admin. No functional changes. Lowest regression risk (Server Components + FormData). |
 
 ### Anti-Features (Commonly Requested, Often Problematic)
 
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| HTTP Basic Auth on test site | Extra protection from accidental indexing | Breaks Railway health checks, blocks AI pipeline cron jobs from running, creates CORS issues with AdSense script already in layout, adds friction for testers | noindex + robots.txt is sufficient for search engine protection; share URL only with intended testers |
-| Separate Railway project/repo | Clean isolation | Doubles maintenance burden; env vars drift between environments; bugs found in test may not reproduce in production if codebases diverge | Use same codebase, different Railway environment or service, with different env vars |
-| Disabling AdSense on test deployment | Prevent test traffic from affecting ad metrics | AdSense script is already in the root layout tied to `NEXT_PUBLIC_ADSENSE_PUB_ID`; AdSense silently no-ops on unverified domains — no real ads will serve | No action needed; AdSense ignores non-verified Railway domains automatically |
-| Test-only database with seed data | Cleaner isolated testing | Requires schema migration sync, seed script maintenance, and a second PostgreSQL instance; for a shareable review deployment, the real (or a dump of the real) database is appropriate | Use a Railway PostgreSQL add-on with a database dump from production, or share the production database read-write for the test milestone |
-| Environment-specific sitemap | Prevent test URLs appearing in sitemap crawl | sitemap.ts is only linked from robots.txt in production mode; in test mode robots.txt disallows everything so sitemap is unreachable by design | The env-conditional `robots.ts` handles this implicitly — no sitemap change needed |
+| Browser Geolocation API for weather | "Auto-detect my location" seems frictionless | Requires permission prompt (EU/GDPR-sensitive). Breaks SSR. IP geolocation is inaccurate to Bezirk level in rural Steiermark. Adds HTTPS complication in dev. | Use Mein Bezirk preference (already exists) as weather location source. Fallback to Graz. Zero permission prompt. |
+| Animated glassmorphism (blur transitions, pill morphing) | Visual polish | `backdrop-filter` animation is GPU-expensive; causes jank on mid-range Android. PROJECT.md explicitly defers animation/motion scope past v2.0. | Static blur only. Active state via top-border change, not animated transition. |
+| SVG choropleth map for region selector | Rich cartographic visual | Styrian Bezirk boundary polygons require licensed geodata or significant manual authoring. Out of proportion to UX value for a homepage card. | Stylized decorative map image (static PNG/illustration) OR a well-styled searchable Bezirk list. No interactive SVG. |
+| Real-time weather polling (sub-5-minute) | "Always current" expectation | Open-Meteo weather models update hourly at source. Polling more frequently returns identical data and wastes API budget even on free tier. | 15-min TTL cache using sessionStorage. Stale-while-revalidate pattern. |
+| "Das Grüne der Woche" as separate page/route | Editorial section deserves its own URL | Low article volume (weekly cadence). Orphan page risk if no articles are tagged this week. Routing overhead for a section that shares article data model. | Homepage section widget with "mehr dazu" link to filtered search results by theme tag. No separate route. |
+| Article sidebar on mobile | Desktop editorial standard | 375px viewport cannot accommodate two-column layout without unreadable text or uselessly narrow sidebar. | Progressive enhancement only: sidebar on tablet/desktop (≥768px), metadata strip above article body on mobile. |
+| Multiple backdrop-filter blur elements per viewport | Premium glass effect everywhere | Each blur element triggers separate GPU compositing layer. 3+ blur elements causes visible frame drops on mid-range phones. | One blur element per viewport at any time. Bottom nav gets blur; AppBar remains solid Ink color. |
 
 ---
 
 ## Feature Dependencies
 
 ```
-[Railway Deployment]
-    └──requires──> [DATABASE_URL set in Railway]
-    └──requires──> [HMAC_SECRET set in Railway]
-    └──requires──> [ANTHROPIC_API_KEY set in Railway]
-    └──requires──> [NEXT_PUBLIC_IS_TEST_DEPLOYMENT=true set in Railway]
-    └──requires──> [NEXT_PUBLIC_BASE_URL set in Railway]
+[Weather Widget]
+    └──reads──> [Mein Bezirk (localStorage)] (existing)
+    └──requires──> [Bezirk lat/lon coordinates in bundesland.config.ts] (NEW DATA — simple addition)
+    └──calls──> [Open-Meteo API /v1/forecast] (external, no key needed)
+    └──caches──> [sessionStorage {data, fetchedAt}] (15-min TTL)
 
-[TESTSEITE Banner]
-    └──requires──> [NEXT_PUBLIC_IS_TEST_DEPLOYMENT env var]
-    └──enhances──> [noindex meta] (visual + technical together signal "not production")
+["Frag den Wurzelmann" Region Selector Card]
+    └──reads/writes──> [Mein Bezirk (localStorage)] (existing)
+    └──reads──> [Bezirk list from bundesland.config.ts] (existing)
+    └──enhances──> [Weather Widget] (setting Bezirk updates weather location reactively)
+    └──shares-hook──> [useMeinBezirk() or similar] (both components read same localStorage key)
 
-[robots noindex meta]
-    └──requires──> [root layout.tsx metadata object updated with conditional robots field]
-    └──conflicts──> [existing SEO metadata in layout.tsx] (must be additive/conditional, not permanent override)
+["Das Grüne der Woche" Section]
+    └──requires──> [theme tag on Article model] (NEW SCHEMA — migration required)
+    └──reads──> [Article data via Prisma] (existing)
+    └──enhances──> [Search/Discovery page] (theme tag becomes filterable in search)
+    └──requires──> [CMS article creation/edit UI to support theme tag] (part of CMS admin refresh)
 
-[robots.txt disallow all]
-    └──requires──> [src/app/robots.ts created] (does not yet exist in project)
-    └──references──> [NEXT_PUBLIC_BASE_URL] (same var already used in sitemap.ts)
-    └──compatible──> [existing sitemap.ts] (robots.ts conditionally omits sitemap reference in test mode)
+[Article Sidebar Metadata]
+    └──reads──> [Existing article metadata: date, Bezirk, source, body word count] (existing)
+    └──modifies-layout──> [Existing article detail page] (CSS Grid restructure)
+    └──conflicts-on-mobile──> [Single-column mobile layout] (resolves to metadata strip)
+
+[Drop Cap + Blockquote Styling]
+    └──applies-to──> [Article body renderer] (existing)
+    └──no-data-dependencies──> (pure CSS — no schema or API changes)
+
+[Glassmorphic Bottom Nav]
+    └──modifies-style──> [Existing WurzelNavBar component] (existing)
+    └──conflicts-performance──> [Any other backdrop-filter element] (only one blur per viewport)
+    └──requires──> [New Archivist color tokens (Parchment rgba)] (part of color overhaul)
+
+[Color Token Overhaul]
+    └──is-foundation-for──> [ALL other v3.0 visual features] (do this first)
+    └──modifies──> [Tailwind @theme in globals.css] (existing design system file)
+
+[Dark Editorial Footer]
+    └──links-to──> [Impressum/Datenschutz pages] (existing)
+    └──links-to──> [Bezirke list] (existing config)
+    └──requires──> [Ink/Parchment tokens] (part of color overhaul)
+
+[Topmeldung CTA Button]
+    └──modifies──> [Existing Topmeldung component] (existing)
+    └──requires──> [Archivist button variant] (part of color overhaul)
+
+[Search Page Redesign]
+    └──modifies-only-visual──> [Existing search page] (data + filtering logic unchanged)
+    └──requires──> [Archivist tokens] (part of color overhaul)
+
+[CMS Admin Refresh]
+    └──modifies-only-visual──> [Existing CMS admin pages] (logic unchanged)
+    └──requires──> [Archivist tokens] (part of color overhaul)
+    └──should-add──> [Theme tag field to article create/edit] (for "Das Grüne der Woche")
 ```
 
 ### Dependency Notes
 
-- **Railway Deployment requires all existing env vars:** The AI pipeline cron, HMAC session auth, database connection, AdSense publisher ID, and Anthropic API key are all required for the app to function on Railway. These must be replicated from the production environment.
-- **noindex is additive, not a replacement:** The existing `metadata` export in `layout.tsx` has no `robots` field (currently defaults to index/follow). Adding a conditional `robots` field does not affect production builds where `NEXT_PUBLIC_IS_TEST_DEPLOYMENT` is unset.
-- **robots.ts is a new file:** No `src/app/robots.ts` or `public/robots.txt` exists yet. The Next.js 15 App Router convention (`src/app/robots.ts` returning `MetadataRoute.Robots`) is the correct approach and takes precedence over a static `public/robots.txt` file if both exist.
-- **Banner must be server-side:** `NEXT_PUBLIC_IS_TEST_DEPLOYMENT` is inlined at build time, so the banner can be a simple Server Component with a build-time conditional — no client-side hydration or useEffect needed.
+- **Color token overhaul must be Phase 1.** Every other v3.0 feature depends on the Ink/Parchment/Slate/Aged Wood token system. Building the weather widget or region selector card before tokens exist means double-work.
+- **"Das Grüne der Woche" requires a schema migration.** A `theme` field (or reserved tag value like `gruen-der-woche`) must be added to the Article model before the homepage section can render anything meaningful. The CMS admin refresh should include this tagging UI. Plan the migration before the section component.
+- **Weather widget requires Bezirk coordinate data.** Each of the 13 Bezirke needs `weatherCoords: { lat: number; lon: number }` added to their entries in `bundesland.config.ts`. This is a one-time data task, not a schema migration.
+- **Region selector card and weather widget share Mein Bezirk state.** Both components read the same localStorage key. Coordinate via a shared `useMeinBezirk()` hook or React context to ensure the weather widget re-renders when the user selects a Bezirk in the card.
+- **Glassmorphic nav must be the only blur element.** Do not add `backdrop-filter` to WurzelAppBar or any other persistent element. AppBar: solid Ink color. Nav: frosted Parchment. One blur per viewport.
 
 ---
 
 ## MVP Definition
 
-### Launch With (v1.2)
+### Launch With (v3.0)
 
-All four features are required for a safe, shareable test deployment. None can be deferred.
+All items below constitute the "Modern Archivist" milestone. All are required for the brand evolution to read as intentional.
 
-- [ ] TESTSEITE banner visible on every page (reader + CMS) — prevents tester confusion and false editorial decisions
-- [ ] `robots: { index: false, follow: false }` in root layout metadata, conditional on `NEXT_PUBLIC_IS_TEST_DEPLOYMENT` — blocks search engine indexing
-- [ ] `src/app/robots.ts` disallowing all crawlers in test mode — belt-and-suspenders crawl block
-- [ ] Railway deployment producing a shareable `*.up.railway.app` URL — the delivery vehicle for the test milestone
+- [ ] Complete color token overhaul (Ink/Parchment/Slate/Aged Wood) — foundation for everything else
+- [ ] Glassmorphic bottom nav with top-border active state
+- [ ] Drop cap + blockquote/pull quote styling on article detail
+- [ ] Article sidebar metadata (desktop sticky / mobile strip)
+- [ ] Topmeldung with explicit CTA button
+- [ ] "Frag den Wurzelmann" region selector card (homepage)
+- [ ] Weather widget: Bezirk-aware, Open-Meteo, 15-min cache, current conditions
+- [ ] "Das Grüne der Woche" themed section (homepage widget + CMS tag support)
+- [ ] Dark editorial footer with 4-column navigation
+- [ ] Search/discovery page visual redesign
+- [ ] CMS admin visual refresh (including theme tag field)
 
-### Add After Validation (post-v1.2)
+### Add After Validation (v3.x)
 
-- [ ] Remove test banner and noindex for production launch — trigger: launch decision made; handled by removing or setting `NEXT_PUBLIC_IS_TEST_DEPLOYMENT=false` and redeploying — no code changes required
-- [ ] Custom domain configuration on Railway — trigger: public launch; requires `NEXT_PUBLIC_BASE_URL` update for sitemap and canonical URL correctness
+- [ ] `initial-letter` CSS drop cap — when Firefox ships support (use `@supports` progressive enhancement wrapper; currently production-safe only in Chrome/Safari)
+- [ ] Weather 5-day forecast expansion — currently scoped to current conditions card; forecast strip is a natural extension
+- [ ] Bezirk weather coordinates refined by district centroid precision — currently approximate
 
-### Future Consideration (v2+)
+### Future Consideration (v4+)
 
-- [ ] Automated Railway preview deployments per PR — trigger: team grows beyond solo operator; adds CI/CD overhead not needed now
-- [ ] Password-protected staging environment — trigger: external stakeholders who should not see unfinished features; current milestone is for trusted collaborators only
+- [ ] Animated page transitions — explicitly deferred in PROJECT.md
+- [ ] SVG choropleth Bezirk map for region selector — requires geodata licensing
+- [ ] Central Wurzelmann FAB in bottom nav — explicitly deferred in PROJECT.md
 
 ---
 
@@ -112,94 +158,115 @@ All four features are required for a safe, shareable test deployment. None can b
 
 | Feature | User Value | Implementation Cost | Priority |
 |---------|------------|---------------------|----------|
-| Railway deployment | HIGH — enables all sharing | MEDIUM | P1 |
-| TESTSEITE banner | HIGH — tester safety | LOW | P1 |
-| noindex robots meta | HIGH — SEO safety | LOW | P1 |
-| robots.txt disallow | MEDIUM — redundant but belt-and-suspenders | LOW | P1 |
+| Color token overhaul | HIGH (visual foundation) | MEDIUM | P1 — Phase 1 |
+| Weather widget (Bezirk-aware) | HIGH | MEDIUM | P1 |
+| "Frag den Wurzelmann" region selector | HIGH | MEDIUM | P1 |
+| "Das Grüne der Woche" section | HIGH | HIGH | P1 |
+| Article sidebar metadata | HIGH | MEDIUM | P1 |
+| Drop cap + blockquote | MEDIUM | LOW | P1 |
+| Topmeldung CTA | MEDIUM | LOW | P1 |
+| Glassmorphic bottom nav | MEDIUM | LOW | P1 |
+| Dark editorial footer | MEDIUM | LOW | P1 |
+| Search page visual redesign | MEDIUM | MEDIUM | P2 |
+| CMS admin visual refresh | LOW | MEDIUM | P2 |
 
-All four features are P1. This is the entire scope of v1.2.
+**Priority key:**
+- P1: Required for "Modern Archivist" milestone to be coherent
+- P2: High quality addition within milestone, schedule permitting
+- P3: Nice to have, defer to next milestone
 
 ---
 
-## Implementation Notes for Next.js 15
+## Competitor Feature Analysis
 
-### robots metadata in layout.tsx
+| Feature | Der Standard | Kleine Zeitung (Steiermark) | Our Approach |
+|---------|--------------|----------------------------|--------------|
+| Weather widget | Inline top-bar, Vienna-centric | Prominent regional weather block (Graz) | Per-Bezirk via Mein Bezirk preference — hyperlocal, no competitor matches this |
+| Drop caps | None | None | CSS float drop cap — editorial differentiator, zero competition |
+| Region personalization | No (national) | Section nav by Bezirk | Homepage card — interactive, localStorage-persistent, visually branded |
+| Themed weekly section | Weekend supplements | "Woche im Bild" photo feature | Branded "Das Grüne der Woche" — sustainability niche, distinct visual treatment |
+| Footer | Dark, dense, multi-column | Dark, section links + social | Dark 4-column: Bezirke / Themen / Über uns / Rechtliches |
+| Mobile navigation | None (desktop-first) | Fixed bottom nav (basic) | Glassmorphic frosted — premium mobile-native feel |
+| Article sidebar | Author card, tags | Author bio, related articles | Full metadata sidebar: date, Bezirk pill, source, read time — desktop sticky |
+| Color system | Blue/white corporate | Red/white regional | Ink/Parchment/Aged Wood — literary heritage, unique in Austrian regional news |
 
-The existing `layout.tsx` exports a static `metadata` object with `title` and `description`. The `robots` field is not yet set (defaults to index/follow). Extend conditionally:
+---
 
-```typescript
-export const metadata: Metadata = {
-  title: config.siteName,
-  description: "Aktuelle Nachrichten aus der Steiermark",
-  ...(process.env.NEXT_PUBLIC_IS_TEST_DEPLOYMENT === 'true' && {
-    robots: { index: false, follow: false },
-  }),
-};
-```
+## Implementation Notes
 
-Output when test mode active: `<meta name="robots" content="noindex, nofollow" />` on every page. Verified against Next.js 15 Metadata API (official docs version 16.2.1, last updated 2026-03-20). The `robots` field in layout metadata propagates to all child routes unless a child page overrides it with its own `robots` field. None of the current page files set a `robots` field, so root layout is sufficient.
+### Weather Widget
 
-### robots.ts (new file at src/app/robots.ts)
+- **Endpoint:** `https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,weather_code,wind_speed_10m&timezone=Europe/Vienna`
+- **No API key required.** Free tier. Austria covered by ECMWF model at 1-2km resolution.
+- **WMO weather codes** map to German labels + icons: 0 = Klar, 1 = Überwiegend klar, 2-3 = Bewölkt, 45/48 = Nebel, 51-67 = Regen, 71-77 = Schnee, 80-82 = Schauer, 95-99 = Gewitter
+- **Client Component only** — uses localStorage for Bezirk, cannot SSR
+- **Cache strategy:** `sessionStorage.setItem('ww_weather', JSON.stringify({data, fetchedAt}))`. Re-fetch if `Date.now() - fetchedAt > 900000` (15 min)
+- **Config addition needed:** `weatherCoords: { lat: number; lon: number }` on each Bezirk entry in `bundesland.config.ts`
+- **Fallback:** If no Bezirk set → use Graz coordinates (47.0707, 15.4395)
 
-```typescript
-import type { MetadataRoute } from 'next'
+### Drop Cap
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://ennstal-aktuell.at'
-const isTest = process.env.NEXT_PUBLIC_IS_TEST_DEPLOYMENT === 'true'
+- Use `::first-letter` pseudo-element: `float: left; font-size: 3.75rem; line-height: 0.85; padding-right: 0.1em; font-family: var(--font-newsreader); color: var(--color-ink)`
+- Apply via `.prose-drop-cap::first-letter` Tailwind utility or component class
+- Do NOT use CSS `initial-letter` — Firefox unsupported as of March 2026
+- Conditional rendering: apply class only when `article.body.length > 300`
+- Do NOT apply on AI-generated articles summary paragraphs (too short, looks wrong)
 
-export default function robots(): MetadataRoute.Robots {
-  if (isTest) {
-    return {
-      rules: { userAgent: '*', disallow: '/' },
-    }
-  }
-  return {
-    rules: { userAgent: '*', allow: '/' },
-    sitemap: `${BASE_URL}/sitemap.xml`,
-  }
-}
-```
+### Glassmorphic Bottom Nav
 
-The test version intentionally omits the sitemap reference — linking a sitemap in a disallow-all robots.txt is contradictory and confusing to crawlers.
+- `backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px)`
+- Background: `rgba(252, 249, 239, 0.72)` (Parchment at 72% opacity) — exact value TBD with token system
+- Active indicator: `border-top: 2px solid var(--color-ink)` on active tab item (replaces terracotta rounded pill)
+- `@supports (backdrop-filter: blur(1px)) { ... }` — fallback: solid Parchment background
+- Blur value: 10px. Keep ≤12px. Avoid animating this property.
+- Only ONE `backdrop-filter` element in the viewport at any time
 
-### TESTSEITE banner component
+### "Das Grüne der Woche" Section
 
-Fixed-position element in root layout body, rendered only in test mode. Should be visually prominent. Use warning amber rather than Styrian green to distinguish it from production UI elements. As a Server Component, it can read the build-time env var directly without client-side code:
+- **Schema migration required:** Add `theme VARCHAR(64)` to Article table (nullable). OR use existing tag system with reserved slug `gruen-der-woche` (lower migration risk if tags are already implemented)
+- **Homepage widget:** Fetches articles where `theme = 'gruen'` (or matching tag), ordered by `publishedAt DESC`, limit 4-5
+- **Visual treatment:** Section wrapper with muted green tonal background (distinct from Parchment). Leaf/plant Material Symbol. Newsreader Italic section heading "Das Grüne der Woche"
+- **CMS integration:** Article create/edit form needs a "Thema" select field (or tag assignment). Include in CMS admin refresh phase.
+- **Empty state:** If no articles tagged this week, section is hidden (CSS `display:none` when result count = 0) — not an error
 
-```typescript
-// In layout.tsx body:
-{process.env.NEXT_PUBLIC_IS_TEST_DEPLOYMENT === 'true' && <TestBanner />}
-```
+### Article Sidebar (Desktop)
 
-The `TestBanner` component itself requires no state, hooks, or client-side interactivity.
+- CSS Grid on article detail wrapper: `grid-template-columns: 1fr 256px` at `@media (min-width: 768px)`
+- Sidebar content: `publishedAt` (formatted DE), Bezirk pill(s) from ArticleBezirk junction, source name + favicon (16px), estimated read time (`Math.ceil(wordCount / 200)` minutes)
+- `position: sticky; top: 5rem` so sidebar stays visible during scroll
+- Mobile (< 768px): sidebar becomes `display:flex; flex-direction:row; gap:1rem; flex-wrap:wrap` strip above article body
+- All data already available from existing article detail page query — layout restructure only
 
-### Railway deployment
+### Dark Editorial Footer
 
-Railway's Nixpacks builder auto-detects Next.js and runs `next build` + serves via standalone output. Key env vars to set in Railway dashboard:
-
-| Var | Value |
-|-----|-------|
-| `DATABASE_URL` | Railway PostgreSQL connection string |
-| `HMAC_SECRET` | Copy from production env |
-| `ANTHROPIC_API_KEY` | Copy from production env |
-| `NEXT_PUBLIC_BASE_URL` | Railway-provided URL (e.g. `https://regionalprojekt.up.railway.app`) |
-| `NEXT_PUBLIC_ADSENSE_PUB_ID` | Copy from production env (will no-op on unverified domain) |
-| `NEXT_PUBLIC_IS_TEST_DEPLOYMENT` | `true` |
-
-Railway provides health checks and automatic HTTPS for `*.up.railway.app` domains. No custom Dockerfile needed for a standard Next.js app.
+- Background: `var(--color-ink)` (near-black Archivist token)
+- Text: `var(--color-parchment)`
+- 4 columns at ≥1024px, 2 at ≥640px, 1 on mobile
+- Column 1 "Bezirke": all 13 Bezirke as links to filtered search
+- Column 2 "Themen": main content categories
+- Column 3 "Wurzelwelt": Über uns, Mascot lore, RSS feeds
+- Column 4 "Rechtliches": Impressum, Datenschutz, Barrierefreiheit
+- Sub-footer bar: "Automatisch erstellt von Wurzelwelt · © 2026" + "KI-generierte Inhalte werden gekennzeichnet"
+- Reversed/light logo variant of Wurzelwelt wordmark
 
 ---
 
 ## Sources
 
-- [Next.js generateMetadata API Reference (v16.2.1, last updated 2026-03-20)](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#robots) — `robots` field in Metadata object confirmed, HIGH confidence
-- [Next.js Metadata Files: robots.txt](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots) — `src/app/robots.ts` App Router convention confirmed
-- [Railway Next.js Deployment Guide](https://docs.railway.com/guides/nextjs) — Nixpacks auto-detection, env var support confirmed
-- [Railway Environments](https://docs.railway.com/environments) — parallel environment support for test/production separation
-- [searchviu.com: robots.txt and noindex for staging environments](https://www.searchviu.com/en/robots-txt-staging-environment/) — dual-protection rationale (robots.txt + noindex meta)
-- [Search Engine Journal: Google on Staging Sites](https://www.searchenginejournal.com/google-on-staging-sites-preventing-accidental-indexing/484257/) — confirmed pattern: use both robots.txt AND noindex meta for staging
+- [Open-Meteo Free Weather API documentation](https://open-meteo.com/en/docs) — MEDIUM confidence (official docs, Austria ECMWF coverage confirmed)
+- [Open-Meteo features page](https://open-meteo.com/en/features) — MEDIUM confidence (free tier, no API key confirmed)
+- [CSS `initial-letter` — Can I Use](https://caniuse.com/css-initial-letter) — HIGH confidence (browser compatibility table, Firefox unsupported)
+- [CSS Drop Caps — CSS-Tricks](https://css-tricks.com/snippets/css/drop-caps/) — HIGH confidence (established reference, float method)
+- [Chrome Developers: CSS initial-letter](https://developer.chrome.com/blog/control-your-drop-caps-with-css-initial-letter) — HIGH confidence (official Chrome blog)
+- [Glassmorphism best practices 2026 — UX Pilot](https://uxpilot.ai/blogs/glassmorphism-ui) — MEDIUM confidence (industry blog, consistent with MDN performance notes)
+- [Glassmorphism implementation guide 2025](https://playground.halfaccessible.com/blog/glassmorphism-design-trend-implementation-guide) — MEDIUM confidence (GPU performance guidance)
+- [Mobile navigation patterns 2026 — Phone Simulator](https://phone-simulator.com/blog/mobile-navigation-patterns-in-2026) — LOW confidence (single source)
+- [Footer UX patterns 2026 — Eleken](https://www.eleken.co/blog-posts/footer-ux) — MEDIUM confidence
+- [Weather widget UX for websites — Medium 2026](https://medium.com/@malenix/what-is-a-weather-widget-for-a-website-and-what-data-should-it-show-2317178a1b14) — LOW confidence (community blog, single source)
+- [Region selector UX impact — GeoTargetly](https://geotargetly.com/blog/how-does-a-region-selector-impact-your-website-ux) — LOW confidence (vendor blog)
+- Competitor analysis: Der Standard (standard.at), Kleine Zeitung (kleinezeitung.at) — direct observation — HIGH confidence for feature inventory
 
 ---
 
-*Feature research for: test/staging deployment infrastructure (v1.2 milestone)*
-*Researched: 2026-03-26*
+*Feature research for: Wurzelwelt v3.0 "The Modern Archivist" design system overhaul*
+*Researched: 2026-03-30*
