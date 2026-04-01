@@ -33,7 +33,7 @@ export function WurzelAppBar({ bezirke }: WurzelAppBarProps) {
   }
 
   return (
-    <header className="sticky top-0 z-40 bg-primary h-14 flex items-center justify-center relative px-4">
+    <header className="sticky top-0 z-40 bg-aged-wood h-14 flex items-center justify-center relative px-4">
       {/* Centered brand: avatar + title */}
       <Link
         href="/"
@@ -45,9 +45,10 @@ export function WurzelAppBar({ bezirke }: WurzelAppBarProps) {
           alt="Wurzelmann Maskottchen"
           width={32}
           height={32}
-          className="rounded-full ring-2 ring-white/30"
+          style={{ borderRadius: "50%" }}
+          className="ring-2 ring-parchment/30"
         />
-        <span className="font-headline uppercase font-bold text-white text-xl tracking-wide">
+        <span className="font-headline uppercase font-bold text-parchment text-xl tracking-wide">
           {config.siteName}
         </span>
       </Link>
@@ -55,7 +56,7 @@ export function WurzelAppBar({ bezirke }: WurzelAppBarProps) {
       {/* Bezirk selector — right */}
       <button
         onClick={handleBezirkClick}
-        className="absolute right-4 flex items-center gap-1 text-white/80 text-xs font-label hover:text-white transition-colors"
+        className="absolute right-4 flex items-center gap-1 text-parchment/80 text-xs font-label hover:text-parchment transition-colors"
         aria-label="Bezirk auswählen"
       >
         <span className="material-symbols-rounded text-[16px]" aria-hidden="true">

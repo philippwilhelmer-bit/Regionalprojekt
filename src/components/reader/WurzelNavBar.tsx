@@ -14,7 +14,7 @@ export function WurzelNavBar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-40 bg-background shadow-[0_-2px_8px_rgba(0,0,0,0.06)] h-16 flex items-center justify-around px-2 rounded-t-2xl">
+    <nav className="fixed bottom-0 inset-x-0 z-40 bg-parchment shadow-[var(--shadow-nav)] h-16 flex items-center justify-around px-2 rounded-none">
       {NAV_ITEMS.map((item) => {
         if (!item.enabled) {
           return (
@@ -23,12 +23,12 @@ export function WurzelNavBar() {
               className="flex flex-col items-center gap-0.5 opacity-30 cursor-default"
             >
               <span
-                className="material-symbols-rounded text-xl text-secondary"
+                className="material-symbols-rounded text-xl text-slate"
                 aria-hidden="true"
               >
                 {item.icon}
               </span>
-              <span className="font-label text-[10px] text-secondary">{item.label}</span>
+              <span className="font-label text-[10px] text-slate">{item.label}</span>
             </div>
           );
         }
@@ -42,15 +42,15 @@ export function WurzelNavBar() {
             href={item.href}
             className="flex flex-col items-center gap-0.5 min-w-[56px]"
           >
-            {/* Active pill indicator — terracotta accent */}
+            {/* Active pill indicator — aged-wood accent */}
             <span
-              className={`flex items-center justify-center w-16 h-8 rounded-full transition-colors ${
-                isActive ? "bg-accent" : ""
+              className={`flex items-center justify-center w-16 h-8 rounded-xs transition-colors ${
+                isActive ? "bg-aged-wood" : ""
               }`}
             >
               <span
                 className={`material-symbols-rounded text-xl transition-colors ${
-                  isActive ? "text-white" : "text-primary"
+                  isActive ? "text-parchment" : "text-ink"
                 }`}
                 aria-hidden="true"
               >
@@ -59,7 +59,7 @@ export function WurzelNavBar() {
             </span>
             <span
               className={`font-label text-[10px] transition-colors ${
-                isActive ? "text-accent font-semibold" : "text-secondary"
+                isActive ? "text-aged-wood font-semibold" : "text-slate"
               }`}
             >
               {item.label}
