@@ -20,9 +20,9 @@ Requirements for "The Modern Archivist" design system overhaul. Each maps to roa
 
 - [ ] **SHEL-01**: Bottom nav uses glassmorphism (85% opacity + backdrop-blur) with top-border active indicator
 - [ ] **SHEL-02**: Bottom nav icons updated (auto_stories, forest, face_5, book_2) with filled active state
-- [ ] **SHEL-03**: Dark editorial footer with Wurzelwelt branding, navigation columns, and Impressum/Kontakt links
-- [ ] **SHEL-04**: Header shows hamburger menu + left-aligned serif "Wurzelwelt" on mobile
-- [ ] **SHEL-05**: Header shows desktop navigation links (Archive, Forest, Guide, Library) on wider screens
+- [x] **SHEL-03**: Dark editorial footer with Wurzelwelt branding, navigation columns, and Impressum/Kontakt links
+- [x] **SHEL-04**: Header shows hamburger menu + left-aligned serif "Wurzelwelt" on mobile
+- [x] **SHEL-05**: Header shows desktop navigation links (Archive, Forest, Guide, Library) on wider screens
 
 ### Homepage
 
@@ -88,9 +88,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TOKN-06 | Phase 33 | Complete (Plan 33-01) |
 | SHEL-01 | Phase 34 | Pending |
 | SHEL-02 | Phase 34 | Pending |
-| SHEL-03 | Phase 34 | Pending |
-| SHEL-04 | Phase 34 | Pending |
-| SHEL-05 | Phase 34 | Pending |
+| SHEL-03 | Phase 34 | Complete |
+| SHEL-04 | Phase 34 | Complete |
+| SHEL-05 | Phase 34 | Complete |
 | HOME-01 | Phase 35 | Pending |
 | HOME-02 | Phase 35 | Pending |
 | HOME-03 | Phase 35 | Pending |

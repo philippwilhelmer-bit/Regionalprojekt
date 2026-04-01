@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: The Modern Archivist
 status: executing
-stopped_at: Completed 33-03-PLAN.md
-last_updated: "2026-04-01T17:17:22.136Z"
+stopped_at: Completed 34-02-PLAN.md
+last_updated: "2026-04-01T18:33:43.287Z"
 last_activity: 2026-04-01 — Plan 33-03 complete — All reader components migrated to Archivist tokens; zero token violations across entire reader directory
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 5
+  completed_plans: 4
   percent: 8
 ---
 
@@ -58,6 +58,9 @@ Recent decisions relevant to v3.0:
 - [Plan 33-03]: WurzelNavBar active state uses bg-aged-wood (not bg-ink) to preserve Wurzel brand distinction from RegionalNavBar
 - [Plan 33-03]: Header/RegionalAppBar use bg-ink (Archivist editorial dark) — Styrian flag identity preserved via inline-style stripe above header
 - [Plan 33-03]: HomepageLayout bg-background -> bg-parchment (former --color-background was parchment in old system)
+- [Phase 34-shell-components]: Bezirk selector moved to hamburger drawer — openBezirkModal event preserved
+- [Phase 34-shell-components]: Footer uses pb-28 for 112px bottom nav clearance
+- [Phase 34-shell-components]: WurzelAppBar image avatar removed, replaced with left-aligned font-headline italic brand text
 
 ### Pending Todos
 
@@ -71,6 +74,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01T17:00:00Z
-Stopped at: Completed 33-03-PLAN.md
-Resume file: .planning/phases/33-color-token-foundation/33-03-SUMMARY.md
+Last session: 2026-04-01T18:33:43.286Z
+Stopped at: Completed 34-02-PLAN.md
+Resume file: None
