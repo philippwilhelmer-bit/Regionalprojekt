@@ -81,7 +81,7 @@ Full details: `.planning/milestones/v2.0-ROADMAP.md`
 - [x] **Phase 33: Color Token Foundation** - MD3-style Ink/Parchment/Slate/Aged Wood token system, No-Line Rule, radius and spacing scales, glassmorphism tokens (Plans 01-03 complete 2026-04-01)
 - [x] **Phase 34: Shell Components** - Glassmorphic bottom nav, dark editorial footer, updated header with hamburger and desktop navigation (completed 2026-04-01)
 - [x] **Phase 35: Homepage Feature Components** - Weather widget, Frag den Wurzelmann region selector, Das Grune der Woche section, Topmeldung CTA, tonal palette update, MascotGreeting restyle (completed 2026-04-01)
-- [ ] **Phase 36: Article Detail Redesign** - Drop cap, blockquote styling, sidebar metadata, Archival Header pattern
+- [x] **Phase 36: Article Detail Redesign** - Drop cap, blockquote styling, sidebar metadata, Archival Header pattern (completed 2026-04-01)
 - [ ] **Phase 37: Search and CMS Refresh** - Search page Archivist token treatment, CMS admin token swap, theme tag management
 
 ## Phase Details
@@ -146,7 +146,7 @@ Plans:
 **Plans:** 2 plans
 Plans:
 - [x] 36-01-PLAN.md — Archival Header, drop cap, blockquote styling, article utility functions
-- [ ] 36-02-PLAN.md — Desktop sticky sidebar, mobile metadata strip, visual verification
+- [x] 36-02-PLAN.md — Desktop sticky sidebar, mobile metadata strip, visual verification
 
 ### Phase 37: Search and CMS Refresh
 **Goal**: The search page and CMS admin carry the Archivist visual treatment — no reader or editor encounters legacy Wurzelwelt warm-cream tokens after this phase
@@ -169,5 +169,5 @@ Plans:
 | 33. Color Token Foundation | v3.0 | Complete    | 2026-04-01 | 2026-04-01 |
 | 34. Shell Components | 2/2 | Complete    | 2026-04-01 | - |
 | 35. Homepage Feature Components | 3/3 | Complete    | 2026-04-01 | - |
-| 36. Article Detail Redesign | v3.0 | 1/2 | In progress | - |
+| 36. Article Detail Redesign | v3.0 | 2/2 | Complete | 2026-04-01 |
 | 37. Search and CMS Refresh | v3.0 | 0/TBD | Not started | - |

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: The Modern Archivist
 status: executing
-stopped_at: Completed 36-01-PLAN.md
-last_updated: "2026-04-01T22:35:00Z"
-last_activity: 2026-04-01 — Plan 36-01 complete — Archival Header pattern, drop cap, blockquote detection landed on article detail page
+stopped_at: Completed 36-02-PLAN.md
+last_updated: "2026-04-01T22:50:00Z"
+last_activity: 2026-04-01 — Plan 36-02 complete — sticky desktop sidebar + mobile metadata strip landed on article detail page
 progress:
   total_phases: 5
-  completed_phases: 3
-  total_plans: 8
-  completed_plans: 8
-  percent: 8
+  completed_phases: 5
+  total_plans: 10
+  completed_plans: 10
+  percent: 100
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 ## Current Position
 
 Phase: 36 of 37 (Article Detail Redesign)
-Plan: 01 complete — Phase 36 in progress
-Status: In progress
-Last activity: 2026-04-01 — Plan 36-01 complete — Archival Header pattern, drop cap, blockquote detection landed on article detail page
+Plan: 02 complete — Phase 36 complete
+Status: Phase 36 complete — ready for Phase 37
+Last activity: 2026-04-01 — Plan 36-02 complete — sticky desktop sidebar + mobile metadata strip with ShareButton landed on article detail page
 
-Progress: [██░░░░░░░░] 8%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -73,6 +73,9 @@ Recent decisions relevant to v3.0:
 - [Plan 36-01]: prose class removed from article body — custom paragraph map provides full typographic control
 - [Plan 36-01]: ShareButton temporarily in source attribution area — moves to sidebar in Plan 36-02
 - [Plan 36-01]: bg-background replaced with bg-parchment on article page outer wrapper (deprecated token removal)
+- [Plan 36-02]: ArticleSidebar sticky offset is top-[4rem] to clear WurzelAppBar/RegionalAppBar height
+- [Plan 36-02]: ShareButton removed from source attribution area — now exclusively in sidebar (desktop) and metadata strip (mobile)
+- [Plan 36-02]: AdUnit and related articles remain outside grid — they span full content column width
 
 ### Pending Todos
 
@@ -86,6 +89,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01T22:35:00Z
-Stopped at: Completed 36-01-PLAN.md
+Last session: 2026-04-01T22:50:00Z
+Stopped at: Completed 36-02-PLAN.md
 Resume file: None
