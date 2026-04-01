@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: The Modern Archivist
 status: executing
-stopped_at: Completed 33-02-PLAN.md
-last_updated: "2026-04-01T16:16:52.241Z"
-last_activity: 2026-04-01 — Plan 33-01 complete — Archivist @theme token system defined in globals.css
+stopped_at: Completed 33-03-PLAN.md
+last_updated: "2026-04-01T17:00:00Z"
+last_activity: 2026-04-01 — Plan 33-03 complete — All reader components migrated to Archivist tokens; zero token violations across entire reader directory
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 3
-  completed_plans: 2
-  percent: 4
+  completed_plans: 3
+  percent: 8
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 ## Current Position
 
 Phase: 33 of 37 (Color Token Foundation)
-Plan: 01 complete, Plan 02 next
+Plan: 03 complete — Phase 33 DONE
 Status: In progress
-Last activity: 2026-04-01 — Plan 33-01 complete — Archivist @theme token system defined in globals.css
+Last activity: 2026-04-01 — Plan 33-03 complete — All reader components migrated to Archivist tokens; zero token violations across entire reader directory
 
-Progress: [█░░░░░░░░░] 4%
+Progress: [██░░░░░░░░] 8%
 
 ## Performance Metrics
 
@@ -55,6 +55,9 @@ Recent decisions relevant to v3.0:
 - [Phase 33]: BEZIRK_COLORS/BEZIRK_BADGE_COLORS maps deleted from reader components — unified from-ink to-ink-soft gradient for all article cards
 - [Phase 33]: ListItem border-b removed — tonal bg shift (bg-parchment hover:bg-parchment-dim) used for separation per TOKN-02
 - [Phase 33]: Spinner uses style={{ borderRadius: 50% }} inline instead of rounded-full — functional circle exemption pattern established
+- [Plan 33-03]: WurzelNavBar active state uses bg-aged-wood (not bg-ink) to preserve Wurzel brand distinction from RegionalNavBar
+- [Plan 33-03]: Header/RegionalAppBar use bg-ink (Archivist editorial dark) — Styrian flag identity preserved via inline-style stripe above header
+- [Plan 33-03]: HomepageLayout bg-background -> bg-parchment (former --color-background was parchment in old system)
 
 ### Pending Todos
 
@@ -68,6 +71,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01T16:16:52.240Z
-Stopped at: Completed 33-02-PLAN.md
-Resume file: None
+Last session: 2026-04-01T17:00:00Z
+Stopped at: Completed 33-03-PLAN.md
+Resume file: .planning/phases/33-color-token-foundation/33-03-SUMMARY.md
