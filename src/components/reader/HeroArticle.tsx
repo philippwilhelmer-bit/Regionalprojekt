@@ -56,6 +56,11 @@ export function HeroArticle({ article }: HeroArticleProps) {
         {excerpt && (
           <p className="text-parchment/80 text-sm line-clamp-2">{excerpt}</p>
         )}
+
+        {/* CTA — decorative span (outer Link handles navigation) */}
+        <span className="mt-4 inline-block self-start px-4 py-2 font-label font-semibold uppercase text-xs tracking-wider text-parchment bg-ink/70 border border-parchment/30 rounded-xs">
+          VOLLSTAENDIGEN ARTIKEL LESEN
+        </span>
       </div>
     </Link>
   );

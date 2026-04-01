@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 function getTimeOfDay(): "morning" | "afternoon" | "evening" {
   const hour = new Date().getHours();
   if (hour < 11) return "morning";
@@ -29,48 +27,15 @@ export function MascotGreeting() {
   const { greeting, quote } = GREETINGS[slot];
 
   return (
-    <div className="px-[var(--spacing-gutter)] py-4">
-      {/* Speech bubble + avatar wrapper */}
-      <div className="flex flex-col items-start">
-        {/* Bubble container */}
-        <div className="relative w-full">
-          {/* "Wurzelmann sagt:" label */}
-          <p className="font-label uppercase text-xs font-semibold text-ink-muted mb-1 tracking-wider">
-            Wurzelmann sagt:
-          </p>
-
-          {/* Speech bubble */}
-          <div className="bg-surface-elevated rounded-sm shadow-sm p-3 relative">
-            <p className="font-headline text-base font-semibold text-ink leading-snug">
-              {greeting}!
-            </p>
-            <p className="font-label text-sm text-ink/60 mt-0.5">{quote}</p>
-
-            {/* Triangular tail pointing down-left toward avatar */}
-            <span
-              className="absolute -bottom-[10px] left-6"
-              style={{
-                width: 0,
-                height: 0,
-                borderLeft: "10px solid transparent",
-                borderRight: "10px solid transparent",
-                borderTop: "10px solid white",
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Wurzelmann avatar — placed below and slightly left of bubble */}
-        <div className="ml-2 mt-0.5">
-          <Image
-            src="/images/wurzelmann.png"
-            alt="Wurzelmann"
-            width={360}
-            height={360}
-            className="object-contain"
-            priority={false}
-          />
-        </div>
+    <div className="px-[var(--spacing-gutter)]">
+      <div className="bg-surface rounded-xs px-4 py-3">
+        <p className="font-label uppercase text-xs font-semibold text-ink-muted mb-1 tracking-wider">
+          Wurzel sagt ...
+        </p>
+        <p className="font-headline text-base font-semibold text-ink leading-snug">
+          {greeting}!
+        </p>
+        <p className="font-label text-sm text-ink/60 mt-0.5">{quote}</p>
       </div>
     </div>
   );
