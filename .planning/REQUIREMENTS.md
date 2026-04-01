@@ -9,12 +9,12 @@ Requirements for "The Modern Archivist" design system overhaul. Each maps to roa
 
 ### Design Tokens & Foundation
 
-- [ ] **TOKN-01**: Site uses MD3-style color token system (Ink #071806, Parchment #FCF9EF, Slate #50606F, Aged Wood #230E08) with ~30 semantic surface/container variants
+- [x] **TOKN-01**: Site uses MD3-style color token system (Ink #071806, Parchment #FCF9EF, Slate #50606F, Aged Wood #230E08) with ~30 semantic surface/container variants
 - [ ] **TOKN-02**: No visible borders on any reader-facing component — sections separated by tonal background shifts and negative space only
 - [ ] **TOKN-03**: Border radii use 0.125rem (default) and 0.25rem (lg) throughout — no rounded corners
-- [ ] **TOKN-04**: Vertical spacing follows 3:5 ratio rhythm (1rem horizontal → 1.7rem vertical)
-- [ ] **TOKN-05**: Glassmorphism surface tokens defined via color-mix() for nav and overlays
-- [ ] **TOKN-06**: All shadows use tinted on-surface color, never pure black
+- [x] **TOKN-04**: Vertical spacing follows 3:5 ratio rhythm (1rem horizontal → 1.7rem vertical)
+- [x] **TOKN-05**: Glassmorphism surface tokens defined via color-mix() for nav and overlays
+- [x] **TOKN-06**: All shadows use tinted on-surface color, never pure black
 
 ### Shell Components
 
@@ -80,12 +80,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TOKN-01 | Phase 33 | Pending |
+| TOKN-01 | Phase 33 | Complete (Plan 33-01) |
 | TOKN-02 | Phase 33 | Pending |
 | TOKN-03 | Phase 33 | Pending |
-| TOKN-04 | Phase 33 | Pending |
-| TOKN-05 | Phase 33 | Pending |
-| TOKN-06 | Phase 33 | Pending |
+| TOKN-04 | Phase 33 | Complete (Plan 33-01) |
+| TOKN-05 | Phase 33 | Complete (Plan 33-01) |
+| TOKN-06 | Phase 33 | Complete (Plan 33-01) |
 | SHEL-01 | Phase 34 | Pending |
 | SHEL-02 | Phase 34 | Pending |
 | SHEL-03 | Phase 34 | Pending |
@@ -112,4 +112,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-04-01*
-*Last updated: 2026-04-01 after roadmap creation*
+*Last updated: 2026-04-01 after Plan 33-01 completion (TOKN-01, TOKN-04, TOKN-05, TOKN-06 marked complete)*

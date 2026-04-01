@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: The Modern Archivist
-status: planning
-stopped_at: Phase 33 context gathered
-last_updated: "2026-04-01T14:45:34.284Z"
-last_activity: 2026-04-01 — Roadmap created, 5 phases defined (33-37), 24/24 requirements mapped
+status: in-progress
+stopped_at: Phase 33, Plan 01 complete
+last_updated: "2026-04-01T16:00:01Z"
+last_activity: 2026-04-01 — Plan 33-01 complete — Archivist @theme token system defined in globals.css
 progress:
   total_phases: 5
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 1
+  completed_plans: 1
+  percent: 4
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 ## Current Position
 
 Phase: 33 of 37 (Color Token Foundation)
-Plan: — (not yet planned)
-Status: Ready to plan
-Last activity: 2026-04-01 — Roadmap created, 5 phases defined (33-37), 24/24 requirements mapped
+Plan: 01 complete, Plan 02 next
+Status: In progress
+Last activity: 2026-04-01 — Plan 33-01 complete — Archivist @theme token system defined in globals.css
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 4%
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Recent decisions relevant to v3.0:
 - Float-based ::first-letter drop cap (not initial-letter) — Firefox unsupported
 - Weather widget: Server Component fetch with revalidate: 1800; no geolocation API (GDPR)
 - "Das Grüne der Woche": nullable theme field on Article model (Prisma migration required in Phase 35)
+- Plan 33-01: Clean break from 8 old tokens — no bridge aliases. Literal hex in color-mix() within @theme (not var()). --radius-sm override removed (Tailwind v4 default 0.25rem already correct). --spacing-gutter corrected to 1rem; --spacing-vertical: 1.7rem added.
 
 ### Pending Todos
 
@@ -64,6 +65,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01T14:45:34.276Z
-Stopped at: Phase 33 context gathered
-Resume file: .planning/phases/33-color-token-foundation/33-CONTEXT.md
+Last session: 2026-04-01T16:00:01Z
+Stopped at: Phase 33, Plan 01 complete
+Resume file: .planning/phases/33-color-token-foundation/33-01-SUMMARY.md

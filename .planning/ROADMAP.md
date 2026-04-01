@@ -78,7 +78,7 @@ Full details: `.planning/milestones/v2.0-ROADMAP.md`
 
 **Milestone Goal:** Transform the visual identity from "Modern Mountain Folklore" to "The Modern Archivist" — a high-end editorial print-magazine aesthetic with a new MD3-style color system, glassmorphic navigation, editorial homepage features, article detail print conventions, and consistent Archivist treatment across search and CMS.
 
-- [ ] **Phase 33: Color Token Foundation** - MD3-style Ink/Parchment/Slate/Aged Wood token system, No-Line Rule, radius and spacing scales, glassmorphism tokens
+- [ ] **Phase 33: Color Token Foundation** - MD3-style Ink/Parchment/Slate/Aged Wood token system, No-Line Rule, radius and spacing scales, glassmorphism tokens (Plan 01 complete)
 - [ ] **Phase 34: Shell Components** - Glassmorphic bottom nav, dark editorial footer, updated header with hamburger and desktop navigation
 - [ ] **Phase 35: Homepage Feature Components** - Weather widget, Frag den Wurzelmann region selector, Das Grüne der Woche section, Topmeldung CTA, tonal palette update, MascotGreeting restyle
 - [ ] **Phase 36: Article Detail Redesign** - Drop cap, blockquote styling, sidebar metadata, Archival Header pattern
@@ -98,7 +98,7 @@ Full details: `.planning/milestones/v2.0-ROADMAP.md`
   5. The glassmorphism tokens (color-mix() definitions for nav and overlay surfaces) are defined in @theme and usable as Tailwind utilities
 **Plans:** 3 plans
 Plans:
-- [ ] 33-01-PLAN.md — Define complete Archivist @theme token system in globals.css
+- [x] 33-01-PLAN.md — Define complete Archivist @theme token system in globals.css (complete 2026-04-01)
 - [ ] 33-02-PLAN.md — Migrate 9 core reader components (cards, lists, feeds, search, modals)
 - [ ] 33-03-PLAN.md — Migrate 5 shell/nav components + full verification sweep
 
@@ -156,7 +156,7 @@ Plans:
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
-| 33. Color Token Foundation | v3.0 | 0/3 | Not started | - |
+| 33. Color Token Foundation | v3.0 | 1/3 | In progress | - |
 | 34. Shell Components | v3.0 | 0/TBD | Not started | - |
 | 35. Homepage Feature Components | v3.0 | 0/TBD | Not started | - |
 | 36. Article Detail Redesign | v3.0 | 0/TBD | Not started | - |
