@@ -99,7 +99,7 @@ export function BezirkModal({ bezirke }: { bezirke: BezirkItem[] }) {
 
       {/* Modal panel */}
       <div className="relative z-10 w-full max-w-md bg-surface-elevated rounded-t-sm sm:rounded-sm p-6 shadow-xl max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-bold text-zinc-900 mb-4">Mein Bezirk</h2>
+        <h2 className="text-xl font-bold text-ink mb-4">Mein Bezirk</h2>
 
         {/* "Alle Bezirke" toggle */}
         <button
@@ -107,8 +107,8 @@ export function BezirkModal({ bezirke }: { bezirke: BezirkItem[] }) {
           className={
             "w-full mb-4 py-2 px-4 rounded-sm text-sm font-medium transition-colors " +
             (allSelected
-              ? "bg-primary text-white"
-              : "bg-surface text-zinc-700 shadow-sm hover:bg-surface-elevated")
+              ? "bg-ink text-parchment"
+              : "bg-surface text-ink-soft shadow-sm hover:bg-surface-elevated")
           }
         >
           Alle Bezirke
@@ -125,8 +125,8 @@ export function BezirkModal({ bezirke }: { bezirke: BezirkItem[] }) {
                 className={
                   "py-2 px-3 rounded-sm text-xs font-medium transition-colors text-left " +
                   (isSelected
-                    ? "bg-primary text-white"
-                    : "bg-surface-elevated text-zinc-700 shadow-sm hover:bg-surface")
+                    ? "bg-ink text-parchment"
+                    : "bg-surface-elevated text-ink-soft shadow-sm hover:bg-surface")
                 }
               >
                 {bezirk.name}
@@ -139,13 +139,13 @@ export function BezirkModal({ bezirke }: { bezirke: BezirkItem[] }) {
         <div className="flex flex-col gap-2">
           <button
             onClick={handleSave}
-            className="w-full py-3 px-4 rounded-full bg-gradient-to-br from-primary to-primary-container text-white font-semibold text-sm shadow-sm hover:opacity-90 transition-opacity"
+            className="w-full py-3 px-4 rounded-xs bg-gradient-to-br from-ink to-ink-soft text-parchment font-semibold text-sm shadow-sm hover:opacity-90 transition-opacity"
           >
             Übernehmen
           </button>
           <button
             onClick={handleDismiss}
-            className="w-full py-2 px-4 rounded-sm text-zinc-500 text-sm hover:text-zinc-700 transition-colors"
+            className="w-full py-2 px-4 rounded-sm text-ink-muted text-sm hover:text-ink transition-colors"
           >
             Später
           </button>

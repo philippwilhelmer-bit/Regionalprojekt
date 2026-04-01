@@ -42,13 +42,13 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
   }
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="bg-parchment min-h-screen">
       {/* Zone 1 — Search input (SRCH-01) */}
       <div className="px-4 pt-6 pb-4">
-        <h1 className="font-headline text-3xl text-zinc-900 mb-4">Suche</h1>
+        <h1 className="font-headline text-3xl text-ink mb-4">Suche</h1>
         <div className="relative">
           <span
-            className="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-secondary"
+            className="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate"
             aria-hidden="true"
           >
             search
@@ -58,12 +58,12 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Artikel suchen…"
-            className="w-full font-headline text-xl bg-surface ring-1 ring-secondary/20 focus:ring-primary focus:outline-none rounded-sm pb-2 pt-2 pl-10 pr-10 text-zinc-900 placeholder:text-zinc-400"
+            className="w-full font-headline text-xl bg-surface ring-1 ring-slate/20 focus:ring-ink focus:outline-none rounded-sm pb-2 pt-2 pl-10 pr-10 text-ink placeholder:text-ink-dim"
           />
           {query !== "" && (
             <button
               onClick={() => setQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-zinc-700"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate hover:text-ink"
               aria-label="Suche löschen"
             >
               <span className="material-symbols-rounded" aria-hidden="true">close</span>
@@ -74,7 +74,7 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
 
       {/* Zone 2 — Trending pills (SRCH-02) */}
       <section className="px-4 pb-4">
-        <h2 className="font-label text-xs uppercase tracking-wider text-secondary mb-2">
+        <h2 className="font-label text-xs uppercase tracking-wider text-slate mb-2">
           Beliebte Themen
         </h2>
         <div className="flex gap-2 overflow-x-auto scrollbar-none pb-2">
@@ -83,10 +83,10 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
               key={b.id}
               onClick={() => toggleBezirk(b.id)}
               className={
-                "shrink-0 px-3 py-1 rounded-full text-sm font-label transition-colors " +
+                "shrink-0 px-3 py-1 rounded-xs text-sm font-label transition-colors " +
                 (activeBezirkId === b.id
-                  ? "bg-primary text-white"
-                  : "bg-surface-elevated text-secondary shadow-sm hover:text-primary")
+                  ? "bg-ink text-parchment"
+                  : "bg-surface-elevated text-slate shadow-sm hover:text-ink")
               }
             >
               {b.name}
@@ -101,17 +101,17 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
           <div className="px-4 pb-3">
             <button
               onClick={() => { setQuery(""); setActiveBezirkId(null); }}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-full bg-gradient-to-br from-primary to-primary-container text-white font-label text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xs bg-gradient-to-br from-ink to-ink-soft text-parchment font-label text-sm font-semibold shadow-sm transition-opacity hover:opacity-90"
             >
               <span className="material-symbols-rounded text-base" aria-hidden="true">arrow_back</span>
               Alle Bezirke anzeigen
             </button>
           </div>
-          <p className="px-4 pb-2 text-sm text-secondary">{filtered.length} Artikel gefunden</p>
+          <p className="px-4 pb-2 text-sm text-slate">{filtered.length} Artikel gefunden</p>
           {filtered.length === 0 ? (
             <div className="px-4 py-12 text-center">
-              <p className="font-headline text-xl text-zinc-600 mb-2">Keine Artikel gefunden</p>
-              <p className="text-sm text-zinc-400">
+              <p className="font-headline text-xl text-ink-muted mb-2">Keine Artikel gefunden</p>
+              <p className="text-sm text-ink-dim">
                 Versuchen Sie einen anderen Suchbegriff oder wählen Sie einen Bezirk.
               </p>
             </div>
@@ -127,7 +127,7 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
         <>
           {/* Zone 3 — Category grid (SRCH-03) */}
           <section className="px-4 pb-6">
-            <h2 className="font-label text-xs uppercase tracking-wider text-secondary mb-3">
+            <h2 className="font-label text-xs uppercase tracking-wider text-slate mb-3">
               Alle Bezirke
             </h2>
             <div className="grid grid-cols-2 gap-3">
@@ -138,12 +138,12 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
                   className={
                     "text-left p-3 rounded-sm transition-colors " +
                     (activeBezirkId === b.id
-                      ? "bg-primary/10 text-primary"
-                      : "bg-surface-elevated text-zinc-800 shadow-sm hover:bg-surface")
+                      ? "bg-ink/10 text-ink"
+                      : "bg-surface-elevated text-ink-soft shadow-sm hover:bg-surface")
                   }
                 >
                   <span
-                    className="material-symbols-rounded text-secondary text-lg block mb-1"
+                    className="material-symbols-rounded text-slate text-lg block mb-1"
                     aria-hidden="true"
                   >
                     location_city
@@ -156,7 +156,7 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
 
           {/* Zone 4 — Empfohlene Artikel (SRCH-04) */}
           <section className="px-4 pb-6">
-            <h2 className="font-headline text-xl text-zinc-900 mb-3">Empfohlene Artikel</h2>
+            <h2 className="font-headline text-xl text-ink mb-3">Empfohlene Artikel</h2>
             <div className="grid grid-cols-2 gap-3">
               {recommended.slice(0, 6).map((a) => (
                 <ArticleCard article={a} key={a.id} />
