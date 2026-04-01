@@ -16,7 +16,7 @@ export function RegionalEditorialCard({ article }: RegionalEditorialCardProps) {
   return (
     <Link href={href} className="block">
       {/* Full-width aspect-video image */}
-      <div className="relative w-full aspect-video rounded-sm overflow-hidden bg-gradient-to-br from-primary to-secondary">
+      <div className="relative w-full aspect-video rounded-sm overflow-hidden bg-gradient-to-br from-ink to-ink-soft">
         {article.imageUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -31,20 +31,20 @@ export function RegionalEditorialCard({ article }: RegionalEditorialCardProps) {
       <div className="p-3">
         {/* Category / bezirk label */}
         {firstBezirk && (
-          <p className="font-label uppercase text-xs tracking-wider text-primary font-semibold mb-1">
+          <p className="font-label uppercase text-xs tracking-wider text-ink-muted font-semibold mb-1">
             {firstBezirk.name}
           </p>
         )}
 
         {/* Newsreader headline */}
-        <h2 className="font-headline text-lg font-semibold text-text leading-snug mb-1">
+        <h2 className="font-headline text-lg font-semibold text-ink leading-snug mb-1">
           {article.title}
         </h2>
 
         {/* Relative timestamp */}
         <time
           dateTime={publishedAt.toISOString()}
-          className="text-xs text-text/40"
+          className="text-xs text-ink/40"
         >
           {formatRelativeTime(publishedAt)}
         </time>

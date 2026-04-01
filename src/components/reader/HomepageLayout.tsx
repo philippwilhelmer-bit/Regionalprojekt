@@ -76,7 +76,7 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
     return (
       <section className="px-[var(--spacing-gutter)] py-[var(--spacing-section)]">
         {/* Bezirk section heading — no Styrian flag */}
-        <h3 className="font-headline text-lg font-semibold text-primary mb-3 px-0">
+        <h3 className="font-headline text-lg font-semibold text-ink mb-3 px-0">
           {name}
         </h3>
 
@@ -107,9 +107,9 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
         <MascotGreeting />
       </div>
 
-      {/* 3. TopMeldungenRow — bg-background */}
+      {/* 3. TopMeldungenRow — bg-parchment */}
       {filteredPinned.length > 0 && (
-        <div className="bg-background py-[var(--spacing-section)]">
+        <div className="bg-parchment py-[var(--spacing-section)]">
           <TopMeldungenRow articles={filteredPinned} />
         </div>
       )}
@@ -124,8 +124,8 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
         /* Mein Bezirk — grouped by bezirk */
         <div>
           {/* "Dein Bezirk" heading */}
-          <div className="px-[var(--spacing-gutter)] pt-4 pb-1 bg-background">
-            <h2 className="font-headline text-xl font-semibold text-primary">
+          <div className="px-[var(--spacing-gutter)] pt-4 pb-1 bg-parchment">
+            <h2 className="font-headline text-xl font-semibold text-ink">
               Dein Bezirk
             </h2>
           </div>
@@ -133,7 +133,7 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
           {bezirkSections.map(({ slug, name, articles }, index) => (
             <div
               key={slug}
-              className={index % 2 === 0 ? "bg-background" : "bg-surface"}
+              className={index % 2 === 0 ? "bg-parchment" : "bg-surface"}
             >
               {renderBezirkSection(name, articles)}
               {/* Ad every 2nd section */}
@@ -147,14 +147,14 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
 
           {/* Empty state for bezirk filter */}
           {bezirkSections.length === 0 && (
-            <div className="px-[var(--spacing-gutter)] py-8 text-center text-text/50 bg-background">
+            <div className="px-[var(--spacing-gutter)] py-8 text-center text-ink/50 bg-parchment">
               <p className="mb-3">Noch keine Nachrichten für deinen Bezirk.</p>
               <button
                 onClick={() => {
                   localStorage.removeItem("bezirk_selection");
                   setSelectedSlugs([]);
                 }}
-                className="text-sm text-primary underline"
+                className="text-sm text-ink-muted underline"
               >
                 Bezirksauswahl zurücksetzen
               </button>
@@ -165,20 +165,20 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
         /* Flat view — all articles */
         <div>
           {/* "Alle Nachrichten" heading */}
-          <div className="px-[var(--spacing-gutter)] pt-4 pb-1 bg-background">
-            <h2 className="font-headline text-xl font-semibold text-primary">
+          <div className="px-[var(--spacing-gutter)] pt-4 pb-1 bg-parchment">
+            <h2 className="font-headline text-xl font-semibold text-ink">
               Alle Nachrichten
             </h2>
           </div>
 
           {isEmpty ? (
-            <div className="px-[var(--spacing-gutter)] py-8 text-center text-text/50 bg-background">
+            <div className="px-[var(--spacing-gutter)] py-8 text-center text-ink/50 bg-parchment">
               <p>Noch keine Nachrichten.</p>
             </div>
           ) : (
             <>
               {/* First article as RegionalEditorialCard + next 3 as ListItems */}
-              <div className="bg-background px-[var(--spacing-gutter)] py-[var(--spacing-section)]">
+              <div className="bg-parchment px-[var(--spacing-gutter)] py-[var(--spacing-section)]">
                 {flatFirst.length > 0 && (
                   <div className="mb-3">
                     <RegionalEditorialCard article={flatFirst[0]} />

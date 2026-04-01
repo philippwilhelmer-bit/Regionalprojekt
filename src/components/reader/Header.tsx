@@ -37,14 +37,14 @@ export function Header({ bezirke }: { bezirke: BezirkItem[] }) {
       />
 
       {/* HDR-02: Dark green editorial header */}
-      <header className="bg-primary px-4 h-14 flex items-center justify-between">
-        <span className="font-headline italic text-white text-xl">{config.siteName}</span>
+      <header className="bg-ink px-4 h-14 flex items-center justify-between">
+        <span className="font-headline italic text-parchment text-xl">{config.siteName}</span>
 
         <div className="flex items-center gap-3">
           {/* HDR-03: Location badge / Bezirk selector */}
           <button
             onClick={handleBezirkClick}
-            className="flex items-center gap-1 text-white text-sm hover:opacity-80 transition-opacity"
+            className="flex items-center gap-1 text-parchment text-sm hover:opacity-80 transition-opacity"
             aria-label="Bezirk auswählen"
           >
             <span className="material-symbols-rounded text-[18px]" aria-hidden="true">location_on</span>
@@ -55,7 +55,7 @@ export function Header({ bezirke }: { bezirke: BezirkItem[] }) {
           {/* HDR-04: Search icon — links to /suche */}
           <Link
             href="/suche"
-            className="material-symbols-rounded text-white hover:opacity-80 transition-opacity"
+            className="material-symbols-rounded text-parchment hover:opacity-80 transition-opacity"
             aria-label="Zur Suche"
           >
             search

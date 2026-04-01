@@ -35,16 +35,16 @@ export function MascotGreeting() {
         {/* Bubble container */}
         <div className="relative w-full">
           {/* "Wurzelmann sagt:" label */}
-          <p className="font-label uppercase text-xs font-semibold text-primary mb-1 tracking-wider">
+          <p className="font-label uppercase text-xs font-semibold text-ink-muted mb-1 tracking-wider">
             Wurzelmann sagt:
           </p>
 
           {/* Speech bubble */}
           <div className="bg-surface-elevated rounded-sm shadow-sm p-3 relative">
-            <p className="font-headline text-base font-semibold text-text leading-snug">
+            <p className="font-headline text-base font-semibold text-ink leading-snug">
               {greeting}!
             </p>
-            <p className="font-label text-sm text-text/60 mt-0.5">{quote}</p>
+            <p className="font-label text-sm text-ink/60 mt-0.5">{quote}</p>
 
             {/* Triangular tail pointing down-left toward avatar */}
             <span

@@ -32,7 +32,7 @@ export function BezirkSection({ bezirkName, articles, showDivider = false }: Bez
       />
 
       {/* Section heading */}
-      <h2 className="font-headline font-semibold text-primary text-lg mb-3">
+      <h2 className="font-headline font-semibold text-ink text-lg mb-3">
         {bezirkName}
       </h2>
 

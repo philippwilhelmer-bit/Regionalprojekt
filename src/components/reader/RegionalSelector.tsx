@@ -65,14 +65,14 @@ export function RegionalSelector({
   return (
     <div className="px-[var(--spacing-gutter)] py-3">
       {/* Breadcrumb navigation */}
-      <nav className="flex items-center gap-1 text-xs text-zinc-400 mb-3">
+      <nav className="flex items-center gap-1 text-xs text-ink-dim mb-3">
         <button
           onClick={drillUp}
           className={
             "transition-colors " +
             (level === "bundesland"
-              ? "text-primary font-semibold"
-              : "hover:text-primary")
+              ? "text-ink font-semibold"
+              : "hover:text-ink")
           }
         >
           {bundeslandName}
@@ -82,7 +82,7 @@ export function RegionalSelector({
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-            <span className="text-primary font-semibold">Bezirk</span>
+            <span className="text-ink font-semibold">Bezirk</span>
           </>
         )}
       </nav>
@@ -102,9 +102,9 @@ export function RegionalSelector({
                 background: "linear-gradient(to bottom, #fff 50%, #2D5A27 50%)",
               }}
             />
-            <span className="text-sm font-medium text-zinc-900">{bundeslandName}</span>
+            <span className="text-sm font-medium text-ink">{bundeslandName}</span>
           </div>
-          <svg className="w-4 h-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="w-4 h-4 text-ink-dim" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -119,8 +119,8 @@ export function RegionalSelector({
                 className={
                   "py-1.5 px-3 rounded-sm text-xs font-medium transition-colors " +
                   (isSelected
-                    ? "bg-primary/10 text-primary"
-                    : "bg-surface-elevated text-zinc-600 shadow-sm hover:bg-surface")
+                    ? "bg-ink/10 text-ink"
+                    : "bg-surface-elevated text-ink-muted shadow-sm hover:bg-surface")
                 }
               >
                 {bezirk.name}

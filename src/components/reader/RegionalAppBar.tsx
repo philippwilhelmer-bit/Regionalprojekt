@@ -41,11 +41,11 @@ export function RegionalAppBar({ bezirke }: RegionalAppBarProps) {
       />
 
       {/* App bar */}
-      <header className="bg-primary px-4 h-14 flex items-center justify-center relative">
+      <header className="bg-ink px-4 h-14 flex items-center justify-center relative">
         {/* Location label — left-aligned */}
         <button
           onClick={handleBezirkClick}
-          className="absolute left-4 flex items-center gap-1 text-white/80 text-xs hover:text-white transition-colors"
+          className="absolute left-4 flex items-center gap-1 text-parchment/80 text-xs hover:text-parchment transition-colors"
           aria-label="Bezirk auswählen"
         >
           <span className="material-symbols-rounded text-[16px]" aria-hidden="true">
@@ -58,7 +58,7 @@ export function RegionalAppBar({ bezirke }: RegionalAppBarProps) {
         </button>
 
         {/* Center-aligned title — links to homepage */}
-        <Link href="/" className="font-headline italic text-white text-xl hover:opacity-90 transition-opacity">
+        <Link href="/" className="font-headline italic text-parchment text-xl hover:opacity-90 transition-opacity">
           {config.siteName}
         </Link>
 

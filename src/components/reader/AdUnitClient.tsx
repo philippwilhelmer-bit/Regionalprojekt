@@ -32,7 +32,7 @@ export function AdUnitClient({ pubId, slot, zone }: AdUnitClientProps) {
   // Dev placeholder when pub ID is not configured
   if (!pubId) {
     return (
-      <div className="bg-zinc-100 rounded h-20 flex items-center justify-center text-xs text-zinc-400">
+      <div className="bg-surface h-20 flex items-center justify-center text-xs text-ink-dim">
         Ad [{zone}]
       </div>
     );
