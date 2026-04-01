@@ -73,7 +73,7 @@ export function UnsplashPicker({
 
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium text-text/70">
+      <label className="block text-sm font-medium text-ink-muted">
         Artikelbild
       </label>
 
@@ -87,7 +87,7 @@ export function UnsplashPicker({
             className="w-full h-40 object-cover rounded border border-surface"
           />
           {savedCredit && (
-            <p className="text-xs text-text/40 mt-1">{savedCredit}</p>
+            <p className="text-xs text-ink-dim mt-1">{savedCredit}</p>
           )}
           <button
             type="button"
@@ -108,13 +108,13 @@ export function UnsplashPicker({
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleSearch())}
           placeholder="Suchbegriff eingeben..."
-          className="flex-1 border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+          className="flex-1 border border-parchment-dim rounded-sm px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
         />
         <button
           type="button"
           onClick={handleSuggest}
           disabled={isPending}
-          className="px-3 py-2 border border-surface text-sm text-text/70 rounded-sm hover:bg-surface disabled:opacity-50"
+          className="px-3 py-2 border border-surface text-sm text-ink-muted rounded-sm hover:bg-surface disabled:opacity-50"
           title="Keywords aus Titel generieren"
         >
           Auto
@@ -123,7 +123,7 @@ export function UnsplashPicker({
           type="button"
           onClick={handleSearch}
           disabled={isPending || !query.trim()}
-          className="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-white text-sm font-medium rounded-full hover:opacity-90 disabled:opacity-50"
+          className="px-4 py-2 bg-gradient-to-br from-ink to-ink-soft text-parchment text-sm font-medium rounded-sm hover:opacity-90 disabled:opacity-50"
         >
           {isPending ? '...' : 'Suchen'}
         </button>
@@ -131,7 +131,7 @@ export function UnsplashPicker({
 
       {/* Status message */}
       {message && (
-        <p className="text-sm text-text/50">{message}</p>
+        <p className="text-sm text-ink-dim">{message}</p>
       )}
 
       {/* Results grid */}
@@ -143,7 +143,7 @@ export function UnsplashPicker({
               type="button"
               onClick={() => handleSelect(image)}
               disabled={isPending}
-              className="group relative overflow-hidden rounded border border-surface hover:border-primary transition-colors disabled:opacity-50"
+              className="group relative overflow-hidden rounded border border-surface hover:border-ink transition-colors disabled:opacity-50"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -156,7 +156,7 @@ export function UnsplashPicker({
                   Auswählen
                 </span>
               </div>
-              <p className="text-[10px] text-text/40 px-1 py-0.5 truncate">
+              <p className="text-[10px] text-ink-dim px-1 py-0.5 truncate">
                 {image.credit}
               </p>
             </button>
