@@ -80,36 +80,36 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TOKN-01 | — | Pending |
-| TOKN-02 | — | Pending |
-| TOKN-03 | — | Pending |
-| TOKN-04 | — | Pending |
-| TOKN-05 | — | Pending |
-| TOKN-06 | — | Pending |
-| SHEL-01 | — | Pending |
-| SHEL-02 | — | Pending |
-| SHEL-03 | — | Pending |
-| SHEL-04 | — | Pending |
-| SHEL-05 | — | Pending |
-| HOME-01 | — | Pending |
-| HOME-02 | — | Pending |
-| HOME-03 | — | Pending |
-| HOME-04 | — | Pending |
-| HOME-05 | — | Pending |
-| HOME-06 | — | Pending |
-| ARTC-01 | — | Pending |
-| ARTC-02 | — | Pending |
-| ARTC-03 | — | Pending |
-| ARTC-04 | — | Pending |
-| SRCH-01 | — | Pending |
-| CMS-01 | — | Pending |
-| CMS-02 | — | Pending |
+| TOKN-01 | Phase 33 | Pending |
+| TOKN-02 | Phase 33 | Pending |
+| TOKN-03 | Phase 33 | Pending |
+| TOKN-04 | Phase 33 | Pending |
+| TOKN-05 | Phase 33 | Pending |
+| TOKN-06 | Phase 33 | Pending |
+| SHEL-01 | Phase 34 | Pending |
+| SHEL-02 | Phase 34 | Pending |
+| SHEL-03 | Phase 34 | Pending |
+| SHEL-04 | Phase 34 | Pending |
+| SHEL-05 | Phase 34 | Pending |
+| HOME-01 | Phase 35 | Pending |
+| HOME-02 | Phase 35 | Pending |
+| HOME-03 | Phase 35 | Pending |
+| HOME-04 | Phase 35 | Pending |
+| HOME-05 | Phase 35 | Pending |
+| HOME-06 | Phase 35 | Pending |
+| ARTC-01 | Phase 36 | Pending |
+| ARTC-02 | Phase 36 | Pending |
+| ARTC-03 | Phase 36 | Pending |
+| ARTC-04 | Phase 36 | Pending |
+| SRCH-01 | Phase 37 | Pending |
+| CMS-01 | Phase 37 | Pending |
+| CMS-02 | Phase 37 | Pending |
 
 **Coverage:**
 - v3.0 requirements: 24 total
-- Mapped to phases: 0
-- Unmapped: 24 ⚠️
+- Mapped to phases: 24
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-01*
-*Last updated: 2026-04-01 after initial definition*
+*Last updated: 2026-04-01 after roadmap creation*

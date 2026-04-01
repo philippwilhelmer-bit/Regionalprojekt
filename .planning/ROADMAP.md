@@ -6,6 +6,7 @@
 - ✅ **v1.1 Design Overhaul** — Phases 16-20 (shipped 2026-03-26)
 - ✅ **v1.2 Test Deployment** — Phases 21-25 (shipped 2026-03-28)
 - ✅ **v2.0 Wurzelwelt Rebrand** — Phases 26-32 (shipped 2026-03-30)
+- 🚧 **v3.0 The Modern Archivist** — Phases 33-37 (in progress)
 
 ## Phases
 
@@ -73,6 +74,76 @@ Full details: `.planning/milestones/v2.0-ROADMAP.md`
 
 </details>
 
+### 🚧 v3.0 The Modern Archivist (In Progress)
+
+**Milestone Goal:** Transform the visual identity from "Modern Mountain Folklore" to "The Modern Archivist" — a high-end editorial print-magazine aesthetic with a new MD3-style color system, glassmorphic navigation, editorial homepage features, article detail print conventions, and consistent Archivist treatment across search and CMS.
+
+- [ ] **Phase 33: Color Token Foundation** - MD3-style Ink/Parchment/Slate/Aged Wood token system, No-Line Rule, radius and spacing scales, glassmorphism tokens
+- [ ] **Phase 34: Shell Components** - Glassmorphic bottom nav, dark editorial footer, updated header with hamburger and desktop navigation
+- [ ] **Phase 35: Homepage Feature Components** - Weather widget, Frag den Wurzelmann region selector, Das Grüne der Woche section, Topmeldung CTA, tonal palette update, MascotGreeting restyle
+- [ ] **Phase 36: Article Detail Redesign** - Drop cap, blockquote styling, sidebar metadata, Archival Header pattern
+- [ ] **Phase 37: Search and CMS Refresh** - Search page Archivist token treatment, CMS admin token swap, theme tag management
+
+## Phase Details
+
+### Phase 33: Color Token Foundation
+**Goal**: The entire site runs on a coherent Ink/Parchment/Slate/Aged Wood token system — every surface, container, and overlay uses a named semantic token, no raw hex values, and no visible borders separate sections
+**Depends on**: Nothing (first v3.0 phase)
+**Requirements**: TOKN-01, TOKN-02, TOKN-03, TOKN-04, TOKN-05, TOKN-06
+**Success Criteria** (what must be TRUE):
+  1. The globals.css @theme block contains approximately 30 named tokens covering the Ink/Parchment/Slate/Aged Wood palette and all semantic surface/container variants
+  2. No reader-facing component renders a visible CSS border for section separation — tonal background shifts and negative space carry all visual division
+  3. All corner radii across the site are either 0.125rem or 0.25rem — no rounded-xl or rounded-full shapes remain on reader-facing components
+  4. All shadow utilities use tinted on-surface color tokens, not literal black or gray hex values
+  5. The glassmorphism tokens (color-mix() definitions for nav and overlay surfaces) are defined in @theme and usable as Tailwind utilities
+**Plans**: TBD
+
+### Phase 34: Shell Components
+**Goal**: Every public page loads with a glassmorphic bottom nav and a dark editorial footer — the visual chrome that frames all reader content reflects the Archivist identity
+**Depends on**: Phase 33
+**Requirements**: SHEL-01, SHEL-02, SHEL-03, SHEL-04, SHEL-05
+**Success Criteria** (what must be TRUE):
+  1. The bottom nav renders with a frosted-glass background (85% opacity + backdrop-blur) and a top-border active state indicator — the terracotta pill is gone
+  2. The active nav tab displays a filled icon variant; inactive tabs display outlined icons (auto_stories, forest, face_5, book_2)
+  3. The bottom nav renders without visual defects on iOS Safari — the blur effect is visible and the element is not invisible
+  4. A dark editorial footer appears at the bottom of all public pages with Wurzelwelt branding, navigation columns, and Impressum/Kontakt links
+  5. On mobile, the header shows a hamburger menu and left-aligned serif "Wurzelwelt"; on wider screens it shows Archive, Forest, Guide, Library navigation links
+**Plans**: TBD
+
+### Phase 35: Homepage Feature Components
+**Goal**: The homepage presents the Archivist's three new editorial features — live Bezirk weather, the Frag den Wurzelmann region selector, and the Das Grüne der Woche themed section — alongside an updated Topmeldung hero and restyled Wurzel greeting card
+**Depends on**: Phase 34
+**Requirements**: HOME-01, HOME-02, HOME-03, HOME-04, HOME-05, HOME-06
+**Success Criteria** (what must be TRUE):
+  1. The Topmeldung hero displays a "VOLLSTÄNDIGEN ARTIKEL LESEN" CTA button overlaid on the gradient — clicking it navigates to the article
+  2. The MascotGreeting renders as a tonal "Wurzel sagt..." box using Archivist tokens, not a speech bubble
+  3. A weather widget on the homepage shows current temperature and weather conditions for the user's selected Bezirk, sourced from Open-Meteo with a 30-minute server-side cache
+  4. A "Frag den Wurzelmann" dark green card appears on the homepage and links to the region selector
+  5. A "Das Grüne der Woche" section appears on the homepage when nature/environment-tagged articles exist — the Article model has a theme field and the CMS can assign it
+  6. Homepage sections use Archivist palette background alternation (not the previous warm cream / slightly darker cream pair)
+**Plans**: TBD
+
+### Phase 36: Article Detail Redesign
+**Goal**: Article pages read like premium editorial print — a drop cap opens the body, pull quotes are visually distinct, metadata lives in a sidebar, and the article header uses an overlapping archival title layout
+**Depends on**: Phase 35
+**Requirements**: ARTC-01, ARTC-02, ARTC-03, ARTC-04
+**Success Criteria** (what must be TRUE):
+  1. The first paragraph of every article body displays a float-based drop cap using ::first-letter — the cap is visible in Firefox, Chrome, and Safari
+  2. Blockquotes in article bodies render with large serif italic typography and tonal dividers — visually distinct from body prose
+  3. On desktop, article pages show a sticky sidebar with author/source attribution, estimated reading time, and a share button; on mobile this collapses to a horizontal metadata strip
+  4. The article header uses the Archival Header pattern — the article title overlaps the hero image rather than sitting below it
+**Plans**: TBD
+
+### Phase 37: Search and CMS Refresh
+**Goal**: The search page and CMS admin carry the Archivist visual treatment — no reader or editor encounters legacy Wurzelwelt warm-cream tokens after this phase
+**Depends on**: Phase 36
+**Requirements**: SRCH-01, CMS-01, CMS-02
+**Success Criteria** (what must be TRUE):
+  1. The search and discovery page renders result cards, filter chips, and typography using Archivist Ink/Parchment/Slate tokens — no legacy forest-green or warm-cream palette remnants visible
+  2. CMS admin pages (login, sidebar, articles list, sources, AI config, exception queue) use Archivist Ink/Parchment/Slate tokens throughout
+  3. The CMS article edit form includes a "Grüne der Woche" theme tag field — an editor can assign and remove the theme tag from any article
+**Plans**: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -81,3 +152,8 @@ Full details: `.planning/milestones/v2.0-ROADMAP.md`
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
+| 33. Color Token Foundation | v3.0 | 0/TBD | Not started | - |
+| 34. Shell Components | v3.0 | 0/TBD | Not started | - |
+| 35. Homepage Feature Components | v3.0 | 0/TBD | Not started | - |
+| 36. Article Detail Redesign | v3.0 | 0/TBD | Not started | - |
+| 37. Search and CMS Refresh | v3.0 | 0/TBD | Not started | - |
