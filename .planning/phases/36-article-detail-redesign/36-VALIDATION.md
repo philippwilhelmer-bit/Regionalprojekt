@@ -2,8 +2,8 @@
 phase: 36
 slug: article-detail-redesign
 status: draft
-nyquist_compliant: false
-wave_0_complete: false
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-04-01
 ---
 
@@ -38,10 +38,10 @@ created: 2026-04-01
 
 | Task ID | Plan | Wave | Requirement | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|-----------|-------------------|-------------|--------|
-| 36-01-01 | 01 | 1 | ARTC-01 | visual/manual | Browser check | N/A | ⬜ pending |
-| 36-01-02 | 01 | 1 | ARTC-02 | visual/manual | Browser check | N/A | ⬜ pending |
-| 36-02-01 | 02 | 1 | ARTC-03 | visual/manual | Browser check | N/A | ⬜ pending |
-| 36-03-01 | 03 | 1 | ARTC-04 | visual/manual | Browser check | N/A | ⬜ pending |
+| 36-01-T0 | 01 | 1 | ARTC-01,02,04 | unit (RED) | `npx vitest run src/app/__tests__/article-detail.test.ts` | ❌ W0 | ⬜ pending |
+| 36-01-T1 | 01 | 1 | ARTC-01,02,04 | unit (GREEN) | `npx vitest run src/app/__tests__/article-detail.test.ts` | ✅ | ⬜ pending |
+| 36-02-T1 | 02 | 2 | ARTC-03 | unit | `npx vitest run` | ✅ | ⬜ pending |
+| 36-02-T2 | 02 | 2 | ARTC-01,02,03,04 | checkpoint | Human visual verify | N/A | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
