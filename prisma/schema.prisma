@@ -72,6 +72,7 @@ model Article {
   isEilmeldung    Boolean          @default(false)
   imageUrl        String?
   imageCredit     String?
+  theme           String?
   retryCount      Int              @default(0)
   errorMessage    String?
   createdAt       DateTime         @default(now())
@@ -86,6 +87,7 @@ model Article {
   @@index([isEilmeldung])
   @@index([source, status])
   @@index([sourceId])
+  @@index([theme])
 }
 
 model ArticleBezirk {

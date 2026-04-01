@@ -432,6 +432,42 @@ export function groupArticlesByBezirk(
   return result
 }
 
+/**
+ * Returns PUBLISHED articles with theme='gruene_woche', ordered by publishedAt DESC.
+ * Default limit is 10.
+ */
+export async function listGrueneWocheArticles(options?: {
+  limit?: number
+}): Promise<ArticleWithBezirke[]>
+export async function listGrueneWocheArticles(
+  client: PrismaClient,
+  options?: { limit?: number }
+): Promise<ArticleWithBezirke[]>
+export async function listGrueneWocheArticles(
+  clientOrOptions?: PrismaClient | { limit?: number },
+  options?: { limit?: number }
+): Promise<ArticleWithBezirke[]> {
+  let db: PrismaClient
+  let opts: { limit?: number }
+
+  if (clientOrOptions !== undefined && clientOrOptions !== null && typeof clientOrOptions === 'object' && '$connect' in clientOrOptions) {
+    db = clientOrOptions as PrismaClient
+    opts = options ?? {}
+  } else {
+    db = defaultPrisma
+    opts = (clientOrOptions as { limit?: number }) ?? {}
+  }
+
+  const { limit = 10 } = opts
+
+  return db.article.findMany({
+    where: { status: 'PUBLISHED', theme: 'gruene_woche' },
+    include: { bezirke: { include: { bezirk: true } } },
+    orderBy: { publishedAt: 'desc' },
+    take: limit,
+  })
+}
+
 // ─── Bezirk-specific article queries ─────────────────────────────────────────
 
 export async function getArticlesByBezirk(
