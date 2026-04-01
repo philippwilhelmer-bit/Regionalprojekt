@@ -4,8 +4,8 @@ milestone: v3.0
 milestone_name: The Modern Archivist
 status: completed
 stopped_at: Completed 37-02-PLAN.md
-last_updated: "2026-04-01T21:53:45Z"
-last_activity: 2026-04-01 — Plan 37-02 complete — theme persistence tests added (CMS-02); SearchPageLayout.tsx confirmed Archivist-compliant (SRCH-01 sealed)
+last_updated: "2026-04-02T00:02:00Z"
+last_activity: 2026-04-02 — Plan 37-01 complete — all 20 admin files migrated to Archivist Ink/Parchment/Slate tokens; zero legacy MD3 tokens remain in admin surface
 progress:
   total_phases: 5
   completed_phases: 5
@@ -78,6 +78,11 @@ Recent decisions relevant to v3.0:
 - [Plan 36-02]: AdUnit and related articles remain outside grid — they span full content column width
 - [Plan 37-02]: SearchPageLayout.tsx was already fully Archivist-compliant — Task 2 was a verification seal with no code changes required
 - [Plan 37-02]: Theme persistence tests confirm empty string normalizes to null in updateArticleDb (gruene_woche assign, clear, and preserve-on-omission all verified)
+- [Plan 37-01]: Non-semantic admin badges (source type, category, keywords, bezirk preview) use bg-surface text-slate — no color meaning applied
+- [Plan 37-01]: isPinned active state uses neutral bg-surface text-slate (not orange) — functional only
+- [Plan 37-01]: isFeatured active state uses bg-ink/10 text-ink — editorial emphasis without purple
+- [Plan 37-01]: theme option label is 'Grune der Woche' matching homepage section title
+- [Plan 37-01]: UnsplashPicker hover:border-primary -> hover:border-ink; parchment-dim border replaces surface border on inputs
 
 ### Pending Todos
 
@@ -91,6 +96,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01T21:53:45Z
-Stopped at: Completed 37-02-PLAN.md
+Last session: 2026-04-02T00:02:00Z
+Stopped at: Completed 37-01-PLAN.md
 Resume file: None

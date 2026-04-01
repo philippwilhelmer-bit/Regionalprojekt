@@ -82,7 +82,7 @@ Full details: `.planning/milestones/v2.0-ROADMAP.md`
 - [x] **Phase 34: Shell Components** - Glassmorphic bottom nav, dark editorial footer, updated header with hamburger and desktop navigation (completed 2026-04-01)
 - [x] **Phase 35: Homepage Feature Components** - Weather widget, Frag den Wurzelmann region selector, Das Grune der Woche section, Topmeldung CTA, tonal palette update, MascotGreeting restyle (completed 2026-04-01)
 - [x] **Phase 36: Article Detail Redesign** - Drop cap, blockquote styling, sidebar metadata, Archival Header pattern (completed 2026-04-01)
-- [ ] **Phase 37: Search and CMS Refresh** - Search page Archivist token treatment, CMS admin token swap, theme tag management
+- [x] **Phase 37: Search and CMS Refresh** - Search page Archivist token treatment, CMS admin token swap, theme tag management (completed 2026-04-01)
 
 ## Phase Details
 
@@ -156,7 +156,7 @@ Plans:
   1. The search and discovery page renders result cards, filter chips, and typography using Archivist Ink/Parchment/Slate tokens — no legacy forest-green or warm-cream palette remnants visible
   2. CMS admin pages (login, sidebar, articles list, sources, AI config, exception queue) use Archivist Ink/Parchment/Slate tokens throughout
   3. The CMS article edit form includes a "Grune der Woche" theme tag field — an editor can assign and remove the theme tag from any article
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 37-01-PLAN.md — CMS admin full Archivist token migration (15 files) + theme tag verify
 - [ ] 37-02-PLAN.md — Search page audit + theme tag persistence tests
@@ -173,4 +173,4 @@ Plans:
 | 34. Shell Components | 2/2 | Complete    | 2026-04-01 | - |
 | 35. Homepage Feature Components | 3/3 | Complete    | 2026-04-01 | - |
 | 36. Article Detail Redesign | v3.0 | Complete    | 2026-04-01 | 2026-04-01 |
-| 37. Search and CMS Refresh | 1/2 | In Progress|  | - |
+| 37. Search and CMS Refresh | 2/2 | Complete   | 2026-04-01 | - |
