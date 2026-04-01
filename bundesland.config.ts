@@ -55,3 +55,19 @@ export default {
     { slug: 'weiz', name: 'Weiz' },
   ],
 } satisfies BundeslandConfig
+
+export const BEZIRK_COORDS: Record<string, { lat: number; lon: number }> = {
+  'graz':                    { lat: 47.07, lon: 15.44 },
+  'graz-umgebung':           { lat: 47.07, lon: 15.44 },
+  'deutschlandsberg':        { lat: 46.81, lon: 15.21 },
+  'hartberg-fuerstenfeld':   { lat: 47.28, lon: 15.97 },
+  'leibnitz':                { lat: 46.78, lon: 15.53 },
+  'leoben':                  { lat: 47.38, lon: 15.09 },
+  'liezen':                  { lat: 47.57, lon: 14.24 },
+  'murau':                   { lat: 47.11, lon: 14.17 },
+  'murtal':                  { lat: 47.21, lon: 14.69 },
+  'bruck-muerzzuschlag':     { lat: 47.41, lon: 15.27 },
+  'suedoststeiermark':       { lat: 46.87, lon: 15.83 },
+  'voitsberg':               { lat: 47.05, lon: 15.15 },
+  'weiz':                    { lat: 47.22, lon: 15.62 },
+}
