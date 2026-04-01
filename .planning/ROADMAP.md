@@ -96,7 +96,7 @@ Full details: `.planning/milestones/v2.0-ROADMAP.md`
   3. All corner radii across the site are either 0.125rem or 0.25rem — no rounded-xl or rounded-full shapes remain on reader-facing components
   4. All shadow utilities use tinted on-surface color tokens, not literal black or gray hex values
   5. The glassmorphism tokens (color-mix() definitions for nav and overlay surfaces) are defined in @theme and usable as Tailwind utilities
-**Plans:** 3 plans
+**Plans:** 2/3 plans executed
 Plans:
 - [x] 33-01-PLAN.md — Define complete Archivist @theme token system in globals.css (complete 2026-04-01)
 - [ ] 33-02-PLAN.md — Migrate 9 core reader components (cards, lists, feeds, search, modals)
@@ -156,7 +156,7 @@ Plans:
 | 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
-| 33. Color Token Foundation | v3.0 | 1/3 | In progress | - |
+| 33. Color Token Foundation | 2/3 | In Progress|  | - |
 | 34. Shell Components | v3.0 | 0/TBD | Not started | - |
 | 35. Homepage Feature Components | v3.0 | 0/TBD | Not started | - |
 | 36. Article Detail Redesign | v3.0 | 0/TBD | Not started | - |

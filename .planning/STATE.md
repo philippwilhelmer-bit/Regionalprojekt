@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: The Modern Archivist
-status: in-progress
-stopped_at: Phase 33, Plan 01 complete
-last_updated: "2026-04-01T16:00:01Z"
+status: executing
+stopped_at: Completed 33-02-PLAN.md
+last_updated: "2026-04-01T16:16:52.241Z"
 last_activity: 2026-04-01 — Plan 33-01 complete — Archivist @theme token system defined in globals.css
 progress:
   total_phases: 5
   completed_phases: 0
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 3
+  completed_plans: 2
   percent: 4
 ---
 
@@ -52,6 +52,9 @@ Recent decisions relevant to v3.0:
 - Weather widget: Server Component fetch with revalidate: 1800; no geolocation API (GDPR)
 - "Das Grüne der Woche": nullable theme field on Article model (Prisma migration required in Phase 35)
 - Plan 33-01: Clean break from 8 old tokens — no bridge aliases. Literal hex in color-mix() within @theme (not var()). --radius-sm override removed (Tailwind v4 default 0.25rem already correct). --spacing-gutter corrected to 1rem; --spacing-vertical: 1.7rem added.
+- [Phase 33]: BEZIRK_COLORS/BEZIRK_BADGE_COLORS maps deleted from reader components — unified from-ink to-ink-soft gradient for all article cards
+- [Phase 33]: ListItem border-b removed — tonal bg shift (bg-parchment hover:bg-parchment-dim) used for separation per TOKN-02
+- [Phase 33]: Spinner uses style={{ borderRadius: 50% }} inline instead of rounded-full — functional circle exemption pattern established
 
 ### Pending Todos
 
@@ -65,6 +68,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01T16:00:01Z
-Stopped at: Phase 33, Plan 01 complete
-Resume file: .planning/phases/33-color-token-foundation/33-01-SUMMARY.md
+Last session: 2026-04-01T16:16:52.240Z
+Stopped at: Completed 33-02-PLAN.md
+Resume file: None
