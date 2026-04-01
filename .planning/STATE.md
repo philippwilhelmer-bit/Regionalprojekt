@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: The Modern Archivist
 status: completed
-stopped_at: Completed 37-02-PLAN.md
-last_updated: "2026-04-02T00:02:00Z"
-last_activity: 2026-04-02 — Plan 37-01 complete — all 20 admin files migrated to Archivist Ink/Parchment/Slate tokens; zero legacy MD3 tokens remain in admin surface
+stopped_at: Completed 37-01-PLAN.md
+last_updated: "2026-04-01T22:08:38.440Z"
+last_activity: 2026-04-01 — Plan 37-02 complete — theme persistence tests (CMS-02) + SRCH-01 token audit sealed
 progress:
   total_phases: 5
   completed_phases: 5

@@ -173,4 +173,4 @@ Plans:
 | 34. Shell Components | 2/2 | Complete    | 2026-04-01 | - |
 | 35. Homepage Feature Components | 3/3 | Complete    | 2026-04-01 | - |
 | 36. Article Detail Redesign | v3.0 | Complete    | 2026-04-01 | 2026-04-01 |
-| 37. Search and CMS Refresh | 2/2 | Complete   | 2026-04-01 | - |
+| 37. Search and CMS Refresh | 2/2 | Complete    | 2026-04-01 | - |
