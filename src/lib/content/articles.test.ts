@@ -9,7 +9,7 @@ import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
 import { createTestDb, cleanDb } from '../../test/setup-db'
 import { seedBezirke } from '../../../prisma/seed'
 import type { PrismaClient } from '@prisma/client'
-import { listArticles, getArticleById, getArticlesByBezirk, getArticleByPublicId, listArticlesReader, listArticlesForSearch } from './articles'
+import { listArticles, getArticleById, getArticlesByBezirk, getArticleByPublicId, listArticlesReader, listArticlesForSearch, listGrueneWocheArticles } from './articles'
 
 describe('Article DAL', () => {
   let prisma: PrismaClient
@@ -462,5 +462,121 @@ describe('listArticlesForSearch', () => {
     expect(results[0].title).toBe('Newest')
     const titles = results.map((a) => a.title)
     expect(titles).toEqual(['Newest', 'Middle', 'Oldest'])
+  })
+})
+
+describe('listGrueneWocheArticles', () => {
+  let prisma: PrismaClient
+
+  beforeAll(async () => {
+    prisma = await createTestDb()
+    await seedBezirke(prisma, 'steiermark')
+  })
+
+  beforeEach(async () => {
+    await prisma.articleBezirk.deleteMany()
+    await prisma.article.deleteMany()
+  })
+
+  it('returns only PUBLISHED articles with theme=gruene_woche', async () => {
+    const grueneWoche = await prisma.article.create({
+      data: {
+        source: 'OTS_AT',
+        title: 'Gruene Woche Article',
+        status: 'PUBLISHED',
+        isStateWide: false,
+        publicId: 'gw-pub-1',
+        theme: 'gruene_woche',
+        publishedAt: new Date(),
+      },
+    })
+    // PUBLISHED but no theme — should be excluded
+    await prisma.article.create({
+      data: {
+        source: 'OTS_AT',
+        title: 'Regular Published',
+        status: 'PUBLISHED',
+        isStateWide: false,
+        publicId: 'gw-reg-1',
+        publishedAt: new Date(),
+      },
+    })
+    // Has theme but not PUBLISHED — should be excluded
+    await prisma.article.create({
+      data: {
+        source: 'OTS_AT',
+        title: 'Drafted Gruene Woche',
+        status: 'WRITTEN',
+        isStateWide: false,
+        publicId: 'gw-wrt-1',
+        theme: 'gruene_woche',
+        publishedAt: new Date(),
+      },
+    })
+
+    const results = await listGrueneWocheArticles(prisma)
+    expect(results).toHaveLength(1)
+    expect(results[0].id).toBe(grueneWoche.id)
+    expect(results[0].title).toBe('Gruene Woche Article')
+  })
+
+  it('returns empty array when no matching articles exist', async () => {
+    await prisma.article.create({
+      data: {
+        source: 'OTS_AT',
+        title: 'Regular Article',
+        status: 'PUBLISHED',
+        isStateWide: false,
+        publicId: 'gw-empty-1',
+        publishedAt: new Date(),
+      },
+    })
+
+    const results = await listGrueneWocheArticles(prisma)
+    expect(results).toHaveLength(0)
+  })
+
+  it('orders results by publishedAt DESC', async () => {
+    const now = new Date()
+    const older = new Date(now.getTime() - 10000)
+    const oldest = new Date(now.getTime() - 20000)
+
+    await prisma.article.create({
+      data: {
+        source: 'OTS_AT', title: 'Middle GW', status: 'PUBLISHED', isStateWide: false,
+        publicId: 'gw-ord-2', theme: 'gruene_woche', publishedAt: older,
+      },
+    })
+    await prisma.article.create({
+      data: {
+        source: 'OTS_AT', title: 'Oldest GW', status: 'PUBLISHED', isStateWide: false,
+        publicId: 'gw-ord-3', theme: 'gruene_woche', publishedAt: oldest,
+      },
+    })
+    await prisma.article.create({
+      data: {
+        source: 'OTS_AT', title: 'Newest GW', status: 'PUBLISHED', isStateWide: false,
+        publicId: 'gw-ord-1', theme: 'gruene_woche', publishedAt: now,
+      },
+    })
+
+    const results = await listGrueneWocheArticles(prisma)
+    const titles = results.map((a) => a.title)
+    expect(titles).toEqual(['Newest GW', 'Middle GW', 'Oldest GW'])
+  })
+
+  it('respects limit parameter', async () => {
+    for (let i = 1; i <= 8; i++) {
+      await prisma.article.create({
+        data: {
+          source: 'OTS_AT', title: `GW Article ${i}`, status: 'PUBLISHED', isStateWide: false,
+          publicId: `gw-lim-${i}`, theme: 'gruene_woche',
+          publishedAt: new Date(Date.now() - i * 1000),
+        },
+      })
+    }
+
+    const results = await listGrueneWocheArticles(prisma, { limit: 5 })
+    expect(results).toHaveLength(5)
   })
 })
