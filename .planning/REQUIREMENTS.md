@@ -35,10 +35,10 @@ Requirements for "The Modern Archivist" design system overhaul. Each maps to roa
 
 ### Article Detail
 
-- [ ] **ARTC-01**: Article body displays drop cap on first paragraph
-- [ ] **ARTC-02**: Blockquotes styled with large serif italic typography and tonal dividers
+- [x] **ARTC-01**: Article body displays drop cap on first paragraph
+- [x] **ARTC-02**: Blockquotes styled with large serif italic typography and tonal dividers
 - [ ] **ARTC-03**: Sidebar shows article metadata (author/source, reading time, share button)
-- [ ] **ARTC-04**: Article header uses "Archival Header" pattern with overlapping title on image
+- [x] **ARTC-04**: Article header uses "Archival Header" pattern with overlapping title on image
 
 ### Search & Discovery
 
@@ -97,10 +97,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HOME-04 | Phase 35 | Complete |
 | HOME-05 | Phase 35 | Complete |
 | HOME-06 | Phase 35 | Complete |
-| ARTC-01 | Phase 36 | Pending |
-| ARTC-02 | Phase 36 | Pending |
+| ARTC-01 | Phase 36 | Complete |
+| ARTC-02 | Phase 36 | Complete |
 | ARTC-03 | Phase 36 | Pending |
-| ARTC-04 | Phase 36 | Pending |
+| ARTC-04 | Phase 36 | Complete |
 | SRCH-01 | Phase 37 | Pending |
 | CMS-01 | Phase 37 | Pending |
 | CMS-02 | Phase 37 | Pending |
