@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: The Modern Archivist
 status: executing
-stopped_at: Completed 35-01-PLAN.md
-last_updated: "2026-04-01T19:42:22.663Z"
+stopped_at: Completed 35-03-PLAN.md
+last_updated: "2026-04-01T19:50:37.374Z"
 last_activity: 2026-04-01 — Plan 33-03 complete — All reader components migrated to Archivist tokens; zero token violations across entire reader directory
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 8
-  completed_plans: 7
+  completed_plans: 8
   percent: 8
 ---
 
@@ -66,6 +66,8 @@ Recent decisions relevant to v3.0:
 - [Phase 35-homepage-feature-components]: FragDenWurzelmannCard: bg-ink dark wrapper deferred to HomepageLayout Plan 03 — card is content-only for reusability
 - [Phase 35-homepage-feature-components]: HeroArticle CTA: span (not button/Link) used inside outer Link — avoids nested interactives
 - [Phase 35]: prisma db push used for theme migration due to migration drift; theme empty string maps to null in DB; GrueneWocheSection returns null on empty articles
+- [Phase 35]: Weather API uses unstable_cache per bezirk slug — prevents cross-bezirk cache collision
+- [Phase 35]: bg-ink dark accent zone combines WeatherWidget and FragDenWurzelmannCard as single visual block per Archivist tonal pattern
 
 ### Pending Todos
 
@@ -79,6 +81,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01T19:42:22.661Z
-Stopped at: Completed 35-01-PLAN.md
+Last session: 2026-04-01T19:50:37.372Z
+Stopped at: Completed 35-03-PLAN.md
 Resume file: None

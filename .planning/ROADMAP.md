@@ -80,7 +80,7 @@ Full details: `.planning/milestones/v2.0-ROADMAP.md`
 
 - [x] **Phase 33: Color Token Foundation** - MD3-style Ink/Parchment/Slate/Aged Wood token system, No-Line Rule, radius and spacing scales, glassmorphism tokens (Plans 01-03 complete 2026-04-01)
 - [x] **Phase 34: Shell Components** - Glassmorphic bottom nav, dark editorial footer, updated header with hamburger and desktop navigation (completed 2026-04-01)
-- [ ] **Phase 35: Homepage Feature Components** - Weather widget, Frag den Wurzelmann region selector, Das Grune der Woche section, Topmeldung CTA, tonal palette update, MascotGreeting restyle
+- [x] **Phase 35: Homepage Feature Components** - Weather widget, Frag den Wurzelmann region selector, Das Grune der Woche section, Topmeldung CTA, tonal palette update, MascotGreeting restyle (completed 2026-04-01)
 - [ ] **Phase 36: Article Detail Redesign** - Drop cap, blockquote styling, sidebar metadata, Archival Header pattern
 - [ ] **Phase 37: Search and CMS Refresh** - Search page Archivist token treatment, CMS admin token swap, theme tag management
 
@@ -128,7 +128,7 @@ Plans:
   4. A "Frag den Wurzelmann" dark green card appears on the homepage and links to the region selector
   5. A "Das Grune der Woche" section appears on the homepage when nature/environment-tagged articles exist — the Article model has a theme field and the CMS can assign it
   6. Homepage sections use Archivist palette background alternation (not the previous warm cream / slightly darker cream pair)
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
 - [ ] 35-01-PLAN.md — Prisma migration for Article.theme, DAL function, CMS field, GrueneWocheSection component
 - [ ] 35-02-PLAN.md — Topmeldung CTA, MascotGreeting tonal restyle, FragDenWurzelmannCard
@@ -165,6 +165,6 @@ Plans:
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
 | 33. Color Token Foundation | v3.0 | Complete    | 2026-04-01 | 2026-04-01 |
 | 34. Shell Components | 2/2 | Complete    | 2026-04-01 | - |
-| 35. Homepage Feature Components | 2/3 | In Progress|  | - |
+| 35. Homepage Feature Components | 3/3 | Complete   | 2026-04-01 | - |
 | 36. Article Detail Redesign | v3.0 | 0/TBD | Not started | - |
 | 37. Search and CMS Refresh | v3.0 | 0/TBD | Not started | - |
