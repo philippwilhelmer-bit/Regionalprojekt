@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: The Modern Archivist
 status: executing
-stopped_at: Completed 35-02-PLAN.md
-last_updated: "2026-04-01T19:34:06.909Z"
+stopped_at: Completed 35-01-PLAN.md
+last_updated: "2026-04-01T19:42:22.663Z"
 last_activity: 2026-04-01 — Plan 33-03 complete — All reader components migrated to Archivist tokens; zero token violations across entire reader directory
 progress:
   total_phases: 5
   completed_phases: 2
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 7
   percent: 8
 ---
 
@@ -65,6 +65,7 @@ Recent decisions relevant to v3.0:
 - [Phase 34-shell-components]: [Plan 34-01]: WurzelNavBar aged-wood pill removed — top-border pattern (border-t-2 border-ink) replaces pill; inactive tabs use border-transparent for layout consistency
 - [Phase 35-homepage-feature-components]: FragDenWurzelmannCard: bg-ink dark wrapper deferred to HomepageLayout Plan 03 — card is content-only for reusability
 - [Phase 35-homepage-feature-components]: HeroArticle CTA: span (not button/Link) used inside outer Link — avoids nested interactives
+- [Phase 35]: prisma db push used for theme migration due to migration drift; theme empty string maps to null in DB; GrueneWocheSection returns null on empty articles
 
 ### Pending Todos
 
@@ -78,6 +79,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01T19:34:06.907Z
-Stopped at: Completed 35-02-PLAN.md
+Last session: 2026-04-01T19:42:22.661Z
+Stopped at: Completed 35-01-PLAN.md
 Resume file: None

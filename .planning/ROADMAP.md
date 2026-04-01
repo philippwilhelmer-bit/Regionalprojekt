@@ -128,7 +128,7 @@ Plans:
   4. A "Frag den Wurzelmann" dark green card appears on the homepage and links to the region selector
   5. A "Das Grune der Woche" section appears on the homepage when nature/environment-tagged articles exist — the Article model has a theme field and the CMS can assign it
   6. Homepage sections use Archivist palette background alternation (not the previous warm cream / slightly darker cream pair)
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 Plans:
 - [ ] 35-01-PLAN.md — Prisma migration for Article.theme, DAL function, CMS field, GrueneWocheSection component
 - [ ] 35-02-PLAN.md — Topmeldung CTA, MascotGreeting tonal restyle, FragDenWurzelmannCard
@@ -165,6 +165,6 @@ Plans:
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
 | 33. Color Token Foundation | v3.0 | Complete    | 2026-04-01 | 2026-04-01 |
 | 34. Shell Components | 2/2 | Complete    | 2026-04-01 | - |
-| 35. Homepage Feature Components | 1/3 | In Progress|  | - |
+| 35. Homepage Feature Components | 2/3 | In Progress|  | - |
 | 36. Article Detail Redesign | v3.0 | 0/TBD | Not started | - |
 | 37. Search and CMS Refresh | v3.0 | 0/TBD | Not started | - |

@@ -30,7 +30,7 @@ Requirements for "The Modern Archivist" design system overhaul. Each maps to roa
 - [x] **HOME-02**: MascotGreeting restyled as "Wurzel sagt..." tonal box (not speech bubble)
 - [ ] **HOME-03**: Weather widget displays current temperature and conditions for user's selected Bezirk via Open-Meteo API
 - [x] **HOME-04**: "Frag den Wurzelmann" card with dark green background links to region selector
-- [ ] **HOME-05**: "Das Grüne der Woche" themed section displays nature/environment-tagged articles
+- [x] **HOME-05**: "Das Grüne der Woche" themed section displays nature/environment-tagged articles
 - [ ] **HOME-06**: Homepage sections use tonal background alternation per the Archivist palette
 
 ### Article Detail
@@ -95,7 +95,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HOME-02 | Phase 35 | Complete |
 | HOME-03 | Phase 35 | Pending |
 | HOME-04 | Phase 35 | Complete |
-| HOME-05 | Phase 35 | Pending |
+| HOME-05 | Phase 35 | Complete |
 | HOME-06 | Phase 35 | Pending |
 | ARTC-01 | Phase 36 | Pending |
 | ARTC-02 | Phase 36 | Pending |
