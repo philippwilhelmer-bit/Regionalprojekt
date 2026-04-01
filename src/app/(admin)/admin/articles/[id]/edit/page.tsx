@@ -13,6 +13,7 @@ type Props = { params: Promise<{ id: string }> }
 async function updateArticleForm(formData: FormData) {
   'use server'
   const id = Number(formData.get('_id'))
+  const themeRaw = formData.get('theme')?.toString() ?? ''
   await updateArticle({
     id,
     title: formData.get('title')?.toString() ?? undefined,
@@ -20,6 +21,7 @@ async function updateArticleForm(formData: FormData) {
     seoTitle: formData.get('seoTitle')?.toString() || undefined,
     metaDescription: formData.get('metaDescription')?.toString() || undefined,
     bezirkIds: formData.getAll('bezirkIds').map(Number).filter(Boolean),
+    theme: themeRaw === '' ? null : themeRaw,
   })
   revalidatePath('/admin/articles')
   redirect('/admin/articles')
@@ -145,6 +147,22 @@ export default async function EditArticlePage({ params }: Props) {
               ))}
             </div>
           </fieldset>
+        </div>
+
+        {/* Thema */}
+        <div>
+          <label htmlFor="theme" className="block text-sm font-medium text-text/70 mb-1">
+            Thema <span className="text-xs text-text/60">(optional)</span>
+          </label>
+          <select
+            id="theme"
+            name="theme"
+            defaultValue={article.theme ?? ''}
+            className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="">Kein Thema</option>
+            <option value="gruene_woche">Gruenes der Woche</option>
+          </select>
         </div>
 
         {/* Artikelbild (Unsplash) */}

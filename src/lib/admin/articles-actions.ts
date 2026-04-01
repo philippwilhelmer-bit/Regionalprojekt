@@ -37,6 +37,7 @@ export interface UpdateArticleInput {
   seoTitle?: string
   metaDescription?: string
   bezirkIds?: number[]
+  theme?: string | null
 }
 
 export interface ListArticlesAdminOptions {
@@ -90,7 +91,7 @@ export async function updateArticleDb(
   db: PrismaClient,
   input: UpdateArticleInput
 ): Promise<Article> {
-  const { id, bezirkIds, ...fields } = input
+  const { id, bezirkIds, theme, ...fields } = input
 
   if (bezirkIds !== undefined) {
     // Atomic Bezirk replacement
@@ -102,7 +103,11 @@ export async function updateArticleDb(
 
   return db.article.update({
     where: { id },
-    data: fields,
+    data: {
+      ...fields,
+      // Normalize theme: if explicitly passed, empty string becomes null (clears theme)
+      ...(theme !== undefined ? { theme: theme === '' ? null : theme } : {}),
+    },
   })
 }
 
