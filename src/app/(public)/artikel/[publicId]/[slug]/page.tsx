@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getArticleByPublicId, listArticlesReader } from "@/lib/content/articles";
 import { slugify } from "@/lib/reader/slug";
 import { buildArticleMetadata } from "@/lib/reader/metadata";
+import { isBlockquote, stripBlockquotePrefix } from "@/lib/reader/article-utils";
 import { AdUnit } from "@/components/reader/AdUnit";
 import { ShareButton } from "@/components/reader/ShareButton";
 import { TopMeldungenRow } from "@/components/reader/TopMeldungenRow";
@@ -73,6 +74,12 @@ export default async function ArticlePage({ params }: Props) {
       }).format(article.publishedAt)
     : null;
 
+  // Parse paragraphs for body rendering
+  const paragraphs = (article.content ?? "").split("\n\n").filter(Boolean);
+
+  // Track whether drop cap has been applied (skip blockquotes)
+  let dropCapApplied = false;
+
   return (
     <>
       {/* JSON-LD */}
@@ -81,76 +88,123 @@ export default async function ArticlePage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="bg-background min-h-screen">
-        {/* Hero image — full bleed, outside content column */}
-        {article.imageUrl && (
-          <figure>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={article.imageUrl}
-              alt={article.title ?? ""}
-              className="w-full object-cover max-h-[50vh] img-matte"
-              loading="eager"
-            />
+      <div className="bg-parchment min-h-screen">
+        {/* Archival Header */}
+        {article.imageUrl ? (
+          <>
+            <header className="relative overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={article.imageUrl}
+                alt={article.title ?? ""}
+                className="w-full object-cover max-h-[55vh] img-matte"
+                loading="eager"
+              />
+              {/* Gradient scrim */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              {/* Overlay content — title + breadcrumb + date */}
+              <div className="absolute bottom-0 left-0 right-0 p-[var(--spacing-gutter)] pb-8 z-10">
+                {/* Breadcrumb */}
+                <nav className="font-label text-sm text-parchment/80 mb-3" aria-label="Breadcrumb">
+                  <Link href="/" className="hover:underline">
+                    Startseite
+                  </Link>
+                  {firstBezirk && (
+                    <>
+                      <span className="mx-1">/</span>
+                      <Link
+                        href={`/bezirk/${firstBezirk.slug}`}
+                        className="hover:underline"
+                      >
+                        {firstBezirk.name}
+                      </Link>
+                    </>
+                  )}
+                  <span className="mx-1">/</span>
+                  <span>Artikel</span>
+                </nav>
+                <h1 className="font-headline text-parchment text-2xl md:text-3xl font-semibold leading-tight">
+                  {article.title}
+                </h1>
+                {publishedAt && (
+                  <p className="text-parchment/70 text-sm mt-2">{publishedAt} Uhr</p>
+                )}
+              </div>
+            </header>
             {article.imageCredit && (
-              <figcaption className="text-xs text-secondary/60 text-right px-4 py-1">
+              <p className="text-xs text-slate text-right px-[var(--spacing-gutter)] py-1">
                 {article.imageCredit}
-              </figcaption>
+              </p>
             )}
-          </figure>
-        )}
-
-        {/* Content column — constrained */}
-        <div className="max-w-2xl mx-auto px-[var(--spacing-gutter)] py-[var(--spacing-section)]">
-          {/* Breadcrumb */}
-          <nav className="font-label text-sm text-secondary mb-4" aria-label="Breadcrumb">
-            <Link href="/" className="hover:underline">
-              Startseite
-            </Link>
-            {firstBezirk && (
-              <>
-                <span className="mx-1">/</span>
-                <Link
-                  href={`/bezirk/${firstBezirk.slug}`}
-                  className="hover:underline"
-                >
-                  {firstBezirk.name}
-                </Link>
-              </>
-            )}
-            <span className="mx-1">/</span>
-            <span>Artikel</span>
-          </nav>
-
-          {/* Article header */}
-          <header className="mb-6">
-            <h1 className="font-headline text-2xl font-bold text-text leading-tight mb-2">
+          </>
+        ) : (
+          <header className="bg-parchment-dim px-[var(--spacing-gutter)] pt-8 pb-6">
+            {/* Breadcrumb */}
+            <nav className="font-label text-sm text-slate mb-4" aria-label="Breadcrumb">
+              <Link href="/" className="hover:underline">
+                Startseite
+              </Link>
+              {firstBezirk && (
+                <>
+                  <span className="mx-1">/</span>
+                  <Link
+                    href={`/bezirk/${firstBezirk.slug}`}
+                    className="hover:underline"
+                  >
+                    {firstBezirk.name}
+                  </Link>
+                </>
+              )}
+              <span className="mx-1">/</span>
+              <span>Artikel</span>
+            </nav>
+            <h1 className="font-headline text-ink text-2xl md:text-3xl font-semibold leading-tight">
               {article.title}
             </h1>
             {publishedAt && (
-              <p className="font-label text-sm text-secondary">{publishedAt} Uhr</p>
+              <p className="text-slate text-sm mt-2">{publishedAt} Uhr</p>
             )}
           </header>
+        )}
 
-          {/* Share button — positioned below headline, before article body */}
-          <div className="mb-6">
+        {/* Content column — constrained */}
+        <div className="max-w-2xl mx-auto px-[var(--spacing-gutter)] pt-[var(--spacing-vertical)] pb-[var(--spacing-section)]">
+
+          {/* Article body */}
+          <article className="max-w-none mb-6">
+            {paragraphs.map((paragraph, index) => {
+              if (isBlockquote(paragraph)) {
+                return (
+                  <blockquote key={index} className="article-blockquote">
+                    {stripBlockquotePrefix(paragraph)}
+                  </blockquote>
+                );
+              }
+              const isFirst = !dropCapApplied;
+              if (!dropCapApplied) dropCapApplied = true;
+              return (
+                <p
+                  key={index}
+                  className={
+                    isFirst
+                      ? "drop-cap font-body text-ink leading-relaxed"
+                      : "font-body text-ink leading-relaxed mb-[var(--spacing-vertical)]"
+                  }
+                >
+                  {paragraph}
+                </p>
+              );
+            })}
+          </article>
+
+          {/* Source attribution + AI label + Share */}
+          <div className="flex items-center gap-3 text-xs text-slate mb-4">
+            {sourceLabel && <span>{sourceLabel}</span>}
+            {article.isAutoGenerated && <span>AI</span>}
             <ShareButton
               title={article.seoTitle ?? article.title ?? ""}
               url={canonicalUrl}
             />
-          </div>
-
-          {/* Article body */}
-          <article className="prose max-w-none mb-6 prose-p:text-text prose-headings:font-headline prose-a:text-primary prose-a:underline">
-            {(article.content ?? "").split("\n\n").map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
-          </article>
-
-          {/* Source attribution + AI label */}
-          <div className="flex items-center gap-3 text-xs text-secondary/70 mb-4">
-            {sourceLabel && <span>{sourceLabel}</span>}
-            {article.isAutoGenerated && <span>AI</span>}
           </div>
 
           {/* Ad unit */}

@@ -77,3 +77,30 @@ body {
 .icon-filled {
   font-variation-settings: 'FILL' 1;
 }
+
+.drop-cap {
+  overflow: hidden; /* contain the float — prevents bleed into next paragraph */
+}
+.drop-cap::first-letter {
+  float: left;
+  font-family: var(--font-headline);
+  font-size: 4.5rem;
+  line-height: 1;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-right: 0.25rem;
+  margin-top: 0.05em;
+}
+
+.article-blockquote {
+  font-family: var(--font-headline);
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: var(--color-ink-soft);
+  margin: var(--spacing-vertical) 0;
+  padding: var(--spacing-vertical) var(--spacing-gutter);
+  border-top: 1px solid var(--color-parchment-dim);
+  border-bottom: 1px solid var(--color-parchment-dim);
+  background: var(--color-parchment-dim);
+}
