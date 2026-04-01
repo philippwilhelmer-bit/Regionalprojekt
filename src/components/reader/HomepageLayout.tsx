@@ -10,15 +10,19 @@ import { MascotGreeting } from "./MascotGreeting";
 import { RegionalEditorialCard } from "./RegionalEditorialCard";
 import { ListItem } from "./ListItem";
 import { AdUnit } from "./AdUnit";
+import { WeatherWidget } from "./WeatherWidget";
+import { FragDenWurzelmannCard } from "./FragDenWurzelmannCard";
+import { GrueneWocheSection } from "./GrueneWocheSection";
 
 interface HomepageLayoutProps {
   hero: ArticleWithBezirke | null;
   pinnedArticles: ArticleWithBezirke[];
   allArticles: ArticleWithBezirke[];
   bezirke?: BezirkItem[];
+  grueneWocheArticles?: ArticleWithBezirke[];
 }
 
-export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = [] }: HomepageLayoutProps) {
+export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = [], grueneWocheArticles = [] }: HomepageLayoutProps) {
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
 
@@ -114,12 +118,20 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
         </div>
       )}
 
-      {/* 4. Ad slot — bg-surface */}
+      {/* 4. Weather + Frag den Wurzelmann — dark accent zone */}
+      <div className="bg-ink py-[var(--spacing-section)]">
+        <WeatherWidget />
+        <div className="mt-4">
+          <FragDenWurzelmannCard />
+        </div>
+      </div>
+
+      {/* 5. Ad slot — bg-surface */}
       <div className="bg-surface px-[var(--spacing-gutter)] py-4">
         <AdUnit zone="hero" />
       </div>
 
-      {/* 5/6. Editorial sections */}
+      {/* 6/7. Editorial sections */}
       {hasBezirkSelection ? (
         /* Mein Bezirk — grouped by bezirk */
         <div>
@@ -205,6 +217,13 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
               )}
             </>
           )}
+        </div>
+      )}
+
+      {/* 8. Gruene der Woche — tonal surface */}
+      {grueneWocheArticles.length > 0 && (
+        <div className="bg-surface">
+          <GrueneWocheSection articles={grueneWocheArticles} />
         </div>
       )}
     </div>
