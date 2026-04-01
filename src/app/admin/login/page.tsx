@@ -7,9 +7,9 @@ export default function LoginPage() {
   return (
     <>
       <TestSiteBanner />
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center bg-parchment">
         <div className="bg-surface-elevated p-8 rounded-sm shadow-md w-full max-w-sm">
-          <h1 className="text-2xl font-bold mb-6 text-text font-headline">{config.siteName} Admin</h1>
+          <h1 className="text-2xl font-bold mb-6 text-ink font-headline">{config.siteName} Admin</h1>
           <LoginForm />
         </div>
       </div>

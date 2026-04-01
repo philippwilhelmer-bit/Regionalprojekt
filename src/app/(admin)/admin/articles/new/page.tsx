@@ -9,16 +9,16 @@ export default async function NewArticlePage() {
   return (
     <div className="max-w-2xl">
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/admin/articles" className="text-sm text-text/70 hover:text-text">
+        <Link href="/admin/articles" className="text-sm text-ink-muted hover:text-ink">
           &larr; Zurueck
         </Link>
-        <h1 className="text-2xl font-bold text-text font-headline">Neuer Artikel</h1>
+        <h1 className="text-2xl font-bold text-ink font-headline">Neuer Artikel</h1>
       </div>
 
       <form action={createManualArticleForm} className="bg-surface-elevated rounded-sm p-6 space-y-5">
         {/* Titel */}
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-text/70 mb-1">
+          <label htmlFor="title" className="block text-sm font-medium text-ink-muted mb-1">
             Titel <span className="text-red-500">*</span>
           </label>
           <input
@@ -26,14 +26,14 @@ export default async function NewArticlePage() {
             name="title"
             type="text"
             required
-            className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full border border-parchment-dim rounded-sm px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
             placeholder="Artikeltitel"
           />
         </div>
 
         {/* Inhalt */}
         <div>
-          <label htmlFor="content" className="block text-sm font-medium text-text/70 mb-1">
+          <label htmlFor="content" className="block text-sm font-medium text-ink-muted mb-1">
             Inhalt <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -41,7 +41,7 @@ export default async function NewArticlePage() {
             name="content"
             required
             rows={10}
-            className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full border border-parchment-dim rounded-sm px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
             placeholder="Artikelinhalt…"
           />
         </div>
@@ -49,15 +49,15 @@ export default async function NewArticlePage() {
         {/* Bezirke */}
         <div>
           <fieldset>
-            <legend className="block text-sm font-medium text-text/70 mb-2">Bezirke</legend>
+            <legend className="block text-sm font-medium text-ink-muted mb-2">Bezirke</legend>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {bezirke.map((bezirk) => (
-                <label key={bezirk.id} className="flex items-center gap-2 text-sm text-text/70 cursor-pointer">
+                <label key={bezirk.id} className="flex items-center gap-2 text-sm text-ink-muted cursor-pointer">
                   <input
                     type="checkbox"
                     name="bezirkIds"
                     value={bezirk.id}
-                    className="rounded border-surface text-primary focus:ring-primary"
+                    className="rounded border-parchment-dim text-ink focus:ring-ink"
                   />
                   {bezirk.name}
                 </label>
@@ -71,47 +71,47 @@ export default async function NewArticlePage() {
 
         {/* SEO-Titel */}
         <div>
-          <label htmlFor="seoTitle" className="block text-sm font-medium text-text/70 mb-1">
-            SEO-Titel <span className="text-xs text-text/60">(optional)</span>
+          <label htmlFor="seoTitle" className="block text-sm font-medium text-ink-muted mb-1">
+            SEO-Titel <span className="text-xs text-ink-dim">(optional)</span>
           </label>
           <input
             id="seoTitle"
             name="seoTitle"
             type="text"
-            className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full border border-parchment-dim rounded-sm px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
             placeholder="SEO-optimierter Titel"
           />
         </div>
 
         {/* Meta-Beschreibung */}
         <div>
-          <label htmlFor="metaDescription" className="block text-sm font-medium text-text/70 mb-1">
-            Meta-Beschreibung <span className="text-xs text-text/60">(optional)</span>
+          <label htmlFor="metaDescription" className="block text-sm font-medium text-ink-muted mb-1">
+            Meta-Beschreibung <span className="text-xs text-ink-dim">(optional)</span>
           </label>
           <textarea
             id="metaDescription"
             name="metaDescription"
             rows={3}
-            className="w-full border border-surface rounded-sm px-3 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full border border-parchment-dim rounded-sm px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
             placeholder="Kurze Beschreibung fuer Suchmaschinen…"
           />
         </div>
 
         {/* Toggles */}
         <div className="flex gap-6">
-          <label className="flex items-center gap-2 text-sm text-text/70 cursor-pointer">
+          <label className="flex items-center gap-2 text-sm text-ink-muted cursor-pointer">
             <input
               type="checkbox"
               name="isPinned"
-              className="rounded border-surface text-orange-500 focus:ring-orange-500"
+              className="rounded border-parchment-dim text-slate focus:ring-ink"
             />
             Angepinnt
           </label>
-          <label className="flex items-center gap-2 text-sm text-text/70 cursor-pointer">
+          <label className="flex items-center gap-2 text-sm text-ink-muted cursor-pointer">
             <input
               type="checkbox"
               name="isFeatured"
-              className="rounded border-surface text-purple-500 focus:ring-purple-500"
+              className="rounded border-parchment-dim text-ink focus:ring-ink"
             />
             Hervorgehoben
           </label>
@@ -121,13 +121,13 @@ export default async function NewArticlePage() {
         <div className="flex gap-3 pt-2">
           <button
             type="submit"
-            className="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-white text-sm font-medium rounded-full hover:opacity-90"
+            className="px-4 py-2 bg-gradient-to-br from-ink to-ink-soft text-parchment text-sm font-medium rounded-sm hover:opacity-90"
           >
             Artikel speichern
           </button>
           <Link
             href="/admin/articles"
-            className="px-4 py-2 border border-surface text-sm text-text/70 rounded-sm hover:bg-surface"
+            className="px-4 py-2 border border-surface text-sm text-ink-muted rounded-sm hover:bg-surface"
           >
             Abbrechen
           </Link>

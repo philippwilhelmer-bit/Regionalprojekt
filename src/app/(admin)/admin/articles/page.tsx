@@ -62,35 +62,35 @@ export default async function ArticlesPage({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-text font-headline">Artikel</h1>
+        <h1 className="text-2xl font-bold text-ink font-headline">Artikel</h1>
         <Link
           href="/admin/articles/new"
-          className="px-4 py-2 bg-gradient-to-br from-primary to-primary-container text-white text-sm font-medium rounded-full hover:opacity-90"
+          className="px-4 py-2 bg-gradient-to-br from-ink to-ink-soft text-parchment text-sm font-medium rounded-sm hover:opacity-90"
         >
           Neuer Artikel
         </Link>
       </div>
 
       <div className="bg-surface-elevated rounded-sm p-4 mb-4">
-        <Suspense fallback={<div className="text-sm text-text/60">Lade Filter…</div>}>
+        <Suspense fallback={<div className="text-sm text-ink-dim">Lade Filter…</div>}>
           <ArticleFilters bezirke={bezirke} />
         </Suspense>
       </div>
 
       {articles.length === 0 ? (
-        <p className="text-center text-text/70 py-12">Keine Artikel gefunden.</p>
+        <p className="text-center text-ink-muted py-12">Keine Artikel gefunden.</p>
       ) : (
         <>
           <div className="bg-surface-elevated rounded-sm overflow-hidden">
             <table className="w-full text-left">
               <thead className="bg-surface">
                 <tr>
-                  <th className="px-4 py-3 text-xs font-semibold text-text/70 uppercase tracking-wide font-label">Titel</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-text/70 uppercase tracking-wide font-label">Status</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-text/70 uppercase tracking-wide font-label">Quelle</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-text/70 uppercase tracking-wide font-label">Datum</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-text/70 uppercase tracking-wide font-label">Bezirke</th>
-                  <th className="px-4 py-3 text-xs font-semibold text-text/70 uppercase tracking-wide font-label">Aktionen</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide font-label">Titel</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide font-label">Status</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide font-label">Quelle</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide font-label">Datum</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide font-label">Bezirke</th>
+                  <th className="px-4 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wide font-label">Aktionen</th>
                 </tr>
               </thead>
               <tbody>
@@ -101,13 +101,13 @@ export default async function ArticlesPage({
             </table>
           </div>
 
-          <div className="flex items-center justify-between mt-4 text-sm text-text/70">
+          <div className="flex items-center justify-between mt-4 text-sm text-ink-muted">
             <span>Seite {page}</span>
             <div className="flex gap-2">
               {prevPage && (
                 <Link
                   href={buildPageUrl(prevPage)}
-                  className="px-3 py-1.5 border border-surface rounded-sm text-text hover:bg-surface"
+                  className="px-3 py-1.5 border border-surface rounded-sm text-ink hover:bg-surface"
                 >
                   Zurueck
                 </Link>
@@ -115,7 +115,7 @@ export default async function ArticlesPage({
               {nextPage && (
                 <Link
                   href={buildPageUrl(nextPage)}
-                  className="px-3 py-1.5 border border-surface rounded-sm text-text hover:bg-surface"
+                  className="px-3 py-1.5 border border-surface rounded-sm text-ink hover:bg-surface"
                 >
                   Weiter
                 </Link>

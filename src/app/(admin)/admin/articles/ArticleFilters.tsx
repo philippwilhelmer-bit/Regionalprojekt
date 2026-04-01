@@ -54,11 +54,11 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
   return (
     <div className="flex flex-wrap gap-3 items-end">
       <div>
-        <label className="block text-xs font-medium text-text/70 mb-1">Bezirk</label>
+        <label className="block text-xs font-medium text-ink-muted mb-1">Bezirk</label>
         <select
           value={searchParams.get('bezirkId') ?? ''}
           onChange={(e) => updateParam('bezirkId', e.target.value)}
-          className="border border-surface rounded-sm px-2 py-1.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+          className="border border-surface rounded-sm px-2 py-1.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
         >
           <option value="">Alle Bezirke</option>
           {bezirke.map((b) => (
@@ -70,11 +70,11 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-text/70 mb-1">Quelle</label>
+        <label className="block text-xs font-medium text-ink-muted mb-1">Quelle</label>
         <select
           value={searchParams.get('source') ?? ''}
           onChange={(e) => updateParam('source', e.target.value)}
-          className="border border-surface rounded-sm px-2 py-1.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+          className="border border-surface rounded-sm px-2 py-1.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
         >
           {SOURCES.map((s) => (
             <option key={s.value} value={s.value}>
@@ -85,11 +85,11 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-text/70 mb-1">Status</label>
+        <label className="block text-xs font-medium text-ink-muted mb-1">Status</label>
         <select
           value={searchParams.get('status') ?? ''}
           onChange={(e) => updateParam('status', e.target.value)}
-          className="border border-surface rounded-sm px-2 py-1.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+          className="border border-surface rounded-sm px-2 py-1.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
         >
           {STATUSES.map((s) => (
             <option key={s.value} value={s.value}>
@@ -100,28 +100,28 @@ export function ArticleFilters({ bezirke }: ArticleFiltersProps) {
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-text/70 mb-1">Von</label>
+        <label className="block text-xs font-medium text-ink-muted mb-1">Von</label>
         <input
           type="date"
           value={searchParams.get('from') ?? ''}
           onChange={(e) => updateParam('from', e.target.value)}
-          className="border border-surface rounded-sm px-2 py-1.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+          className="border border-surface rounded-sm px-2 py-1.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-medium text-text/70 mb-1">Bis</label>
+        <label className="block text-xs font-medium text-ink-muted mb-1">Bis</label>
         <input
           type="date"
           value={searchParams.get('to') ?? ''}
           onChange={(e) => updateParam('to', e.target.value)}
-          className="border border-surface rounded-sm px-2 py-1.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary"
+          className="border border-surface rounded-sm px-2 py-1.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
         />
       </div>
 
       <button
         onClick={resetFilters}
-        className="px-3 py-1.5 text-sm text-text/70 border border-surface rounded-sm hover:bg-surface"
+        className="px-3 py-1.5 text-sm text-ink-muted border border-surface rounded-sm hover:bg-surface"
       >
         Filter zuruecksetzen
       </button>
