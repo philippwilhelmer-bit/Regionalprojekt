@@ -42,12 +42,12 @@ Requirements for "The Modern Archivist" design system overhaul. Each maps to roa
 
 ### Search & Discovery
 
-- [ ] **SRCH-01**: Search page restyled with Archivist color tokens and editorial typography
+- [x] **SRCH-01**: Search page restyled with Archivist color tokens and editorial typography
 
 ### CMS Admin
 
 - [ ] **CMS-01**: Admin pages restyled with Archivist color tokens (Ink/Parchment/Slate)
-- [ ] **CMS-02**: Admin can assign "Grüne der Woche" theme tag to articles
+- [x] **CMS-02**: Admin can assign "Grüne der Woche" theme tag to articles
 
 ## Future Requirements
 
@@ -101,9 +101,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ARTC-02 | Phase 36 | Complete |
 | ARTC-03 | Phase 36 | Complete |
 | ARTC-04 | Phase 36 | Complete |
-| SRCH-01 | Phase 37 | Pending |
+| SRCH-01 | Phase 37 | Complete |
 | CMS-01 | Phase 37 | Pending |
-| CMS-02 | Phase 37 | Pending |
+| CMS-02 | Phase 37 | Complete |
 
 **Coverage:**
 - v3.0 requirements: 24 total

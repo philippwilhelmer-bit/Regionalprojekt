@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: The Modern Archivist
 status: completed
-stopped_at: Completed 36-02-PLAN.md
-last_updated: "2026-04-01T21:32:14.735Z"
-last_activity: 2026-04-01 — Plan 36-02 complete — sticky desktop sidebar + mobile metadata strip with ShareButton landed on article detail page
+stopped_at: Completed 37-02-PLAN.md
+last_updated: "2026-04-01T21:53:45Z"
+last_activity: 2026-04-01 — Plan 37-02 complete — theme persistence tests added (CMS-02); SearchPageLayout.tsx confirmed Archivist-compliant (SRCH-01 sealed)
 progress:
   total_phases: 5
-  completed_phases: 4
-  total_plans: 10
-  completed_plans: 10
+  completed_phases: 5
+  total_plans: 12
+  completed_plans: 12
   percent: 100
 ---
 
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 
 ## Current Position
 
-Phase: 36 of 37 (Article Detail Redesign)
-Plan: 02 complete — Phase 36 complete
-Status: Phase 36 complete — ready for Phase 37
-Last activity: 2026-04-01 — Plan 36-02 complete — sticky desktop sidebar + mobile metadata strip with ShareButton landed on article detail page
+Phase: 37 of 37 (Search & CMS Refresh)
+Plan: 02 complete — Phase 37 complete
+Status: Phase 37 complete — v3.0 milestone complete
+Last activity: 2026-04-01 — Plan 37-02 complete — theme persistence tests (CMS-02) + SRCH-01 token audit sealed
 
 Progress: [██████████] 100%
 
@@ -76,6 +76,8 @@ Recent decisions relevant to v3.0:
 - [Plan 36-02]: ArticleSidebar sticky offset is top-[4rem] to clear WurzelAppBar/RegionalAppBar height
 - [Plan 36-02]: ShareButton removed from source attribution area — now exclusively in sidebar (desktop) and metadata strip (mobile)
 - [Plan 36-02]: AdUnit and related articles remain outside grid — they span full content column width
+- [Plan 37-02]: SearchPageLayout.tsx was already fully Archivist-compliant — Task 2 was a verification seal with no code changes required
+- [Plan 37-02]: Theme persistence tests confirm empty string normalizes to null in updateArticleDb (gruene_woche assign, clear, and preserve-on-omission all verified)
 
 ### Pending Todos
 
@@ -89,6 +91,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-01T22:50:00Z
-Stopped at: Completed 36-02-PLAN.md
+Last session: 2026-04-01T21:53:45Z
+Stopped at: Completed 37-02-PLAN.md
 Resume file: None

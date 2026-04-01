@@ -156,7 +156,7 @@ Plans:
   1. The search and discovery page renders result cards, filter chips, and typography using Archivist Ink/Parchment/Slate tokens — no legacy forest-green or warm-cream palette remnants visible
   2. CMS admin pages (login, sidebar, articles list, sources, AI config, exception queue) use Archivist Ink/Parchment/Slate tokens throughout
   3. The CMS article edit form includes a "Grune der Woche" theme tag field — an editor can assign and remove the theme tag from any article
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
 - [ ] 37-01-PLAN.md — CMS admin full Archivist token migration (15 files) + theme tag verify
 - [ ] 37-02-PLAN.md — Search page audit + theme tag persistence tests
@@ -173,4 +173,4 @@ Plans:
 | 34. Shell Components | 2/2 | Complete    | 2026-04-01 | - |
 | 35. Homepage Feature Components | 3/3 | Complete    | 2026-04-01 | - |
 | 36. Article Detail Redesign | v3.0 | Complete    | 2026-04-01 | 2026-04-01 |
-| 37. Search and CMS Refresh | v3.0 | 0/2 | Not started | - |
+| 37. Search and CMS Refresh | 1/2 | In Progress|  | - |
