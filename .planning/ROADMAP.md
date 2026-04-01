@@ -80,7 +80,7 @@ Full details: `.planning/milestones/v2.0-ROADMAP.md`
 
 - [x] **Phase 33: Color Token Foundation** - MD3-style Ink/Parchment/Slate/Aged Wood token system, No-Line Rule, radius and spacing scales, glassmorphism tokens (Plans 01-03 complete 2026-04-01)
 - [x] **Phase 34: Shell Components** - Glassmorphic bottom nav, dark editorial footer, updated header with hamburger and desktop navigation (completed 2026-04-01)
-- [ ] **Phase 35: Homepage Feature Components** - Weather widget, Frag den Wurzelmann region selector, Das Grüne der Woche section, Topmeldung CTA, tonal palette update, MascotGreeting restyle
+- [ ] **Phase 35: Homepage Feature Components** - Weather widget, Frag den Wurzelmann region selector, Das Grune der Woche section, Topmeldung CTA, tonal palette update, MascotGreeting restyle
 - [ ] **Phase 36: Article Detail Redesign** - Drop cap, blockquote styling, sidebar metadata, Archival Header pattern
 - [ ] **Phase 37: Search and CMS Refresh** - Search page Archivist token treatment, CMS admin token swap, theme tag management
 
@@ -118,17 +118,21 @@ Plans:
 - [ ] 34-02-PLAN.md — Dark editorial footer and responsive header with hamburger/desktop nav
 
 ### Phase 35: Homepage Feature Components
-**Goal**: The homepage presents the Archivist's three new editorial features — live Bezirk weather, the Frag den Wurzelmann region selector, and the Das Grüne der Woche themed section — alongside an updated Topmeldung hero and restyled Wurzel greeting card
+**Goal**: The homepage presents the Archivist's three new editorial features — live Bezirk weather, the Frag den Wurzelmann region selector, and the Das Grune der Woche themed section — alongside an updated Topmeldung hero and restyled Wurzel greeting card
 **Depends on**: Phase 34
 **Requirements**: HOME-01, HOME-02, HOME-03, HOME-04, HOME-05, HOME-06
 **Success Criteria** (what must be TRUE):
-  1. The Topmeldung hero displays a "VOLLSTÄNDIGEN ARTIKEL LESEN" CTA button overlaid on the gradient — clicking it navigates to the article
+  1. The Topmeldung hero displays a "VOLLSTAENDIGEN ARTIKEL LESEN" CTA button overlaid on the gradient — clicking it navigates to the article
   2. The MascotGreeting renders as a tonal "Wurzel sagt..." box using Archivist tokens, not a speech bubble
   3. A weather widget on the homepage shows current temperature and weather conditions for the user's selected Bezirk, sourced from Open-Meteo with a 30-minute server-side cache
   4. A "Frag den Wurzelmann" dark green card appears on the homepage and links to the region selector
-  5. A "Das Grüne der Woche" section appears on the homepage when nature/environment-tagged articles exist — the Article model has a theme field and the CMS can assign it
+  5. A "Das Grune der Woche" section appears on the homepage when nature/environment-tagged articles exist — the Article model has a theme field and the CMS can assign it
   6. Homepage sections use Archivist palette background alternation (not the previous warm cream / slightly darker cream pair)
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 35-01-PLAN.md — Prisma migration for Article.theme, DAL function, CMS field, GrueneWocheSection component
+- [ ] 35-02-PLAN.md — Topmeldung CTA, MascotGreeting tonal restyle, FragDenWurzelmannCard
+- [ ] 35-03-PLAN.md — Weather widget (API route + client component) + HomepageLayout integration + tonal alternation
 
 ### Phase 36: Article Detail Redesign
 **Goal**: Article pages read like premium editorial print — a drop cap opens the body, pull quotes are visually distinct, metadata lives in a sidebar, and the article header uses an overlapping archival title layout
@@ -148,7 +152,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. The search and discovery page renders result cards, filter chips, and typography using Archivist Ink/Parchment/Slate tokens — no legacy forest-green or warm-cream palette remnants visible
   2. CMS admin pages (login, sidebar, articles list, sources, AI config, exception queue) use Archivist Ink/Parchment/Slate tokens throughout
-  3. The CMS article edit form includes a "Grüne der Woche" theme tag field — an editor can assign and remove the theme tag from any article
+  3. The CMS article edit form includes a "Grune der Woche" theme tag field — an editor can assign and remove the theme tag from any article
 **Plans**: TBD
 
 ## Progress
@@ -161,6 +165,6 @@ Plans:
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
 | 33. Color Token Foundation | v3.0 | Complete    | 2026-04-01 | 2026-04-01 |
 | 34. Shell Components | 2/2 | Complete    | 2026-04-01 | - |
-| 35. Homepage Feature Components | v3.0 | 0/TBD | Not started | - |
+| 35. Homepage Feature Components | v3.0 | 0/3 | Not started | - |
 | 36. Article Detail Redesign | v3.0 | 0/TBD | Not started | - |
 | 37. Search and CMS Refresh | v3.0 | 0/TBD | Not started | - |
