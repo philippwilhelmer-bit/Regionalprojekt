@@ -185,6 +185,54 @@ describe('softDelete', () => {
   })
 })
 
+describe('updateArticle theme persistence (CMS-02)', () => {
+  it('sets theme to "gruene_woche" when provided', async () => {
+    const bezirk = await createBezirk(db, 'graz', 'Graz (Stadt)')
+    const created = await createManualArticleDb(db, {
+      title: 'Theme Article',
+      content: 'Content',
+      bezirkIds: [bezirk.id],
+    })
+
+    await updateArticleDb(db, { id: created.id, theme: 'gruene_woche' })
+
+    const updated = await db.article.findUnique({ where: { id: created.id } })
+    expect(updated?.theme).toBe('gruene_woche')
+  })
+
+  it('clears theme to null when empty string provided', async () => {
+    const bezirk = await createBezirk(db, 'graz', 'Graz (Stadt)')
+    const created = await createManualArticleDb(db, {
+      title: 'Theme Article',
+      content: 'Content',
+      bezirkIds: [bezirk.id],
+    })
+    // First set a theme
+    await updateArticleDb(db, { id: created.id, theme: 'gruene_woche' })
+    // Then clear it
+    await updateArticleDb(db, { id: created.id, theme: '' })
+
+    const updated = await db.article.findUnique({ where: { id: created.id } })
+    expect(updated?.theme).toBeNull()
+  })
+
+  it('preserves existing theme when theme field not included in update', async () => {
+    const bezirk = await createBezirk(db, 'graz', 'Graz (Stadt)')
+    const created = await createManualArticleDb(db, {
+      title: 'Theme Article',
+      content: 'Content',
+      bezirkIds: [bezirk.id],
+    })
+    // Set a theme first
+    await updateArticleDb(db, { id: created.id, theme: 'gruene_woche' })
+    // Update title only — theme should be preserved
+    await updateArticleDb(db, { id: created.id, title: 'Updated Title' })
+
+    const updated = await db.article.findUnique({ where: { id: created.id } })
+    expect(updated?.theme).toBe('gruene_woche')
+  })
+})
+
 describe('listArticlesAdmin', () => {
   it('excludes REJECTED and FAILED articles by default', async () => {
     const bezirk = await createBezirk(db, 'graz', 'Graz (Stadt)')
