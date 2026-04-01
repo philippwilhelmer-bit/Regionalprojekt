@@ -71,7 +71,7 @@ Each task was committed atomically:
 1. **Task 1: Rewrite @theme block with complete Archivist token system** - `f095044` (feat)
 2. **Task 2: Validate token system and build** - validation only, no separate commit (Task 1 covers all file changes)
 
-**Plan metadata:** TBD (final commit)
+**Plan metadata:** `5fed65b` (docs: complete plan)
 
 ## Files Created/Modified
 - `src/app/globals.css` - Complete @theme block rewrite: 8 old tokens removed, ~33 Archivist tokens added (base palette, semantic surfaces, glassmorphism, shadows, spacing, typography)
