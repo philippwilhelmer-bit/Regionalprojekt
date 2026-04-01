@@ -1,35 +1,34 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.0
-milestone_name: Wurzelwelt Rebrand
-status: complete
-stopped_at: Milestone v2.0 complete
-last_updated: "2026-03-30T16:00:00.000Z"
-last_activity: 2026-03-30 — Completed v2.0 Wurzelwelt Rebrand milestone (7 phases, 11 plans, 18/18 requirements)
+milestone: v3.0
+milestone_name: The Modern Archivist
+status: active
+stopped_at: Defining requirements
+last_updated: "2026-04-01T00:00:00.000Z"
+last_activity: 2026-04-01 — Milestone v3.0 started
 progress:
-  total_phases: 7
-  completed_phases: 7
-  total_plans: 11
-  completed_plans: 11
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-30)
+See: .planning/PROJECT.md (updated 2026-04-01)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** Planning next milestone
+**Current focus:** Defining requirements for v3.0
 
 ## Current Position
 
-Milestone: v2.0 Wurzelwelt Rebrand — COMPLETE
-Status: Shipped 2026-03-30
-Next: `/gsd:new-milestone`
-
-Progress: [██████████] 100%
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-01 — Milestone v3.0 started
 
 ## Performance Metrics
 
@@ -55,6 +54,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-30
-Stopped at: Milestone v2.0 complete
+Last session: 2026-04-01
+Stopped at: Defining requirements for v3.0
 Resume file: None

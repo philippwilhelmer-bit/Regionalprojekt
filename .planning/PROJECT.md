@@ -75,9 +75,21 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 - ✓ Article detail restyled with Wurzelwelt tokens — v2.0
 - ✓ CMS admin restyled with Wurzelwelt brand — v2.0
 
-### Active
+## Current Milestone: v3.0 The Modern Archivist
 
-(None yet — define with `/gsd:new-milestone`)
+**Goal:** Transform the visual identity from "Modern Mountain Folklore" to "The Modern Archivist" — a high-end editorial print-magazine aesthetic with overhauled color system, tonal layering, glassmorphism, and new components (weather, region selector card, themed sections, editorial footer).
+
+**Target features:**
+- Complete color system overhaul (MD3-style tokens: Ink/Parchment/Slate/Aged Wood)
+- "No-Line Rule" design philosophy (tonal layering + negative space, no borders)
+- Glassmorphic bottom nav with top-border active state
+- Editorial homepage: Topmeldung with CTA, "Frag den Wurzelmann" region selector card, weather widget (Open-Meteo), "Das Grüne der Woche" section
+- Article detail: sidebar metadata, drop cap, blockquote styling
+- Dark editorial footer with navigation columns
+- Search/discovery page redesign
+- CMS admin visual refresh
+
+### Active
 
 ### Out of Scope
 
