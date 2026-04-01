@@ -1,27 +1,62 @@
 @import "tailwindcss";
 
 @theme {
-  /* Color tokens — Wurzelwelt semantic palette */
-  --color-primary: #1B2D18;
-  --color-secondary: #4A5D23;
-  --color-accent: #9F411E;
-  --color-background: #FCF9EF;
-  --color-text: #071806;
-  --color-surface: #F6F4EA;
-  --color-surface-elevated: #FFFFFF;
-  --color-primary-container: #4A5D23;
+  /* === BASE PALETTE === */
 
-  /* Font family tokens */
+  /* Ink — editorial dark, body text */
+  --color-ink:       #071806;
+  --color-ink-soft:  #2a3a28;
+  --color-ink-muted: #4a5a48;
+  --color-ink-dim:   #6a7a68;
+
+  /* Parchment — warm paper background */
+  --color-parchment:        #FCF9EF;
+  --color-parchment-dim:    #F6F4EA;
+  --color-parchment-bright: #FFFFFF;
+
+  /* Slate — cool mid-tone UI chrome */
+  --color-slate:       #50606F;
+  --color-slate-soft:  #6e7e8d;
+  --color-slate-muted: #8c9caa;
+  --color-slate-dim:   #aabbc8;
+
+  /* Aged Wood — dark warm accent surfaces */
+  --color-aged-wood:       #230E08;
+  --color-aged-wood-soft:  #4a2a1e;
+  --color-aged-wood-muted: #7a5a4e;
+  --color-aged-wood-dim:   #a8887c;
+
+  /* === SEMANTIC SURFACES === */
+  --color-surface:          var(--color-parchment-dim);
+  --color-surface-elevated: var(--color-parchment-bright);
+  --color-surface-overlay:  var(--color-parchment);
+
+  /* === GLASSMORPHISM (literal hex in color-mix — no var() references) === */
+  --color-glass-nav:     color-mix(in srgb, #FCF9EF 85%, transparent);
+  --color-glass-overlay: color-mix(in srgb, #FCF9EF 70%, transparent);
+
+  /* === SHADOWS (ink-tinted — no pure black) === */
+  --shadow-2xs: 0 1px color-mix(in srgb, #071806 5%, transparent);
+  --shadow-xs:  0 1px 2px 0 color-mix(in srgb, #071806 5%, transparent);
+  --shadow-sm:  0 1px 3px 0 color-mix(in srgb, #071806 10%, transparent),
+                0 1px 2px -1px color-mix(in srgb, #071806 6%, transparent);
+  --shadow-md:  0 4px 6px -1px color-mix(in srgb, #071806 12%, transparent),
+                0 2px 4px -2px color-mix(in srgb, #071806 8%, transparent);
+  --shadow-lg:  0 10px 15px -3px color-mix(in srgb, #071806 12%, transparent),
+                0 4px 6px -4px color-mix(in srgb, #071806 8%, transparent);
+  --shadow-xl:  0 20px 25px -5px color-mix(in srgb, #071806 12%, transparent),
+                0 8px 10px -6px color-mix(in srgb, #071806 8%, transparent);
+  --shadow-nav: 0 -2px 8px color-mix(in srgb, #071806 8%, transparent);
+
+  /* === SPACING (3:5 rhythm scale) === */
+  --spacing-gutter:   1rem;    /* horizontal gutters (was 1.7rem — corrected) */
+  --spacing-vertical: 1.7rem;  /* vertical rhythm (new token, 3:5 ratio) */
+  --spacing-section:  4rem;    /* section separation */
+
+  /* === TYPOGRAPHY === */
   --font-headline: var(--font-newsreader), serif;
-  --font-body: var(--font-jakarta), sans-serif;
-  --font-label: var(--font-jakarta), sans-serif;
-
-  /* Border radius — new baseline for interactive elements */
-  --radius-sm: 0.75rem;
-
-  /* Spacing — organic scale */
-  --spacing-gutter: 1.7rem;
-  --spacing-section: 4rem;
+  --font-body:     var(--font-jakarta), sans-serif;
+  --font-label:    var(--font-jakarta), sans-serif;
 }
 
 body {
