@@ -99,18 +99,18 @@ export function ArticleFeed({ initialArticles }: ArticleFeedProps) {
   return (
     <section aria-label={feedHeading}>
       <div className="px-4 pt-4 pb-2">
-        <h1 className="text-lg font-bold text-zinc-900">{feedHeading}</h1>
-        <p className="text-xs text-zinc-500">Steiermark Aktuell</p>
+        <h1 className="text-lg font-bold text-ink">{feedHeading}</h1>
+        <p className="text-xs text-ink-muted">Steiermark Aktuell</p>
       </div>
 
       {articles.length === 0 && !loading && (
         <div className="px-4 py-12 text-center">
-          <p className="text-zinc-500 mb-4">
+          <p className="text-ink-muted mb-4">
             Noch keine Nachrichten für deine Bezirke.
           </p>
           <button
             onClick={clearSelection}
-            className="text-primary underline text-sm hover:text-secondary"
+            className="text-aged-wood underline text-sm hover:text-aged-wood-soft"
           >
             Alle Nachrichten anzeigen
           </button>
@@ -134,10 +134,13 @@ export function ArticleFeed({ initialArticles }: ArticleFeedProps) {
         ))}
       </div>
 
-      {/* Loading spinner — functional border kept as-is */}
+      {/* Loading spinner — functional circular shape via inline borderRadius */}
       {loading && (
         <div className="flex justify-center py-6" aria-label="Lädt…">
-          <div className="w-6 h-6 border-2 border-zinc-300 border-t-primary rounded-full animate-spin" />
+          <div
+            className="w-6 h-6 border-2 border-slate-dim border-t-ink animate-spin"
+            style={{ borderRadius: '50%' }}
+          />
         </div>
       )}
 
@@ -147,7 +150,7 @@ export function ArticleFeed({ initialArticles }: ArticleFeedProps) {
       )}
 
       {!hasMore && articles.length > 0 && (
-        <p className="text-center text-xs text-zinc-400 py-6">
+        <p className="text-center text-xs text-ink-dim py-6">
           Alle Nachrichten geladen
         </p>
       )}

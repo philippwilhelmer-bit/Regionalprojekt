@@ -27,7 +27,7 @@ export function HeroArticle({ article }: HeroArticleProps) {
           className="absolute inset-0 w-full h-full object-cover img-matte"
         />
       ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary" />
+        <div className="absolute inset-0 bg-gradient-to-br from-ink to-ink-soft" />
       )}
 
       {/* Gradient overlay for text legibility */}
@@ -35,26 +35,26 @@ export function HeroArticle({ article }: HeroArticleProps) {
 
       {/* Content: positioned at bottom */}
       <div className="relative z-10 flex flex-col justify-end min-h-[60vh] p-[var(--spacing-gutter)] pb-8">
-        {/* Topmeldung label — accent gradient pill */}
-        <span className="inline-block self-start mb-2 px-3 py-1 rounded-full font-label font-semibold uppercase text-xs tracking-wider text-white bg-gradient-to-br from-primary to-primary-container">
+        {/* Topmeldung label — ink gradient pill */}
+        <span className="inline-block self-start mb-2 px-3 py-1 rounded-xs font-label font-semibold uppercase text-xs tracking-wider text-parchment bg-gradient-to-br from-ink to-ink-soft">
           Topmeldung
         </span>
 
         {/* Bezirk badge */}
         {firstBezirk && (
-          <span className="inline-block self-start mb-1 px-2 py-0.5 rounded-full font-label font-semibold uppercase text-xs text-primary bg-background">
+          <span className="inline-block self-start mb-1 px-2 py-0.5 rounded-xs font-label font-semibold uppercase text-xs text-parchment bg-ink-soft">
             {firstBezirk.name}
           </span>
         )}
 
         {/* Headline */}
-        <h1 className="font-headline text-white text-2xl md:text-3xl font-semibold leading-tight mb-2">
+        <h1 className="font-headline text-parchment text-2xl md:text-3xl font-semibold leading-tight mb-2">
           {article.title}
         </h1>
 
         {/* Excerpt */}
         {excerpt && (
-          <p className="text-white/80 text-sm line-clamp-2">{excerpt}</p>
+          <p className="text-parchment/80 text-sm line-clamp-2">{excerpt}</p>
         )}
       </div>
     </Link>

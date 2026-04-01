@@ -16,26 +16,26 @@ export function ListItem({ article }: ListItemProps) {
   return (
     <Link
       href={href}
-      className="flex items-start gap-3 py-3 border-b border-surface last:border-b-0 hover:bg-surface/50 transition-colors"
+      className="flex items-start gap-3 py-3 bg-parchment hover:bg-parchment-dim transition-colors"
     >
       <div className="flex-1 min-w-0">
-        <h3 className="font-headline text-sm font-semibold text-zinc-900 leading-snug line-clamp-2">
+        <h3 className="font-headline text-sm font-semibold text-ink leading-snug line-clamp-2">
           {article.title}
         </h3>
         <div className="flex items-center gap-2 mt-1">
           {firstBezirk && (
-            <span className="text-xs font-medium text-primary">
+            <span className="text-xs font-medium text-ink-muted">
               {firstBezirk.name}
             </span>
           )}
-          <time dateTime={publishedAt.toISOString()} className="text-xs text-zinc-400">
+          <time dateTime={publishedAt.toISOString()} className="text-xs text-ink-dim">
             {formatRelativeTime(publishedAt)}
           </time>
         </div>
       </div>
       {/* Small chevron indicator */}
       <svg
-        className="w-4 h-4 text-zinc-300 mt-1 flex-shrink-0"
+        className="w-4 h-4 text-slate-muted mt-1 flex-shrink-0"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"

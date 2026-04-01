@@ -35,40 +35,40 @@ export function EditorialCard({ article, category }: EditorialCardProps) {
         </Link>
       ) : (
         <Link href={href}>
-          <div className="w-full aspect-video bg-gradient-to-br from-primary to-secondary" />
+          <div className="w-full aspect-video bg-gradient-to-br from-ink to-ink-soft" />
         </Link>
       )}
 
       {/* Card body */}
       <div className="p-4">
         {/* Category label — uppercase Jakarta Sans */}
-        <span className="font-label font-semibold uppercase tracking-wider text-xs text-primary">
+        <span className="font-label font-semibold uppercase tracking-wider text-xs text-ink-muted">
           {categoryLabel}
         </span>
 
         {/* Headline — Newsreader serif */}
         <Link href={href}>
-          <h2 className="font-headline text-xl font-semibold text-zinc-900 leading-snug mt-2 mb-2">
+          <h2 className="font-headline text-xl font-semibold text-ink leading-snug mt-2 mb-2">
             {article.title}
           </h2>
         </Link>
 
         {/* Summary text */}
         {summary && (
-          <p className="text-sm text-zinc-600 leading-relaxed mb-3 line-clamp-3">
+          <p className="text-sm text-ink-muted leading-relaxed mb-3 line-clamp-3">
             {summary}
           </p>
         )}
 
         {/* Footer: timestamp + Read More link */}
         <div className="flex items-center justify-between">
-          <time dateTime={publishedAt.toISOString()} className="text-xs text-zinc-400">
+          <time dateTime={publishedAt.toISOString()} className="text-xs text-ink-dim">
             {formatRelativeTime(publishedAt)}
           </time>
 
           <Link
             href={href}
-            className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-secondary transition-colors"
+            className="inline-flex items-center gap-1 text-sm font-medium text-aged-wood hover:text-aged-wood-soft transition-colors"
           >
             Weiterlesen
             <svg
