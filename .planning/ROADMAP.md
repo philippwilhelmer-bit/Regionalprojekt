@@ -112,7 +112,10 @@ Plans:
   3. The bottom nav renders without visual defects on iOS Safari — the blur effect is visible and the element is not invisible
   4. A dark editorial footer appears at the bottom of all public pages with Wurzelwelt branding, navigation columns, and Impressum/Kontakt links
   5. On mobile, the header shows a hamburger menu and left-aligned serif "Wurzelwelt"; on wider screens it shows Archive, Forest, Guide, Library navigation links
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 34-01-PLAN.md — Glassmorphic bottom nav with Archivist icons and filled/outlined states
+- [ ] 34-02-PLAN.md — Dark editorial footer and responsive header with hamburger/desktop nav
 
 ### Phase 35: Homepage Feature Components
 **Goal**: The homepage presents the Archivist's three new editorial features — live Bezirk weather, the Frag den Wurzelmann region selector, and the Das Grüne der Woche themed section — alongside an updated Topmeldung hero and restyled Wurzel greeting card
@@ -157,7 +160,7 @@ Plans:
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
 | 33. Color Token Foundation | v3.0 | Complete    | 2026-04-01 | 2026-04-01 |
-| 34. Shell Components | v3.0 | 0/TBD | Not started | - |
+| 34. Shell Components | v3.0 | 0/2 | Not started | - |
 | 35. Homepage Feature Components | v3.0 | 0/TBD | Not started | - |
 | 36. Article Detail Redesign | v3.0 | 0/TBD | Not started | - |
 | 37. Search and CMS Refresh | v3.0 | 0/TBD | Not started | - |
