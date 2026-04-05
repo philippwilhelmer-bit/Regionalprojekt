@@ -90,7 +90,7 @@ Full details: `.planning/milestones/v3.0-ROADMAP.md`
 
 </details>
 
-### 🚧 v3.1 Basemap Article Images (In Progress)
+### v3.1 Basemap Article Images (In Progress)
 
 **Milestone Goal:** Replace gradient fallbacks with auto-generated basemap.at map images for article headers, using location extraction from article text.
 
@@ -112,10 +112,13 @@ Full details: `.planning/milestones/v3.0-ROADMAP.md`
 **Success Criteria** (what must be TRUE):
   1. Given a lat/lon coordinate, the system fetches a 3x3 tile grid from basemap.at and composites it into a 1200x630px JPEG with "© basemap.at" text overlay
   2. The generated image is stored in Vercel Blob and its URL is written to Article.imageUrl with Article.imageCredit set to "© basemap.at"
-  3. Zoom level is auto-selected based on result type (city→12, town→13, village→14, street→15) and map layer is selected by article topic keywords (greyscale default, terrain for nature)
+  3. Zoom level is auto-selected based on result type (city->12, town->13, village->14, street->15) and map layer is selected by article topic keywords (greyscale default, terrain for nature)
   4. When tile fetching, compositing, or Blob upload throws any error, the article publishes normally with imageUrl null and the existing gradient fallback renders unchanged
   5. A Vercel deployment smoke test confirms the sharp linux-x64 binary loads and produces a valid image for Graz coordinates (47.07N, 15.43E)
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 40-01-PLAN.md — Dependencies, sharp smoke test, mapgen skeleton with pure functions and tests
+- [ ] 40-02-PLAN.md — Full tile pipeline: fetching with retry, stitching, attribution, Blob upload, graceful fallback
 
 ### Phase 41: Location Intelligence and Full Pipeline
 **Goal**: Newly ingested articles automatically receive map images based on location extracted from their text, with Nominatim results cached in Postgres to prevent rate-limit bans
@@ -147,6 +150,6 @@ Full details: `.planning/milestones/v3.0-ROADMAP.md`
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
 | 33-39 | v3.0 | 12/12 + 2 quick | Complete | 2026-04-05 |
-| 40. Tile Pipeline Infrastructure | v3.1 | 0/TBD | Not started | - |
+| 40. Tile Pipeline Infrastructure | v3.1 | 0/2 | Not started | - |
 | 41. Location Intelligence and Full Pipeline | v3.1 | 0/TBD | Not started | - |
 | 42. On-Demand Route, CMS Picker, and Backfill | v3.1 | 0/TBD | Not started | - |
