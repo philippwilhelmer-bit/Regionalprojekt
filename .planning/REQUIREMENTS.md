@@ -59,26 +59,26 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MAP-01 | — | Pending |
-| MAP-02 | — | Pending |
-| MAP-03 | — | Pending |
-| MAP-04 | — | Pending |
-| MAP-05 | — | Pending |
-| MAP-06 | — | Pending |
-| MAP-07 | — | Pending |
-| MAP-08 | — | Pending |
-| INTG-01 | — | Pending |
-| INTG-02 | — | Pending |
-| INTG-03 | — | Pending |
-| INTG-04 | — | Pending |
-| CMS-01 | — | Pending |
-| CMS-02 | — | Pending |
+| MAP-01 | Phase 41 | Pending |
+| MAP-02 | Phase 41 | Pending |
+| MAP-03 | Phase 40 | Pending |
+| MAP-04 | Phase 40 | Pending |
+| MAP-05 | Phase 40 | Pending |
+| MAP-06 | Phase 40 | Pending |
+| MAP-07 | Phase 40 | Pending |
+| MAP-08 | Phase 40 | Pending |
+| INTG-01 | Phase 41 | Pending |
+| INTG-02 | Phase 40 | Pending |
+| INTG-03 | Phase 42 | Pending |
+| INTG-04 | Phase 42 | Pending |
+| CMS-01 | Phase 42 | Pending |
+| CMS-02 | Phase 41 | Pending |
 
 **Coverage:**
 - v3.1 requirements: 14 total
-- Mapped to phases: 0
-- Unmapped: 14 ⚠️
+- Mapped to phases: 14
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-05*
-*Last updated: 2026-04-05 after initial definition*
+*Last updated: 2026-04-05 after roadmap creation*

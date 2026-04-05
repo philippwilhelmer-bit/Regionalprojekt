@@ -7,6 +7,7 @@
 - ✅ **v1.2 Test Deployment** — Phases 21-25 (shipped 2026-03-28)
 - ✅ **v2.0 Wurzelwelt Rebrand** — Phases 26-32 (shipped 2026-03-30)
 - ✅ **v3.0 The Modern Archivist** — Phases 33-39 (shipped 2026-04-05)
+- 🚧 **v3.1 Basemap Article Images** — Phases 40-42 (in progress)
 
 ## Phases
 
@@ -89,6 +90,54 @@ Full details: `.planning/milestones/v3.0-ROADMAP.md`
 
 </details>
 
+### 🚧 v3.1 Basemap Article Images (In Progress)
+
+**Milestone Goal:** Replace gradient fallbacks with auto-generated basemap.at map images for article headers, using location extraction from article text.
+
+#### Phase 40: Tile Pipeline Infrastructure
+- [ ] **Phase 40: Tile Pipeline Infrastructure** - sharp pin, Blob storage, tile fetch, stitching, attribution, graceful fallback, pipeline isolation
+
+#### Phase 41: Location Intelligence and Full Pipeline
+- [ ] **Phase 41: Location Intelligence and Full Pipeline** - Regex and LLM location extraction, Nominatim geocoding with Postgres cache, zoom/layer selection, end-to-end cron integration
+
+#### Phase 42: On-Demand Route, CMS Picker, and Backfill
+- [ ] **Phase 42: On-Demand Route, CMS Picker, and Backfill** - API route, CMS map picker tab, bulk backfill action
+
+## Phase Details
+
+### Phase 40: Tile Pipeline Infrastructure
+**Goal**: Map images can be generated for any lat/lon coordinate, stored in Vercel Blob, and written to Article.imageUrl — with attribution on every image and pipeline failures never blocking article publication
+**Depends on**: Phase 39 (v3.0 complete)
+**Requirements**: MAP-03, MAP-04, MAP-05, MAP-06, MAP-07, MAP-08, INTG-02
+**Success Criteria** (what must be TRUE):
+  1. Given a lat/lon coordinate, the system fetches a 3x3 tile grid from basemap.at and composites it into a 1200x630px JPEG with "© basemap.at" text overlay
+  2. The generated image is stored in Vercel Blob and its URL is written to Article.imageUrl with Article.imageCredit set to "© basemap.at"
+  3. Zoom level is auto-selected based on result type (city→12, town→13, village→14, street→15) and map layer is selected by article topic keywords (greyscale default, terrain for nature)
+  4. When tile fetching, compositing, or Blob upload throws any error, the article publishes normally with imageUrl null and the existing gradient fallback renders unchanged
+  5. A Vercel deployment smoke test confirms the sharp linux-x64 binary loads and produces a valid image for Graz coordinates (47.07N, 15.43E)
+**Plans**: TBD
+
+### Phase 41: Location Intelligence and Full Pipeline
+**Goal**: Newly ingested articles automatically receive map images based on location extracted from their text, with Nominatim results cached in Postgres to prevent rate-limit bans
+**Depends on**: Phase 40
+**Requirements**: MAP-01, MAP-02, CMS-02, INTG-01
+**Success Criteria** (what must be TRUE):
+  1. After cron ingestion completes, articles containing recognizable Austrian place names (Bezirk names or Steiermark city list) have imageUrl populated with a map image
+  2. Each unique normalized place name is geocoded via Nominatim at most once — subsequent articles with the same location read from the Postgres cache with no external API call
+  3. When regex finds no location and the article has meaningful geographic content, the LLM fallback extracts a place name and the pipeline proceeds to geocoding
+  4. When no location can be extracted by either method, the article publishes with imageUrl null — no error is thrown and no article status is affected
+**Plans**: TBD
+
+### Phase 42: On-Demand Route, CMS Picker, and Backfill
+**Goal**: Editors can manually generate or replace map images for any article, and existing articles without images can be backfilled in bulk
+**Depends on**: Phase 41
+**Requirements**: INTG-03, INTG-04, CMS-01
+**Success Criteria** (what must be TRUE):
+  1. Calling GET /api/map-image/[articleId] generates a map image for the article (or returns the existing URL if already set) and writes the result to Article.imageUrl
+  2. In the article edit page, the "Karte" tab shows the current map image preview and a "Karte generieren" button — clicking it generates a new image and saves it without leaving the edit page
+  3. The CMS backfill action processes all articles with imageUrl null in batches of 10 with 1100ms delay between geocoding calls, and progress is visible in console logs
+**Plans**: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -98,3 +147,6 @@ Full details: `.planning/milestones/v3.0-ROADMAP.md`
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
 | 33-39 | v3.0 | 12/12 + 2 quick | Complete | 2026-04-05 |
+| 40. Tile Pipeline Infrastructure | v3.1 | 0/TBD | Not started | - |
+| 41. Location Intelligence and Full Pipeline | v3.1 | 0/TBD | Not started | - |
+| 42. On-Demand Route, CMS Picker, and Backfill | v3.1 | 0/TBD | Not started | - |
