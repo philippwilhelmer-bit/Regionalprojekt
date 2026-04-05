@@ -21,6 +21,7 @@ key_files:
     - src/lib/admin/articles-actions.ts
     - src/app/(admin)/admin/articles/[id]/edit/page.tsx
     - src/test/articles-phase18.test.ts
+requirements-completed: [HOME-05]
 decisions:
   - "Used prisma db push instead of migrate dev due to historical migration drift (20260321_ingestion name mismatch); created migration file manually for history"
   - "theme field is String? (nullable) on Article model — empty string in CMS form maps to null in DB"

@@ -33,6 +33,7 @@ key_files:
     - src/app/(admin)/admin/ai-config/SourceOverrideForm.tsx
     - src/components/admin/UnsplashPicker.tsx
     - src/components/admin/UnsplashPickerNew.tsx
+requirements-completed: [CMS-01]
 decisions:
   - "Non-semantic badges (source type, category, keywords, bezirk preview) migrate to bg-surface text-slate — no color meaning"
   - "Semantic action colors preserved: PUBLISHED/REVIEW/REJECTED status, OK/DEGRADED/DOWN health, Approve/Reject buttons, Loeschen button"

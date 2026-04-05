@@ -5,7 +5,7 @@ milestone_name: The Modern Archivist
 status: completed
 stopped_at: Completed 37-01-PLAN.md
 last_updated: "2026-04-01T22:08:38.440Z"
-last_activity: 2026-04-01 — Plan 37-02 complete — theme persistence tests (CMS-02) + SRCH-01 token audit sealed
+last_activity: 2026-04-05 — Quick task 001 — frontmatter gap closure (TOKN-02, HOME-05, CMS-01)
 progress:
   total_phases: 5
   completed_phases: 5
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 
 ## Current Position
 
-Phase: 37 of 37 (Search & CMS Refresh)
-Plan: 02 complete — Phase 37 complete
-Status: Phase 37 complete — v3.0 milestone complete
-Last activity: 2026-04-01 — Plan 37-02 complete — theme persistence tests (CMS-02) + SRCH-01 token audit sealed
+Phase: 38 of 39 (Documentation & Frontmatter Fixes — complete via quick task)
+Plan: Phase 38 closed via quick task 001
+Status: Phase 38 complete — Phase 39 remaining
+Last activity: 2026-04-05 — Quick task 001 — frontmatter gap closure (TOKN-02, HOME-05, CMS-01)
 
 Progress: [██████████] 100%
 
@@ -87,6 +87,12 @@ Recent decisions relevant to v3.0:
 ### Pending Todos
 
 None.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Directory |
+|---|-------------|------|-----------|
+| 001 | Frontmatter gap closure (TOKN-02, HOME-05, CMS-01) | 2026-04-05 | [001-frontmatter-gap-closure](./quick/001-frontmatter-gap-closure/) |
 
 ### Blockers/Concerns
 

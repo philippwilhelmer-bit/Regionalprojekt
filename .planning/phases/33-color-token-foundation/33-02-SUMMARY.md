@@ -36,6 +36,8 @@ key-files:
     - src/components/reader/BezirkModal.tsx
     - src/components/reader/CookieBanner.tsx
 
+requirements-completed: [TOKN-02]
+
 key-decisions:
   - "BEZIRK_COLORS and BEZIRK_BADGE_COLORS maps deleted — single unified ink gradient for all cards"
   - "ListItem border-b removed — tonal bg shift (bg-parchment hover:bg-parchment-dim) creates separation"
