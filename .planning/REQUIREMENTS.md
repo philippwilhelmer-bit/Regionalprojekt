@@ -81,34 +81,35 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | TOKN-01 | Phase 33 | Complete (Plan 33-01) |
-| TOKN-02 | Phase 33 | Complete |
+| TOKN-02 | Phase 33, 38 | Pending (frontmatter fix) |
 | TOKN-03 | Phase 33 | Complete |
 | TOKN-04 | Phase 33 | Complete (Plan 33-01) |
 | TOKN-05 | Phase 33 | Complete (Plan 33-01) |
 | TOKN-06 | Phase 33 | Complete (Plan 33-01) |
-| SHEL-01 | Phase 34 | Complete |
-| SHEL-02 | Phase 34 | Complete |
-| SHEL-03 | Phase 34 | Complete |
+| SHEL-01 | Phase 34, 39 | Pending (polish) |
+| SHEL-02 | Phase 34, 39 | Pending (polish) |
+| SHEL-03 | Phase 34, 39 | Pending (polish) |
 | SHEL-04 | Phase 34 | Complete |
 | SHEL-05 | Phase 34 | Complete |
 | HOME-01 | Phase 35 | Complete |
 | HOME-02 | Phase 35 | Complete |
 | HOME-03 | Phase 35 | Complete |
 | HOME-04 | Phase 35 | Complete |
-| HOME-05 | Phase 35 | Complete |
+| HOME-05 | Phase 35, 38 | Pending (frontmatter fix) |
 | HOME-06 | Phase 35 | Complete |
 | ARTC-01 | Phase 36 | Complete |
 | ARTC-02 | Phase 36 | Complete |
 | ARTC-03 | Phase 36 | Complete |
 | ARTC-04 | Phase 36 | Complete |
 | SRCH-01 | Phase 37 | Complete |
-| CMS-01 | Phase 37 | Complete |
+| CMS-01 | Phase 37, 38 | Pending (frontmatter fix) |
 | CMS-02 | Phase 37 | Complete |
 
 **Coverage:**
 - v3.0 requirements: 24 total
 - Mapped to phases: 24
 - Unmapped: 0 ✓
+- Pending (gap closure): 6 (TOKN-02, HOME-05, CMS-01, SHEL-01, SHEL-02, SHEL-03)
 
 ---
 *Requirements defined: 2026-04-01*

@@ -6,7 +6,7 @@
 - ✅ **v1.1 Design Overhaul** — Phases 16-20 (shipped 2026-03-26)
 - ✅ **v1.2 Test Deployment** — Phases 21-25 (shipped 2026-03-28)
 - ✅ **v2.0 Wurzelwelt Rebrand** — Phases 26-32 (shipped 2026-03-30)
-- 🚧 **v3.0 The Modern Archivist** — Phases 33-37 (in progress)
+- 🚧 **v3.0 The Modern Archivist** — Phases 33-39 (in progress)
 
 ## Phases
 
@@ -83,6 +83,8 @@ Full details: `.planning/milestones/v2.0-ROADMAP.md`
 - [x] **Phase 35: Homepage Feature Components** - Weather widget, Frag den Wurzelmann region selector, Das Grune der Woche section, Topmeldung CTA, tonal palette update, MascotGreeting restyle (completed 2026-04-01)
 - [x] **Phase 36: Article Detail Redesign** - Drop cap, blockquote styling, sidebar metadata, Archival Header pattern (completed 2026-04-01)
 - [x] **Phase 37: Search and CMS Refresh** - Search page Archivist token treatment, CMS admin token swap, theme tag management (completed 2026-04-01)
+- [ ] **Phase 38: Documentation & Frontmatter Fixes** - Fix missing SUMMARY frontmatter entries for TOKN-02, HOME-05, CMS-01 (gap closure)
+- [ ] **Phase 39: Shell Polish** - Nav active state on /artikel/* routes, Kontakt link distinct destination (gap closure)
 
 ## Phase Details
 
@@ -160,6 +162,25 @@ Plans:
 Plans:
 - [ ] 37-01-PLAN.md — CMS admin full Archivist token migration (15 files) + theme tag verify
 - [ ] 37-02-PLAN.md — Search page audit + theme tag persistence tests
+
+### Phase 38: Documentation & Frontmatter Fixes
+**Goal**: All phase SUMMARY frontmatters accurately list every requirement they satisfied — closing the 3 documentation gaps identified by milestone audit
+**Depends on**: Phase 37
+**Requirements**: TOKN-02, HOME-05, CMS-01 (frontmatter traceability only)
+**Gap Closure:** Closes requirement documentation gaps from v3.0 audit
+**Success Criteria** (what must be TRUE):
+  1. TOKN-02 appears in SUMMARY frontmatter `requirements-completed` for Phase 33 plans (33-02 or 33-03)
+  2. HOME-05 appears in SUMMARY frontmatter `requirements-completed` for Phase 35 plans
+  3. CMS-01 appears in SUMMARY frontmatter `requirements-completed` for Phase 37 plans
+
+### Phase 39: Shell Polish
+**Goal**: Navigation active state and footer links work correctly on all routes — closing the 2 integration gaps from milestone audit
+**Depends on**: Phase 34
+**Requirements**: SHEL-01, SHEL-02, SHEL-03 (polish)
+**Gap Closure:** Closes integration gaps GAP-01 and GAP-02 from v3.0 audit
+**Success Criteria** (what must be TRUE):
+  1. WurzelNavBar highlights the correct tab when on `/artikel/*` routes (extends active state logic beyond exact `/` match)
+  2. Footer Kontakt link points to a distinct `/kontakt` route or is clearly differentiated from Impressum
 
 ## Progress
 
