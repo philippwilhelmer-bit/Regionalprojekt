@@ -2,7 +2,7 @@
 
 ## What This Is
 
-An autonomous AI-powered regional news platform covering all 13 Bezirke of Steiermark, Austria, branded as "Wurzelwelt" with a "Modern Mountain Folklore" design identity. The platform ingests content from OTS.at and RSS feeds, generates localized German-language articles via AI, and publishes them without manual intervention. Readers personalize their feed by selecting their Bezirk ("Mein Bezirk") and discover content through the Wurzelwelt editorial homepage — featuring the Wurzelmann mascot, hero articles with gradient overlays, tonal section layering, and a 4-tab bottom navigation. Editors curate content through a fully branded CMS. The architecture is config-driven — deploying for a new Bundesland requires only changing `bundesland.config.ts` and re-seeding.
+An autonomous AI-powered regional news platform covering all 13 Bezirke of Steiermark, Austria, branded as "Wurzelwelt" with "The Modern Archivist" design identity — a high-end editorial print-magazine aesthetic. The platform ingests content from OTS.at and RSS feeds, generates localized German-language articles via AI, and publishes them without manual intervention. Readers personalize their feed by selecting their Bezirk ("Mein Bezirk") and discover content through the Wurzelwelt editorial homepage — featuring a weather widget, Frag den Wurzelmann region selector, Das Grüne der Woche themed section, hero articles with CTA overlays, and glassmorphic bottom navigation. Article pages use archival headers with overlapping titles, drop caps, and sticky metadata sidebars. Editors curate content through a fully branded CMS with Archivist tokens. The architecture is config-driven — deploying for a new Bundesland requires only changing `bundesland.config.ts` and re-seeding.
 
 ## Core Value
 
@@ -75,21 +75,28 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 - ✓ Article detail restyled with Wurzelwelt tokens — v2.0
 - ✓ CMS admin restyled with Wurzelwelt brand — v2.0
 
-## Current Milestone: v3.0 The Modern Archivist
-
-**Goal:** Transform the visual identity from "Modern Mountain Folklore" to "The Modern Archivist" — a high-end editorial print-magazine aesthetic with overhauled color system, tonal layering, glassmorphism, and new components (weather, region selector card, themed sections, editorial footer).
-
-**Target features:**
-- Complete color system overhaul (MD3-style tokens: Ink/Parchment/Slate/Aged Wood)
-- "No-Line Rule" design philosophy (tonal layering + negative space, no borders)
-- Glassmorphic bottom nav with top-border active state
-- Editorial homepage: Topmeldung with CTA, "Frag den Wurzelmann" region selector card, weather widget (Open-Meteo), "Das Grüne der Woche" section
-- Article detail: sidebar metadata, drop cap, blockquote styling
-- Dark editorial footer with navigation columns
-- Search/discovery page redesign
-- CMS admin visual refresh
+- ✓ MD3-style Archivist color token system (Ink/Parchment/Slate/Aged Wood) with ~30 semantic tokens — v3.0
+- ✓ No-Line Rule: tonal background shifts and negative space replace all visible borders — v3.0
+- ✓ Glassmorphic bottom nav with top-border active state and filled/outlined icon states — v3.0
+- ✓ Dark editorial footer with navigation columns and Impressum/Kontakt links — v3.0
+- ✓ Responsive header with hamburger menu (mobile) and desktop nav with Bezirk selector — v3.0
+- ✓ Topmeldung hero with "VOLLSTÄNDIGEN ARTIKEL LESEN" CTA button — v3.0
+- ✓ MascotGreeting restyled as tonal "Wurzel sagt..." box — v3.0
+- ✓ Weather widget with Open-Meteo API and per-Bezirk server-side cache — v3.0
+- ✓ "Frag den Wurzelmann" region selector card on homepage — v3.0
+- ✓ "Das Grüne der Woche" themed section with Article.theme field and CMS tag management — v3.0
+- ✓ Homepage tonal alternation per Archivist palette — v3.0
+- ✓ Article archival header with overlapping title on hero image — v3.0
+- ✓ Float-based drop cap on article first paragraph — v3.0
+- ✓ Blockquote styling with serif italic typography and tonal dividers — v3.0
+- ✓ Desktop sticky sidebar with metadata (author, reading time, share) — v3.0
+- ✓ Search page restyled with Archivist tokens — v3.0
+- ✓ CMS admin fully migrated to Archivist tokens (20 files) — v3.0
+- ✓ CMS theme tag field for "Grüne der Woche" article assignment — v3.0
 
 ### Active
+
+(None — planning next milestone)
 
 ### Out of Scope
 
@@ -98,20 +105,22 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 - Paywalls — not in current scope
 - Multi-tenant single app — config-driven deployment per Bundesland is simpler and sufficient
 - Offline mode — real-time news is core value
-- Central Wurzelmann action button in bottom nav — functionality still in design, deferred past v2.0
-- Animation/motion design — kept scope to visual tokens and components in v2.0
+- Central Wurzelmann action button in bottom nav — functionality still in design, deferred past v3.0
+- Animation/motion design — kept scope to visual tokens and components
+- Dark mode — not part of Archivist identity; warm parchment is the brand
+- SVG choropleth map for region selector — maintenance burden, accessibility issues, low mobile usability
 
 ## Context
 
-Shipped v2.0 Wurzelwelt Rebrand on 2026-03-30 (3 days, 7 phases, 11 plans).
+Shipped v3.0 The Modern Archivist on 2026-04-05 (5 days, 7 phases, 12 plans + 2 quick tasks).
 Live at: https://regionalprojekt.vercel.app (Vercel Hobby + Neon PostgreSQL).
 Tech stack: Next.js 15, Prisma v6, PostgreSQL (Neon), Anthropic Claude API, Tailwind CSS v4, Vitest with pgLite.
 Architecture: Config-driven Bundesland deployment, adapter-pattern ingestion, Server Component CMS with HMAC auth.
-Reader frontend: "Wurzelwelt" brand identity with Wurzelmann mascot, "Modern Mountain Folklore" design system — forest green/moss/terracotta/warm cream palette, Plus Jakarta Sans + Newsreader typography, Material Symbols Rounded, tonal section layering, organic spacing.
+Reader frontend: "Wurzelwelt" brand with "The Modern Archivist" design identity — Ink/Parchment/Slate/Aged Wood MD3 token system, glassmorphic nav, editorial footer, weather widget, archival article headers, drop caps, sticky sidebar. Plus Jakarta Sans + Newsreader typography, Material Symbols Rounded.
 Test mode: Single env var (NEXT_PUBLIC_IS_TEST_SITE) gates banners, SEO suppression, and AdSense suppression.
 Cron: Vercel cron → /api/cron route (1/day on Hobby plan), secured with CRON_SECRET.
-Codebase: 13,341 LOC TypeScript across 4 milestones.
-Known items: Impressum fields need real publisher data, OTS source disabled (Cloudflare-blocked, using ORF RSS only), 12 pre-existing test failures (DB hooks + bezirke data), 9 non-blocking tech debt items from v2.0 audit.
+Codebase: 14,337 LOC TypeScript across 5 milestones.
+Known items: Impressum fields need real publisher data, OTS source disabled (Cloudflare-blocked, using ORF RSS only), Article.theme field added (Prisma db push, no formal migration file).
 
 ## Key Decisions
 
@@ -138,6 +147,14 @@ Known items: Impressum fields need real publisher data, OTS source disabled (Clo
 | Tonal layering over borders | Borderless design with bg shifts creates warmer, editorial feel | ✓ Good — consistent across all pages |
 | Terracotta accent for active nav state | Distinct from primary green, creates visual hierarchy | ✓ Good — visually clear active indication |
 | MascotGreeting as client component | Time-of-day detection requires getHours(), cannot SSR | ✓ Good — acceptable trade-off for dynamic greeting |
+| MD3-style token system (Ink/Parchment/Slate/Aged Wood) | Cohesive editorial identity, semantic naming | ✓ Good — consistent across all surfaces |
+| No-Line Rule (tonal shifts, no borders) | Premium editorial feel, reduces visual clutter | ✓ Good — clean, print-magazine aesthetic |
+| Float-based drop cap (not initial-letter) | Firefox doesn't support initial-letter | ✓ Good — cross-browser compatible |
+| Open-Meteo for weather (not geolocation) | GDPR friction with geolocation API | ✓ Good — uses Mein Bezirk localStorage selection |
+| unstable_cache per bezirk for weather | Prevents cross-bezirk cache collision | ✓ Good — 30-min server-side cache per region |
+| Prisma db push for Article.theme | Migration drift made formal migration impractical | ⚠️ Revisit — no migration file exists |
+| Bezirk selector in hamburger drawer + desktop nav | Cleaner header, still accessible | ✓ Good — desktop badge added in v3.0 gap closure |
+| color-mix() for glassmorphism tokens | Native CSS, no JS runtime | ✓ Good — Tailwind v4 auto-prefixes -webkit |
 
 ## Constraints
 
@@ -148,4 +165,4 @@ Known items: Impressum fields need real publisher data, OTS source disabled (Clo
 - **Austrian legal**: Impressum must satisfy MedienG/ECG; AI disclosure required on generated articles
 
 ---
-*Last updated: 2026-03-30 after v2.0 milestone*
+*Last updated: 2026-04-05 after v3.0 milestone*

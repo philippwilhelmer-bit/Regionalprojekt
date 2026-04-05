@@ -99,6 +99,14 @@ None - no external service configuration required.
 - Phase 34 remaining plans can build on established hamburger/desktop nav pattern
 - Bezirk selector now exclusively in drawer — Phase 35 Bezirk features should note this UX change
 
+## Self-Check: PASSED
+
+- Footer.tsx: FOUND
+- WurzelAppBar.tsx: FOUND
+- SUMMARY.md: FOUND
+- Commit 6d83d6e: FOUND
+- Commit ec6631d: FOUND
+
 ---
 *Phase: 34-shell-components*
 *Completed: 2026-04-01*

@@ -1,5 +1,24 @@
 # Milestones
 
+## v3.0 The Modern Archivist (Shipped: 2026-04-05)
+
+**Phases completed:** 7 phases, 12 plans + 2 quick tasks
+**Timeline:** 5 days (2026-04-01 → 2026-04-05)
+**Codebase:** 55 files changed, +3,515 / -308 lines (14,337 LOC TypeScript)
+**Git range:** feat(33-01) → fix(shell)
+
+**Delivered:** Complete visual identity transformation from "Modern Mountain Folklore" to "The Modern Archivist" — a high-end editorial print-magazine aesthetic with MD3-style color system, glassmorphic navigation, editorial homepage features, premium article detail, and consistent Archivist treatment across all surfaces.
+
+**Key accomplishments:**
+1. MD3-style Archivist token system (Ink/Parchment/Slate/Aged Wood) with ~30 semantic tokens, glassmorphism via color-mix(), and ink-tinted shadows across globals.css
+2. Glassmorphic bottom nav with top-border active state, dark editorial footer, responsive hamburger header with desktop Bezirk selector
+3. Homepage editorial features: weather widget (Open-Meteo API), Das Grüne der Woche themed section, Frag den Wurzelmann region card, MascotGreeting tonal restyle, Topmeldung CTA
+4. Premium article detail: archival header with overlapping title, float-based drop cap, serif blockquote styling, responsive sticky sidebar with metadata
+5. Full CMS admin Archivist token migration across 20 files + theme tag persistence tests
+6. Gap closure: frontmatter traceability fixes, nav active state on /artikel/* routes, Kontakt link, desktop Bezirk selector
+
+---
+
 ## v2.0 Wurzelwelt Rebrand (Shipped: 2026-03-30)
 
 **Phases completed:** 7 phases, 11 plans

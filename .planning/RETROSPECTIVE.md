@@ -2,6 +2,53 @@
 
 *A living document updated after each milestone. Lessons feed forward into future planning.*
 
+## Milestone: v3.0 — The Modern Archivist
+
+**Shipped:** 2026-04-05
+**Phases:** 7 | **Plans:** 12 + 2 quick tasks | **Timeline:** 5 days
+
+### What Was Built
+- MD3-style Archivist token system (Ink/Parchment/Slate/Aged Wood) with ~30 semantic tokens, glassmorphism via color-mix(), ink-tinted shadows
+- Glassmorphic bottom nav with top-border active state, dark editorial footer, responsive hamburger header with desktop Bezirk selector
+- Homepage features: weather widget (Open-Meteo), Das Grüne der Woche themed section, Frag den Wurzelmann card, MascotGreeting tonal restyle, Topmeldung CTA
+- Article detail: archival header with overlapping title, float-based drop cap, serif blockquote styling, responsive sticky sidebar
+- Full CMS admin and search page migrated to Archivist tokens (20 admin files)
+- Gap closure: frontmatter traceability, nav active state, Kontakt link, desktop Bezirk selector
+
+### What Worked
+- Foundation-first sequencing (Phase 33 tokens → 34 shell → 35-37 surfaces) proven for third consecutive redesign milestone — zero rework
+- Quick tasks for gap closure (Phases 38-39) were faster than full plan/execute cycles for small fixes
+- Two-phase token rename strategy (add new alongside old → migrate → remove old) prevented silent breakage during migration
+- Research phases identified cross-browser issues early (initial-letter Firefox gap, backdrop-filter Safari quirks)
+- Milestone audit caught 5 gaps (3 frontmatter, 2 integration) that quick tasks resolved cleanly
+
+### What Was Inefficient
+- Bezirk selector visibility regression on desktop — moved to hamburger drawer in Phase 34 without preserving desktop access, caught only at milestone completion
+- ROADMAP.md plan checkboxes out of sync (Phases 34, 35, 37 show `[ ]` despite SUMMARY.md existing) — same cosmetic issue as v2.0
+- Prisma db push used instead of formal migration for Article.theme — creates migration drift risk
+- Phase 38/39 directories created but empty (no PLAN/SUMMARY files) — quick task artifacts live in .planning/quick/ instead
+
+### Patterns Established
+- `color-mix()` in @theme for glassmorphism surfaces — native CSS, no JS runtime, auto-prefixed by Tailwind v4
+- Float-based `::first-letter` drop cap pattern — cross-browser fallback for `initial-letter`
+- `unstable_cache` per bezirk slug for weather — prevents cross-key cache collision in Next.js
+- Archival Header: negative margin title overlay on hero image — creates print-magazine feel
+- Tonal three-zone homepage: parchment sections, surface sections, ink accent zone
+
+### Key Lessons
+1. Desktop UX must be verified alongside mobile — hamburger-only Bezirk selector was a regression caught late
+2. Quick tasks are the right tool for gap-closure fixes < 3 tasks — faster than full plan/execute cycle
+3. Three consecutive design milestones confirm: foundation-first phase ordering eliminates rework
+4. Prisma db push is expedient but creates migration drift — formal migration should be preferred for schema changes
+5. Token migration at scale (20+ files) benefits from systematic file-by-file approach with build verification after each batch
+
+### Cost Observations
+- Model mix: balanced profile (opus orchestration, sonnet execution)
+- Sessions: ~5-6 across 5 days
+- Notable: Phases 33-37 all completed on 2026-04-01 (single day for core work), gap closure on 2026-04-05
+
+---
+
 ## Milestone: v2.0 — Wurzelwelt Rebrand
 
 **Shipped:** 2026-03-30
@@ -189,6 +236,7 @@
 | v1.1 | 2 days | 5 | Pure frontend redesign — no gap-closure needed |
 | v1.2 | 2 days | 5 | Deployment + test mode — 3 gap-closure phases from audit |
 | v2.0 | 3 days | 7 | Full rebrand — 2 gap-closure phases from audit |
+| v3.0 | 5 days | 7 | Archivist identity — 2 quick-task gap-closure phases |
 
 ### Cumulative Quality
 
@@ -198,6 +246,7 @@
 | v1.1 | +8,357 | 67 | Design tokens, editorial components, RSC+client layouts |
 | v1.2 | +4,976 | 79 | Env-var test mode, Vercel+Neon deployment, defense-in-depth AdSense |
 | v2.0 | +6,704 | 129 | Wurzelwelt rebrand, semantic tokens, tonal design, mascot identity |
+| v3.0 | +3,515 | 55 | Archivist identity, MD3 tokens, glassmorphism, weather, drop caps |
 
 ### Top Lessons (Verified Across Milestones)
 
@@ -207,4 +256,6 @@
 4. UAT after final phase catches UX gaps that automated tests miss — back navigation (v1.1), CMS acceptance (v1.0)
 5. Milestone audits catch real gaps — v1.0 spawned 8 gap-closure phases, v1.2 spawned 3, v2.0 spawned 2 — consistently essential
 6. Validate infrastructure decisions with user before planning — v1.2 Railway→Vercel pivot wasted one plan
-7. Design rebrand milestones execute fastest with foundation-first sequencing — verified across v1.1 and v2.0
+7. Design rebrand milestones execute fastest with foundation-first sequencing — verified across v1.1, v2.0, and v3.0
+8. Quick tasks are the right tool for small gap-closure fixes — faster than full plan/execute cycles (v3.0)
+9. Desktop UX must be verified alongside mobile — hamburger-only patterns can regress desktop discoverability (v3.0)
