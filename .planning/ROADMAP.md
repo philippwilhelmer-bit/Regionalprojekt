@@ -84,7 +84,7 @@ Full details: `.planning/milestones/v2.0-ROADMAP.md`
 - [x] **Phase 36: Article Detail Redesign** - Drop cap, blockquote styling, sidebar metadata, Archival Header pattern (completed 2026-04-01)
 - [x] **Phase 37: Search and CMS Refresh** - Search page Archivist token treatment, CMS admin token swap, theme tag management (completed 2026-04-01)
 - [x] **Phase 38: Documentation & Frontmatter Fixes** - Fix missing SUMMARY frontmatter entries for TOKN-02, HOME-05, CMS-01 (gap closure)
-- [ ] **Phase 39: Shell Polish** - Nav active state on /artikel/* routes, Kontakt link distinct destination (gap closure)
+- [x] **Phase 39: Shell Polish** - Nav active state on /artikel/* routes, Kontakt link distinct destination (gap closure)
 
 ## Phase Details
 

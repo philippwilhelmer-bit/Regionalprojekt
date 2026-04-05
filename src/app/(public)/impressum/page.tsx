@@ -113,7 +113,7 @@ export default function ImpressumPage() {
         personenbezogenen Daten erhoben.
       </p>
 
-      <h2>Kontakt Datenschutz</h2>
+      <h2 id="kontakt">Kontakt</h2>
       <p>
         Bei Fragen zum Datenschutz wenden Sie sich an:{' '}
         <a href={`mailto:${config.branding.impressum.datenschutzEmail}`}>{config.branding.impressum.datenschutzEmail}</a>

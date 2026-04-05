@@ -5,7 +5,7 @@ milestone_name: The Modern Archivist
 status: completed
 stopped_at: Completed 37-01-PLAN.md
 last_updated: "2026-04-01T22:08:38.440Z"
-last_activity: 2026-04-05 — Quick task 001 — frontmatter gap closure (TOKN-02, HOME-05, CMS-01)
+last_activity: 2026-04-05 — Quick task 002 — shell polish (nav active state + Kontakt link)
 progress:
   total_phases: 5
   completed_phases: 5
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 
 ## Current Position
 
-Phase: 38 of 39 (Documentation & Frontmatter Fixes — complete via quick task)
-Plan: Phase 38 closed via quick task 001
-Status: Phase 38 complete — Phase 39 remaining
-Last activity: 2026-04-05 — Quick task 001 — frontmatter gap closure (TOKN-02, HOME-05, CMS-01)
+Phase: 39 of 39 (Shell Polish — complete via quick task)
+Plan: Phase 39 closed via quick task 002
+Status: All phases complete — v3.0 milestone ready for completion
+Last activity: 2026-04-05 — Quick task 002 — shell polish (nav active state + Kontakt link)
 
 Progress: [██████████] 100%
 
@@ -93,6 +93,7 @@ None.
 | # | Description | Date | Directory |
 |---|-------------|------|-----------|
 | 001 | Frontmatter gap closure (TOKN-02, HOME-05, CMS-01) | 2026-04-05 | [001-frontmatter-gap-closure](./quick/001-frontmatter-gap-closure/) |
+| 002 | Shell polish (nav active state + Kontakt link) | 2026-04-05 | [002-shell-polish](./quick/002-shell-polish/) |
 
 ### Blockers/Concerns
 

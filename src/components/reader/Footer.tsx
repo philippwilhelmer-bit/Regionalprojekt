@@ -51,7 +51,7 @@ export function Footer() {
             <h3 className="font-label text-xs uppercase tracking-widest text-parchment/60 mb-3">Rechtliches</h3>
             <ul className="space-y-2 text-sm text-parchment/80">
               <li><Link href="/impressum">Impressum</Link></li>
-              <li><Link href="/impressum">Kontakt</Link></li>
+              <li><Link href="/impressum#kontakt">Kontakt</Link></li>
             </ul>
           </div>
         </div>

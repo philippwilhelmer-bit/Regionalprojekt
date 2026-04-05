@@ -34,7 +34,9 @@ export function WurzelNavBar() {
         }
 
         const isActive =
-          item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          item.href === "/"
+            ? pathname === "/" || pathname.startsWith("/artikel")
+            : pathname.startsWith(item.href);
 
         return (
           <Link
