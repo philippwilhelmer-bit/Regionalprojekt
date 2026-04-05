@@ -96,7 +96,18 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 
 ### Active
 
-(None — planning next milestone)
+## Current Milestone: v3.1 Basemap Article Images
+
+**Goal:** Replace gradient fallbacks with auto-generated basemap.at map images for article headers, using location extraction from article text.
+
+**Target features:**
+- Automatic map image generation during content ingestion pipeline
+- On-demand map image API route for articles missing images
+- CMS map image picker alongside existing Unsplash picker
+- Vercel Blob Storage for generated map images
+- Location extraction from article text (regex + LLM fallback)
+- Geocoding via Nominatim (Austria-focused)
+- Tile stitching from basemap.at (CC-BY 4.0, no API key)
 
 ### Out of Scope
 
@@ -165,4 +176,4 @@ Known items: Impressum fields need real publisher data, OTS source disabled (Clo
 - **Austrian legal**: Impressum must satisfy MedienG/ECG; AI disclosure required on generated articles
 
 ---
-*Last updated: 2026-04-05 after v3.0 milestone*
+*Last updated: 2026-04-05 after v3.1 milestone started*

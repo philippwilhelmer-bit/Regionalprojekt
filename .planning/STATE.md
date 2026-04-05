@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v3.0
-milestone_name: The Modern Archivist
-status: shipped
-stopped_at: Milestone v3.0 completed
-last_updated: "2026-04-05T20:00:00.000Z"
-last_activity: 2026-04-05 — v3.0 milestone archived
+milestone: v3.1
+milestone_name: Basemap Article Images
+status: defining_requirements
+stopped_at: Defining requirements for v3.1
+last_updated: "2026-04-05T21:00:00.000Z"
+last_activity: 2026-04-05 — Milestone v3.1 started
 progress:
-  total_phases: 7
-  completed_phases: 7
-  total_plans: 12
-  completed_plans: 12
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -21,12 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-05)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** Planning next milestone
+**Current focus:** Defining requirements for v3.1 Basemap Article Images
 
 ## Current Position
 
-Milestone: v3.0 The Modern Archivist — SHIPPED 2026-04-05
-Status: Milestone complete, awaiting next milestone planning
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-05 — Milestone v3.1 started
 
 ## Performance Metrics
 
@@ -54,5 +56,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-04-05
-Stopped at: Milestone v3.0 completed
+Stopped at: Defining requirements for v3.1
 Resume file: None
