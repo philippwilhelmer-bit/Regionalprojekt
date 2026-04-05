@@ -1,14 +1,86 @@
 # Feature Research
 
-**Domain:** High-end editorial regional news — "The Modern Archivist" design system overhaul (v3.0)
-**Researched:** 2026-03-30
-**Confidence:** MEDIUM — patterns verified against editorial/news design literature, Open-Meteo official docs, MDN/caniuse for CSS features, and direct competitor observation. "Das Grüne der Woche" is a custom Wurzelwelt concept with no direct published analogues.
+**Domain:** Automatic map image generation for regional news articles — basemap.at tile stitching for Wurzelwelt v3.1
+**Researched:** 2026-04-05
+**Confidence:** HIGH for tile mechanics and zoom semantics; MEDIUM for geocoding confidence mapping; LOW for Austrian Nominatim data density in rural Bezirke
 
 ---
 
 ## Scope Note
 
-This research covers ONLY new features for v3.0 "The Modern Archivist." The following already exist and are explicitly out of scope: homepage hero/Topmeldung base component, bottom nav base component, WurzelAppBar, MascotGreeting, Mein Bezirk section, article detail base layout, search/discovery page base, CMS admin base, Bezirk list, localStorage preference system.
+This research covers ONLY new features for v3.1 "Basemap Article Images." The following already exist and are explicitly out of scope: Unsplash picker in CMS, Article.imageUrl / imageCredit fields, gradient fallback in HeroArticle / ArticleCard / EditorialCard / RegionalEditorialCard, OTS image extraction (disabled), RSS adapter. The gradient fallback already works — the goal is to replace it with meaningful location-based map images, not to fix broken behavior.
+
+---
+
+## Domain Context: How Map Images Work in News Platforms
+
+News platforms generate location-based header images by:
+1. **Extracting a location** from the article text (city/town name, address, Bezirk mention)
+2. **Geocoding that location** to lat/lon coordinates
+3. **Fetching map tiles** from a tile server at appropriate zoom and coordinate
+4. **Stitching tiles** into a single rectangular image at the desired output dimensions
+5. **Storing the result** in blob storage and writing the URL back to the Article record
+
+The zoom level controls what geographic scope is visible. Nominatim's zoom levels map directly to XYZ tile zoom levels:
+
+| Nominatim zoom | Map zoom | What's visible |
+|---------------|----------|----------------|
+| 3 | 3 | Country |
+| 5 | 5 | State/Bundesland |
+| 8 | 8 | County/Bezirk |
+| 10 | 10 | City |
+| 12 | 12 | Town / Borough |
+| 13 | 13 | Village / Suburb |
+| 14 | 14 | Neighbourhood |
+| 16 | 16 | Major streets |
+| 18 | 18 | Building-level |
+
+For article header images, the sweet spot is **zoom 12–14** for a named town or village (shows the settlement in full context), and **zoom 10–11** for a Bezirk or city-level result. Zoom ≥15 for header images is too tight — shows only a few streets, loses geographic context entirely.
+
+---
+
+## basemap.at Tile Services
+
+basemap.at is an open-data initiative of Austrian federal and state administrations. All layers are **CC-BY 4.0 Austria** — attribution required, no API key needed.
+
+### Available Layers
+
+| Layer | Identifier | Character | Best Use |
+|-------|-----------|-----------|----------|
+| Standard (color) | `geolandbasemap` | Full-color topographic | Default — most readable for article headers |
+| Grau (greyscale) | `bmapgrau` | Desaturated colour map | Best for overlaid article titles (Archivist design) |
+| Orthofoto (aerial) | `bmaporthofoto30cm` | Aerial photography | Differentiator — visual interest for nature/infrastructure articles |
+| Overlay | `bmapoverlay` | Roads + labels only, transparent | Not useful standalone — used as a label layer on top of Orthofoto |
+| Gelände (terrain shading) | `bmapgelaende` | Hillshade | Scenic/outdoor stories |
+| Oberfläche | `bmapoberflaeche` | Surface model | Low editorial value |
+| High DPI | `bmaphidpi` | Standard × 2 resolution | Retina screens; same content as Standard |
+
+### Tile URL Format
+
+```
+https://maps{s}.wien.gv.at/basemap/{layer}/normal/google3857/{z}/{y}/{x}.png
+```
+
+Where:
+- `{s}` — subdomain: empty, `1`, `2`, `3`, `4` (use rotation to distribute requests)
+- `{layer}` — layer identifier from table above
+- `{z}` — zoom level integer
+- `{y}` — tile y coordinate (note: y before x in this URL format)
+- `{x}` — tile x coordinate
+
+**Orthofoto extension:** `.jpeg` not `.png`
+
+**WMTS Capabilities:** `https://basemap.at/wmts/1.0.0/WMTSCapabilities.xml`
+
+### Attribution Requirement
+
+All images generated from basemap.at tiles must include the credit string:
+
+```
+© basemap.at
+```
+
+This maps to Article.imageCredit — the existing field already supports this. Set it to `"© basemap.at"` when generating map images programmatically.
 
 ---
 
@@ -16,141 +88,157 @@ This research covers ONLY new features for v3.0 "The Modern Archivist." The foll
 
 ### Table Stakes (Users Expect These)
 
-Features the "Modern Archivist" redesign must deliver to feel complete. Missing any of these makes the overhaul feel unfinished relative to high-end editorial peers.
+Features that must work for map image generation to be coherent. Missing any of these means map images either don't generate, look wrong, or break the pipeline.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Drop cap on first article paragraph | Editorial/magazine standard; absence signals "blog not publication." Der Standard and Kleine Zeitung both omit this — immediate differentiator AND table stakes for "Archivist" brand claim | LOW | `::first-letter` pseudo-element with float fallback. Do NOT use `initial-letter` CSS property — Firefox unsupported as of 2026. Apply only when article body exceeds 300 chars. |
-| Blockquote / pull quote styling | Every premium editorial layout uses pull quotes to break long-form text. Reader expectation from any print-heritage publication | LOW | Pure CSS. Left border accent in Aged Wood token + oversized quotation glyph in Newsreader Italic. No JS needed. |
-| Article sidebar metadata (desktop) | Sidebar metadata placement is universal in print-heritage digital sites: date, author/source, Bezirk tag, read time. Inline placement feels web-1.0 | MEDIUM | Desktop: sticky right-column 240px. Mobile: collapses to horizontal metadata strip above article body. CSS Grid restructure of existing article detail layout. Data already exists — layout restructure only. |
-| Dark editorial footer with navigation columns | All premium news sites use dark footers as visual terminus. Multi-column nav links at bottom of page are a user wayfinding expectation | LOW | 4-column grid: Bezirke / Themen / Über uns / Rechtliches. Dark Ink background, Parchment text. Sub-footer: AI disclosure + copyright. |
-| Glassmorphic bottom nav | Frosted/translucent nav bar is now mainstream on mobile (iOS, Android, major news apps). Opaque nav against editorial imagery feels dated | LOW | `backdrop-filter: blur(10px)` + `-webkit-` prefix. Single blur element per viewport (performance constraint). Active state: 2px top-border in Ink color, not pill. |
-| Topmeldung with CTA button | Hero sections without an explicit call to action are display items, not editorial statements. Users expect a "read more" affordance on the lead story | LOW | Button variant added to existing Topmeldung component. Archivist typography treatment. |
-| "Frag den Wurzelmann" region selector card | Mein Bezirk is a core platform feature. Users who haven't selected a Bezirk need an inviting, prominent on-ramp. This card IS that on-ramp | MEDIUM | Shows current Bezirk if set; otherwise displays selectable Bezirk list. Reads/writes existing localStorage key. Dependency: existing Bezirk list from bundesland.config.ts. |
+| Location extraction from article text | Without a location, no map is possible. Every pipeline feature depends on this. | MEDIUM | Two-stage: regex first (fast, cheap), LLM fallback only when regex finds nothing. Regex handles: Bezirk names from config, Austrian city/town names from a seed list, address patterns (Straße, Platz, Gasse). LLM call structured prompt returning `{location: string \| null}`. |
+| Nominatim geocoding of extracted location | Converts extracted text ("Leoben") to lat/lon. Austria-focused query using `countrycodes=at&limit=1`. | LOW | Public Nominatim rate limit: 1 req/sec. At 1 article/day cron cadence this is never an issue. Must include `User-Agent: Wurzelwelt/1.0 (regionalprojekt.vercel.app)` header per usage policy. Self-host not required at current volume. |
+| Tile fetching at computed XYZ coordinates | Downloads the 256×256 PNG tiles needed to cover the output image at the chosen zoom. | MEDIUM | lat/lon → tile X,Y,Z via standard Web Mercator formula. Fetch 2×2 or 3×3 grid around center tile to get margin. Parallel `fetch()` calls with basemap.at subdomain rotation. Handle 404 gracefully (ocean/border tiles). |
+| Tile stitching into output image | Combines fetched tiles into one PNG at the target dimensions (e.g., 1200×630). | MEDIUM | Use `sharp` (already a standard dependency for Next.js image optimization scenarios). Composite fetched tiles onto a canvas at their correct pixel offsets. Crop to output dimensions centered on the geocoded point. Sharp operates in Node.js; run in a Next.js Route Handler (not Edge runtime — Node.js required for sharp). |
+| Vercel Blob storage of generated image | Generated PNG must be persisted — regenerating on every request is too slow for article load. | MEDIUM | `@vercel/blob` SDK. `put()` with `access: 'public'`. Store at deterministic key e.g. `map-images/{articleId}.png`. Vercel CDN caches public blobs for up to 1 month. Write returned URL to Article.imageUrl via Prisma update. |
+| Attribution written to Article.imageCredit | CC-BY 4.0 requires attribution. Existing imageCredit field already exists — just needs to be populated. | LOW | Set `imageCredit = "© basemap.at"` on Article record when saving generated map image URL. No schema change needed. |
+| Graceful degradation to gradient | If location extraction yields nothing, geocoding fails, or tile fetch errors — the gradient fallback already exists and must remain the safety net. | LOW | All reader components (HeroArticle, ArticleCard, etc.) already fall back to gradient when imageUrl is null. Pipeline failure must leave imageUrl null (not set a broken URL). No change to reader components needed. |
 
 ### Differentiators (Competitive Advantage)
 
-Features that elevate Wurzelwelt above Der Standard, Kleine Zeitung, and generic Austrian regional news. These align directly with "Modern Mountain Folklore → Modern Archivist" identity evolution.
+Features that make map image generation better than the naive implementation. None of these are required for a working v3.1, but they improve quality significantly.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Weather widget tied to user's Bezirk | Der Standard shows Vienna weather. Kleine Zeitung shows Graz. Wurzelwelt shows YOUR district — hyperlocal relevance no competitor delivers | MEDIUM | Open-Meteo API (free, no key, Austria covered by ECMWF 1-2km model). Reads Mein Bezirk preference → looks up lat/lon from config. 15-min client-side cache. |
-| "Das Grüne der Woche" themed section | Curated weekly sustainability/environment section gives Wurzelwelt an editorial identity beyond "AI aggregator." Creates a branded recurring content slot — reason to return weekly | HIGH | Requires new CMS tagging field (schema migration). Weekly editorial slot concept. Distinct visual: muted green tonal skin, leaf/plant iconography, Newsreader serif headline. No competitor analogue — original differentiator. |
-| Color system overhaul: Ink/Parchment/Slate/Aged Wood | The existing forest-green/terracotta palette reads "folklore craft." Ink/Parchment reads "literary heritage." This token swap is the single biggest visual signal of the brand evolution | MEDIUM | MD3-style design tokens. Touches every component. High blast radius but entirely within Tailwind @theme — no logic changes. |
-| Search/discovery visual redesign | Existing search is functional but palette-generic. Archivist treatment (ink-on-parchment, tonal card grid, refined filter chips) makes discovery feel curated rather than utilitarian | MEDIUM | Data model and client-side filtering logic unchanged. Visual-only redesign of result cards, filter chips, category grid. |
-| CMS admin visual refresh | Editors use the brand daily. An Archivist-aligned admin signals craft and intentionality. Most competing platform CMS tools use generic Bootstrap blue | MEDIUM | Color token swap + typography update in admin. No functional changes. Lowest regression risk (Server Components + FormData). |
+| Zoom level auto-selection based on geocoding confidence | A "Graz" result should zoom out to city level (z12). A "Hauptplatz 1, Leoben" should zoom in to street level (z15). Zoom based on Nominatim result type. | LOW | Map Nominatim `type` field: `country`→z5, `state`→z8, `county`→z10, `city`→z12, `town`→z13, `village`→z14, `suburb`→z14, `neighbourhood`→z15, `street`/`road`→z16. Cap at z15 for article headers — anything tighter loses geographic context. |
+| Layer selection based on article topic | Nature/outdoor articles get terrain (`bmapgelaende`). Infrastructure gets standard. Default is greyscale (`bmapgrau`) to align with Archivist editorial aesthetic. | LOW | Simple keyword match on article title/tags: keywords like "Wald", "Berg", "Natur", "Wandern", "Landwirtschaft" → terrain layer. "Bau", "Straße", "Projekt", "Infrastruktur" → standard. Default → greyscale. No LLM needed — keyword array in config. |
+| CMS map image picker (alongside Unsplash) | Editor can preview generated map, regenerate with different location/zoom, or replace with Unsplash image. Manual override without losing automation. | MEDIUM | New "Karte" tab in existing CMS image picker modal. Displays current map image if generated. "Neu generieren" button calls the on-demand API route. Location/zoom override inputs (pre-filled from generation metadata). Saves to same imageUrl/imageCredit fields. Dependency: on-demand map image API route must exist first. |
+| On-demand map image API route | Generates a map image for any article on request, not just during initial ingestion. Needed by CMS picker and for articles ingested before v3.1. | MEDIUM | `GET /api/map-image?articleId={id}` — reads article from DB, runs full pipeline (extract → geocode → tile fetch → stitch → blob store → DB update). Returns JSON `{imageUrl, location, zoom, layer}`. Must be secured — HMAC auth same pattern as existing CMS. |
+| Backfill for existing articles | Thousands of existing articles have no imageUrl. After pipeline is validated, bulk-generate map images for the backlog. | MEDIUM | One-time admin action: `POST /api/admin/map-image/backfill`. Processes articles in batches of 10 with 1-second delay between geocoding calls (Nominatim rate limit). Long-running — should be a background task with progress logging, not a synchronous API response. |
+| Generation metadata stored on Article | Record what location was extracted, what zoom was chosen, which layer was used. Allows CMS to show "Karte von: Leoben, Zoom 13, Grau" and let editor understand why the map looks as it does. | LOW | Options: (a) add `mapMeta JSONB` column to Article, (b) encode in a separate table, (c) store in Vercel Blob filename only. Recommend option (a) — single nullable JSONB column, no migrations needed in practice with `db push`. Schema: `{location: string, lat: number, lon: number, zoom: number, layer: string, generatedAt: string}`. |
 
 ### Anti-Features (Commonly Requested, Often Problematic)
 
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| Browser Geolocation API for weather | "Auto-detect my location" seems frictionless | Requires permission prompt (EU/GDPR-sensitive). Breaks SSR. IP geolocation is inaccurate to Bezirk level in rural Steiermark. Adds HTTPS complication in dev. | Use Mein Bezirk preference (already exists) as weather location source. Fallback to Graz. Zero permission prompt. |
-| Animated glassmorphism (blur transitions, pill morphing) | Visual polish | `backdrop-filter` animation is GPU-expensive; causes jank on mid-range Android. PROJECT.md explicitly defers animation/motion scope past v2.0. | Static blur only. Active state via top-border change, not animated transition. |
-| SVG choropleth map for region selector | Rich cartographic visual | Styrian Bezirk boundary polygons require licensed geodata or significant manual authoring. Out of proportion to UX value for a homepage card. | Stylized decorative map image (static PNG/illustration) OR a well-styled searchable Bezirk list. No interactive SVG. |
-| Real-time weather polling (sub-5-minute) | "Always current" expectation | Open-Meteo weather models update hourly at source. Polling more frequently returns identical data and wastes API budget even on free tier. | 15-min TTL cache using sessionStorage. Stale-while-revalidate pattern. |
-| "Das Grüne der Woche" as separate page/route | Editorial section deserves its own URL | Low article volume (weekly cadence). Orphan page risk if no articles are tagged this week. Routing overhead for a section that shares article data model. | Homepage section widget with "mehr dazu" link to filtered search results by theme tag. No separate route. |
-| Article sidebar on mobile | Desktop editorial standard | 375px viewport cannot accommodate two-column layout without unreadable text or uselessly narrow sidebar. | Progressive enhancement only: sidebar on tablet/desktop (≥768px), metadata strip above article body on mobile. |
-| Multiple backdrop-filter blur elements per viewport | Premium glass effect everywhere | Each blur element triggers separate GPU compositing layer. 3+ blur elements causes visible frame drops on mid-range phones. | One blur element per viewport at any time. Bottom nav gets blur; AppBar remains solid Ink color. |
+| Real-time tile rendering on article page load | "Always fresh" maps, no blob storage needed | Tile fetching + stitching takes 1–3 seconds. Unacceptable latency for article page loads. Sharp runs in Node.js, not Edge — cold start penalty on Vercel. Tile fetch failures would break image display. | Generate once at ingest time, store in Vercel Blob, serve static URL. Regeneration via CMS picker or on-demand route when needed. |
+| Mapbox / Google Maps Static API | Higher quality, no tile stitching code | Both require API keys and have usage costs. Mapbox free tier limited to 50,000 static image requests/month — exceeds budget for automated platform at scale. Google Maps Static API is not free at any meaningful volume. basemap.at is CC-BY 4.0, free, no key, specifically for Austrian geography. | Use basemap.at exclusively. |
+| Custom map styling (colour theming to Archivist palette) | Map matches brand | basemap.at serves pre-rendered raster tiles — no dynamic styling. MapLibre vector tiles would allow this but adds massive complexity (client-side rendering, different SDK). | Use greyscale (`bmapgrau`) layer as default — desaturated, editorial, pairs well with Archivist Ink/Parchment palette without requiring custom styling. |
+| Interactive map on article page | Rich user experience | Adds Leaflet/MapLibre dependency + JS bundle. Maps at this complexity require geocoordinate storage on Article model + rendering components. This is a v4+ feature, not a v3.1 feature. | Static map image in article header is visually equivalent for the current use case. Interactive maps are a separate feature milestone. |
+| Geocoding every article regardless of content | "Always have a map" | Many articles are genuinely non-location-specific (national policy, stock market news). A map of Austria at zoom 8 adds no value. Forced geocoding wastes Nominatim quota and Blob storage. | Only generate map if location extraction returns a result with sufficient confidence. Fall back to gradient for location-free articles — gradient is a deliberate design choice, not a failure. |
+| Self-hosted Nominatim instance | No rate limit concerns | At 1 article/day (Vercel Hobby cron), public Nominatim is more than sufficient. Self-hosting adds a running service to maintain. | Use public Nominatim. Revisit if cron frequency increases beyond 50 articles/day. |
+| Zoom level user preference in reader app | "Show me more context" | Reader has no concept of map zoom — they just see the article header image. No UI for this interaction exists. | Fixed zoom per result type (auto-selection from differentiator above) is the right abstraction. CMS picker can override for editors. |
+| Tile caching layer (Redis/KV) | Avoid re-fetching same tiles | Generated images are stored in Vercel Blob already — tiles are fetched once at generation time and the result is persisted. No tile-level cache needed. Adding Vercel KV for tile caching is over-engineering. | Vercel Blob stores the final composited image. Tiles are ephemeral during generation only. |
 
 ---
 
 ## Feature Dependencies
 
 ```
-[Weather Widget]
-    └──reads──> [Mein Bezirk (localStorage)] (existing)
-    └──requires──> [Bezirk lat/lon coordinates in bundesland.config.ts] (NEW DATA — simple addition)
-    └──calls──> [Open-Meteo API /v1/forecast] (external, no key needed)
-    └──caches──> [sessionStorage {data, fetchedAt}] (15-min TTL)
+[Location Extraction]
+    └──feeds──> [Nominatim Geocoding]
+                    └──feeds──> [Zoom Auto-Selection]
+                    └──feeds──> [Tile Coordinate Calculation]
+                                    └──feeds──> [Tile Fetching]
+                                                    └──feeds──> [Tile Stitching (sharp)]
+                                                                    └──feeds──> [Vercel Blob Store]
+                                                                                    └──writes──> [Article.imageUrl]
+                                                                                    └──writes──> [Article.imageCredit = "© basemap.at"]
 
-["Frag den Wurzelmann" Region Selector Card]
-    └──reads/writes──> [Mein Bezirk (localStorage)] (existing)
-    └──reads──> [Bezirk list from bundesland.config.ts] (existing)
-    └──enhances──> [Weather Widget] (setting Bezirk updates weather location reactively)
-    └──shares-hook──> [useMeinBezirk() or similar] (both components read same localStorage key)
+[Layer Selection]
+    └──reads──> [Article title/tags] (existing)
+    └──feeds──> [Tile Fetching] (determines which basemap.at layer URL to use)
 
-["Das Grüne der Woche" Section]
-    └──requires──> [theme tag on Article model] (NEW SCHEMA — migration required)
-    └──reads──> [Article data via Prisma] (existing)
-    └──enhances──> [Search/Discovery page] (theme tag becomes filterable in search)
-    └──requires──> [CMS article creation/edit UI to support theme tag] (part of CMS admin refresh)
+[On-demand API Route]
+    └──runs──> [Full pipeline above] (extract → geocode → tiles → stitch → blob → db)
+    └──required-by──> [CMS Map Image Picker]
 
-[Article Sidebar Metadata]
-    └──reads──> [Existing article metadata: date, Bezirk, source, body word count] (existing)
-    └──modifies-layout──> [Existing article detail page] (CSS Grid restructure)
-    └──conflicts-on-mobile──> [Single-column mobile layout] (resolves to metadata strip)
+[CMS Map Image Picker]
+    └──calls──> [On-demand API Route]
+    └──extends──> [Existing CMS image picker modal] (existing)
+    └──writes-to──> [Article.imageUrl + Article.imageCredit] (existing fields)
 
-[Drop Cap + Blockquote Styling]
-    └──applies-to──> [Article body renderer] (existing)
-    └──no-data-dependencies──> (pure CSS — no schema or API changes)
+[Automatic Pipeline Integration]
+    └──runs-after──> [Article saved to DB] (existing ingestion pipeline)
+    └──runs-same-process-as──> [Existing AI article generation step]
 
-[Glassmorphic Bottom Nav]
-    └──modifies-style──> [Existing WurzelNavBar component] (existing)
-    └──conflicts-performance──> [Any other backdrop-filter element] (only one blur per viewport)
-    └──requires──> [New Archivist color tokens (Parchment rgba)] (part of color overhaul)
-
-[Color Token Overhaul]
-    └──is-foundation-for──> [ALL other v3.0 visual features] (do this first)
-    └──modifies──> [Tailwind @theme in globals.css] (existing design system file)
-
-[Dark Editorial Footer]
-    └──links-to──> [Impressum/Datenschutz pages] (existing)
-    └──links-to──> [Bezirke list] (existing config)
-    └──requires──> [Ink/Parchment tokens] (part of color overhaul)
-
-[Topmeldung CTA Button]
-    └──modifies──> [Existing Topmeldung component] (existing)
-    └──requires──> [Archivist button variant] (part of color overhaul)
-
-[Search Page Redesign]
-    └──modifies-only-visual──> [Existing search page] (data + filtering logic unchanged)
-    └──requires──> [Archivist tokens] (part of color overhaul)
-
-[CMS Admin Refresh]
-    └──modifies-only-visual──> [Existing CMS admin pages] (logic unchanged)
-    └──requires──> [Archivist tokens] (part of color overhaul)
-    └──should-add──> [Theme tag field to article create/edit] (for "Das Grüne der Woche")
+[Backfill Admin Action]
+    └──calls──> [On-demand API Route] per article
+    └──rate-limits-to──> [1 req/sec for Nominatim]
+    └──reads──> [Articles WHERE imageUrl IS NULL] (existing DB)
 ```
 
 ### Dependency Notes
 
-- **Color token overhaul must be Phase 1.** Every other v3.0 feature depends on the Ink/Parchment/Slate/Aged Wood token system. Building the weather widget or region selector card before tokens exist means double-work.
-- **"Das Grüne der Woche" requires a schema migration.** A `theme` field (or reserved tag value like `gruen-der-woche`) must be added to the Article model before the homepage section can render anything meaningful. The CMS admin refresh should include this tagging UI. Plan the migration before the section component.
-- **Weather widget requires Bezirk coordinate data.** Each of the 13 Bezirke needs `weatherCoords: { lat: number; lon: number }` added to their entries in `bundesland.config.ts`. This is a one-time data task, not a schema migration.
-- **Region selector card and weather widget share Mein Bezirk state.** Both components read the same localStorage key. Coordinate via a shared `useMeinBezirk()` hook or React context to ensure the weather widget re-renders when the user selects a Bezirk in the card.
-- **Glassmorphic nav must be the only blur element.** Do not add `backdrop-filter` to WurzelAppBar or any other persistent element. AppBar: solid Ink color. Nav: frosted Parchment. One blur per viewport.
+- **Location extraction is the critical path.** If it returns nothing, the entire pipeline short-circuits to gradient. Regex + LLM fallback must be tuned before anything else is validated.
+- **On-demand API route is the foundation for the CMS picker.** Build and test the API route standalone before building the picker UI. The picker is just a UI wrapper around the route.
+- **Sharp requires Node.js runtime.** Do not run the tile stitch step in Edge functions or Edge API routes. Use `export const runtime = 'nodejs'` on the Route Handler. This is already the default for Next.js Route Handlers.
+- **Vercel Blob must be provisioned before testing.** The `BLOB_READ_WRITE_TOKEN` env var must exist in both local dev (`.env.local`) and Vercel project settings. Without it, `put()` throws at runtime.
+- **Article.imageCredit already exists** — no schema migration needed for attribution. The `mapMeta` JSONB column is optional (differentiator); build the core pipeline without it first.
+- **Existing image pipeline compatibility.** The Unsplash picker writes to `imageUrl` + `imageCredit`. The map generator writes to the same fields. They are alternatives — last write wins. The CMS picker UI must make clear which source is active (Unsplash vs. generated map).
+
+---
+
+## Zoom Level Guidance by Geocoding Result
+
+This is the primary decision table for the auto-selection feature. Based on Nominatim result type:
+
+| Nominatim `type` | Map zoom | Rationale | Example |
+|------------------|----------|-----------|---------|
+| `country` | 6 | Should not generate — too generic | "Österreich" |
+| `state` | 7 | Borderline — shows full Bundesland | "Steiermark" |
+| `county` | 10 | Shows Bezirk in full | "Bezirk Leoben" |
+| `city` | 12 | Shows city + surrounding area | "Graz", "Leoben" |
+| `town` | 13 | Shows town + immediate surroundings | "Bruck an der Mur" |
+| `village` | 14 | Shows village + adjacent settlements | "Proleb" |
+| `suburb` / `neighbourhood` | 14 | Shows sub-district | "Graz-Liebenau" |
+| `street` / `road` | 15 | Shows street + cross streets | "Hauptplatz Leoben" |
+| `building` / `house` | 15 | Cap here — don't go tighter for headers | "Rathaus Graz" |
+
+**Hard rules:**
+- Minimum zoom for article headers: 10 (anything below shows too large an area to be meaningful)
+- Maximum zoom for article headers: 15 (anything tighter loses geographic context)
+- If Nominatim `importance` score < 0.3 and result `type` is `country` or `state`: skip map generation, leave gradient
+
+---
+
+## Map Layer Selection Logic
+
+Default to greyscale. Override by keyword match on article body (first 500 chars + title):
+
+| Keywords (German) | Layer | Rationale |
+|------------------|-------|-----------|
+| Wald, Berg, Natur, Wandern, Alm, Forst, Jagd, Fauna, Flora, Landschaft | `bmapgelaende` (terrain) | Hillshading highlights topography for outdoor/nature stories |
+| Luftbild, Infrastruktur, Bau, Baustelle, Gelände, Areal, Betriebsgelände | `bmaporthofoto30cm` (aerial) | Aerial photo shows physical footprint of construction/infrastructure |
+| (default) | `bmapgrau` (greyscale) | Desaturated. Pairs with Archivist Ink/Parchment. Editorial, not distracting. |
+| Standard color | `geolandbasemap` | Not used by default — too colourful against editorial palette. Available as CMS override. |
 
 ---
 
 ## MVP Definition
 
-### Launch With (v3.0)
+### Launch With (v3.1)
 
-All items below constitute the "Modern Archivist" milestone. All are required for the brand evolution to read as intentional.
+Minimum viable pipeline that replaces gradients with maps for newly ingested articles.
 
-- [ ] Complete color token overhaul (Ink/Parchment/Slate/Aged Wood) — foundation for everything else
-- [ ] Glassmorphic bottom nav with top-border active state
-- [ ] Drop cap + blockquote/pull quote styling on article detail
-- [ ] Article sidebar metadata (desktop sticky / mobile strip)
-- [ ] Topmeldung with explicit CTA button
-- [ ] "Frag den Wurzelmann" region selector card (homepage)
-- [ ] Weather widget: Bezirk-aware, Open-Meteo, 15-min cache, current conditions
-- [ ] "Das Grüne der Woche" themed section (homepage widget + CMS tag support)
-- [ ] Dark editorial footer with 4-column navigation
-- [ ] Search/discovery page visual redesign
-- [ ] CMS admin visual refresh (including theme tag field)
+- [ ] Location extraction: regex for Bezirk names + major Steiermark cities/towns — enough to cover 80% of ORF RSS articles
+- [ ] Nominatim geocoding with Austria-focused query parameters
+- [ ] Zoom auto-selection from result type (table above)
+- [ ] Layer selection: greyscale default, terrain/aerial by keyword (3 rules, no config complexity)
+- [ ] Tile fetching from basemap.at (greyscale + terrain layers minimum)
+- [ ] Tile stitching with sharp — output 1200×630px PNG
+- [ ] Vercel Blob storage + Article.imageUrl + Article.imageCredit write
+- [ ] Integration into ingestion pipeline (runs after AI article generation)
+- [ ] Graceful failure: any error → leave imageUrl null → gradient fallback
 
-### Add After Validation (v3.x)
+### Add After Validation (v3.1.x)
 
-- [ ] `initial-letter` CSS drop cap — when Firefox ships support (use `@supports` progressive enhancement wrapper; currently production-safe only in Chrome/Safari)
-- [ ] Weather 5-day forecast expansion — currently scoped to current conditions card; forecast strip is a natural extension
-- [ ] Bezirk weather coordinates refined by district centroid precision — currently approximate
+- [ ] On-demand API route — enables CMS picker and backfill
+- [ ] CMS map image picker tab alongside Unsplash picker
+- [ ] LLM fallback for location extraction (when regex finds nothing and article has meaningful geographic content)
+- [ ] Backfill admin action for existing articles
 
 ### Future Consideration (v4+)
 
-- [ ] Animated page transitions — explicitly deferred in PROJECT.md
-- [ ] SVG choropleth Bezirk map for region selector — requires geodata licensing
-- [ ] Central Wurzelmann FAB in bottom nav — explicitly deferred in PROJECT.md
+- [ ] Generation metadata (`mapMeta` JSONB) — useful for analytics/debugging but not for v3.1 value
+- [ ] Interactive maps on article pages — separate milestone, requires Leaflet/MapLibre
+- [ ] Orthofoto (aerial) layer in production — higher quality but larger tile file sizes
 
 ---
 
@@ -158,115 +246,146 @@ All items below constitute the "Modern Archivist" milestone. All are required fo
 
 | Feature | User Value | Implementation Cost | Priority |
 |---------|------------|---------------------|----------|
-| Color token overhaul | HIGH (visual foundation) | MEDIUM | P1 — Phase 1 |
-| Weather widget (Bezirk-aware) | HIGH | MEDIUM | P1 |
-| "Frag den Wurzelmann" region selector | HIGH | MEDIUM | P1 |
-| "Das Grüne der Woche" section | HIGH | HIGH | P1 |
-| Article sidebar metadata | HIGH | MEDIUM | P1 |
-| Drop cap + blockquote | MEDIUM | LOW | P1 |
-| Topmeldung CTA | MEDIUM | LOW | P1 |
-| Glassmorphic bottom nav | MEDIUM | LOW | P1 |
-| Dark editorial footer | MEDIUM | LOW | P1 |
-| Search page visual redesign | MEDIUM | MEDIUM | P2 |
-| CMS admin visual refresh | LOW | MEDIUM | P2 |
+| Location extraction (regex) | HIGH — enables whole pipeline | LOW | P1 |
+| Nominatim geocoding | HIGH — required by all map features | LOW | P1 |
+| Zoom auto-selection | HIGH — wrong zoom = useless image | LOW | P1 |
+| Tile fetching (bmapgrau) | HIGH — core deliverable | MEDIUM | P1 |
+| Tile stitching (sharp) | HIGH — core deliverable | MEDIUM | P1 |
+| Vercel Blob storage | HIGH — persistence required | LOW | P1 |
+| Attribution (imageCredit) | HIGH — legal requirement (CC-BY 4.0) | LOW | P1 |
+| Layer selection (greyscale/terrain) | MEDIUM — improves quality | LOW | P1 |
+| On-demand API route | MEDIUM — enables editor workflow | MEDIUM | P2 |
+| CMS map image picker | MEDIUM — editor control | MEDIUM | P2 |
+| LLM location fallback | MEDIUM — improves coverage | MEDIUM | P2 |
+| Backfill admin action | MEDIUM — retroactive value | MEDIUM | P2 |
+| mapMeta JSONB metadata | LOW — debugging aid | LOW | P3 |
 
 **Priority key:**
-- P1: Required for "Modern Archivist" milestone to be coherent
-- P2: High quality addition within milestone, schedule permitting
-- P3: Nice to have, defer to next milestone
+- P1: Required for v3.1 pipeline to function
+- P2: Should have, add after core pipeline is validated
+- P3: Nice to have, future consideration
 
 ---
 
 ## Competitor Feature Analysis
 
-| Feature | Der Standard | Kleine Zeitung (Steiermark) | Our Approach |
-|---------|--------------|----------------------------|--------------|
-| Weather widget | Inline top-bar, Vienna-centric | Prominent regional weather block (Graz) | Per-Bezirk via Mein Bezirk preference — hyperlocal, no competitor matches this |
-| Drop caps | None | None | CSS float drop cap — editorial differentiator, zero competition |
-| Region personalization | No (national) | Section nav by Bezirk | Homepage card — interactive, localStorage-persistent, visually branded |
-| Themed weekly section | Weekend supplements | "Woche im Bild" photo feature | Branded "Das Grüne der Woche" — sustainability niche, distinct visual treatment |
-| Footer | Dark, dense, multi-column | Dark, section links + social | Dark 4-column: Bezirke / Themen / Über uns / Rechtliches |
-| Mobile navigation | None (desktop-first) | Fixed bottom nav (basic) | Glassmorphic frosted — premium mobile-native feel |
-| Article sidebar | Author card, tags | Author bio, related articles | Full metadata sidebar: date, Bezirk pill, source, read time — desktop sticky |
-| Color system | Blue/white corporate | Red/white regional | Ink/Parchment/Aged Wood — literary heritage, unique in Austrian regional news |
+Context: how Austrian/German regional news platforms handle article imagery where photos are unavailable.
+
+| Feature | Der Standard | Kleine Zeitung | ORF.at | Wurzelwelt v3.1 |
+|---------|--------------|----------------|--------|-----------------|
+| Fallback when no photo | Tonal gradient in brand color | Branded placeholder | Category-icon placeholder | Static generated map image — location-specific |
+| Map images for regional stories | No | No | No | Yes — auto-generated from basemap.at |
+| Attribution handling | N/A | N/A | N/A | `imageCredit = "© basemap.at"` auto-populated |
+| Zoom/context appropriateness | N/A | N/A | N/A | Auto-selected by Nominatim result type |
+| Editor override | N/A | N/A | N/A | CMS picker with regenerate + Unsplash alternative |
+
+No direct Austrian competitor generates map images automatically for article headers. This is a genuine differentiator for a hyperlocal platform — the map reinforces geographic context on every article.
 
 ---
 
 ## Implementation Notes
 
-### Weather Widget
+### Location Extraction Regex Seed List
 
-- **Endpoint:** `https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,weather_code,wind_speed_10m&timezone=Europe/Vienna`
-- **No API key required.** Free tier. Austria covered by ECMWF model at 1-2km resolution.
-- **WMO weather codes** map to German labels + icons: 0 = Klar, 1 = Überwiegend klar, 2-3 = Bewölkt, 45/48 = Nebel, 51-67 = Regen, 71-77 = Schnee, 80-82 = Schauer, 95-99 = Gewitter
-- **Client Component only** — uses localStorage for Bezirk, cannot SSR
-- **Cache strategy:** `sessionStorage.setItem('ww_weather', JSON.stringify({data, fetchedAt}))`. Re-fetch if `Date.now() - fetchedAt > 900000` (15 min)
-- **Config addition needed:** `weatherCoords: { lat: number; lon: number }` on each Bezirk entry in `bundesland.config.ts`
-- **Fallback:** If no Bezirk set → use Graz coordinates (47.0707, 15.4395)
+Priority order for regex matching:
 
-### Drop Cap
+1. **Bezirk names** — all 13 Steiermark Bezirke from `bundesland.config.ts` (Murtal, Liezen, etc.). Match boundary: word start/end to avoid partial matches.
+2. **Major Steiermark cities** (population > 10,000): Graz, Leoben, Kapfenberg, Bruck an der Mur, Feldbach, Hartberg, Leibnitz, Voitsberg, Mürzzuschlag, Weiz, Judenburg, Knittelfeld, Mürau, Zeltweg, Eisenerz
+3. **Address patterns**: `(.*?)(straße|gasse|platz|weg|allee|ring),?\s+\d{4}?\s+\w+` — captures Austrian address patterns likely to geocode accurately
+4. **Fallback**: Return `null` if no match → pipeline skips map generation
 
-- Use `::first-letter` pseudo-element: `float: left; font-size: 3.75rem; line-height: 0.85; padding-right: 0.1em; font-family: var(--font-newsreader); color: var(--color-ink)`
-- Apply via `.prose-drop-cap::first-letter` Tailwind utility or component class
-- Do NOT use CSS `initial-letter` — Firefox unsupported as of March 2026
-- Conditional rendering: apply class only when `article.body.length > 300`
-- Do NOT apply on AI-generated articles summary paragraphs (too short, looks wrong)
+### Tile Math (Web Mercator / EPSG:3857)
 
-### Glassmorphic Bottom Nav
+```typescript
+// lat/lon → tile XY at zoom z
+function latLonToTile(lat: number, lon: number, z: number): { x: number; y: number } {
+  const x = Math.floor((lon + 180) / 360 * Math.pow(2, z));
+  const y = Math.floor((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * Math.pow(2, z));
+  return { x, y };
+}
+```
 
-- `backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px)`
-- Background: `rgba(252, 249, 239, 0.72)` (Parchment at 72% opacity) — exact value TBD with token system
-- Active indicator: `border-top: 2px solid var(--color-ink)` on active tab item (replaces terracotta rounded pill)
-- `@supports (backdrop-filter: blur(1px)) { ... }` — fallback: solid Parchment background
-- Blur value: 10px. Keep ≤12px. Avoid animating this property.
-- Only ONE `backdrop-filter` element in the viewport at any time
+Fetch a 3×3 grid of tiles around the center tile. At 256px per tile, a 3×3 grid = 768×768px. Crop to 1200×630px centered on the target coordinates (requires pixel offset math from center tile to target lat/lon pixel).
 
-### "Das Grüne der Woche" Section
+### Sharp Composite Operation
 
-- **Schema migration required:** Add `theme VARCHAR(64)` to Article table (nullable). OR use existing tag system with reserved slug `gruen-der-woche` (lower migration risk if tags are already implemented)
-- **Homepage widget:** Fetches articles where `theme = 'gruen'` (or matching tag), ordered by `publishedAt DESC`, limit 4-5
-- **Visual treatment:** Section wrapper with muted green tonal background (distinct from Parchment). Leaf/plant Material Symbol. Newsreader Italic section heading "Das Grüne der Woche"
-- **CMS integration:** Article create/edit form needs a "Thema" select field (or tag assignment). Include in CMS admin refresh phase.
-- **Empty state:** If no articles tagged this week, section is hidden (CSS `display:none` when result count = 0) — not an error
+```typescript
+import sharp from 'sharp';
 
-### Article Sidebar (Desktop)
+// canvas = 768x768 (3×3 tiles at 256px each)
+const canvas = sharp({
+  create: { width: 768, height: 768, channels: 4, background: { r: 240, g: 237, b: 230, alpha: 1 } }
+});
 
-- CSS Grid on article detail wrapper: `grid-template-columns: 1fr 256px` at `@media (min-width: 768px)`
-- Sidebar content: `publishedAt` (formatted DE), Bezirk pill(s) from ArticleBezirk junction, source name + favicon (16px), estimated read time (`Math.ceil(wordCount / 200)` minutes)
-- `position: sticky; top: 5rem` so sidebar stays visible during scroll
-- Mobile (< 768px): sidebar becomes `display:flex; flex-direction:row; gap:1rem; flex-wrap:wrap` strip above article body
-- All data already available from existing article detail page query — layout restructure only
+const composites = tiles.map(({ buffer, col, row }) => ({
+  input: buffer,
+  left: col * 256,
+  top: row * 256,
+}));
 
-### Dark Editorial Footer
+const stitched = await canvas.composite(composites).png().toBuffer();
 
-- Background: `var(--color-ink)` (near-black Archivist token)
-- Text: `var(--color-parchment)`
-- 4 columns at ≥1024px, 2 at ≥640px, 1 on mobile
-- Column 1 "Bezirke": all 13 Bezirke as links to filtered search
-- Column 2 "Themen": main content categories
-- Column 3 "Wurzelwelt": Über uns, Mascot lore, RSS feeds
-- Column 4 "Rechtliches": Impressum, Datenschutz, Barrierefreiheit
-- Sub-footer bar: "Automatisch erstellt von Wurzelwelt · © 2026" + "KI-generierte Inhalte werden gekennzeichnet"
-- Reversed/light logo variant of Wurzelwelt wordmark
+// Crop to 1200×630, centering on target pixel
+const finalImage = await sharp(stitched)
+  .extract({ left: cropX, top: cropY, width: 1200, height: 630 })
+  .toBuffer();
+```
+
+### Vercel Blob Upload
+
+```typescript
+import { put } from '@vercel/blob';
+
+const { url } = await put(`map-images/${articleId}.png`, finalImage, {
+  access: 'public',
+  contentType: 'image/png',
+  cacheControlMaxAge: 60 * 60 * 24 * 30, // 30 days
+});
+
+await prisma.article.update({
+  where: { id: articleId },
+  data: { imageUrl: url, imageCredit: '© basemap.at' },
+});
+```
+
+### Nominatim Request
+
+```typescript
+const url = new URL('https://nominatim.openstreetmap.org/search');
+url.searchParams.set('q', extractedLocation);
+url.searchParams.set('format', 'jsonv2');
+url.searchParams.set('countrycodes', 'at');
+url.searchParams.set('limit', '1');
+url.searchParams.set('addressdetails', '1');
+
+const response = await fetch(url.toString(), {
+  headers: {
+    'User-Agent': 'Wurzelwelt/1.0 (regionalprojekt.vercel.app)',
+    'Accept-Language': 'de',
+  },
+});
+```
+
+Result: check `result[0].type` for zoom selection, `result[0].lat` + `result[0].lon` for coordinates, `result[0].importance` to filter garbage results (skip if < 0.3).
 
 ---
 
 ## Sources
 
-- [Open-Meteo Free Weather API documentation](https://open-meteo.com/en/docs) — MEDIUM confidence (official docs, Austria ECMWF coverage confirmed)
-- [Open-Meteo features page](https://open-meteo.com/en/features) — MEDIUM confidence (free tier, no API key confirmed)
-- [CSS `initial-letter` — Can I Use](https://caniuse.com/css-initial-letter) — HIGH confidence (browser compatibility table, Firefox unsupported)
-- [CSS Drop Caps — CSS-Tricks](https://css-tricks.com/snippets/css/drop-caps/) — HIGH confidence (established reference, float method)
-- [Chrome Developers: CSS initial-letter](https://developer.chrome.com/blog/control-your-drop-caps-with-css-initial-letter) — HIGH confidence (official Chrome blog)
-- [Glassmorphism best practices 2026 — UX Pilot](https://uxpilot.ai/blogs/glassmorphism-ui) — MEDIUM confidence (industry blog, consistent with MDN performance notes)
-- [Glassmorphism implementation guide 2025](https://playground.halfaccessible.com/blog/glassmorphism-design-trend-implementation-guide) — MEDIUM confidence (GPU performance guidance)
-- [Mobile navigation patterns 2026 — Phone Simulator](https://phone-simulator.com/blog/mobile-navigation-patterns-in-2026) — LOW confidence (single source)
-- [Footer UX patterns 2026 — Eleken](https://www.eleken.co/blog-posts/footer-ux) — MEDIUM confidence
-- [Weather widget UX for websites — Medium 2026](https://medium.com/@malenix/what-is-a-weather-widget-for-a-website-and-what-data-should-it-show-2317178a1b14) — LOW confidence (community blog, single source)
-- [Region selector UX impact — GeoTargetly](https://geotargetly.com/blog/how-does-a-region-selector-impact-your-website-ux) — LOW confidence (vendor blog)
-- Competitor analysis: Der Standard (standard.at), Kleine Zeitung (kleinezeitung.at) — direct observation — HIGH confidence for feature inventory
+- [basemap.at official site](https://basemap.at/en/) — HIGH confidence (official, CC-BY 4.0 confirmed, layer list confirmed)
+- [DE:AT/basemap — OpenStreetMap Wiki](https://wiki.openstreetmap.org/wiki/DE:AT/basemap) — HIGH confidence (community-maintained, layer identifiers confirmed)
+- [basemap.at WMTS Capabilities XML](https://basemap.at/wmts/1.0.0/WMTSCapabilities.xml) — HIGH confidence (authoritative capabilities document)
+- [Nominatim reverse zoom parameter table](https://nominatim.org/release-docs/latest/api/Reverse/) — HIGH confidence (official docs, zoom→granularity mapping)
+- [Nominatim usage policy — 1 req/sec limit](https://operations.osmfoundation.org/policies/nominatim/) — HIGH confidence (official OSM Foundation policy)
+- [Nominatim Search API docs](https://nominatim.org/release-docs/latest/api/Search/) — HIGH confidence (official docs, `countrycodes` and `featuretype` parameters)
+- [staticmaps npm — Node.js tile stitching library](https://github.com/StephanGeorg/staticmaps) — MEDIUM confidence (GitHub repo, sharp-based, custom tileUrl supported)
+- [Zoom levels — OpenStreetMap Wiki](https://wiki.openstreetmap.org/wiki/Zoom_levels) — HIGH confidence (canonical zoom level reference)
+- [Vercel Blob docs](https://vercel.com/docs/vercel-blob) — HIGH confidence (official Vercel documentation)
+- [Creating static map images with Pillow (Python) — alexwlchan.net 2025](https://alexwlchan.net/2025/static-maps/) — MEDIUM confidence (verified pattern, language-agnostic tile math applies to Node.js)
+- [Tile stitching — OpenStreetMap Wiki](https://wiki.openstreetmap.org/wiki/Tile_stitching) — HIGH confidence (community reference)
+- [Isticktoit.net — basemap.at Leaflet tile URL examples](https://www.isticktoit.net/?p=1145) — MEDIUM confidence (community blog, tile URL format verified against WMTS capabilities)
 
 ---
 
-*Feature research for: Wurzelwelt v3.0 "The Modern Archivist" design system overhaul*
-*Researched: 2026-03-30*
+*Feature research for: Wurzelwelt v3.1 "Basemap Article Images" — automatic map image generation*
+*Researched: 2026-04-05*

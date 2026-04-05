@@ -1,8 +1,8 @@
 # Stack Research
 
-**Domain:** "The Modern Archivist" design overhaul — weather widget, glassmorphism nav, MD3 color tokens, editorial typography (v3.0)
-**Researched:** 2026-03-30
-**Confidence:** HIGH
+**Domain:** Basemap article image generation — tile stitching, geocoding, blob storage (v3.1)
+**Researched:** 2026-04-05
+**Confidence:** MEDIUM (sharp/Vercel compatibility is actively unstable; other areas HIGH)
 
 ## Context: Milestone Scope
 
@@ -10,12 +10,11 @@ This is a SUBSEQUENT MILESTONE on an existing Next.js 15 / Prisma v6 / PostgreSQ
 
 Validated stack (do NOT re-research): Next.js 15, Prisma v6, PostgreSQL (Neon), Anthropic Claude API, Tailwind CSS v4, Vitest with pgLite, Server Components, HMAC auth CMS, Vercel deployment.
 
-Current `package.json` dependencies relevant to this milestone:
-- `tailwindcss: ^4.2.2` with `@tailwindcss/postcss: ^4`
-- `next: ^15.5.14`, `react: ^19.2.4`
-- Existing `@theme` tokens in `src/app/globals.css`: `--color-primary`, `--color-secondary`, `--color-accent`, `--color-background`, `--color-text`, `--color-surface`, `--color-surface-elevated`, font tokens, radius, spacing
-
-**Bottom line: one new npm package (`openmeteo`) is required. Everything else — glassmorphism, MD3 color tokens, drop caps, blockquotes — is implemented in CSS within the existing Tailwind v4 @theme system.**
+**New packages required for v3.1:**
+- `sharp@^0.33.5` — image compositing (tile stitching)
+- `@vercel/blob@^0.27` — persisting generated map images
+- No geocoding package — Nominatim is called via native `fetch` (no wrapper needed)
+- No tile math package — OSM tile coordinate formula is 6 lines of code
 
 ---
 
@@ -25,148 +24,160 @@ Current `package.json` dependencies relevant to this milestone:
 
 | Technology | Version | Purpose | Why Recommended |
 |------------|---------|---------|-----------------|
-| `openmeteo` | `^1.2.3` | Official Open-Meteo TypeScript SDK for weather data | Official SDK from the Open-Meteo team. Uses FlatBuffers for efficient binary transport instead of JSON — relevant for time-series weather data. Provides `fetchWeatherApi()` with built-in retry logic (3 retries, 0.2 backoff). Only one function exposed, keeping the integration minimal. Free, no API key, no sign-up required. Version 1.2.3 is the latest stable release as of early 2026. |
-| Tailwind CSS v4 `backdrop-blur-*` utilities | `^4.2.2` (existing) | Glassmorphic bottom nav with frosted-glass effect | `backdrop-blur-md` (12px) is the correct baseline for nav bars. No new package needed — Tailwind v4 ships all `backdrop-filter` utilities natively. Combine with `bg-[color]/[opacity]` for semi-transparent base. Requires `-webkit-backdrop-filter` prefix on Safari/iOS — Tailwind outputs this automatically. |
-| Tailwind CSS v4 `@theme` extension | `^4.2.2` (existing) | MD3-style color token system (Ink/Parchment/Slate/Aged Wood palette) | The existing `@theme` block in `globals.css` is the single source of truth. Add new v3.0 semantic tokens here — do not introduce a separate CSS file or token library. MD3's token philosophy (reference → system → component) maps directly to Tailwind's `@theme` variable cascade. |
-| CSS `::first-letter` pseudo-element | native CSS (no package) | Article drop cap styling | Tailwind v4 supports `first-letter:` variants natively (e.g., `first-letter:float-left first-letter:text-7xl first-letter:font-headline`). No plugin or additional package needed. Apply only to `<p>` elements (block containers) — not `<span>`. |
+| `sharp` | `^0.33.5` (pinned minor) | Fetch and composite basemap.at PNG tiles into a single map image | libvips-backed, runs in Node.js serverless without a browser. The `composite()` API accepts an array of `{ input: Buffer, left: number, top: number }` objects — exactly the pattern for stitching a grid of 256×256 tiles. Used internally by Next.js 15 for `<Image>` optimization, so it is already a transitive dependency. Pinning to `^0.33.5` is critical — see version compatibility section. |
+| `@vercel/blob` | `^0.27` | Store generated map images and return public CDN URLs | Native to the project's Vercel hosting. `put(pathname, buffer, { access: 'public' })` accepts a Node.js `Buffer` directly — no stream conversion needed. Returns a `url` property pointing to Vercel's CDN edge. Automatically namespaced under `BLOB_READ_WRITE_TOKEN`. Version 0.27 is the current stable release. |
+| Nominatim (via native `fetch`) | API v1, no package | Geocode Austrian place names extracted from article text to lat/lon coordinates | No wrapper library needed. A single `fetch` call to `https://nominatim.openstreetmap.org/search?q={place}&countrycodes=at&format=jsonv2&limit=1` with a `User-Agent` header is sufficient. The API returns `lat` and `lon` as strings. No authentication required. Free with a 1 req/s policy — adequate for pipeline use (one geocode per article ingestion, not per request). |
+| basemap.at WMTS (via native `fetch`) | OGC WMTS 1.0.0, XYZ-style, no package | Fetch individual 256×256 PNG map tiles for Austria | CC-BY 4.0 licensed, no API key. The XYZ tile URL format is `https://mapsneu.wien.gv.at/basemap/{layer}/normal/google3857/{z}/{y}/{x}.png`. Use the `geolandbasemap` layer for the full-color Austrian basemap. Zoom 12–14 is the right range for Bezirk-level context (shows roads and geography, not individual buildings). |
 
 ### Supporting Libraries
 
 | Library | Version | Purpose | When to Use |
 |---------|---------|---------|-------------|
-| `openmeteo` | `^1.2.3` | `fetchWeatherApi()` for weather data with FlatBuffer decoding | Only needed for the weather widget Server Component. Do not use for any other data fetching — existing patterns (Prisma, native fetch) cover everything else. |
+| `sharp` | `^0.33.5` | `sharp(width, height).composite(tiles).png().toBuffer()` | Every map image generation call. Do not use for anything else in this project — existing article images come from Unsplash URLs and do not need processing. |
+| `@vercel/blob` | `^0.27` | `put()` to store, `list()` to check existence, `del()` for CMS cleanup | Use `put()` in the ingestion pipeline and on-demand API route. Use `list({ prefix: 'maps/' })` to check if a map already exists before regenerating. Use `del()` in the CMS when an editor replaces a map image. |
 
 ### Development Tools
 
-No new development tools are required.
+| Tool | Purpose | Notes |
+|------|---------|-------|
+| `@vercel/blob` local dev mock | Blob storage in development without hitting Vercel | Set `BLOB_READ_WRITE_TOKEN=vercel_blob_rw_test_localtoken` in `.env.local`. The SDK detects a test token and stores files locally in `.vercel/blob/` — no real Vercel project needed during development. |
 
 ---
 
 ## Installation
 
 ```bash
-# New production dependency — weather widget only
-npm install openmeteo
+# Core new dependencies
+npm install sharp@0.33.5 @vercel/blob
 
 # No new dev dependencies required
+# sharp ships its own prebuilt linux-x64 binary — no @types/sharp needed
 ```
 
-Everything else (glassmorphism, color tokens, drop caps, blockquotes, footer typography) is pure CSS in `globals.css` and `@theme` extensions.
+**Critical: pin sharp to exactly `0.33.5`, not a range.** See version compatibility.
 
 ---
 
-## Integration Points with Existing Tailwind v4 @theme
+## basemap.at Tile URL Format
 
-### 1. Extending @theme for MD3-Style Color Tokens
+The service uses a modified WMTS XYZ pattern where `y` and `x` are swapped from the OSM convention:
 
-Add v3.0 "Modern Archivist" tokens to the existing `@theme` block in `src/app/globals.css`. The current tokens (`--color-primary`, `--color-accent`, etc.) remain as-is for CMS and backwards compatibility. New tokens augment rather than replace:
-
-```css
-@theme {
-  /* === EXISTING TOKENS (keep) === */
-  --color-primary: #1B2D18;
-  /* ... */
-
-  /* === v3.0 Modern Archivist palette === */
-  /* Ink/Parchment/Slate/Aged Wood semantic roles */
-  --color-ink:         #1A1410;   /* deep warm black — headlines, body */
-  --color-parchment:   #F5EFE0;   /* warm off-white — page background */
-  --color-parchment-deep: #EDE5D0; /* darker parchment — surface variant */
-  --color-slate:       #4A4540;   /* muted warm grey — metadata, labels */
-  --color-aged-wood:   #7C5C3A;   /* warm brown — accent, blockquote borders */
-  --color-aged-wood-light: #C4A882; /* light wood — decorative elements */
-
-  /* Glass surface tokens for glassmorphism nav */
-  --color-glass-bg:    color-mix(in srgb, var(--color-parchment) 75%, transparent);
-  --color-glass-border: color-mix(in srgb, var(--color-aged-wood-light) 30%, transparent);
-}
+```
+https://mapsneu.wien.gv.at/basemap/{layer}/normal/google3857/{z}/{y}/{x}.{ext}
 ```
 
-**Why this approach:** `color-mix()` for glass tokens is supported in all modern browsers (Safari 16.2+, Chrome 111+, Firefox 113+) and avoids hardcoded rgba values that diverge from the token system. Tailwind v4 supports arbitrary CSS values in `@theme`, so these are usable as `bg-glass-bg` etc.
+Available layers:
 
-### 2. Glassmorphic Bottom Nav Pattern
+| Layer name | Format | Use |
+|---|---|---|
+| `geolandbasemap` | `.png` | Full-color Austrian basemap — **use this** |
+| `bmapgrau` | `.png` | Grayscale version |
+| `bmapoverlay` | `.png` | Labels only (overlay) |
+| `bmaporthofoto30cm` | `.jpeg` | Aerial photography |
+| `bmaphidpi` | `.png` | HiDPI variant |
 
-No new package. Pure Tailwind utility classes:
+For article header images, use `geolandbasemap` at zoom 13. A 3×3 tile grid (9 tiles) at zoom 13 covers roughly a 20×20 km area — appropriate for Bezirk-level context.
 
-```tsx
-// Glassmorphic nav bar — correct class combination
-<nav className="
-  fixed bottom-0 inset-x-0
-  backdrop-blur-md          /* 12px blur — safe for mobile */
-  bg-parchment/80           /* semi-transparent parchment */
-  border-t border-glass-border
-  supports-[backdrop-filter:blur(1px)]:bg-parchment/60
-">
-```
-
-The `supports-[backdrop-filter:blur(1px)]:` variant progressively enhances: browsers that support `backdrop-filter` get the more transparent glass; others fall back to `bg-parchment/80` (opaque enough to be readable).
-
-**Performance rule:** Keep blur to `backdrop-blur-md` (12px) or less on the nav. Do NOT animate `backdrop-filter`. Limit to 2–3 simultaneous `backdrop-filter` elements on any page. On mobile (primary platform), 12px blur on a single fixed nav bar is within safe GPU budget for all target devices.
-
-### 3. Drop Cap Implementation
-
-No plugin needed — Tailwind v4's `first-letter:` variant covers this:
-
-```tsx
-// Article body — apply to first paragraph only
-<p className="first-letter:float-left first-letter:font-headline first-letter:text-[4.5rem] first-letter:leading-[0.85] first-letter:mr-2 first-letter:text-ink">
-  {firstParagraphText}
-</p>
-```
-
-For article-body-scoped styles, define a utility in `globals.css`:
-
-```css
-@layer utilities {
-  .prose-drop-cap p:first-of-type::first-letter {
-    float: left;
-    font-family: var(--font-headline);
-    font-size: 4.5rem;
-    line-height: 0.85;
-    margin-right: 0.5rem;
-    color: var(--color-ink);
-  }
-}
-```
-
-### 4. Open-Meteo Weather Widget Integration
-
-The weather widget fetches via a Next.js Server Component with ISR revalidation. Coordinates are sourced from `bundesland.config.ts` (extend with lat/lon per Bezirk, or use a single Steiermark capital coordinate for the widget).
+**Tile coordinate math** (no library needed):
 
 ```typescript
-// src/lib/weather.ts — server-only utility
-import { fetchWeatherApi } from 'openmeteo';
-
-export interface CurrentWeather {
-  temperature: number;      // °C
-  weatherCode: number;      // WMO code
-  windSpeed: number;        // km/h
-  isDay: boolean;
+function lonToTile(lon: number, zoom: number): number {
+  return Math.floor((lon + 180) / 360 * Math.pow(2, zoom));
 }
 
-export async function getCurrentWeather(lat: number, lon: number): Promise<CurrentWeather> {
-  const params = {
-    latitude: lat,
-    longitude: lon,
-    current: ['temperature_2m', 'weather_code', 'wind_speed_10m', 'is_day'],
-    timezone: 'Europe/Vienna',
-  };
-
-  const responses = await fetchWeatherApi('https://api.open-meteo.com/v1/forecast', params);
-  const current = responses[0].current()!;
-
-  return {
-    temperature: Math.round(current.variables(0)!.value()),
-    weatherCode: current.variables(1)!.value(),
-    windSpeed:   Math.round(current.variables(2)!.value()),
-    isDay:       current.variables(3)!.value() === 1,
-  };
+function latToTile(lat: number, zoom: number): number {
+  const rad = lat * Math.PI / 180;
+  return Math.floor(
+    (1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2 * Math.pow(2, zoom)
+  );
 }
 ```
 
-Cache in the Server Component with `{ next: { revalidate: 1800 } }` — weather refreshes every 30 minutes, adequate for a regional news widget and respects Open-Meteo's fair-use guidance.
+**Attribution requirement:** basemap.at is CC-BY 4.0. Generated images must carry the attribution "basemap.at" — render it as a text overlay on the composited image using `sharp`'s SVG composite, or store it in the image metadata field and render in the article template.
 
-WMO weather codes (0–99) map to German-language descriptions and Material Symbols icons without any additional library — a lookup table in the codebase is sufficient. The existing Material Symbols Rounded icon font already covers all needed weather glyphs (partly_cloudy_day, rainy, ac_unit, etc.).
+---
+
+## Nominatim Integration Pattern
+
+```typescript
+// Geocode an Austrian place name to lat/lon
+async function geocodeAustria(placeName: string): Promise<{ lat: number; lon: number } | null> {
+  const url = new URL('https://nominatim.openstreetmap.org/search');
+  url.searchParams.set('q', placeName);
+  url.searchParams.set('countrycodes', 'at');
+  url.searchParams.set('format', 'jsonv2');
+  url.searchParams.set('limit', '1');
+  url.searchParams.set('accept-language', 'de');
+
+  const res = await fetch(url.toString(), {
+    headers: {
+      'User-Agent': 'Wurzelwelt/3.1 (regionalprojekt.vercel.app; contact@wurzelwelt.at)',
+    },
+    next: { revalidate: 86400 }, // 24h cache — geocoding results don't change
+  });
+
+  const results = await res.json();
+  if (!results.length) return null;
+  return { lat: parseFloat(results[0].lat), lon: parseFloat(results[0].lon) };
+}
+```
+
+Key points:
+- `countrycodes=at` restricts results to Austria — eliminates ambiguity for place names that exist in multiple countries
+- `accept-language=de` returns German-language names in `display_name` (relevant if results are logged)
+- `User-Agent` is **required** by the usage policy — requests without it will be rate-limited or blocked
+- Cache geocoding results in Prisma (store `lat`/`lon` on the article or a Bezirk-level cache) — do not geocode the same place name twice
+- Pipeline rate: 1 geocode per new article ingestion. At 5–10 articles/day, well within the 1 req/s policy
+
+---
+
+## Vercel Function Constraints
+
+Sharp runs as a Node.js serverless function on Vercel. Key constraints:
+
+| Constraint | Value | Impact |
+|---|---|---|
+| Max unzipped bundle size | 250 MB | sharp's prebuilt binary is ~30 MB — safe. Do not add puppeteer (~170 MB) or canvas |
+| Default memory | 1024 MB (Hobby) | Sufficient for 9-tile stitch (9 × ~200KB PNG = ~1.8MB in memory). Flag if expanding to larger grids. |
+| Execution timeout | 10s (Hobby) | 9 tile fetches + composite + blob upload must complete in <10s. Use `Promise.all()` to fetch tiles in parallel. |
+| Cold start | ~1–2s extra | Sharp initialization is included in cold start. Use `unstable_cache` or background job pattern for pipeline (not user-facing requests) |
+| Response payload | 4.5 MB body limit | Map images are stored in Blob and returned as URLs — body limit is not an issue |
+
+**Memory sizing:** A 3×3 grid of 256×256 PNG tiles at zoom 13 produces a 768×768 output image (~1.2 MB PNG). Well within memory limits.
+
+---
+
+## Tile Stitching with sharp
+
+```typescript
+import sharp from 'sharp';
+
+interface TileInput {
+  input: Buffer;
+  left: number;   // x pixel offset
+  top: number;    // y pixel offset
+}
+
+async function stitchTiles(
+  tiles: TileInput[],
+  width: number,   // cols × 256
+  height: number,  // rows × 256
+): Promise<Buffer> {
+  return sharp({
+    create: {
+      width,
+      height,
+      channels: 3,
+      background: { r: 240, g: 240, b: 240 }, // fallback grey
+    },
+  })
+    .composite(tiles)
+    .png({ compressionLevel: 6 })
+    .toBuffer();
+}
+```
+
+Call `stitchTiles` after `Promise.all(tileUrls.map(fetch))`. The composited `Buffer` is passed directly to `@vercel/blob`'s `put()`.
 
 ---
 
@@ -174,11 +185,13 @@ WMO weather codes (0–99) map to German-language descriptions and Material Symb
 
 | Recommended | Alternative | When to Use Alternative |
 |-------------|-------------|-------------------------|
-| `openmeteo` SDK (FlatBuffers) | Plain `fetch` to Open-Meteo JSON endpoint | Use plain fetch if the SDK ever becomes unmaintained or if the weather widget only needs temperature + condition (minimal fields). For simple use cases, `fetch('https://api.open-meteo.com/v1/forecast?latitude=47.07&longitude=15.44&current=temperature_2m,weather_code')` works with zero dependencies. The SDK adds retry logic which is a minor but real benefit for a widget that must load on every page. |
-| Tailwind `backdrop-blur-md` (12px) | Larger blur values (`backdrop-blur-xl`, `backdrop-blur-2xl`) | Use larger blur only for hero overlays above the fold, never for fixed-position elements that repaint on scroll. On a bottom nav specifically, larger blur increases GPU pressure on scroll events. |
-| `color-mix()` for glass tokens | Hardcoded `rgba()` values | Use `rgba()` only if IE11 or older WebKit support is required (not applicable here). `color-mix()` keeps tokens in the theme system; `rgba()` creates separate magic numbers. |
-| `::first-letter` CSS | JavaScript-based drop cap (wrap first letter in `<span>`) | Use the JS approach only if the drop cap needs to be interactive (clickable, animated). For static editorial typography, CSS-native is simpler and more robust with server-rendered HTML. |
-| CSS `@layer utilities` for `.prose-drop-cap` | `@tailwindcss/typography` plugin prose customization | The `@tailwindcss/typography` plugin v0.5.x is not yet updated for Tailwind v4's CSS-first config (v4 compatibility is in progress as of early 2026). Adding it risks config conflicts. The existing project does not use it, and a single `@layer utilities` block achieves the required editorial styles without the plugin overhead. |
+| `sharp` for compositing | `canvas` (node-canvas) | canvas supports text rendering natively (useful for map overlays with labels), but requires Cairo native bindings that fail reliably on Vercel's lambda environment. sharp is the safe choice for pure compositing. |
+| `sharp` for compositing | Puppeteer / Playwright headless screenshot | These work but add ~170 MB to the function bundle (hits Vercel's 250 MB limit) and have ~3s cold start overhead per image. Completely disproportionate for tile stitching. |
+| Nominatim via native `fetch` | `nominatim-geocoder` npm wrapper | The wrapper adds an npm dependency for what is a single `fetch` call. The package's last update was 2022 — maintenance risk. Direct fetch is more transparent and controllable. |
+| Nominatim via native `fetch` | Google Maps Geocoding API | Costs money ($0.005/request), requires API key management, GDPR surface area. Nominatim with `countrycodes=at` is accurate for Austrian places. Use Google only if Nominatim repeatedly fails on specific Austrian place names. |
+| `@vercel/blob` | Cloudinary / S3 | Require additional credentials and separate billing. Vercel Blob is native to the project's existing Vercel hosting and bills under the same account. For the Hobby plan's image volume (<100 images/month initially), it stays within the free tier. |
+| `@vercel/blob` | Storing image URLs from Unsplash | Unsplash images are fetched externally on each render and have no guaranteed availability. Blob gives us a stable CDN URL that we own. |
+| zoom level 13 | zoom level 10 (Bundesland view) or 15 (street view) | Zoom 10 shows too little context (country-level). Zoom 15 shows individual streets but provides no regional orientation. Zoom 13 balances recognizable geography with editorial utility. |
 
 ---
 
@@ -186,30 +199,38 @@ WMO weather codes (0–99) map to German-language descriptions and Material Symb
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| `@tailwindcss/typography` plugin | Not yet fully compatible with Tailwind v4 CSS-first config as of early 2026. Would require `tailwind.config.js` which conflicts with the project's CSS-only configuration. | CSS `@layer utilities` in `globals.css` for article body styles |
-| `react-icons` or `lucide-react` for weather icons | Project already uses Material Symbols Rounded (loaded via Google Fonts CDN). Adding a second icon library doubles icon-related bundle/network cost and creates visual inconsistency. | Material Symbols Rounded — covers all WMO weather conditions (partly_cloudy_day, rainy, thunderstorm, ac_unit, foggy, etc.) |
-| `chart.js` or any charting library for the weather widget | A single temperature reading + condition icon is not a chart. Scope creep risk. | Plain TSX with the current weather object |
-| OpenWeatherMap, WeatherAPI, or other paid APIs | Require API keys, have usage limits, and cost money. Open-Meteo is free, no-key, open-source, with ECMWF/GFS/DWD model data of comparable quality for Austria. | `openmeteo` SDK → `api.open-meteo.com` |
-| Animating `backdrop-filter` values | Animating blur radius (`backdrop-blur-sm` → `backdrop-blur-lg` on scroll) triggers GPU recomposition on every frame — catastrophic on mobile. | Static `backdrop-blur-md` with CSS `transition` only on `opacity` or `transform` if animation is needed |
-| `framer-motion` for glassmorphism transitions | Adds ~50KB to the bundle for effects that CSS `transition` handles natively. Project has no animation dependency currently. | CSS `transition: background-color 150ms ease, opacity 150ms ease` on glass surfaces |
+| `sharp@^0.34.x` | Confirmed broken with Next.js 15 on Vercel — "Could not load the 'sharp' module using the linux-x64 runtime" as of October 2025. Multiple projects affected. | Pin to `sharp@0.33.5` which is the version bundled with Next.js 15's internal image optimization and known to work on Vercel linux-x64. |
+| `canvas` (node-canvas) | Requires native Cairo bindings that Vercel's build environment does not reliably compile. Results in deploy failures. | `sharp` for all compositing needs |
+| `puppeteer` or `playwright` | ~170 MB binary pushed the Vercel 250 MB bundle limit; ~3s cold start per invocation; overkill for tile stitching. | `sharp` |
+| `mapbox-gl`, `leaflet`, or any map rendering library | These render tiles in a browser DOM. For server-side map image generation, they require a headless browser (see puppeteer above). | Direct WMTS tile fetch + sharp composite |
+| `node-fetch` package | Node.js ≥18 (required by Next.js 15) ships native `fetch`. Adding `node-fetch` duplicates this and complicates the build. | Native `fetch` |
+| A tile coordinate npm package (`coordinates2tile`, etc.) | 6 lines of math (standard OSM formula). An npm dependency with maintenance overhead is not justified. | Inline coordinate functions |
+| mapbox static images API or similar paid services | These would work but cost money and add external dependencies. basemap.at is CC-BY 4.0 and tailored to Austria — more relevant content for an Austrian news platform. | basemap.at WMTS |
 
 ---
 
 ## Stack Patterns by Variant
 
-**If weather data must be per-Bezirk (not a single widget for all of Steiermark):**
-- Extend `bundesland.config.ts` with `lat` and `lon` fields per Bezirk entry
-- Pass the user's selected Bezirk coordinates to `getCurrentWeather()`
-- Cache per-coordinate by passing coordinates as fetch cache key tags: `{ next: { revalidate: 1800, tags: ['weather', \`${lat},${lon}\`] } }`
+**If the ingestion pipeline (cron job) generates maps automatically:**
+- Run tile fetch + sharp composite + blob upload inside the ingestion function
+- Use `Promise.all()` for the 9 tile fetches — do not await sequentially (adds ~9× network latency)
+- Store the returned Blob URL in the `Article.imageUrl` field via Prisma update
+- Budget: ~2–4s for the full pipeline per article (9 parallel tile fetches ~1s, composite ~0.5s, blob upload ~1s)
 
-**If backdrop-blur causes visual artifacts on older Android devices:**
-- Use `@supports (backdrop-filter: blur(1px))` in CSS to conditionally apply blur
-- Tailwind v4 `supports-[backdrop-filter:blur(1px)]:` variant handles this inline
-- Fallback: `bg-parchment/95` (near-opaque) with no blur — readable on all devices
+**If map generation is on-demand (API route, not pipeline):**
+- Create `/api/maps/generate?articleId=...` route with HMAC auth
+- Check Blob existence (`list({ prefix: \`maps/article-${id}\` })`) before regenerating
+- Return 304 if map already exists
+- Cap total function timeout at 8s with an `AbortController` signal
 
-**If the weather widget must work offline (e.g., cached PWA view):**
-- This is out of scope (PROJECT.md explicitly excludes offline mode)
-- The widget should gracefully degrade: wrap fetch in try/catch, return `null` on error, hide the widget component if data unavailable
+**If a location cannot be geocoded (Nominatim returns no results):**
+- Fall back to the article's tagged Bezirk centroid (add lat/lon to `bundesland.config.ts`)
+- Every Steiermark Bezirk should have a centroid lat/lon in config — this is the guaranteed fallback
+
+**If the Hobby plan Blob free tier is approached:**
+- Implement `del()` of old Blob images when a new map replaces them
+- CMS map picker should show current blob URL and offer "Bild löschen" action calling `del()`
+- Current estimate: ~100–200 generated images at ~150KB each = ~30 MB/month — well within Hobby limits
 
 ---
 
@@ -217,28 +238,30 @@ WMO weather codes (0–99) map to German-language descriptions and Material Symb
 
 | Package | Compatible With | Notes |
 |---------|-----------------|-------|
-| `openmeteo@^1.2.3` | Next.js 15 App Router Server Components | Import `fetchWeatherApi` in a server-only utility — do not import in Client Components (FlatBuffer decoding is server-side). Works with Node.js ≥18. |
-| `openmeteo@^1.2.3` | TypeScript 5.x | Ships its own type declarations. No `@types/openmeteo` needed. |
-| `backdrop-filter` CSS | iOS Safari ≥9, Chrome ≥76, Firefox ≥103 | 97%+ global browser support as of 2026. Tailwind outputs `-webkit-backdrop-filter` prefix automatically — no manual prefix needed. |
-| `color-mix()` CSS | Safari 16.2+, Chrome 111+, Firefox 113+ | All iOS 16.2+ and modern Android browsers. Covers >95% of Austrian mobile users. Safe to use in `@theme` tokens. |
-| `::first-letter` pseudo-element | All modern browsers | Tailwind v4 native `first-letter:` variant — no plugin required. Note: Tailwind v4 resets `::first-letter` in its preflight base styles; verify drop cap float behavior after applying reset if it interferes. |
-| Tailwind v4 `@theme` with `color-mix()` | `tailwindcss@^4.2.2` | `color-mix()` in `@theme` is supported — Tailwind v4 passes through arbitrary CSS values in custom properties without transformation. |
+| `sharp@0.33.5` | Next.js 15 App Router, Vercel linux-x64 | This is the version Next.js 15.0.2 ships internally. Proven working on Vercel. Do NOT upgrade to 0.34.x until the issue (lovell/sharp#4361) is resolved. Lock with `"sharp": "0.33.5"` (no caret) in package.json. |
+| `sharp@0.33.5` | Node.js ≥18 | Uses libvips prebuilt binary — no compilation needed. |
+| `@vercel/blob@^0.27` | Next.js 15 App Router (Server Actions, Route Handlers) | Works in both Server Actions and API routes. Reads `BLOB_READ_WRITE_TOKEN` from `process.env`. |
+| `@vercel/blob@^0.27` | Vercel Hobby plan | Free tier — no paid plan required. Usage limits apply (consult Vercel Blob pricing page for current quotas). |
+| basemap.at WMTS tiles | EPSG:3857 (Web Mercator) | OSM tile math uses Web Mercator. basemap.at uses `google3857` tile matrix set — same projection, same tile coordinate formula. No reprojection needed. |
+| Nominatim API | OpenStreetMap data, CC-BY-SA 2.0 | Results are CC-BY-SA licensed — using them to generate map images (which are separately CC-BY via basemap.at) is legally unambiguous for a non-commercial Austrian news site. Verify with legal if monetization plans change. |
 
 ---
 
 ## Sources
 
-- [openmeteo on npm](https://www.npmjs.com/package/openmeteo) — version 1.2.3 confirmed, MEDIUM confidence (WebSearch result, direct fetch blocked)
-- [open-meteo/typescript GitHub](https://github.com/open-meteo/typescript) — official SDK repository, HIGH confidence
-- [Open-Meteo API docs](https://open-meteo.com/en/docs) — current, forecast, timezone parameters confirmed, MEDIUM confidence (WebSearch-confirmed)
-- [Tailwind CSS backdrop-filter-blur docs](https://tailwindcss.com/docs/backdrop-filter-blur) — native utilities confirmed in v4, HIGH confidence
-- [Tailwind v4.0 release blog](https://tailwindcss.com/blog/tailwindcss-v4) — CSS-first @theme, `first-letter:` variant, `supports-[]` variant confirmed, HIGH confidence
-- [MDN backdrop-filter](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter) — browser support table, HIGH confidence
-- [WMO weather code descriptions (gist)](https://gist.github.com/stellasphere/9490c195ed2b53c707087c8c2db4ec0c) — code-to-description mapping, MEDIUM confidence
-- Material Design 3 token philosophy — [m3.material.io/foundations/design-tokens](https://m3.material.io/foundations/design-tokens) — MD3 CSS custom properties approach confirmed, HIGH confidence
-- Glassmorphism mobile performance — multiple sources agree on 12px blur limit and no animation rule, MEDIUM confidence
+- [sharp/issues/4361 — sharp@0.34.0 fails with Next.js 15](https://github.com/lovell/sharp/issues/4361) — version pinning rationale, HIGH confidence (GitHub issue with reproducible steps)
+- [sharp/issues/3870 — linux-x64 runtime error on Vercel](https://github.com/lovell/sharp/issues/3870) — Vercel compatibility context, HIGH confidence
+- [sharp.pixelplumbing.com](https://sharp.pixelplumbing.com/) — compositing API, install requirements, MEDIUM confidence (WebFetch blocked, confirmed via search)
+- [Vercel Functions Limitations](https://vercel.com/docs/functions/limitations) — 250 MB bundle, 10s timeout, 1024 MB memory, MEDIUM confidence (WebSearch-confirmed official docs)
+- [@vercel/blob npm](https://www.npmjs.com/package/@vercel/blob) — version 0.27+, `put()` API, Buffer support, MEDIUM confidence (WebSearch-confirmed)
+- [Vercel Blob Server Uploads docs](https://vercel.com/docs/vercel-blob/server-upload) — `put()` Server Action pattern, MEDIUM confidence
+- [DE:AT/basemap — OpenStreetMap Wiki](https://wiki.openstreetmap.org/wiki/DE:AT/basemap) — tile URL format, layer names, WMTS spec, HIGH confidence
+- [basemap.at WMTS GetCapabilities](https://basemap.at/wmts/1.0.0/WMTSCapabilities.xml) — authoritative layer list and URL patterns, HIGH confidence
+- [Nominatim 5.3.0 Search API](https://nominatim.org/release-docs/latest/api/Search/) — query parameters including `countrycodes`, `format`, `accept-language`, HIGH confidence
+- [Nominatim Usage Policy](https://operations.osmfoundation.org/policies/nominatim/) — 1 req/s limit, User-Agent requirement, HIGH confidence
+- [OSM tile coordinate formula](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames) — standard XYZ math, HIGH confidence
 
 ---
 
-*Stack research for: v3.0 "The Modern Archivist" — weather widget, glassmorphism, MD3 tokens, editorial typography*
-*Researched: 2026-03-30*
+*Stack research for: v3.1 Basemap Article Images — tile stitching, Nominatim geocoding, Vercel Blob Storage*
+*Researched: 2026-04-05*

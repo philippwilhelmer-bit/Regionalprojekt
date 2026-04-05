@@ -1,257 +1,256 @@
 # Pitfalls Research
 
-**Domain:** Adding "The Modern Archivist" design system overhaul to existing Next.js 15 / Tailwind v4 regional news platform
-**Milestone:** v3.0 The Modern Archivist
-**Researched:** 2026-03-30
-**Confidence:** HIGH for browser/CSS pitfalls (official sources + MDN + caniuse); MEDIUM for Tailwind v4 token naming (verified via Tailwind official docs + GitHub issues); MEDIUM for Open-Meteo (official docs + GitHub issues)
+**Domain:** Adding basemap.at tile stitching, Nominatim geocoding, and sharp image compositing to an existing Vercel-hosted Next.js news platform
+**Milestone:** v3.1 Basemap Article Images
+**Researched:** 2026-04-05
+**Confidence:** HIGH for Nominatim policy (official OSM policy page); HIGH for Vercel memory limits (official docs); HIGH for sharp/Vercel binary issue (multiple GitHub issues); MEDIUM for basemap.at attribution (OSM wiki + data.gv.at license); MEDIUM for Vercel Blob Hobby limits (community forums + docs); MEDIUM for German umlaut geocoding (general geocoding docs, no Austrian-specific official source)
 
 ---
 
 ## Critical Pitfalls
 
-### Pitfall 1: Token Naming Collision — MD3 Semantic Names vs Existing Tailwind v4 @theme Utilities
+### Pitfall 1: Nominatim IP Ban From Serverless Burst Requests
 
 **What goes wrong:**
-The existing `globals.css` already defines `--color-surface`, `--color-primary`, `--color-secondary` in `@theme`. Adding MD3-style tokens (`--color-ink`, `--color-parchment`, `--color-on-surface`, `--color-surface-variant`) that partially overlap with existing names causes two failure modes:
+The Nominatim public API enforces a hard limit of 1 request per second — measured as the sum of all requests originating from the same IP, not per user. Vercel serverless functions do not have a stable egress IP. During a cron-triggered batch ingestion run, all geocoding calls fire from Vercel's infrastructure in rapid succession. The Nominatim policy distinguishes between "bulk use" and normal use; systematic batch geocoding (e.g., geocoding every article in a processing run) qualifies as bulk use even if each individual call is spaced at 1 second in-process.
 
-1. **Silent overwrite:** A new token named `--color-surface` silently replaces the existing one. Every component using `bg-surface`, `text-surface` etc. changes color without any error. This is especially dangerous for the CMS admin which must retain its brand styling.
-2. **Unused orphan:** Renaming `--color-surface` to `--color-parchment` without a migration pass leaves dozens of `bg-surface` utility classes in components pointing at a CSS variable that no longer exists in `@theme`. Tailwind silently generates no utility — the class becomes a no-op with no build error.
+The ban is applied at the IP level and can affect all Vercel-hosted projects sharing that egress IP. Access is blocked with HTTP 403. Recovery requires contacting OSM operations — there is no self-service unban.
 
 **Why it happens:**
-Tailwind v4's `@theme` is a pure CSS token-to-utility generator. There is no schema validation, no deprecation warning, and no "unused token" output. A developer adds the new MD3-style block, removes the old tokens, runs `next dev`, and sees the homepage — which is fine because the hero image covers most of it. The regression is only visible in secondary views like the CMS or Bezirk pages.
+Developers implement per-request delays correctly in their Node.js code but do not account for concurrent serverless invocations. If two ingestion jobs run simultaneously (e.g., a cron trigger and a manual API call), each calls Nominatim independently. The 1 req/s limit is not per-process; it is per source IP at the Nominatim servers.
+
+A second failure mode: Vercel cold starts launch fresh Node.js processes with no shared state. A module-level rate limiter or in-memory queue does not persist across invocations, meaning multiple concurrent cold starts bypass any in-process throttle.
 
 **How to avoid:**
-1. Adopt a **two-phase rename** strategy: in Phase 1, add all new tokens as aliases alongside old ones (e.g., `--color-parchment: #FCF9EF` added next to `--color-background: #FCF9EF`). Both utilities exist simultaneously.
-2. In Phase 2, do a codebase-wide search-and-replace of utility classes (`bg-background` → `bg-parchment`).
-3. Only in Phase 3, remove the old token definitions.
-4. Use `grep -r "bg-background\|text-background\|border-background" src/` to confirm zero remaining usages before removing old tokens.
+1. Never call Nominatim directly from within the main ingestion pipeline. Decouple geocoding into a separate step with explicit serialization.
+2. Cache geocoding results in the database by normalized place name. A location like "Leoben, Steiermark" should only ever be geocoded once. Before calling Nominatim, always check the cache.
+3. Implement a database-backed geocoding queue (a simple `pending_geocoding` status on articles) processed by the cron job one article at a time with explicit 1100ms delays between calls.
+4. Always set a custom `User-Agent` header identifying the application: `User-Agent: Wurzelwelt/1.0 (regionalprojekt.vercel.app)`. Requests without a custom User-Agent identifying the application are considered policy violations and accelerate bans.
+5. Consider self-hosting Nominatim on a free-tier VPS or using the Photon geocoder (powered by OSM data, no rate limit policy) as an alternative for batch use.
 
 **Warning signs:**
-- CMS admin pages render with incorrect colors after token migration (forest-green `--color-primary` overwritten by ink black `--color-ink`)
-- `bg-surface` stops applying any background color (Tailwind generates no utility for a removed token — it becomes an unknown class, silently ignored)
-- Any component that used `border-primary` now uses the new ink color (dark) instead of forest green
+- HTTP 403 responses from `nominatim.openstreetmap.org` in Vercel function logs
+- Geocoding results suddenly empty for all new articles
+- Vercel functions logging "Usage limit reached" in the response body
 
 **Phase to address:**
-Phase 1 (Color System Foundation) — token migration must be the first task, executed atomically with a full component audit before any new components are built on top.
+Phase implementing the geocoding pipeline — the caching + queuing architecture must be designed before writing the first geocoding call.
 
 ---
 
-### Pitfall 2: backdrop-blur Does Not Work in Safari Without -webkit- Prefix and Requires a Semi-Transparent Background
+### Pitfall 2: sharp Binary Incompatibility on Vercel (macOS Dev vs Linux Runtime)
 
 **What goes wrong:**
-The glassmorphic bottom nav uses `backdrop-blur`. Two distinct failures occur on iOS Safari:
+sharp is a native Node.js module backed by libvips. On macOS (ARM64, the likely dev machine), `npm install` installs the `@img/sharp-darwin-arm64` native binary. On Vercel's Linux x64 runtime, this binary does not load and throws: `Could not load the "sharp" module using the linux-x64 runtime`.
 
-1. **Complete invisibility of the blur:** Without `-webkit-backdrop-filter` alongside the standard `backdrop-filter`, the blur simply does not render in older Safari versions (pre-iOS 18). The nav appears with a flat, fully transparent background instead of the frosted glass effect.
-2. **Blur collapses when background is fully transparent:** Safari requires the element to have at least a partially opaque background color (e.g., `rgba(255,255,255,0.6)`). `background: transparent` combined with `backdrop-filter` renders as if neither property is set — the nav becomes invisible against scrolling content.
-
-A third issue: when a parent element also has `backdrop-filter` applied (e.g., a toast or floating card above the nav), Safari treats the nested element's blur as composited differently, producing visible rendering artifacts and sometimes showing a hard-edged rectangle around the blur region.
+This error only appears at runtime on Vercel, not during local development or in the build step. The error causes the map generation API route to fail with a 500 on every invocation.
 
 **Why it happens:**
-This is a documented long-standing WebKit bug. The `-webkit-backdrop-filter` vendor prefix is mandatory for pre-iOS 18 Safari (still a significant share of Austrian mobile users). The transparent-background requirement is a compositing constraint in WebKit's rendering model — without an opaque region to composite against, the blur has no source pixels to sample.
+npm resolves native dependencies based on the current platform at install time. The `package-lock.json` generated on macOS ARM64 specifies the ARM64 optional dependency. When Vercel runs `npm ci`, it uses the lock file and installs the macOS binary rather than the Linux one.
 
 **How to avoid:**
-Always pair `backdrop-filter` with `-webkit-backdrop-filter` in CSS (Tailwind's `backdrop-blur-*` utilities do not automatically add the -webkit- prefix in v4 — verify this). Apply at minimum `bg-white/60` or equivalent semi-transparent background on the same element. Test on an actual iPhone (simulator does not always reproduce this). Avoid nesting backdrop-filter elements.
-
-In Tailwind v4 the correct pattern is:
-```css
-/* In a @layer or component CSS */
-.glass-nav {
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  background-color: rgba(252, 249, 239, 0.75); /* --color-background at 75% */
-}
-```
-
-**Warning signs:**
-- Bottom nav is invisible or shows flat color on iPhone (any iOS version)
-- Bottom nav shows a hard rectangle artifact at its boundaries on Safari
-- Blur effect visible in Chrome/Firefox but absent on Safari in BrowserStack
-
-**Phase to address:**
-Phase implementing the glassmorphic bottom nav — Safari must be tested on a physical device before the phase is marked complete.
-
----
-
-### Pitfall 3: backdrop-blur Causes Scroll Jank on Mid-Range Android Devices
-
-**What goes wrong:**
-A fixed-position bottom nav with `backdrop-blur` triggers a new GPU compositing layer for every scroll frame. On mid-range Android devices (which represent a realistic share of Austrian regional news readers), this causes visible frame drops (below 30fps) during scroll, making the site feel broken. The performance cost scales with blur radius — `blur(20px)` on a 390px-wide nav is significantly more expensive than `blur(4px)`.
-
-**Why it happens:**
-`backdrop-filter` forces GPU compositing and requires the browser to sample the pixels behind the element on every paint. A fixed-position element that covers the full width participates in every scroll repaint. At large blur radii, this is expensive enough to drop below 60fps on GPUs without hardware acceleration.
-
-**How to avoid:**
-- Keep the blur radius at or below `blur(12px)` — above this, the visual gain is marginal but the cost increases significantly.
-- Add `will-change: transform` to the nav element to ensure it is isolated to its own composite layer (reduces the repaint area).
-- Test scroll performance on a mid-range Android device (or throttle GPU in Chrome DevTools to "4x slowdown").
-- As a fallback for low-end devices: use `@media (prefers-reduced-motion: reduce)` to disable the blur and fall back to a solid background.
-
-**Warning signs:**
-- Chrome DevTools Performance tab shows "Recalculate Style" and "Composite Layers" events on every scroll frame
-- FPS counter drops below 45fps during scroll on Android
-- Users report the site "feeling laggy" on the homepage (where the most content scrolls behind the nav)
-
-**Phase to address:**
-Phase implementing glassmorphic bottom nav — performance testing on Android must be a done condition.
-
----
-
-### Pitfall 4: "No-Line Rule" Design Fails WCAG 1.4.11 Non-Text Contrast for Interactive Elements
-
-**What goes wrong:**
-WCAG Success Criterion 1.4.11 (Non-text Contrast, Level AA) requires that visual information used to identify UI components has at least a 3:1 contrast ratio against adjacent colors. When borders are removed from buttons, form fields, cards with interactive areas, and the region selector card, these components may fail to communicate "I am tappable" to low-vision users.
-
-The specific failure mode: the glassmorphic nav and the "Frag den Wurzelmann" card use tonal backgrounds (warm cream variants) to indicate visual separation. If the contrast ratio between `--color-background` (#FCF9EF) and `--color-surface` (#F6F4EA) is below 3:1 — which it almost certainly is, since they are designed to be subtle — any interactive element relying solely on that background shift for its boundary fails WCAG 1.4.11.
-
-**Why it happens:**
-The "No-Line Rule" philosophy optimizes for visual elegance. But the editorial print-magazine aesthetic that works on paper (where slight tonal shifts are perceptible under controlled lighting) does not always translate to mobile screens viewed in sunlight or by low-vision users. The existing v2.0 design already uses tonal layering without borders — v3.0 extends this pattern further, compounding the risk.
-
-**How to avoid:**
-- Use the WebAIM Contrast Checker to verify that each interactive element in its resting state has its boundary discernible at 3:1 against its parent background.
-- Use elevation (box-shadow without border) to communicate depth: `box-shadow: 0 1px 4px rgba(0,0,0,0.1)` adds perceivable separation without a visible border line.
-- For nav tabs: the active state uses a top-border indicator. Ensure this indicator has sufficient contrast against the nav background (not just presence/absence of the line).
-- For the region selector card: add a subtle `ring` or drop shadow instead of a border.
-
-**Warning signs:**
-- WebAIM contrast checker reports < 3:1 between a card background and its parent surface
-- Interactive elements (buttons, nav tabs) look "flat" on a phone screen in direct sunlight
-- Any accessibility audit tool flags "insufficient non-text contrast"
-
-**Phase to address:**
-Phase 1 (Color System Foundation) — token ratios must be validated at token definition time, before components are built.
-
----
-
-### Pitfall 5: CSS initial-letter (Modern Drop Cap) Is Not Supported in Firefox
-
-**What goes wrong:**
-`initial-letter` is the modern CSS property for drop caps (specifying how many lines the first letter spans, with proper baseline alignment). It is supported in Chrome 110+ and Safari (with `-webkit-` prefix), but **Firefox does not support `initial-letter` as of 2026**. An article page using `initial-letter` renders correctly in Chrome and Safari, but in Firefox the first letter appears at normal size with no drop cap effect — or worse, if the fallback is not handled, the layout breaks because font-size and float calculations misfire.
-
-**Why it happens:**
-`initial-letter` is a modern CSS feature tracked in a Firefox open bug. It was not part of CSS 2.1 and Firefox has not yet implemented it. Developers test in Chrome, see it working, and ship without cross-browser validation.
-
-**How to avoid:**
-Use a progressive enhancement strategy:
-```css
-.article-body p:first-of-type::first-letter {
-  /* Firefox fallback: float-based drop cap */
-  float: left;
-  font-size: 3.5rem;
-  line-height: 0.8;
-  margin-right: 0.1em;
-  margin-top: 0.05em;
-  font-family: var(--font-headline);
-}
-
-@supports (initial-letter: 3) {
-  .article-body p:first-of-type::first-letter {
-    float: none;
-    initial-letter: 3;
-    margin-right: 0.1em;
+Add an explicit `postinstall` or `vercel-install` step, or add the following to `package.json`:
+```json
+{
+  "optionalDependencies": {
+    "@img/sharp-linux-x64": "^0.33.0"
   }
 }
 ```
-
-Note: Firefox also applies the parent paragraph's `line-height` to the floated `::first-letter` (a separate Firefox bug since 2005 — open as of 2026), which means the float fallback needs a low explicit `line-height: 0.8` to prevent the drop cap from pushing the first line down.
-
-Additionally, `::first-letter` does not work as expected when the first text node contains HTML elements — if an article begins with a `<strong>` or `<span>` wrapper, `::first-letter` will not target the first character. Ensure article body first paragraph is plain text.
-
-**Warning signs:**
-- Drop cap renders correctly in Chrome but absent or misaligned in Firefox
-- First paragraph baseline shifts down in Firefox (line-height bug)
-- Drop cap appears on a `<strong>` tag's first letter instead of the paragraph's first letter
-
-**Phase to address:**
-Phase implementing article detail redesign — Firefox must be part of the acceptance criteria.
-
----
-
-### Pitfall 6: Editorial Serif Font (Newsreader) Causes CLS Without Proper next/font Configuration
-
-**What goes wrong:**
-Newsreader is already in the stack. However, if the font subsets or weights used in v3.0 differ from v2.0 (e.g., adding italic for drop cap styling or adding a heavier weight for blockquote attribution), the `next/font` configuration may not include those variants, causing them to fall back to `Times New Roman` on first load. The fallback font has different metrics than Newsreader, causing headline text to reflow when the web font loads — a measurable CLS event.
-
-More critically: if drop cap CSS relies on Newsreader's cap height for vertical alignment, and the fallback renders at different metrics, the drop cap can appear misaligned until the font loads, causing a visible jump in the article hero area.
-
-**Why it happens:**
-`next/font` generates a `size-adjust` for the declared fallback automatically, but this calculation is only accurate for the weights and styles included in the `subsets` and `weight` configuration. An incomplete configuration (e.g., `weight: ['400']` when the design uses `weight: 700` for headlines) means some variants fall back without size-adjust compensation.
-
-**How to avoid:**
-- Audit all font weights and styles needed for v3.0 against the current `next/font` Newsreader configuration.
-- Include `display: 'swap'` and `adjustFontFallback: true` explicitly.
-- For the drop cap specifically: the `::first-letter` font-size is usually much larger than body text — even small metric differences cause visible layout shifts. Test the article page in Chrome DevTools with "Slow 3G" throttling and check if the first paragraph jumps when Newsreader loads.
-
-**Warning signs:**
-- Google Search Console Core Web Vitals reports CLS > 0.1 on article pages
-- Article headline text "snaps" noticeably when Newsreader loads in slow network DevTools simulation
-- Drop cap first letter jumps vertically on font load
-
-**Phase to address:**
-Phase implementing article detail redesign — verify CLS on article pages with network throttling before marking complete.
-
----
-
-### Pitfall 7: Weather Widget Causes Hydration Mismatch in Next.js 15 SSR
-
-**What goes wrong:**
-A weather widget fetches current conditions from Open-Meteo. If the component fetches data in a Server Component and renders temperature/conditions, then the client hydrates and fetches again (or uses stale props), the server-rendered HTML and client-rendered HTML may differ (different time of fetch, different temperature reading). React throws a hydration mismatch error in development and silently overrides in production — but the override causes a flash of incorrect content.
-
-More commonly: the weather widget includes a "last updated" timestamp. Any timestamp rendered server-side will not match the client's `Date.now()` at hydration time, causing an immediate hydration error.
-
-**Why it happens:**
-Next.js 15 Server Components fetch on the server; the HTML is sent to the client; React "hydrates" (attaches event handlers) and expects the DOM to match. Any dynamic value (current time, live API data) that differs between server render and client hydration causes a mismatch.
-
-**How to avoid:**
-Two valid strategies:
-
-**Strategy A (recommended for weather):** Use a Server Component with ISR (`revalidate: 1800`) to fetch and render weather data. No timestamp in the rendered output. The server always renders the same cached data within the cache window — no mismatch. Add a "ca. X hours ago" relative indicator computed on the server from a static `fetchedAt` value.
-
-**Strategy B:** Render the weather widget as a Client Component with `dynamic(() => import('./WeatherWidget'), { ssr: false })`. This skips SSR entirely — the widget shows a skeleton on first render and fetches on the client. No hydration mismatch possible, but the widget contributes to CLS (skeleton → content shift).
-
-Do not use `suppressHydrationWarning` as a fix for weather data — it silences the error but allows stale server data to persist until client rehydration, which can show yesterday's weather to users with fast connections.
-
-**Warning signs:**
-- Next.js console shows "Text content does not match server-rendered HTML" on article or homepage
-- Temperature shows differently on first render vs after page interaction
-- "Hydration failed" error in browser console on the page containing the weather widget
-
-**Phase to address:**
-Phase implementing the weather widget — decide on Strategy A vs B at the start of that phase, not after seeing the error.
-
----
-
-### Pitfall 8: Open-Meteo Free Tier Hits Rate Limit If Not Cached at the Application Level
-
-**What goes wrong:**
-Open-Meteo's free tier allows 10,000 API calls per day. This sounds generous, but on a Next.js platform with ISR and multiple Vercel serverless function invocations, the same weather fetch can be called many more times than expected:
-- Each serverless cold start fetches independently (no shared memory cache between invocations)
-- If `revalidate` is not set, Next.js in development mode fetches on every page render
-- If the weather widget is also embedded in the CMS admin preview, it doubles calls
-
-At the Vercel Hobby tier with 1,000 serverless function invocations per day and cold starts, 10,000 calls can be exhausted within hours if the fetch is not properly cached.
-
-**Why it happens:**
-In-memory caching (a Node.js `Map` or module-level variable) does not persist between serverless function invocations on Vercel — each cold start is a fresh process. Developers test locally where process memory persists across requests, assume caching works, and deploy to production where it does not.
-
-**How to avoid:**
-Use Next.js `fetch` with `next: { revalidate: 1800 }` (30 minutes) inside a Server Component or Route Handler. Next.js's built-in fetch cache is persisted in the Vercel Data Cache layer between invocations — this is the only cross-invocation cache available on Vercel Hobby without Redis.
-
-```typescript
-const weatherData = await fetch(
-  `https://api.open-meteo.com/v1/forecast?latitude=47.07&longitude=15.45&current_weather=true`,
-  { next: { revalidate: 1800 } }
-);
+The correct install command for Vercel compatibility:
+```bash
+npm install --cpu=x64 --os=linux --libc=glibc sharp
 ```
-
-Open-Meteo itself recommends updating no more than once per hour. 30-minute revalidation on Vercel is appropriate and keeps calls well below 500/day even with spikes.
+Alternatively, add to `vercel.json`:
+```json
+{
+  "installCommand": "npm install --cpu=x64 --os=linux sharp"
+}
+```
+Verify by checking Vercel build logs that `@img/sharp-linux-x64` is listed in installed packages, not `@img/sharp-darwin-arm64`.
 
 **Warning signs:**
-- HTTP 429 responses from `api.open-meteo.com` in Vercel function logs
-- Weather widget renders empty or shows stale data from hours ago
-- Vercel function invocation count unexpectedly high compared to pageviews
+- `Could not load the "sharp" module using the linux-x64 runtime` in Vercel function logs
+- Map generation routes return 500 locally but work fine
+- Build succeeds but runtime fails on first image compositing call
 
 **Phase to address:**
-Phase implementing the weather widget — caching strategy must be decided before the API integration, not as a fix after seeing 429 errors.
+Phase 1 of the milestone (infrastructure / dependency setup) — add the correct sharp dependency configuration before writing any image compositing code.
+
+---
+
+### Pitfall 3: Map Generation Failure Blocking Article Creation
+
+**What goes wrong:**
+The map image generation is added to the ingestion pipeline as an additional step after article creation. If this step throws an unhandled error (Nominatim ban, basemap.at tile fetch timeout, sharp memory spike, Vercel Blob write failure), the entire ingestion job for that article fails. The article is not saved to the database, or its status is left in an inconsistent state. The pipeline alert system triggers, operators investigate, and the root cause is a transient map image failure — not a content issue.
+
+**Why it happens:**
+Adding a new feature to an existing pipeline without explicit failure isolation. The ingestion pipeline was designed as a sequential chain — if any step fails, the chain stops. Map image generation introduces five new failure points (location extraction, geocoding, tile fetch, image compositing, blob upload) all of which can fail independently and transiently.
+
+**How to avoid:**
+Treat map image generation as a best-effort step with explicit try/catch isolation:
+```typescript
+let mapImageUrl: string | null = null;
+try {
+  mapImageUrl = await generateMapImage(article);
+} catch (err) {
+  logger.warn('Map image generation failed for article, continuing without image', {
+    articleId,
+    error: err,
+  });
+  // Article saves successfully with mapImageUrl = null
+}
+await saveArticle({ ...articleData, mapImageUrl });
+```
+The article creation must always succeed regardless of map image outcome. Map images should be generatable on-demand after publication via the CMS map image picker as a fallback.
+
+**Warning signs:**
+- Ingestion pipeline alerts firing for articles that otherwise have valid content
+- Database shows articles with `status: error` when the article text is valid
+- Cron logs show exceptions originating from `generateMapImage` functions, not from AI generation
+
+**Phase to address:**
+Every phase that touches the ingestion pipeline — this isolation pattern must be the first thing implemented, before any map generation logic is written.
+
+---
+
+### Pitfall 4: Vercel Hobby Plan Cron Timeout With Tile Fetching + Image Compositing
+
+**What goes wrong:**
+The Hobby plan default function duration is 10 seconds, with a maximum of 60 seconds (requires `export const maxDuration = 60` in the route). The ingestion cron already calls the AI generation API (Claude), which takes 5–15 seconds per article. Adding tile fetching (4–9 HTTP requests to basemap.at, each 100–500ms) plus sharp compositing (CPU-intensive, 500ms–2s on a cold 256×256 tile grid) can push total execution time over 60 seconds for a single article with map image generation.
+
+The cron runs once per day. If it times out mid-run, some articles are saved without map images and the pipeline enters a partial-completion state.
+
+**Why it happens:**
+Map image generation is synchronous in the happy path. Developers test with fast tile responses on their local machine and do not account for Vercel cold start overhead, network latency to Austrian tile servers from Vercel's US/EU edge, and the cumulative cost of all pipeline steps in a single function invocation.
+
+**How to avoid:**
+1. Set `export const maxDuration = 60` on the cron route handler immediately.
+2. Decouple map image generation from the cron: the cron saves articles, then enqueues them for map image generation. A separate API route handles map generation per article (triggered by a CMS "generate" button or a lightweight queue processor).
+3. For the on-demand map image API route, set `export const maxDuration = 30` — tile fetch + compositing should complete in under 10 seconds under normal conditions, 30 seconds provides buffer.
+4. Parallelize the tile fetches using `Promise.all` rather than sequential `await` calls — fetching all tiles in parallel reduces tile fetch time from 4×300ms sequential to ~300ms total.
+
+**Warning signs:**
+- Vercel function logs showing `504 FUNCTION_INVOCATION_TIMEOUT` on cron executions
+- Articles saving successfully but all have `mapImageUrl: null`
+- Cron log shows fewer articles processed than source ingested
+
+**Phase to address:**
+Phase designing the pipeline integration — decouple map image generation before implementing it.
+
+---
+
+### Pitfall 5: Vercel Blob Hobby Plan Storage Exhaustion Blocks All Blob Access
+
+**What goes wrong:**
+Vercel Blob storage on the Hobby plan is capped at 250 MB. A basemap.at map image for an article at 800×450px (zoom level 13–14, 3×3 tile grid) saved as JPEG at 80% quality is approximately 150–250 KB. At that size, 250 MB holds roughly 1,000–1,600 map images before the limit is reached. On a platform generating multiple articles per day, this limit is reachable within months.
+
+When the Hobby plan Blob limit is exceeded, Vercel blocks all access to the Blob store — including reads of already-stored images. Articles that previously displayed map images show broken image links. The blockage persists until 30 days after the overage, or until upgrading to Pro.
+
+**Why it happens:**
+The Blob store grows monotonically. Old map images for outdated articles are never pruned. Developers do not account for cumulative storage growth or implement any cleanup strategy.
+
+**How to avoid:**
+1. Implement a Blob cleanup job that deletes map images for articles older than 90 days or articles that have been removed.
+2. Optimize image output aggressively: JPEG at 75% quality, 800×400px max, progressive encoding via sharp. This targets ~80–120 KB per image, extending the 250 MB limit to 2,000+ images.
+3. Monitor Blob usage via Vercel dashboard; set up a manual alert threshold at 200 MB.
+4. For the Hobby plan, consider storing only the most recent N images in Blob and serving older articles with a gradient fallback. Alternatively, upgrade to Pro ($20/month) which includes 10 GB Blob storage.
+5. Never store intermediate tile images or debug composites in Blob — only the final map image.
+
+**Warning signs:**
+- Vercel dashboard shows Blob usage above 200 MB
+- "Blob storage blocked" error in function logs
+- All article map images showing as broken links simultaneously
+
+**Phase to address:**
+Phase implementing Blob storage integration — define and implement the cleanup strategy before the first image is written.
+
+---
+
+### Pitfall 6: basemap.at CC-BY 4.0 Attribution Missing From Generated Images
+
+**What goes wrong:**
+basemap.at is licensed under the Open Government Data License Austria (CC-BY 4.0). The required attribution text is: "Datenquelle: basemap.at" with a link to basemap.at. For static generated images (where hyperlinks cannot be embedded), the attribution must be rendered visibly on the image itself. Omitting this attribution violates the CC-BY 4.0 license terms, which is an IP compliance issue — particularly relevant if the platform is eventually monetized (AdSense is already present).
+
+A secondary violation risk: basemap.at attribution requires the data source to be credited on every derivative work. An article page that displays a generated map image must also show the attribution text on the page, since a generated PNG cannot contain a hyperlink.
+
+**Why it happens:**
+Developers treat basemap.at as "free to use" without reading the license terms carefully. The CC-BY attribution requirement is easy to miss when tiles are fetched without an API key (no key = no account = no terms-of-service reminder).
+
+**How to avoid:**
+1. Burn attribution text into every generated image using sharp's `composite` with a text overlay, or add a semi-transparent attribution bar at the bottom of the composited image.
+2. Use sharp to render a PNG text strip: white text "© basemap.at" on a semi-transparent black bar, composited at the bottom-left of the final image before saving to Blob.
+3. On article pages displaying the map image, render `<figcaption>Kartendaten: <a href="https://basemap.at">basemap.at</a></figcaption>` beneath the image — this satisfies the hyperlink requirement that cannot be met in the image itself.
+4. Document the attribution requirement as a phase done-condition: the milestone is not complete until attribution is visible on all generated images and on article pages.
+
+**Warning signs:**
+- Map images display without any text attribution overlay
+- Article pages show the map image but no data source credit
+- Image compositing code has no step for overlaying attribution text
+
+**Phase to address:**
+Phase implementing the image compositing step — attribution overlay must be part of the initial compositing implementation, not added later.
+
+---
+
+### Pitfall 7: Nominatim German Umlaut and Austrian Place Name Mismatches
+
+**What goes wrong:**
+Nominatim accepts UTF-8 queries and generally handles German umlauts correctly when the query string is properly encoded. However, two failure modes exist in the Wurzelwelt pipeline:
+
+1. **Encoding failure in the fetch call:** If article text is decoded from an RSS feed with incorrect encoding handling and umlauts are represented as HTML entities (`&ouml;`, `&auml;`, `&uuml;`) or mangled characters, passing these directly to Nominatim returns zero results. "Gr&auml;z" instead of "Graz" will not match.
+
+2. **Austrian Bezirk name ambiguity:** Austrian district names are frequently ambiguous. "Leoben" is both a Bezirk (district) and a city within that Bezirk. "Liezen" is a Bezirk that shares its name with the principal town. Nominatim geocodes the city, not the administrative district. The resulting coordinates are correct for the city but may be at the wrong zoom level for a map showing the district.
+
+3. **Common noun vs. place name confusion:** Location extraction from German news text will extract place names, but German common nouns are capitalized, making them easy to confuse with proper nouns. "Das Tal" (the valley) may be extracted as a place name and geocoded incorrectly.
+
+**Why it happens:**
+RSS feed parsers may return incorrectly encoded text, especially from older Austrian news sources. Location extraction without NER context conflates capitalized common nouns with place names. Nominatim's Austria coverage is strong for cities but less reliable for administrative boundaries at the Bezirk level.
+
+**How to avoid:**
+1. Normalize article text through a decode step before any location extraction: convert all HTML entities to UTF-8, strip diacritics fallback characters.
+2. Append ", Österreich" or ", Steiermark" to all Nominatim queries to restrict results to Austria, reducing ambiguity and preventing matches on identically named places in Germany or Switzerland.
+3. Add `countrycodes=at` parameter to all Nominatim API calls: `&countrycodes=at`.
+4. For extracted locations, filter against the known 13 Bezirk names from `bundesland.config.ts` before geocoding — a confirmed Bezirk name is far more reliable than a regex-extracted string.
+5. Implement a confidence threshold: if Nominatim returns multiple results or a result with a low relevance score, fall back to the article's tagged Bezirk centroid from config rather than using an uncertain geocoded location.
+
+**Warning signs:**
+- Nominatim queries returning zero results for Austrian city names
+- Map images showing locations outside Austria
+- Map images centered on German cities instead of Austrian places with the same name
+
+**Phase to address:**
+Phase implementing the geocoding and location extraction logic — the `countrycodes=at` parameter and Bezirk-based fallback must be in the initial implementation.
+
+---
+
+### Pitfall 8: basemap.at Tile Coordinate System and Zoom Level Miscalculation
+
+**What goes wrong:**
+basemap.at WMTS supports two coordinate systems: EPSG:3857 (Web Mercator, same as Google Maps and OpenStreetMap) and EPSG:31256 (Austrian national grid). Using the wrong tile matrix set causes tiles to be fetched for the wrong geographic area.
+
+Additionally, the tile URL format for basemap.at's REST-style WMTS endpoint uses a specific path structure. Developers often reference generic WMTS documentation and construct incorrect tile URLs, resulting in HTTP 400 or 404 responses from the tile server.
+
+Zoom level selection also has pitfalls: zoom level 13–14 is appropriate for Bezirk-level context (shows town + surrounding region). Zoom level 17–18 shows individual buildings but requires 25+ tiles for a useful area, making stitching expensive. Using the wrong zoom level produces either useless (too zoomed out, all of Austria visible) or broken (too many tiles, timeout) map images.
+
+**Why it happens:**
+basemap.at's official documentation is primarily in German and oriented toward GIS professionals. Developers adapt OpenStreetMap tile URL patterns which differ from basemap.at's WMTS conventions. WMTS tile coordinates (row, column, zoom) are specified differently than OSM's slippy map tile conventions.
+
+**How to avoid:**
+1. Use the EPSG:3857 tile matrix set exclusively — it matches the Web Mercator coordinates returned by Nominatim (lat/lon → tile x/y calculation uses the standard OSM slippy map formula).
+2. The correct basemap.at tile URL pattern:
+   `https://mapsneu.wien.gv.at/basemap/{layer}/normal/google3857/{zoom}/{y}/{x}.{format}`
+   Note: y comes before x in basemap.at's path structure (TMS convention), which is the inverse of many other tile services.
+3. Default to zoom level 13 for Bezirk-level maps (town in context, ~3×3 tile grid). Zoom 14 for city-center detail. Never exceed zoom 15 for generated article headers.
+4. Validate tile coordinates: for any location in Austria, valid zoom 13 tile x values are roughly 4300–4500 and y values are roughly 2750–2900. Values outside this range indicate a coordinate calculation error.
+
+**Warning signs:**
+- HTTP 404 responses from basemap.at tile fetch calls
+- Generated images showing sea, water, or land far outside Austria
+- Tile fetch succeeds but stitched image is visually scrambled (x/y transposition)
+
+**Phase to address:**
+Phase implementing tile fetching — include a coordinate validation test with known Graz coordinates before writing stitching logic.
 
 ---
 
@@ -259,13 +258,12 @@ Phase implementing the weather widget — caching strategy must be decided befor
 
 | Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
 |----------|-------------------|----------------|-----------------|
-| Remove old tokens and add new MD3 tokens in one commit | Faster migration | All components using old token names silently lose their styles — detected only in browser | Never — always two-phase rename |
-| Add `-webkit-backdrop-filter` only to the nav component | Quick fix for Safari | Every new glassmorphism component added in future will also lack the prefix | Never — make it a CSS utility class or mixin |
-| Use `initial-letter` without `@supports` guard | Cleaner code | Drop cap broken in Firefox for all users | Never on editorial content — always progressive enhance |
-| Inline Open-Meteo fetch in a Client Component | Simpler code | Direct API calls from browser expose the endpoint pattern; no server-side cache; each client makes its own API call | Never — always server-side with caching |
-| `suppressHydrationWarning` on weather data | Silences error immediately | Stale server-rendered data stays in DOM; misleads users | Never — fix the root cause |
-| Apply `backdrop-blur` with high radius (blur(24px)+) on mobile | Looks impressive in screenshots | Scroll jank on Android; GPU compositing cost per frame | Never on full-width fixed elements |
-| Use `--color-surface` to mean both the existing pale cream background and the new MD3 surface | Reuses existing token name | MD3 surface semantics (for cards, elevation) conflict with v2.0 background semantics | Never — rename to distinct names |
+| Call Nominatim inline in ingestion pipeline without caching | Simpler code | IP ban risk; geocoding same place repeatedly; blocks article creation | Never — always check DB cache first |
+| Skip attribution overlay on map images | Faster compositing code | CC-BY license violation; legal risk if platform is monetized | Never |
+| Store raw tile images in Blob alongside final composites | Easier debugging | Exhausts 250 MB Hobby limit faster; tiles are reproducible from basemap.at on demand | Never in production |
+| In-process Node.js rate limiter for Nominatim | Simple to implement | Does not work across concurrent Vercel invocations; provides false safety | Never — use DB-backed queue |
+| Hardcode zoom level 14 for all articles | Fewer decisions | Cities and villages look wrong at the same zoom level; a major city needs lower zoom for context | Only as starting default, with per-size adjustment planned |
+| Run map image generation synchronously in cron | Simpler pipeline | Cron timeout risk; map failure blocks article creation | Never — isolate as best-effort step |
 
 ---
 
@@ -273,13 +271,16 @@ Phase implementing the weather widget — caching strategy must be decided befor
 
 | Integration | Common Mistake | Correct Approach |
 |-------------|----------------|------------------|
-| Open-Meteo + Next.js | In-memory cache in a module-level variable | Use `fetch` with `next: { revalidate: 1800 }` — Vercel Data Cache persists across invocations |
-| Open-Meteo + Next.js | Fetching in a Client Component | Fetch in a Server Component or Route Handler; Client Component receives props |
-| Open-Meteo + SSR | Rendering `new Date()` alongside weather data | Never render server-side timestamps that will differ at hydration; use relative descriptions or `suppressHydrationWarning` only on the timestamp element |
-| next/font + Newsreader | Adding new font weights/styles without updating the font config | Always update both the `next/font` declaration and the `@theme` font token; verify no FOUT in DevTools |
-| Tailwind v4 @theme + new tokens | Defining `--color-ink` without auditing existing `--color-text` usage | Run grep for all uses of token-derived utilities before renaming any token |
-| CSS backdrop-filter + Tailwind v4 | Assuming `backdrop-blur-md` utility adds -webkit- prefix automatically | Manually verify with DevTools; add -webkit-backdrop-filter in a CSS class if missing |
-| drop cap + Newsreader + first paragraph | Article body component wrapping first text node in a `<span>` for "AI-generated" label or similar | `::first-letter` will not target the correct character — ensure drop cap only applies to plain-text paragraphs |
+| Nominatim | No User-Agent header set | Always set `User-Agent: Wurzelwelt/1.0 (regionalprojekt.vercel.app)` in every fetch call |
+| Nominatim | No `countrycodes=at` filter | Add `&countrycodes=at` to restrict results to Austria and prevent false matches on German cities |
+| Nominatim | Geocoding the same location on every article | Cache geocoding results in Postgres by normalized place name; only call API for cache misses |
+| basemap.at | Using x/y in wrong order | basemap.at REST path is `/{zoom}/{y}/{x}` — y before x, matching TMS convention |
+| basemap.at | Using EPSG:31256 tile matrix set | Use EPSG:3857 (google3857) which matches Nominatim's lat/lon output |
+| sharp | Installing on macOS without Linux optional dependency | Add `@img/sharp-linux-x64` to `optionalDependencies` in `package.json` |
+| sharp | Loading all tiles into memory before compositing | Pipe tile fetches through sharp stream rather than buffering all tiles first |
+| Vercel Blob | Writing every intermediate artifact | Write only the final composited image; intermediate tiles are discarded |
+| Vercel Blob | No cleanup strategy | Implement periodic cleanup of images for articles older than 90 days |
+| Ingestion pipeline | Awaiting map generation before saving article | Wrap in try/catch; save article regardless; `mapImageUrl` defaults to `null` |
 
 ---
 
@@ -287,22 +288,21 @@ Phase implementing the weather widget — caching strategy must be decided befor
 
 | Trap | Symptoms | Prevention | When It Breaks |
 |------|----------|------------|----------------|
-| backdrop-blur on large fixed elements | Scroll jank on Android, <30fps | Keep blur radius ≤ 12px; add `will-change: transform`; test on real hardware | Any mid-range Android phone (common in Austrian regional demographics) |
-| Multiple backdrop-blur elements on the same page | Compounding GPU cost; Safari artifacts | Limit to one backdrop-blur element per viewport | Two or more glass elements visible simultaneously |
-| Newsreader font not subset correctly | FOUT on every page load; high LCP | Use `next/font` with explicit `subsets: ['latin']`; do not load all weights | Always — large font files affect LCP even on fast connections |
-| Open-Meteo fetch without revalidate | 429 rate limit errors; weather widget breaks | Use `next: { revalidate: 1800 }` | After roughly 700 pageviews/day if every view triggers a fetch |
-| CSS `initial-letter` on every article paragraph | Unintended multiple drop caps | Apply only to `p:first-of-type` within the article body container | Any article with multiple paragraphs |
+| Sequential tile fetches (await each tile) | Map generation takes 2–4 seconds instead of 300ms | Use `Promise.all` to fetch all tiles in parallel | Any tile grid larger than 1×1 |
+| Fetching high-resolution tiles (zoom 16+) at 3×3 grid | 9 tiles × 512KB each = 4.5 MB in memory; compositing OOM or timeout | Limit to zoom 13–14; 256px tiles; 3×3 grid max = ~500 KB total | Always — Hobby plan 10 sec default timeout |
+| Reprocessing all articles for map images on each cron run | Nominatim rate limit exhaustion; redundant tile fetches | Only process articles with `mapImageUrl = null` | After ~5 articles if no status check |
+| Storing full-resolution composited JPEG (1200×675px) | ~400 KB per image; hits 250 MB Blob limit in ~600 articles | Optimize: 800×450px, JPEG 75%, progressive | After ~12 months of daily article generation |
+| Calling Nominatim for every location mention in article text | Multiple API calls per article; rate limit hit on any non-trivial run | Extract primary location only; check DB cache; call API at most once per article | On any article mentioning more than 1 place name |
 
 ---
 
 ## Security Mistakes
 
-Not a high-risk area for this milestone. The weather API (Open-Meteo) requires no credentials — exposing the fetch URL is not a security risk. However:
-
 | Mistake | Risk | Prevention |
 |---------|------|------------|
-| Embedding Open-Meteo calls client-side with hardcoded coordinates | Reveals Graz/Styria location specificity to anyone inspecting network tab (low risk, public info) | Fetch server-side; client receives only the rendered data |
-| Adding weather API key (if migrating to a paid weather API in future) to a `NEXT_PUBLIC_` variable | API key exposed in browser JavaScript bundle | Always use non-NEXT_PUBLIC_ variables for API credentials; fetch server-side only |
+| Exposing Vercel Blob token in client-side code | Unauthorized Blob writes; storage exhaustion | Blob token must only be used in server-side API routes, never in `NEXT_PUBLIC_` variables |
+| Unvalidated location string passed to Nominatim query | SSRF-style URL injection if location is not sanitized (low risk, but query is user-visible in logs) | Sanitize extracted location text: strip URL metacharacters, limit length to 100 chars before encoding |
+| No rate limiting on the on-demand map image API route (`/api/map-image`) | The route fetches from basemap.at and calls Nominatim; a crawler hitting it exhausts both limits | Add request signature verification (e.g., HMAC of article ID, consistent with existing CRON_SECRET pattern) or rate limit by IP |
 
 ---
 
@@ -310,26 +310,26 @@ Not a high-risk area for this milestone. The weather API (Open-Meteo) requires n
 
 | Pitfall | User Impact | Better Approach |
 |---------|-------------|-----------------|
-| Glassmorphic nav invisible on dark hero images | Users cannot see nav tabs against dark backgrounds | Ensure nav has sufficient background opacity (≥ 60%) to read against any image color |
-| Drop cap on articles with short first paragraphs (1-2 lines) | Drop cap taller than the paragraph — ugly, broken layout | Add minimum paragraph length check; only apply drop cap if first paragraph has ≥ 4 lines of text |
-| Weather widget shows Graz weather regardless of selected Bezirk | Users in Liezen (alpine) see weather for Graz (valley) — significantly different conditions | Lookup coordinates per selected Bezirk from `bundesland.config.ts` and pass to Open-Meteo |
-| "No-Line Rule" applied to form inputs in CMS admin | Editors cannot identify text fields without borders | Restrict no-border philosophy to read-only editorial content; keep borders on form inputs in CMS |
-| MD3 color token names ("Ink", "Parchment") used as Tailwind utility class names in HTML | Non-semantic class names like `text-ink` are harder to understand than `text-primary` in code review | Use semantic names that describe role, not appearance: `text-editorial` or `text-body` is better than `text-ink` if ink = body text |
+| Map image generation failure shows broken image placeholder | Article header looks broken; degrades editorial quality | Always fall back to the existing gradient fallback if `mapImageUrl = null`; never show broken `<img>` |
+| Map centered on wrong location (geocoding error) | Article about Leoben shows map of a German city | Show the article's tagged Bezirk centroid from config as fallback when geocoding confidence is low |
+| Attribution text overlaid too small to read on mobile | CC-BY license technically satisfied but practically invisible | Minimum 11px font size in attribution overlay; semi-transparent background ensures contrast |
+| Map image shows very generic Austria-wide view (wrong zoom) | Map provides no useful geographic context | Validate that the geocoded coordinates fall within the article's tagged Bezirk bounding box; if not, use Bezirk centroid |
+| CMS map image picker shows no preview before saving | Editor selects wrong crop or wrong location without feedback | Show a preview thumbnail in the CMS before saving the map image URL to the article |
 
 ---
 
 ## "Looks Done But Isn't" Checklist
 
-- [ ] **Token migration complete:** Run `grep -r "bg-background\|bg-surface\|text-text\|border-primary" src/` — result must be zero before old tokens are removed
-- [ ] **Safari backdrop-blur:** Test glassmorphic bottom nav on a physical iPhone — blur effect must be visible (not flat/transparent)
-- [ ] **Android scroll performance:** Scroll the homepage on a mid-range Android device or with GPU throttling in Chrome DevTools — no visible jank
-- [ ] **Firefox drop cap:** Open an article page in Firefox — first letter must render (float fallback, not `initial-letter`), aligned correctly
-- [ ] **CLS on article page:** Run Chrome DevTools Lighthouse on an article page — CLS must be below 0.1
-- [ ] **Hydration errors:** Open browser console on the homepage in development — no "Text content does not match" errors from the weather widget
-- [ ] **Open-Meteo caching:** Check Vercel function logs — confirm the same weather URL is not being fetched on every request
-- [ ] **WCAG non-text contrast:** Verify that interactive elements (nav tabs, region selector card, CTA buttons) have visually perceptible boundaries at 3:1 contrast
-- [ ] **Drop cap on HTML-wrapped paragraphs:** Verify that articles where the AI prepends a `<strong>` tag or similar to the first paragraph do not show a broken drop cap
-- [ ] **CMS admin unaffected:** Navigate every CMS admin page after token migration and confirm no visual regressions
+- [ ] **sharp binary:** Deploy to Vercel and confirm `@img/sharp-linux-x64` loads correctly — test with a live map generation request, not just a local build
+- [ ] **Nominatim User-Agent:** Verify all Nominatim fetch calls include the custom User-Agent header in Vercel function logs
+- [ ] **Nominatim cache:** Confirm that geocoding the same place name twice does not produce two API calls — check DB for cached geocoding rows
+- [ ] **Attribution overlay:** Open a generated map image and confirm "© basemap.at" text is visible on the image itself
+- [ ] **Attribution on article page:** Verify that article pages displaying a map image also render a `<figcaption>` with a link to basemap.at
+- [ ] **Pipeline isolation:** Simulate a Nominatim failure (return 503) and confirm the article is still saved with `mapImageUrl = null` — not with an error status
+- [ ] **Blob cleanup:** Confirm a cleanup strategy exists (manual, cron, or TTL) before Blob usage approaches 200 MB
+- [ ] **Tile coordinate order:** Generate a map for Graz (47.07°N, 15.43°E) and confirm the tile shows Graz, not an ocean or foreign location
+- [ ] **Cron timeout:** Set `maxDuration = 60` on the cron route and confirm the pipeline completes within 45 seconds for a typical single-article run
+- [ ] **Fallback to gradient:** Set `mapImageUrl = null` on an article and confirm the article header renders the gradient fallback, not a broken image
 
 ---
 
@@ -337,13 +337,13 @@ Not a high-risk area for this milestone. The weather API (Open-Meteo) requires n
 
 | Pitfall | Recovery Cost | Recovery Steps |
 |---------|---------------|----------------|
-| Token naming collision breaks CMS styling | MEDIUM | Revert `globals.css` to the two-phase state (both old and new tokens present); re-run migration pass more carefully |
-| Safari backdrop-blur broken at launch | LOW | Add `-webkit-backdrop-filter` and minimum background opacity; redeploy — no data change needed |
-| Open-Meteo 429 errors in production | LOW | Add `next: { revalidate: 1800 }` to the fetch call; redeploy; rate limit self-resolves within 24 hours |
-| Firefox drop cap layout broken | LOW | Wrap `initial-letter` in `@supports`; add float fallback with correct line-height; redeploy |
-| CLS > 0.1 on article pages from Newsreader | MEDIUM | Audit `next/font` config for all weights used; add missing weights; verify `adjustFontFallback: true` |
-| Hydration mismatch from weather widget | LOW | Switch to `dynamic(() => ..., { ssr: false })` or remove timestamp from server-rendered output |
-| Borderless design fails accessibility audit | HIGH | Cannot be resolved by color tweaks alone if the tonal palette was designed without contrast validation — may require adding subtle shadows or ring indicators to interactive elements; requires design review |
+| Nominatim IP ban | HIGH | Contact OSM Operations (ops@osmfoundation.org); implement DB-backed cache and queue before resuming; consider switching to Photon geocoder |
+| sharp binary error on Vercel | LOW | Add `@img/sharp-linux-x64` to `optionalDependencies`; redeploy; no data loss |
+| Cron timeout with map generation | LOW | Add `maxDuration = 60`; decouple map generation to separate step; redeploy |
+| Vercel Blob storage blocked | MEDIUM | Delete old blobs via Vercel dashboard or API to get under 250 MB; implement cleanup cron; articles show gradient fallback during blockage |
+| CC-BY attribution missing at launch | MEDIUM | Regenerate all existing map images with attribution overlay; update sharp compositing step; re-upload to Blob |
+| Map images showing wrong locations | MEDIUM | Clear `mapImageUrl` for affected articles; re-run map generation with fixed coordinate logic; validate with Bezirk bounding box check |
+| Blob URL rotted (image deleted externally) | LOW | On-demand map image API route regenerates and re-saves; article page requests regeneration on broken image |
 
 ---
 
@@ -351,40 +351,34 @@ Not a high-risk area for this milestone. The weather API (Open-Meteo) requires n
 
 | Pitfall | Prevention Phase | Verification |
 |---------|------------------|--------------|
-| Token naming collision | Phase 1: Color System Foundation | grep for zero old utility classes before removing old tokens |
-| MD3 surface/on-surface naming vs Tailwind existing tokens | Phase 1: Color System Foundation | Review every token name against existing globals.css; document all renames in a migration map |
-| No-border WCAG 1.4.11 failure | Phase 1: Color System Foundation | WebAIM contrast check on every interactive element token pair |
-| backdrop-blur iOS Safari | Phase implementing glassmorphic bottom nav | Physical iPhone test required in done criteria |
-| backdrop-blur Android performance | Phase implementing glassmorphic bottom nav | Chrome DevTools GPU throttle test required in done criteria |
-| drop cap Firefox | Phase implementing article detail | Firefox cross-browser test in done criteria |
-| drop cap on HTML-wrapped first paragraph | Phase implementing article detail | Test with AI-generated article that has `<strong>` in first paragraph |
-| Newsreader CLS | Phase implementing article detail | Lighthouse CLS score < 0.1 required in done criteria |
-| Weather hydration mismatch | Phase implementing weather widget | Zero console hydration errors in development mode required |
-| Open-Meteo rate limit | Phase implementing weather widget | Confirm `revalidate` in fetch config before writing the component |
-| Weather Bezirk mismatch | Phase implementing weather widget | Confirm coordinates lookup from bundesland.config.ts, not hardcoded Graz |
+| sharp Linux binary incompatibility | Phase 1: Dependency setup | Live Vercel deployment test with map generation request before any other phases |
+| Pipeline failure blocking article creation | Phase 1: Pipeline integration design | Simulate Nominatim 503; confirm article saves with mapImageUrl null |
+| Nominatim IP ban from burst requests | Phase 2: Geocoding implementation | DB cache check in place before any Nominatim call; confirm no burst on test run |
+| Nominatim missing User-Agent | Phase 2: Geocoding implementation | Inspect fetch headers in Vercel logs |
+| German umlaut / Austrian place name mismatch | Phase 2: Geocoding implementation | countrycodes=at parameter present; test with "Graz", "Bruck an der Mur", "Leoben" |
+| Tile coordinate x/y order error | Phase 3: Tile fetching | Generate map for Graz coordinates; visually confirm location |
+| basemap.at CC-BY attribution missing | Phase 3: Image compositing | Attribution text visible on generated image; figcaption present on article page |
+| Cron timeout | Phase 4: Pipeline integration | maxDuration=60 set; single article map generation completes in <30 seconds |
+| Vercel Blob storage exhaustion | Phase 4: Blob storage integration | Cleanup strategy implemented before first image written; image size <120 KB |
+| Map fallback broken (no gradient on null) | Phase 5: Article page integration | Test article with mapImageUrl=null renders gradient header |
 
 ---
 
 ## Sources
 
-- [Tailwind CSS v4 Theme variables — official docs](https://tailwindcss.com/docs/theme) — confirmed @theme behavior, namespace generation, silent token removal
-- [Tailwind CSS v4 — `@theme` directive not working issue #18966](https://github.com/tailwindlabs/tailwindcss/issues/18966) — confirms edge cases in CSS import + @theme interaction
-- [MDN: initial-letter](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/initial-letter) — confirmed Firefox non-support
-- [Chrome Developers: CSS initial-letter](https://developer.chrome.com/blog/control-your-drop-caps-with-css-initial-letter) — confirmed Chrome 110+ and Safari (-webkit-) support
-- [MDN: ::first-letter](https://developer.mozilla.org/en-US/docs/Web/CSS/::first-letter) — float-based fallback behavior
-- [Mozilla Bugzilla #290125 — Firefox ::first-letter line-height bug](https://bugzilla.mozilla.org/show_bug.cgi?id=290125) — open since 2005, affects float-based drop cap alignment in Firefox
-- [Tailwind CSS GitHub Issue #13844 — backdrop-blur not working in WebKit](https://github.com/tailwindlabs/tailwindcss/issues/13844) — community confirmed -webkit- prefix required
-- [Adrian Roselli: Accessible Drop Caps](https://adrianroselli.com/2019/10/accessible-drop-caps.html) — accessibility considerations for ::first-letter
-- [WCAG 2.1 SC 1.4.11: Non-text Contrast](https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html) — 3:1 requirement for UI component boundaries
-- [W3C WCAG GitHub Issue #800 — borderless button contrast](https://github.com/w3c/wcag/issues/800) — borderless interactive element WCAG interpretation
-- [Open-Meteo Pricing / Rate Limits](https://open-meteo.com/en/pricing) — confirmed 10,000 calls/day free tier
-- [Open-Meteo GitHub Issue #485 — API call limits](https://github.com/open-meteo/open-meteo/issues/485) — recommended update frequency (hourly)
-- [Next.js Font Optimization — Vercel blog](https://vercel.com/blog/nextjs-next-font) — confirmed size-adjust and adjustFontFallback behavior
-- [Tailwind CSS 4 and Next.js 15: Avoiding CLS With Fonts](https://medium.com/@sureshdotariya/tailwind-css-4-and-next-js-15-avoiding-cls-with-fonts-52498ed0a33b) — confirmed next/font + Tailwind v4 font CLS patterns
-- [Next.js hydration error documentation](https://nextjs.org/docs/messages/react-hydration-error) — official guidance on SSR mismatch root causes and solutions
-- [WebKit Bug #158807 — -webkit-backdrop-filter artifacts on rounded borders](https://bugs.webkit.org/show_bug.cgi?id=158807) — confirmed Safari artifact behavior with nested backdrop-filter
+- [Nominatim Usage Policy — OSM Foundation Operations](https://operations.osmfoundation.org/policies/nominatim/) — official rate limit, User-Agent requirement, ban policy (HIGH confidence)
+- [Nominatim 403 error discussion — osm-search/Nominatim GitHub #3801](https://github.com/osm-search/Nominatim/discussions/3801) — community confirmed ban triggers (MEDIUM confidence)
+- [sharp installation — official docs](https://sharp.pixelplumbing.com/install/) — Linux binary installation requirement (HIGH confidence)
+- [Could not load sharp module linux-x64 — vercel/vercel GitHub #11052](https://github.com/vercel/vercel/issues/11052) — confirmed Vercel-specific binary issue (HIGH confidence)
+- [Vercel Functions Memory — official docs](https://vercel.com/docs/functions/configuring-functions/memory) — Hobby plan 2 GB default, not configurable (HIGH confidence)
+- [Vercel Functions Limits — official docs](https://vercel.com/docs/functions/limitations) — duration limits, max 60 seconds Hobby (HIGH confidence)
+- [Vercel Blob Usage and Pricing — official docs](https://vercel.com/docs/vercel-blob/usage-and-pricing) — Hobby plan 250 MB limit (HIGH confidence)
+- [Vercel Blob storage blocked community thread](https://community.vercel.com/t/vercel-blob-storage-blocked-despite-usage-being-below-hobby-plan-limits/37011) — 30-day block on overage confirmed (MEDIUM confidence)
+- [basemap.at dataset — data.gv.at](https://www.data.gv.at/katalog/en/dataset/basemap-at) — CC-BY 4.0 license, attribution requirement "Datenquelle: basemap.at" (MEDIUM confidence)
+- [DE:AT/basemap — OpenStreetMap Wiki](https://wiki.openstreetmap.org/wiki/DE:AT/basemap) — WMTS URL structure, coordinate system support (MEDIUM confidence)
+- [basemap.at Standard layer — basemap.at official](https://basemap.at/en/standard/) — tile availability, zoom levels, EPSG:3857 support (MEDIUM confidence)
 
 ---
-*Pitfalls research for: v3.0 The Modern Archivist design system overhaul (Next.js 15 / Tailwind v4)*
-*Milestone: v3.0 The Modern Archivist*
-*Researched: 2026-03-30*
+*Pitfalls research for: v3.1 Basemap Article Images — adding basemap.at tile stitching, Nominatim geocoding, and sharp image compositing to Vercel-hosted Next.js news platform*
+*Milestone: v3.1 Basemap Article Images*
+*Researched: 2026-04-05*

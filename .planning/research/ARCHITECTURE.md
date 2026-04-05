@@ -1,505 +1,425 @@
 # Architecture Research
 
-**Domain:** Design system overhaul + feature integration for existing Next.js 15 regional news platform
-**Researched:** 2026-03-30
-**Confidence:** HIGH — based on direct codebase inspection + official Tailwind v4 docs + Open-Meteo API verification
+**Domain:** Map image generation pipeline integrated into existing Next.js 15 + Prisma news platform
+**Researched:** 2026-04-05
+**Confidence:** HIGH (existing codebase read directly; external services confirmed via official docs and search)
 
----
+## Standard Architecture
 
-## System Overview
-
-```
-┌──────────────────────────────────────────────────────────────────┐
-│              src/app/globals.css  (@theme — single source)        │
-│  ~8 tokens now → ~30 MD3-style tokens after v3.0                  │
-│  Additive expansion: existing tokens retained, new ones appended  │
-└──────────────────────────────┬───────────────────────────────────┘
-                               │ CSS custom properties cascade down
-         ┌─────────────────────┼─────────────────────┐
-         ▼                     ▼                     ▼
-┌────────────────┐  ┌──────────────────┐  ┌──────────────────────┐
-│ (public)/      │  │ src/components/  │  │ (admin)/             │
-│ layout.tsx     │  │ reader/          │  │ layout.tsx           │
-│ (shell layer)  │  │ (component layer)│  │ (separate concern)   │
-└───────┬────────┘  └────────┬─────────┘  └──────────────────────┘
-        │                    │
-        │  shared layout     │  modified vs new components
-        ▼                    ▼
-┌───────────────────────────────────────────────────────────────┐
-│  WurzelAppBar    WurzelNavBar       Footer       BezirkModal   │
-│  (modified)    → (replaced by      (replaced by  (unchanged)  │
-│               ArchivistNavBar)   EditorialFooter)             │
-└───────────────────────────────────────────────────────────────┘
-        │
-        ▼  new components in v3.0
-┌────────────────────────────────────────────────────────────────┐
-│  WeatherWidget   RegionSelectorCard   GrueneWocheSection       │
-│  EditorialFooter ArchivistNavBar      ArticleSidebar DropCap   │
-└────────────────────────────────────────────────────────────────┘
-        │
-        ▼  data layer
-┌────────────────────────────────────────────────────────────────┐
-│  Prisma/Neon (articles, bezirke)  │  Open-Meteo (weather)      │
-│  Server Components (DB reads)     │  Server-side fetch +        │
-│  localStorage (bezirk selection)  │  { next: { revalidate } }  │
-└────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Integration Analysis by Question
-
-### 1. Tailwind v4 @theme Token Expansion
-
-**Current state:** 8 tokens in `src/app/globals.css`:
-`--color-primary`, `--color-secondary`, `--color-accent`, `--color-background`, `--color-text`, `--color-surface`, `--color-surface-elevated`, `--color-primary-container`.
-
-**How expansion works (HIGH confidence — verified with official Tailwind v4 docs):**
-
-Tailwind v4 `@theme` is purely additive by default. Adding new tokens alongside existing ones generates new utility classes while leaving all existing classes intact. The `--color-*: initial` nuclear option (which wipes a namespace) is explicitly opt-in and is never needed here.
-
-**Migration strategy — zero breakage:**
-
-```css
-@theme {
-  /* EXISTING — do not touch, all current components depend on these */
-  --color-primary: #1B2D18;
-  --color-secondary: #4A5D23;
-  --color-accent: #9F411E;
-  --color-background: #FCF9EF;
-  --color-text: #071806;
-  --color-surface: #F6F4EA;
-  --color-surface-elevated: #FFFFFF;
-  --color-primary-container: #4A5D23;
-
-  /* NEW MD3-style tokens — Ink/Parchment/Slate/Aged Wood system */
-
-  /* Ink family (dark tones) */
-  --color-ink-900: #0D1A0C;
-  --color-ink-800: #1B2D18;       /* maps to current primary */
-  --color-ink-600: #2F4A2B;
-  --color-ink-400: #4A5D23;       /* maps to current secondary */
-
-  /* Parchment family (light tones) */
-  --color-parchment-50: #FDFBF4;
-  --color-parchment-100: #FCF9EF;  /* maps to current background */
-  --color-parchment-200: #F6F4EA;  /* maps to current surface */
-  --color-parchment-300: #EDE9DC;
-
-  /* Slate family (neutral mid-tones) */
-  --color-slate-700: #3D3D3A;
-  --color-slate-500: #6B6B66;
-  --color-slate-300: #B0AFA8;
-  --color-slate-100: #E8E7E2;
-
-  /* Aged Wood / accent family */
-  --color-wood-700: #7A2F10;
-  --color-wood-500: #9F411E;       /* maps to current accent */
-  --color-wood-300: #C4744F;
-  --color-wood-100: #F0D4C4;
-
-  /* Functional tokens for new components */
-  --color-surface-glass: rgba(252, 249, 239, 0.85);
-  --color-on-primary: #FFFFFF;
-  --color-on-surface: #071806;
-
-  /* Existing font, radius, spacing tokens — unchanged */
-}
-```
-
-**Rule:** Existing components continue using `bg-primary`, `text-secondary`, `bg-surface` etc. — unchanged. New v3.0 components use the new token names. This avoids a mass-refactor as a prerequisite for any other work.
-
-**Confidence:** HIGH — Tailwind v4 official docs confirm additive `@theme` expansion leaves existing utilities intact.
-
----
-
-### 2. Open-Meteo API Integration
-
-**Recommendation: Server-side fetch in `page.tsx`, passed as prop to HomepageLayout.**
-
-**Rationale:**
-
-The homepage `page.tsx` is already `force-dynamic` and performs a `Promise.all` fetching articles, pinned articles, bezirke, and featured article. Weather data fits naturally into this same fetch group.
-
-`HomepageLayout.tsx` is a `"use client"` component (it reads localStorage). In Next.js 15 App Router, a Server Component (async WeatherWidget) **cannot** be imported and rendered directly inside a Client Component — this throws a build error. The solution is to fetch weather data at the server level in `page.tsx` and pass it as a typed prop to `HomepageLayout`.
-
-**Data flow:**
+### System Overview
 
 ```
-page.tsx  (async Server Component, force-dynamic)
-  ├── getFeaturedArticle()       → hero
-  ├── getPinnedArticles()        → pinned
-  ├── listArticlesForHomepage()  → allArticles
-  ├── listBezirke()              → bezirke
-  └── fetchCurrentWeather(47.0707, 15.4395)  → weather  ← NEW
-
-HomepageLayout (Client Component)
-  receives weather as prop, renders WeatherWidget as a
-  presentation-only Client Component (no async needed)
+┌─────────────────────────────────────────────────────────────────────┐
+│                        CRON PIPELINE (existing)                      │
+│  /api/cron → ingest() → processArticles() → publishArticles()       │
+├──────────────────────────────────┬──────────────────────────────────┤
+│   NEW: Auto Map Step             │   NEW: On-Demand API             │
+│   (injected into pipeline.ts)    │   /api/map-image/[articleId]     │
+│                                  │                                  │
+│   generateMapImage(article.id)   │   GET → check existing →        │
+│        ↓                         │   generateMapImage() → JSON      │
+│   extractLocation(title,content) │                                  │
+│        ↓                         │                                  │
+│   geocodeLocation(placeName)     │                                  │
+│        ↓                         │                                  │
+│   fetchTiles(lat,lng,zoom=12)    │                                  │
+│        ↓  3x3 grid = 9 PNGs      │                                  │
+│   stitchTiles() via sharp        │                                  │
+│        ↓  JPEG Buffer ~100KB     │                                  │
+│   put(buffer) → Vercel Blob      │                                  │
+│        ↓  public URL             │                                  │
+│   article.update(imageUrl)       │                                  │
+├──────────────────────────────────┴──────────────────────────────────┤
+│                     NEW: CMS Map Picker                              │
+│   MapPicker.tsx (client) ← map-image-actions.ts (Server Action)     │
+│   Sits alongside existing UnsplashPicker in /admin/articles/[id]/edit│
+├─────────────────────────────────────────────────────────────────────┤
+│                     STORAGE LAYER                                    │
+│   Vercel Blob (public)           Neon PostgreSQL                     │
+│   map-images/{id}-{hash}.jpg     Article.imageUrl / imageCredit     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-**Weather fetch function:**
+### Component Responsibilities
+
+| Component | Responsibility | Status |
+|-----------|---------------|--------|
+| `lib/images/map/location-extractor.ts` | Extract place names from German article text via regex; LLM fallback when regex finds nothing | NEW |
+| `lib/images/map/geocoder.ts` | Forward geocode location strings via Nominatim; returns lat/lng | NEW |
+| `lib/images/map/tile-fetcher.ts` | Fetch individual basemap.at raster PNG tiles by XYZ; returns Buffer or null per tile | NEW |
+| `lib/images/map/compositor.ts` | Stitch 3x3 tile grid into single JPEG using sharp composite; add basemap.at attribution | NEW |
+| `lib/images/map/blob-upload.ts` | Upload finished Buffer to Vercel Blob with `access: 'public'`; return public URL | NEW |
+| `lib/images/map/generate.ts` | Orchestrator facade: extractor → geocoder → tile fetcher → compositor → blob upload → DB write | NEW |
+| `app/api/map-image/[articleId]/route.ts` | On-demand Route Handler: idempotent; returns existing URL or triggers generateMapImage | NEW |
+| `lib/admin/map-image-actions.ts` | Server Actions for CMS: `generateMapImageAction` with requireAuth() guard | NEW |
+| `components/admin/MapPicker.tsx` | Client component: "Karte generieren" button + preview; mirrors UnsplashPicker.tsx structure | NEW |
+| `lib/ai/pipeline.ts` | Add generateMapImage call after WRITTEN status in article loop; best-effort try/catch | MODIFIED |
+| `app/(admin)/admin/articles/[id]/edit/page.tsx` | Add `<MapPicker>` alongside existing `<UnsplashPicker>` | MODIFIED |
+
+## Recommended Project Structure
+
+```
+src/
+├── lib/
+│   └── images/
+│       ├── unsplash.ts                 # EXISTING — unchanged
+│       └── map/
+│           ├── location-extractor.ts   # regex scan + LLM fallback
+│           ├── geocoder.ts             # Nominatim wrapper
+│           ├── tile-fetcher.ts         # basemap.at XYZ tile fetch
+│           ├── compositor.ts           # sharp stitch + attribution
+│           ├── blob-upload.ts          # @vercel/blob put()
+│           └── generate.ts             # orchestration facade
+├── app/
+│   └── api/
+│       └── map-image/
+│           └── [articleId]/
+│               └── route.ts            # on-demand GET handler
+└── lib/
+    └── admin/
+        ├── unsplash-actions.ts         # EXISTING — unchanged
+        └── map-image-actions.ts        # NEW Server Actions
+└── components/
+    └── admin/
+        ├── UnsplashPicker.tsx          # EXISTING — unchanged
+        └── MapPicker.tsx               # NEW — parallel structure
+```
+
+### Structure Rationale
+
+- **`lib/images/map/`:** Parallel to `lib/images/unsplash.ts`. A subdirectory is appropriate because map generation is multi-file; unsplash is single-file.
+- **`app/api/map-image/[articleId]/`:** Route Handler rather than Server Action because on-demand generation must be callable without CMS authentication (reader-facing trigger).
+- **`lib/admin/map-image-actions.ts`:** Server Actions require auth guard; mirrors `unsplash-actions.ts` naming and structure exactly for predictability.
+- **`generate.ts` as facade:** All three calling contexts (pipeline, API route, Server Action) use one function. Error handling and DB writes live in one place.
+
+## Architectural Patterns
+
+### Pattern 1: Generate Facade (single entry point for all three modes)
+
+**What:** A single `generateMapImage(articleId, db?)` function orchestrates all sub-steps end-to-end and writes imageUrl/imageCredit to the Article row. All callers delegate to this function.
+**When to use:** All three generation modes (auto / on-demand / manual) call this function. No caller reimplements the pipeline.
+**Trade-offs:** Individual sub-steps are still independently importable and unit-testable. The facade is thin — it delegates, not implements.
 
 ```typescript
-// src/lib/content/weather.ts
-export interface WeatherData {
-  temperature: number;
-  weatherCode: number;
-  windSpeed: number;
-  time: string;
+// lib/images/map/generate.ts
+export async function generateMapImage(
+  articleId: number,
+  db: PrismaClient = defaultPrisma
+): Promise<{ url: string; credit: string } | null> {
+  const article = await db.article.findUnique({
+    where: { id: articleId },
+    select: { title: true, content: true, imageUrl: true },
+  })
+  if (!article || article.imageUrl) return null  // idempotent guard
+
+  const location = await extractLocation(article.title ?? '', article.content ?? '')
+  if (!location) return null
+
+  const coords = await geocodeLocation(location)
+  if (!coords) return null
+
+  const imageBuffer = await stitchMapTiles(coords.lat, coords.lng, 12)
+  const blobUrl = await uploadToBlob(imageBuffer, articleId)
+  const credit = 'Karte: basemap.at \u2013 CC BY 4.0'
+
+  await db.article.update({
+    where: { id: articleId },
+    data: { imageUrl: blobUrl, imageCredit: credit },
+  })
+  return { url: blobUrl, credit }
+}
+```
+
+### Pattern 2: XYZ Tile Fetch + Sharp Composite
+
+**What:** Convert lat/lng to Slippy Map XYZ tile coordinates at zoom 12; fetch a 3x3 grid of 256x256 PNG tiles from basemap.at; composite into 768x432 JPEG with sharp (16:9 crop from centre).
+**When to use:** Core of every map generation. Tile fetch failures for individual tiles are handled gracefully (grey fallback for missing tiles via `background` in `sharp.create`).
+**Trade-offs:** 9 HTTP requests per generation; each is a separate TCP call from Vercel serverless. Acceptable at current cron frequency (~20-50 articles/day).
+
+```typescript
+// lib/images/map/tile-fetcher.ts
+// basemap.at URL pattern: /{z}/{y}/{x}.png  (y before x — confirmed from OSM wiki)
+const BASE = 'https://maps1.wien.gv.at/basemap/geolandbasemap/normal/google3857'
+
+function latLngToXY(lat: number, lng: number, z: number) {
+  const n = 2 ** z
+  const x = Math.floor(((lng + 180) / 360) * n)
+  const latR = (lat * Math.PI) / 180
+  const y = Math.floor(
+    ((1 - Math.log(Math.tan(latR) + 1 / Math.cos(latR)) / Math.PI) / 2) * n
+  )
+  return { x, y }
 }
 
-export async function fetchCurrentWeather(
-  lat: number,
-  lon: number
-): Promise<WeatherData | null> {
+export async function fetchTile(z: number, x: number, y: number): Promise<Buffer | null> {
+  const res = await fetch(`${BASE}/${z}/${y}/${x}.png`, {
+    headers: { 'User-Agent': 'Wurzelwelt/1.0 (regionalprojekt.vercel.app)' },
+  })
+  if (!res.ok) return null
+  return Buffer.from(await res.arrayBuffer())
+}
+```
+
+```typescript
+// lib/images/map/compositor.ts — 3x3 tile grid → 768x432 JPEG
+import sharp from 'sharp'
+
+const T = 256   // basemap.at tiles are 256x256px
+const GRID = 3  // 3x3 = 9 tiles → 768x768 → crop to 768x432
+
+export async function stitchMapTiles(lat: number, lng: number, zoom: number): Promise<Buffer> {
+  const center = latLngToXY(lat, lng, zoom)
+  const tileBuffers = await Promise.all(
+    [-1, 0, 1].flatMap(dy =>
+      [-1, 0, 1].map(dx => fetchTile(zoom, center.x + dx, center.y + dy))
+    )
+  )
+
+  const composites: sharp.OverlayOptions[] = tileBuffers
+    .map((buf, i) =>
+      buf ? { input: buf, left: (i % GRID) * T, top: Math.floor(i / GRID) * T } : null
+    )
+    .filter((c): c is sharp.OverlayOptions => c !== null)
+
+  const cropTop = Math.floor((T * GRID - 432) / 2)
+  return sharp({
+    create: { width: T * GRID, height: T * GRID, channels: 3, background: '#e8e0d4' },
+  })
+    .composite(composites)
+    .extract({ left: 0, top: cropTop, width: T * GRID, height: 432 })
+    .jpeg({ quality: 85 })
+    .toBuffer()
+}
+```
+
+### Pattern 3: Location Extraction with LLM Fallback
+
+**What:** Regex-first extraction scans article title and lead sentence against a term list built from Bezirk names and `gemeindeSynonyms` (already seeded in DB). LLM fallback uses a minimal single-turn Claude prompt (`max_tokens: 20`) only when regex finds nothing.
+**When to use:** Regex handles ~80% of cases at zero cost. LLM fallback handles ambiguous or informal place references. State-wide articles (`isStateWide = true`) skip extraction entirely and use Graz centroid (47.0707, 15.4395) as default.
+**Trade-offs:** LLM fallback adds ~0.5s latency and ~100 tokens per invocation. This is acceptable given it fires infrequently. Reuse the existing `_clientFactory.create()` pattern from `pipeline.ts`.
+
+```typescript
+// lib/images/map/location-extractor.ts
+export function extractLocationRegex(
+  title: string,
+  content: string,
+  terms: string[]   // Bezirk names + gemeindeSynonyms from DB
+): string | null {
+  const text = `${title} ${content.slice(0, 300)}`
+  for (const term of terms) {
+    if (new RegExp(`\\b${term}\\b`, 'i').test(text)) return term
+  }
+  return null
+}
+
+export async function extractLocationLLM(
+  title: string,
+  content: string
+): Promise<string | null> {
+  // Prompt (German): "Nenne den wichtigsten Ort im folgenden Artikel.
+  //   Antworte nur mit dem Ortsnamen, sonst nichts."
+  // Model: cheapest configured model; max_tokens: 20
+  // Returns trimmed response string or null on error/empty
+}
+```
+
+## Data Flow
+
+### Flow 1: Automatic Generation (Cron Pipeline)
+
+```
+Vercel Cron (1/day on Hobby plan)
+  ↓
+GET /api/cron  [existing, maxDuration: 300]
+  ↓
+ingest(source)  [UNCHANGED — creates FETCHED articles]
+  ↓
+processArticles()  [MODIFIED]
+  for each article:
+    runStep1Tag()  → TAGGED status
+    runStep2Write() → WRITTEN status, sets title/content/seoTitle
+    article.update(status: WRITTEN, ...)
+    ↓  NEW — best-effort, inner try/catch, non-fatal
+    if (!article.imageUrl && !step1.isStateWide):
+      generateMapImage(article.id, db)
+        extractLocation(title, content, bezirkTerms)  [regex, no I/O]
+        geocodeLocation(placeName)
+          → GET nominatim.openstreetmap.org/search?q=...&countrycodes=at
+        stitchMapTiles(lat, lng, zoom=12)
+          → 9x GET maps1.wien.gv.at/basemap/.../{z}/{y}/{x}.png
+          → sharp.create().composite([...]).extract().jpeg().toBuffer()
+        uploadToBlob(jpegBuffer, articleId)
+          → @vercel/blob put('map-images/{id}-{ts}.jpg', buf, { access: 'public' })
+        article.update({ imageUrl: blobUrl, imageCredit: 'Karte: basemap.at – CC BY 4.0' })
+    catch (mapErr) → console.warn, continue loop (never rethrow)
+  ↓
+publishArticles()  [UNCHANGED]
+```
+
+**Integration point in pipeline.ts:** After step 5f (status update to WRITTEN/REVIEW), before `articlesWritten++`, add the generateMapImage call inside a try/catch. The outer per-article catch block must not swallow map errors into article ERROR status — the inner catch handles it separately.
+
+```typescript
+// Addition to pipeline.ts article loop, after step 5f:
+if (finalStatus === 'WRITTEN' && !article.imageUrl) {
   try {
-    const url = new URL("https://api.open-meteo.com/v1/forecast");
-    url.searchParams.set("latitude", String(lat));
-    url.searchParams.set("longitude", String(lon));
-    url.searchParams.set("current", "temperature_2m,weather_code,wind_speed_10m");
-
-    const res = await fetch(url.toString(), {
-      next: { revalidate: 1800 },  // 30-minute cache
-    });
-    if (!res.ok) return null;
-
-    const json = await res.json();
-    return {
-      temperature: json.current.temperature_2m,
-      weatherCode: json.current.weather_code,
-      windSpeed: json.current.wind_speed_10m,
-      time: json.current.time,
-    };
-  } catch {
-    return null;  // widget degrades gracefully if API unavailable
+    await generateMapImage(article.id, db)
+  } catch (mapErr) {
+    console.warn(`[map-image] article id=${article.id} — ${String(mapErr)}`)
+    // Non-fatal — article publishes without image
   }
 }
 ```
 
-**Coordinates:** Hard-code Graz (47.0707, 15.4395) as default. Optionally add a `weather` key to `bundesland.config.ts` for Bundesland portability.
-
-**Open-Meteo API facts (HIGH confidence):**
-- Base URL: `https://api.open-meteo.com/v1/forecast`
-- No API key required, no signup
-- Free for non-commercial use
-- Fair-use limit: 10,000 req/day (irrelevant — 30 min revalidate = ~48 req/day)
-- Returns `current.temperature_2m` (°C), `current.weather_code` (WMO), `current.wind_speed_10m` (km/h)
-
-**What NOT to do:**
-- Do not use `useEffect` for client-side weather fetch — adds hydration delay and flash of empty state
-- Do not create an `/api/weather` proxy route — Open-Meteo is public, no CORS issue, a proxy adds unnecessary complexity
-- Do not install the `openmeteo` npm SDK — it uses FlatBuffers (overkill for current conditions only)
-
-**Confidence:** HIGH.
-
----
-
-### 3. "No-Line Rule" Migration
-
-**Current border inventory (from direct codebase inspection):**
-
-| File | Border class | Treatment |
-|------|-------------|-----------|
-| `ListItem.tsx:19` | `border-b border-surface last:border-b-0` | **Remove** — replace with spacing |
-| `ArticleFeed.tsx:140` | `border-2 border-zinc-300 border-t-primary rounded-full animate-spin` | **Keep** — loading spinner; structural not decorative |
-| `MascotGreeting.tsx:55-57` | Inline `borderLeft/Right/Top` CSS triangle | **Keep** — CSS triangle technique; not a visible horizontal/vertical line |
-| Admin forms (multiple files) | `border border-surface` on inputs | **Defer** — functional form borders; admin CMS refresh phase |
-| `ArticleRow.tsx` (admin) | `border-b border-surface` on table rows | **Defer** — admin CMS refresh phase |
-
-**Reader-side migration is minimal — exactly one change:**
-
-`ListItem.tsx` is the only reader component with a visible separator border. It renders inside a `bg-surface-elevated rounded-sm shadow-sm` card wrapper in `HomepageLayout.tsx` — the card's shadow already provides visual grouping. Remove `border-b border-surface last:border-b-0` from `ListItem.tsx` and rely on `py-3` vertical padding for separation.
-
-**Sequence:**
-1. Expand `@theme` tokens (must come first — new surface tokens may be referenced)
-2. Remove `border-b border-surface last:border-b-0` from `ListItem.tsx`
-3. Verify visual separation still reads correctly in context of the card wrapper
-4. Defer all admin border changes to the CMS refresh phase
-
-**Confidence:** HIGH — derived from direct inspection of all reader component files.
-
----
-
-### 4. Component Refactoring Strategy: Update vs New
-
-**Guiding principle:** Modify components that have the same role and props interface. Create new components when the visual structure or behavior changes significantly enough that the old implementation is replaced, not extended.
-
-| Component | Strategy | Rationale |
-|-----------|----------|-----------|
-| `WurzelAppBar.tsx` | **Modify in place** | Same structure, same props (`bezirke`), same location — token updates and minor visual tweaks only |
-| `WurzelNavBar.tsx` | **Replace with `ArchivistNavBar.tsx`** | Active state changes from filled pill to top-border; background changes from opaque to glass; keeping the old file would leave an ambiguous dead component |
-| `Footer.tsx` | **Replace with `EditorialFooter.tsx`** | Dark background multi-column layout is structurally different from the current minimal light footer |
-| `HeroArticle.tsx` | **Modify in place** | Same slot, same props — add CTA button, update tokens |
-| `MascotGreeting.tsx` | **Modify in place** | Same slot; visual refresh only |
-| `RegionalEditorialCard.tsx` | **Modify in place** | Token updates, no structural change |
-| `ListItem.tsx` | **Modify in place** | Remove border, minor token updates |
-| `HomepageLayout.tsx` | **Modify in place** | Add new section slots; overall layout orchestration unchanged |
-| `SearchPageLayout.tsx` | **Modify in place** | Redesign within same component boundary |
-| `BezirkModal.tsx` | **Unchanged** | Not in v3.0 scope |
-| `EilmeldungBanner.tsx` | **Unchanged** | Not in v3.0 scope |
-| `CookieBanner.tsx` | **Unchanged** | Not in v3.0 scope |
-
-**New components to create:**
-
-| Component | Location | Type | Notes |
-|-----------|----------|------|-------|
-| `ArchivistNavBar.tsx` | `src/components/reader/` | Client Component | Glassmorphic, top-border active state |
-| `EditorialFooter.tsx` | `src/components/reader/` | Server Component | Dark, multi-column, navigation links |
-| `WeatherWidget.tsx` | `src/components/reader/` | Client Component (receives prop) | Presentation only; data fetched in page.tsx |
-| `RegionSelectorCard.tsx` | `src/components/reader/` | Client Component | "Frag den Wurzelmann" interactive card |
-| `GrueneWocheSection.tsx` | `src/components/reader/` | Server Component | Themed editorial section |
-| `DropCap.tsx` | `src/components/reader/` | Server Component | First-letter drop cap for article detail |
-| `ArticleSidebar.tsx` | `src/components/reader/` | Server Component | Metadata sidebar for article detail |
-
-**Layout wiring:** `src/app/(public)/layout.tsx` has two import updates:
-- `Footer` → `EditorialFooter`
-- `WurzelNavBar` → `ArchivistNavBar`
-
-All other shell components remain as-is or are modified at their source files.
-
-**Confidence:** HIGH — based on direct inspection of component files and import graph in `(public)/layout.tsx`.
-
----
-
-### 5. Footer as Shared Layout Component
-
-**Current state:** `Footer.tsx` is already a shared layout component, imported only in `src/app/(public)/layout.tsx`. It renders on all reader pages automatically.
-
-**v3.0 approach:** Create `EditorialFooter.tsx` alongside `Footer.tsx`. Update the single import in `(public)/layout.tsx`. No other files need changing.
-
-**Admin layout** (`src/app/(admin)/layout.tsx`) does not import `Footer.tsx` — admin has separate minimal chrome. The footer replacement is scoped entirely to the public reader layout.
-
-**Bottom-padding note:** The current `Footer.tsx` has `pb-24` for bottom-nav clearance. The actual nav clearance is already handled by `<main className="flex-1 pb-20">` in the layout. The new `EditorialFooter.tsx` should have internal bottom padding (`pb-8` or similar for content breathing room) but the nav clearance is layout-level, not footer-level.
-
-**Confidence:** HIGH — derived from direct inspection of `(public)/layout.tsx`.
-
----
-
-### 6. Glassmorphism in Bottom Nav with Tailwind v4
-
-**Pattern:** Replace the opaque `bg-background` in the current nav with a semi-transparent background plus `backdrop-blur-md`.
-
-**Tailwind v4 classes (HIGH confidence — verified against official docs):**
-
-Custom `@theme` color tokens support opacity modifiers in Tailwind v4, identical to built-in colors:
-
-```tsx
-// ArchivistNavBar.tsx — core glass effect
-<nav className="fixed bottom-0 inset-x-0 z-40
-  bg-parchment-100/85 backdrop-blur-md
-  h-16 flex items-center justify-around px-2">
-```
-
-`bg-parchment-100/85` = `--color-parchment-100` at 85% opacity. The `backdrop-blur-md` applies the blur to whatever is behind the nav.
-
-**Active state — top-border indicator:**
-
-```tsx
-// Active tab uses border-t instead of filled pill
-<Link
-  href={item.href}
-  className={`flex flex-col items-center justify-center gap-0.5
-    min-w-[56px] h-full pt-1
-    border-t-2 transition-colors
-    ${isActive ? "border-primary" : "border-transparent"}`}
->
-```
-
-The `border-transparent` on inactive tabs preserves layout stability (same dimensions whether active or not).
-
-**Safari/iOS compatibility:** Tailwind v4 outputs `-webkit-backdrop-filter` automatically alongside `backdrop-filter`. No manual prefix needed.
-
-**Stacking context requirement:** `backdrop-filter` creates a new stacking context. The nav must not have a parent with `overflow: hidden` or `isolation: isolate` that would clip the blur. Current layout: nav is a direct child of `<body>` in `(public)/layout.tsx` — no blocking ancestor exists.
-
-**Shadow replacement:** The current nav uses `shadow-[0_-2px_8px_rgba(0,0,0,0.06)]`. With glassmorphism, remove this — the semi-transparent background already creates visual separation from page content. A subtle `border-t border-parchment-300/50` can reinforce the top edge without a heavy shadow.
-
-**Confidence:** HIGH for Tailwind v4 syntax. HIGH for stacking context safety (verified via layout.tsx inspection). MEDIUM for iOS Safari behavior — relies on Tailwind v4's automatic vendor prefix generation, well-documented but not verified against this project's specific PostCSS config.
-
----
-
-## Recommended Project Structure Changes (v3.0)
+### Flow 2: On-Demand Generation (API Route)
 
 ```
-src/
-├── app/
-│   ├── globals.css              MODIFY — @theme expansion, ~30 tokens
-│   └── (public)/
-│       └── layout.tsx           MODIFY — 2 import swaps only
-│
-└── components/
-    └── reader/
-        ├── WurzelAppBar.tsx         MODIFY — token updates, same interface
-        ├── WurzelNavBar.tsx         KEEP during migration, delete after
-        ├── ArchivistNavBar.tsx      NEW — glassmorphic, top-border active
-        ├── HeroArticle.tsx          MODIFY — add CTA, token updates
-        ├── MascotGreeting.tsx       MODIFY — token updates
-        ├── RegionalEditorialCard.tsx MODIFY — token updates only
-        ├── ListItem.tsx             MODIFY — remove border-b
-        ├── HomepageLayout.tsx       MODIFY — add new section slots
-        ├── Footer.tsx               KEEP during migration, delete after
-        ├── EditorialFooter.tsx      NEW — dark, multi-column
-        ├── WeatherWidget.tsx        NEW — Client Component (prop-fed)
-        ├── RegionSelectorCard.tsx   NEW — Client Component
-        ├── GrueneWocheSection.tsx   NEW — Server Component
-        ├── DropCap.tsx              NEW — Server Component
-        └── ArticleSidebar.tsx       NEW — Server Component
-
-src/lib/
-    └── content/
-        └── weather.ts               NEW — fetchCurrentWeather()
+Reader article page (client-side, optional enhancement)
+  ↓  or: direct URL call from any client
+GET /api/map-image/[articleId]
+  ↓
+Parse articleId → fetch article.imageUrl from DB
+  ├─ imageUrl already set: return 200 { url, credit }  [idempotent, no re-generation]
+  ├─ article not found:    return 404
+  └─ imageUrl null:
+       generateMapImage(articleId)
+         ↓ success: return 200 { url, credit }
+         ↓ no location found: return 422 { error: 'No location found' }
 ```
 
----
+The route is idempotent by design: concurrent requests for the same article all return the same URL once the first completes. There is a brief race window (two simultaneous requests both see `imageUrl: null` and both try to generate), but the result is benign — both write the same credit, and one Blob object will be orphaned. Acceptable at current scale; a DB-level mutex is not needed.
 
-## Data Flow
+```typescript
+// app/api/map-image/[articleId]/route.ts
+export async function GET(
+  _req: Request,
+  { params }: { params: Promise<{ articleId: string }> }
+) {
+  const { articleId } = await params
+  const id = Number(articleId)
+  const article = await prisma.article.findUnique({
+    where: { id },
+    select: { imageUrl: true, imageCredit: true },
+  })
+  if (!article) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  if (article.imageUrl) return NextResponse.json({ url: article.imageUrl, credit: article.imageCredit })
 
-### Weather Data Flow
-
-```
-(public)/page.tsx  (async Server Component, force-dynamic)
-  Promise.all([
-    getFeaturedArticle(),
-    getPinnedArticles(),
-    listArticlesForHomepage(),
-    listBezirke(),
-    fetchCurrentWeather(47.0707, 15.4395),   ← lib/content/weather.ts
-  ])
-    ↓
-    fetch("https://api.open-meteo.com/v1/forecast?...",
-          { next: { revalidate: 1800 } })
-    ↓  (30-min cached response from Next.js fetch cache)
-    Returns: { temperature, weatherCode, windSpeed, time } | null
-    ↓
-HomepageLayout (Client Component)
-  receives weather prop → passes to WeatherWidget
-    ↓
-WeatherWidget (Client Component, presentation only)
-  renders temperature + WMO icon + condition label
+  const result = await generateMapImage(id)
+  if (!result) return NextResponse.json({ error: 'No location found' }, { status: 422 })
+  return NextResponse.json(result)
+}
 ```
 
-### Token Cascade Flow
+### Flow 3: Manual CMS Generation
 
 ```
-globals.css @theme
-  → CSS custom properties on :root
-    (--color-ink-800, --color-parchment-100, etc.)
-    ↓
-  → Tailwind generates utility classes
-    (bg-ink-800, text-parchment-100, etc.)
-    ↓
-  → Components use via className
-    (existing: bg-primary, bg-surface unchanged)
-    (new: bg-ink-800, bg-parchment-100/85, etc.)
+Editor on /admin/articles/[id]/edit  (Server Component page)
+  ↓
+Renders <MapPicker articleId={id} headline={article.title} currentImageUrl={article.imageUrl} />
+  ↓
+Editor clicks "Karte generieren"
+  ↓
+useTransition → generateMapImageAction(articleId)  [Server Action in map-image-actions.ts]
+  ↓  requireAuth() guard (rejects if not logged in)
+  generateMapImage(articleId)
+  ↓
+revalidatePath('/admin/articles/[id]/edit')
+  ↓
+MapPicker.tsx shows generated image preview
+Editor accepts (imageUrl already written to DB) or discards via removeArticleImage() [existing unsplash-actions.ts]
 ```
 
-### Layout Shell Flow (unchanged structure)
-
-```
-(public)/layout.tsx  (async Server Component)
-  ├── WurzelAppBar      (Client — localStorage for bezirk label)
-  ├── EilmeldungBanner  (conditional)
-  ├── <main> children   (page content)
-  ├── EditorialFooter   (Server — new)
-  ├── ArchivistNavBar   (Client — pathname for active state)
-  ├── CookieBanner      (Client)
-  └── BezirkModal       (Client)
-```
-
----
-
-## Build Order Implications
-
-Token expansion must happen first — every subsequent component change depends on new tokens being available. The No-Line Rule migration is a trivial change that can happen in the same commit as token expansion.
-
-| Phase | Work | Dependency |
-|-------|------|------------|
-| 1 | `@theme` expansion in `globals.css` | None — additive, zero breakage |
-| 1 | Remove `border-b border-surface` from `ListItem.tsx` | New surface tokens |
-| 2 | `ArchivistNavBar.tsx` + `(public)/layout.tsx` swap | Tokens |
-| 2 | `EditorialFooter.tsx` + `(public)/layout.tsx` swap | Tokens |
-| 3 | `lib/content/weather.ts` + `page.tsx` wiring | None |
-| 3 | `WeatherWidget.tsx` + `HomepageLayout.tsx` slot | Weather lib |
-| 3 | `RegionSelectorCard.tsx`, `GrueneWocheSection.tsx` | Tokens |
-| 3 | `HeroArticle.tsx` CTA + token updates | Tokens |
-| 4 | Article detail: `DropCap.tsx`, `ArticleSidebar.tsx` | Tokens |
-| 4 | Article detail page token updates | Tokens |
-| 5 | `SearchPageLayout.tsx` redesign | Tokens |
-| 6 | CMS admin border + token updates | Defer — lowest priority |
-
----
-
-## Anti-Patterns
-
-### Anti-Pattern 1: Using `--color-*: initial` to Wipe Existing Tokens
-
-**What it looks like:** Clearing the color namespace in `@theme` to start fresh with new names.
-**Why it breaks things:** All existing components use `bg-primary`, `text-secondary`, etc. Wiping the namespace removes those utilities immediately across ~25 components.
-**Do this instead:** Add new tokens alongside existing ones. Tailwind v4 `@theme` is additive by default.
-
-### Anti-Pattern 2: Client-Side Weather Fetch
-
-**What it looks like:** `useEffect` with `fetch` in a `WeatherWidget` client component.
-**Why it's wrong:** Adds flash of empty state on every page load, increases client JavaScript bundle, and bypasses Next.js server-side fetch cache.
-**Do this instead:** Fetch weather in `page.tsx` as a server-side `Promise.all` entry with `{ next: { revalidate: 1800 } }`.
-
-### Anti-Pattern 3: Importing WeatherWidget Inside HomepageLayout
-
-**What it looks like:** `import WeatherWidget from './WeatherWidget'` at the top of `HomepageLayout.tsx`.
-**Why it breaks things:** `HomepageLayout` is `"use client"`. Server Components cannot be imported inside Client Components in Next.js App Router — build error.
-**Do this instead:** Fetch weather data in `page.tsx` (Server Component) and pass it as a typed prop to `HomepageLayout`.
-
-### Anti-Pattern 4: Creating an `/api/weather` Proxy Route
-
-**What it looks like:** A Route Handler at `src/app/api/weather/route.ts` that calls Open-Meteo and proxies the response.
-**Why it's wrong:** Open-Meteo is a public API, no CORS restriction, no auth needed. A proxy adds a server roundtrip and two fetch calls per request for no benefit.
-**Do this instead:** Call Open-Meteo directly from `lib/content/weather.ts` server-side.
-
-### Anti-Pattern 5: Replacing Both Old and New Components in a Single Phase
-
-**What it looks like:** Deleting `Footer.tsx` and `WurzelNavBar.tsx` at the same time as creating replacements.
-**Why it's risky:** If the new component has a bug, there is no rollback reference. The layout.tsx import fails to compile if the new file has an error.
-**Do this instead:** Keep old files during migration. Create new file, update `layout.tsx` import to point to new file, verify, then delete old file.
-
----
+`MapPicker.tsx` mirrors `UnsplashPicker.tsx` in structure: same prop interface (articleId, headline, currentImageUrl, currentImageCredit), same useState/useTransition pattern, same use of `saveArticleImage`/`removeArticleImage` from `unsplash-actions.ts` for the final write/clear. No new DB primitives needed.
 
 ## Integration Points
 
 ### External Services
 
-| Service | Integration | Cache | Notes |
-|---------|-------------|-------|-------|
-| Open-Meteo API | `fetch` in `lib/content/weather.ts` | `revalidate: 1800` (30 min) | Free, no key, fair-use 10k req/day. URL: `https://api.open-meteo.com/v1/forecast` |
-| Vercel Edge Network | Honors `next.revalidate` on fetch | 30 min TTL | Stale-while-revalidate semantics apply |
+| Service | Integration | Endpoint | Notes |
+|---------|-------------|----------|-------|
+| basemap.at | HTTP GET, no auth | `https://maps1.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png` | CC BY 4.0 — attribution string required in imageCredit; URL uses `{y}/{x}` order (y before x); no API key; zoom 12 for Bezirk-level view |
+| Nominatim (OSM) | HTTP GET, no auth | `https://nominatim.openstreetmap.org/search?q={term}&countrycodes=at&format=json&limit=1` | Must send `User-Agent` header per OSM usage policy; max 1 req/sec; `countrycodes=at` restricts to Austria |
+| Vercel Blob | `@vercel/blob` npm SDK | `put(filename, buffer, { access: 'public' })` | Requires `BLOB_READ_WRITE_TOKEN` env var (set in Vercel dashboard, Blob store created there); composite JPEG ~80-120KB — well under 4.5MB server-side limit |
+| sharp | npm, pre-compiled binary | n/a | Ships pre-compiled linux-x64 binaries; Next.js already uses sharp for `next/image` optimization — no extra Vercel configuration needed |
+| Anthropic Claude | Existing `_clientFactory.create()` from pipeline.ts | Claude API | LLM fallback only; reuse existing factory pattern; use cheapest configured model; ~100 tokens per invocation |
 
 ### Internal Boundaries
 
 | Boundary | Communication | Notes |
 |----------|---------------|-------|
-| `page.tsx` → `HomepageLayout` | Props: articles + bezirke + weatherData | page.tsx is Server Component; HomepageLayout is Client Component |
-| `globals.css @theme` → all components | CSS custom properties via Tailwind utilities | Additive — no component changes required for token expansion itself |
-| `(public)/layout.tsx` → nav/footer | Direct import | Single import site for each shell component — one change wires entire app |
-| `bundesland.config.ts` → weather | Lat/lon coordinates | Currently hardcoded; optionally add `weather: { lat, lon }` to config type for portability |
+| `pipeline.ts` → `generate.ts` | Direct import, best-effort inner try/catch | Map failure must never change article status; outer per-article catch must not intercept map errors |
+| `app/api/map-image/[articleId]` → `generate.ts` | Direct import, thin Route Handler | Route Handler handles param parsing and idempotency check only; generate.ts does all work |
+| `map-image-actions.ts` → `generate.ts` | Direct import with requireAuth() guard | Auth lives in the action, not in generate.ts; generate.ts is auth-agnostic |
+| `MapPicker.tsx` → `map-image-actions.ts` | useTransition + Server Action | Same pattern as UnsplashPicker.tsx → unsplash-actions.ts; no new state management approach |
+| `generate.ts` → Prisma | Injected or singleton client | Same overloaded DI pattern as ingest.ts and pipeline.ts: production uses singleton, tests inject pgLite client |
+| `generate.ts` → Vercel Blob | via `blob-upload.ts` wrapper | Isolation layer makes blob calls mockable in unit tests without real Blob writes |
 
----
+### Existing Code: Modified vs Unchanged
+
+| File | Status | Change |
+|------|--------|--------|
+| `src/lib/ai/pipeline.ts` | MODIFIED | Add `generateMapImage(article.id, db)` after WRITTEN status; inner try/catch; only when `!article.imageUrl` |
+| `src/app/(admin)/admin/articles/[id]/edit/page.tsx` | MODIFIED | Add `<MapPicker>` component below `<UnsplashPicker>` |
+| `src/lib/ingestion/ingest.ts` | UNCHANGED | Map generation must not run during raw ingestion — content not yet AI-rewritten |
+| `src/lib/ingestion/types.ts` | UNCHANGED | `RawItem.imageUrl` already optional; no change needed |
+| `src/lib/admin/unsplash-actions.ts` | UNCHANGED | `saveArticleImage` and `removeArticleImage` reused as-is by MapPicker |
+| `prisma/schema.prisma` | UNCHANGED | `Article.imageUrl` and `imageCredit` already exist with correct types |
+| `src/app/api/cron/route.ts` | UNCHANGED | processArticles() internally handles map generation; cron route is unaware |
 
 ## Scaling Considerations
 
-v3.0 is a visual overhaul milestone. No scaling implications introduced.
+| Scale | Architecture Adjustments |
+|-------|--------------------------|
+| Current (Hobby plan, 1/day cron, ~20-50 articles/day) | Inline map generation in pipeline loop is sufficient; adds ~2-3s per article; total extra time 40-150s/run; fits within `maxDuration: 300` |
+| Pro plan (multiple crons/day, ~200 articles/run) | Monitor cron duration; if approaching 250s, split map generation into separate task after `publishArticles()` or use Vercel Queue |
+| High volume (1000+ articles/day) | Cache Nominatim results in DB (`Article.mapLat`/`mapLng` columns); pre-generate tile cache per Bezirk centroid at deploy time; move to background queue |
 
-Open-Meteo API: with `revalidate: 1800`, API call rate is ~48 req/day regardless of reader traffic. Comfortable within the 10,000 req/day fair-use limit even at significant scale.
+### Scaling Priorities
 
----
+1. **First bottleneck:** Nominatim 1 req/sec rate limit. At 50 articles/day this is irrelevant. If cron runs more frequently with many articles in a single run, add a 1-second delay between geocode calls (or cache `placeName → {lat, lng}` in-memory per pipeline run).
+2. **Second bottleneck:** Vercel function timeout. `maxDuration: 300` is already set on `/api/cron`. Map generation adds ~2-3s per article. At 50 articles that is 100-150 extra seconds. The baseline pipeline typically runs 30-60s. Total ~180-210s. Leaves ~90s headroom. Measure in production.
+
+## Anti-Patterns
+
+### Anti-Pattern 1: Generating Maps During Raw Ingestion (ingest.ts)
+
+**What people do:** Add map generation inside the `ingest()` loop alongside `db.article.create`.
+**Why it's wrong:** At ingestion time, article content is raw/untranslated. Location extraction on raw OTS/RSS payloads is unreliable — titles may be in press-release format or reference non-Austrian locations. Also bloats ingestion duration and conflates two distinct concerns.
+**Do this instead:** Generate after `processArticles()` when the AI-rewritten German title and clean content are available. These are significantly higher-quality inputs for location extraction.
+
+### Anti-Pattern 2: Letting Map Generation Fail the Article
+
+**What people do:** Allow `generateMapImage` exceptions to propagate up through the pipeline.ts per-article error handler.
+**Why it's wrong:** A Nominatim timeout, basemap.at outage, or sharp error would increment `retryCount` and mark the article ERROR or FAILED, blocking it from ever publishing.
+**Do this instead:** Wrap `generateMapImage` in an inner try/catch inside the per-article loop. Log `console.warn`. Continue the loop. Map images are enhancement, not correctness. The article publishes without an image; the on-demand API route handles it later.
+
+### Anti-Pattern 3: Re-Generating Images That Already Exist
+
+**What people do:** Call `generateMapImage` unconditionally on every cron run or every on-demand request.
+**Why it's wrong:** Each generation costs 9 tile fetches + 1 Nominatim request + sharp CPU + 1 Blob write. Re-generating wastes all of these on images already stored. The Blob URL is stable — no need to regenerate.
+**Do this instead:** Check `article.imageUrl` before calling `generateMapImage`. If set, return null immediately. This guard lives authoritatively in `generate.ts` and is reinforced in the API route handler.
+
+### Anti-Pattern 4: Using Raw Tile URLs as imageUrl
+
+**What people do:** Store a basemap.at tile URL directly as `Article.imageUrl` without compositing.
+**Why it's wrong:** Individual tiles are 256x256 and cover a small geographic area. The article header expects a single full-width (768+ px) landscape image. Raw tile URLs require JavaScript slippy-map rendering and cannot be used as `<img src>` for hero images.
+**Do this instead:** Composite a 3x3 tile grid into a single JPEG with sharp; upload to Vercel Blob; store the Blob URL. This is a regular image URL compatible with the existing article header component.
+
+### Anti-Pattern 5: Putting Auth Logic Inside generate.ts
+
+**What people do:** Add `requireAuth()` inside `generateMapImage()` to prevent unauthorized generation.
+**Why it's wrong:** `generateMapImage` is called from three contexts: the cron pipeline (no user session), the on-demand public API route (no auth), and the CMS Server Action (auth required). A single auth guard inside the function breaks two of the three call sites.
+**Do this instead:** Auth belongs in the Server Action (`map-image-actions.ts`). `generate.ts` is auth-agnostic. The public API route relies on idempotency and numeric article ID as its only access control.
 
 ## Sources
 
-- [Tailwind CSS v4 Theme Variables — Official Docs](https://tailwindcss.com/docs/theme) — additive @theme expansion, override behavior (HIGH confidence, verified 2026-03-30)
-- [Tailwind CSS backdrop-filter-blur](https://tailwindcss.com/docs/backdrop-filter-blur) — glassmorphism utility classes (HIGH confidence)
-- [Next.js fetch function — next.revalidate option](https://nextjs.org/docs/app/api-reference/functions/fetch) — server-side caching (HIGH confidence)
-- [Open-Meteo API](https://open-meteo.com/) — endpoint format, parameters, fair-use limits (HIGH confidence via multiple sources)
-- Codebase direct inspection — `src/app/globals.css`, `src/app/(public)/layout.tsx`, all `src/components/reader/` files, `bundesland.config.ts`, `src/app/(public)/page.tsx` (HIGH confidence — primary source)
+- basemap.at tile URL pattern (y/x order, CC BY 4.0): [DE:AT/basemap - OpenStreetMap Wiki](https://wiki.openstreetmap.org/wiki/DE:AT/basemap), [basemap.at official](https://basemap.at/en/) — MEDIUM/HIGH confidence
+- Nominatim usage policy (1 req/sec, User-Agent required): [Nominatim Usage Policy](https://operations.osmfoundation.org/policies/nominatim/) — HIGH confidence (official OSM Foundation)
+- Nominatim search API `countrycodes` parameter: [Nominatim 5.3.0 Search](https://nominatim.org/release-docs/latest/api/Search/) — HIGH confidence (official docs)
+- Vercel Blob `put()` server-side pattern and 4.5MB limit: [Vercel Blob docs](https://vercel.com/docs/vercel-blob), [Server Uploads](https://vercel.com/docs/vercel-blob/server-upload) — HIGH confidence (official Vercel docs)
+- sharp composite API: [sharp compositing](https://sharp.pixelplumbing.com/api-composite/) — HIGH confidence (official)
+- sharp on Vercel: pre-compiled linux-x64 binaries ship with sharp; Next.js already uses sharp for `next/image` — MEDIUM confidence (standard setup works; issues reported only in non-standard bundling configs)
+- Existing codebase (read directly): `ingest.ts`, `pipeline.ts`, `unsplash.ts`, `unsplash-actions.ts`, `UnsplashPicker.tsx`, `schema.prisma`, `/api/cron/route.ts`, `/admin/articles/[id]/edit/page.tsx` — HIGH confidence (primary source)
 
 ---
-
-*Architecture research for: Wurzelwelt v3.0 "The Modern Archivist" design system integration*
-*Researched: 2026-03-30*
+*Architecture research for: v3.1 Basemap Article Images — integration into Regionalprojekt*
+*Researched: 2026-04-05*
