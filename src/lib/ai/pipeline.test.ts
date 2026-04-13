@@ -4,12 +4,33 @@
  * Uses pgLite in-process test DB (no external services).
  * Anthropic client is mocked by overriding _clientFactory.create before each test.
  *
- * Requirements: AI-01, AI-02, AI-03, AI-04, AI-05, SEO-02
+ * Requirements: AI-01, AI-02, AI-03, AI-04, AI-05, SEO-02, INTG-01
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import type { PrismaClient } from '@prisma/client'
 import { createTestDb, cleanDb } from '../../test/setup-db'
 import { processArticles, _clientFactory } from './pipeline'
+
+// ---------------------------------------------------------------------------
+// Mock location intelligence modules (INTG-01)
+// ---------------------------------------------------------------------------
+
+vi.mock('../images/locextract', () => ({
+  extractLocation: vi.fn().mockReturnValue(null),
+  llmLocationFallback: vi.fn().mockResolvedValue(null),
+}))
+
+vi.mock('../images/geocode', () => ({
+  geocodeLocation: vi.fn().mockResolvedValue(null),
+}))
+
+vi.mock('../images/mapgen', () => ({
+  generateMapImage: vi.fn().mockResolvedValue(null),
+}))
+
+import { extractLocation, llmLocationFallback } from '../images/locextract'
+import { geocodeLocation } from '../images/geocode'
+import { generateMapImage } from '../images/mapgen'
 
 // ---------------------------------------------------------------------------
 // Mock Anthropic client factory
@@ -462,5 +483,124 @@ describe('processArticles()', () => {
 
     const succeedingUpdated = await db.article.findUniqueOrThrow({ where: { id: succeeding.id } })
     expect(succeedingUpdated.status).toBe('WRITTEN')
+  })
+
+  // ---------------------------------------------------------------------------
+  // INTG-01: Map generation integration tests
+  // ---------------------------------------------------------------------------
+
+  it('generates map image for article with recognized place name (INTG-01)', async () => {
+    const { article } = await seedFetchedArticle()
+    _clientFactory.create = () => makeMockAnthropicClient() as any
+
+    vi.mocked(extractLocation).mockReturnValue('Graz')
+    vi.mocked(geocodeLocation).mockResolvedValue({
+      lat: 47.0707,
+      lon: 15.4395,
+      locationType: 'city',
+      displayName: 'Graz, Steiermark, Austria',
+    })
+    vi.mocked(generateMapImage).mockResolvedValue({
+      url: 'https://blob.example.com/maps/article-1.jpg',
+      credit: '© basemap.at',
+    })
+
+    await processArticles(db)
+
+    const updated = await db.article.findUniqueOrThrow({ where: { id: article.id } })
+    expect(updated.imageUrl).toBe('https://blob.example.com/maps/article-1.jpg')
+    expect(updated.imageCredit).toBe('© basemap.at')
+    expect(updated.status).toBe('WRITTEN')
+  })
+
+  it('skips map generation when article.imageUrl already set (INTG-01)', async () => {
+    // Create article with an existing Unsplash image
+    await db.bezirk.upsert({
+      where: { slug: 'graz' },
+      create: { slug: 'graz', name: 'Graz (Stadt)', gemeindeSynonyms: [] },
+      update: {},
+    })
+    const article = await db.article.create({
+      data: {
+        source: 'OTS_AT',
+        status: 'FETCHED',
+        title: 'Article with Unsplash image',
+        content: 'Content mentioning Graz.',
+        imageUrl: 'https://images.unsplash.com/photo-existing',
+        imageCredit: 'Photo by John',
+      },
+    })
+    _clientFactory.create = () => makeMockAnthropicClient() as any
+
+    await processArticles(db)
+
+    // extractLocation must NOT have been called (guard fired first)
+    expect(vi.mocked(extractLocation)).not.toHaveBeenCalled()
+
+    // Existing imageUrl must be preserved
+    const updated = await db.article.findUniqueOrThrow({ where: { id: article.id } })
+    expect(updated.imageUrl).toBe('https://images.unsplash.com/photo-existing')
+    expect(updated.status).toBe('WRITTEN')
+  })
+
+  it('falls back to LLM when regex finds no location (INTG-01)', async () => {
+    const { article } = await seedFetchedArticle()
+    _clientFactory.create = () => makeMockAnthropicClient() as any
+
+    vi.mocked(extractLocation).mockReturnValue(null)
+    vi.mocked(llmLocationFallback).mockResolvedValue('Kapfenberg')
+    vi.mocked(geocodeLocation).mockResolvedValue({
+      lat: 47.4439,
+      lon: 15.2981,
+      locationType: 'town',
+      displayName: 'Kapfenberg, Steiermark, Austria',
+    })
+    vi.mocked(generateMapImage).mockResolvedValue({
+      url: 'https://blob.example.com/maps/article-kapfenberg.jpg',
+      credit: '© basemap.at',
+    })
+
+    await processArticles(db)
+
+    expect(vi.mocked(geocodeLocation)).toHaveBeenCalledWith(expect.anything(), 'Kapfenberg')
+
+    const updated = await db.article.findUniqueOrThrow({ where: { id: article.id } })
+    expect(updated.imageUrl).toBe('https://blob.example.com/maps/article-kapfenberg.jpg')
+  })
+
+  it('publishes article normally when no location found (INTG-01)', async () => {
+    const { article } = await seedFetchedArticle()
+    _clientFactory.create = () => makeMockAnthropicClient() as any
+
+    vi.mocked(extractLocation).mockReturnValue(null)
+    vi.mocked(llmLocationFallback).mockResolvedValue(null)
+
+    await processArticles(db)
+
+    // Article must still reach WRITTEN with no error
+    const updated = await db.article.findUniqueOrThrow({ where: { id: article.id } })
+    expect(updated.status).toBe('WRITTEN')
+    expect(updated.imageUrl).toBeNull()
+  })
+
+  it('publishes article normally when map generation throws, logs console.warn (INTG-01)', async () => {
+    const { article } = await seedFetchedArticle()
+    _clientFactory.create = () => makeMockAnthropicClient() as any
+
+    vi.mocked(extractLocation).mockReturnValue('Graz')
+    vi.mocked(geocodeLocation).mockRejectedValue(new Error('Nominatim timeout'))
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    await processArticles(db)
+
+    // Article must still reach WRITTEN
+    const updated = await db.article.findUniqueOrThrow({ where: { id: article.id } })
+    expect(updated.status).toBe('WRITTEN')
+
+    // console.warn must have been called and must mention the article ID
+    expect(warnSpy).toHaveBeenCalled()
+    const warnArg = warnSpy.mock.calls[0][0] as string
+    expect(warnArg).toContain(String(article.id))
   })
 })
