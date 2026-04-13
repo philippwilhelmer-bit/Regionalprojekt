@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: Basemap Article Images
 status: executing
-stopped_at: Completed 41-location-intelligence-full-pipeline-41-02-PLAN.md
-last_updated: "2026-04-13T16:18:44.100Z"
+stopped_at: Completed 42-on-demand-route-cms-picker-backfill-42-01-PLAN.md
+last_updated: "2026-04-13T17:41:22.868Z"
 last_activity: "2026-04-13 — Plan 41-01 complete: locextract.ts + geocode.ts + GeocodingCache model with 25 tests"
 progress:
   total_phases: 3
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 6
+  completed_plans: 5
   percent: 0
 ---
 
@@ -61,6 +61,8 @@ Recent decisions affecting current work:
 - [Phase 41-location-intelligence-full-pipeline]: GEOCODING_QUERY_OVERRIDE lives in locextract.ts and imported by geocode.ts — all Steiermark location domain knowledge in one module
 - [Phase 41-location-intelligence-full-pipeline]: Inner try/catch for map block in pipeline.ts ensures map errors never block publication or increment retryCount
 - [Phase 41-location-intelligence-full-pipeline]: Separate db.article.update for imageUrl/imageCredit prevents silent overwrite by the status/content update
+- [Phase 42-on-demand-route-cms-picker-backfill]: backfillMapImages caps at take:10 (conservative Vercel Hobby Server Action timeout limit)
+- [Phase 42-on-demand-route-cms-picker-backfill]: 1100ms delay placed after geocodeLocation call — rate-limit on the call site, even for cache hits
 
 ### Pending Todos
 
@@ -75,6 +77,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-13T16:15:38.237Z
-Stopped at: Completed 41-location-intelligence-full-pipeline-41-02-PLAN.md
+Last session: 2026-04-13T17:41:22.865Z
+Stopped at: Completed 42-on-demand-route-cms-picker-backfill-42-01-PLAN.md
 Resume file: None

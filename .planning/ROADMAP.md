@@ -115,7 +115,7 @@ Full details: `.planning/milestones/v3.0-ROADMAP.md`
   3. Zoom level is auto-selected based on result type (city->12, town->13, village->14, street->15) and map layer is selected by article topic keywords (greyscale default, terrain for nature)
   4. When tile fetching, compositing, or Blob upload throws any error, the article publishes normally with imageUrl null and the existing gradient fallback renders unchanged
   5. A Vercel deployment smoke test confirms the sharp linux-x64 binary loads and produces a valid image for Graz coordinates (47.07N, 15.43E)
-**Plans:** 2/2 plans complete
+**Plans:** 1/2 plans executed
 Plans:
 - [x] 40-01-PLAN.md — Dependencies, sharp smoke test, mapgen skeleton with pure functions and tests
 - [x] 40-02-PLAN.md — Full tile pipeline: fetching with retry, stitching, attribution, Blob upload, graceful fallback
@@ -158,4 +158,4 @@ Plans:
 | 33-39 | v3.0 | 12/12 + 2 quick | Complete | 2026-04-05 |
 | 40. Tile Pipeline Infrastructure | 2/2 | Complete    | 2026-04-13 | - |
 | 41. Location Intelligence and Full Pipeline | 2/2 | Complete    | 2026-04-13 | - |
-| 42. On-Demand Route, CMS Picker, and Backfill | v3.1 | 0/2 | Not started | - |
+| 42. On-Demand Route, CMS Picker, and Backfill | 1/2 | In Progress|  | - |
