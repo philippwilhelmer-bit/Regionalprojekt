@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: Basemap Article Images
 status: executing
-stopped_at: Completed 40-tile-pipeline-infrastructure-40-02-PLAN.md
-last_updated: "2026-04-13T14:53:25.766Z"
-last_activity: "2026-04-13 — Plan 40-01 complete: mapgen.ts skeleton with pure functions and sharp smoke test"
+stopped_at: Completed 41-location-intelligence-full-pipeline-41-01-PLAN.md
+last_updated: "2026-04-13T18:09:30Z"
+last_activity: "2026-04-13 — Plan 41-01 complete: locextract.ts + geocode.ts + GeocodingCache model with 25 tests"
 progress:
   total_phases: 3
   completed_phases: 1
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-04-05)
 
 ## Current Position
 
-Phase: 40 of 42 in v3.1 (Tile Pipeline Infrastructure)
+Phase: 41 of 42 in v3.1 (Location Intelligence - Full Pipeline)
 Plan: 1 of 2 in current phase
 Status: In progress
-Last activity: 2026-04-13 — Plan 40-01 complete: mapgen.ts skeleton with pure functions and sharp smoke test
+Last activity: 2026-04-13 — Plan 41-01 complete: locextract.ts + geocode.ts + GeocodingCache model with 25 tests
 
 Progress: [░░░░░░░░░░] 0% (v3.1 milestone)
 
@@ -56,6 +56,9 @@ Recent decisions affecting current work:
 - [Phase 40-tile-pipeline-infrastructure]: tileUrl uses wien.gv.at domain (maps*.wien.gv.at/basemap/) confirmed from WMTS capabilities XML — not basemap.at domain
 - [Phase 40-tile-pipeline-infrastructure]: Sharp intermediate buffers must be PNG-encoded between pipeline steps — toBuffer() returns raw pixel data that sharp cannot auto-detect
 - [Phase 40-tile-pipeline-infrastructure]: Test ArrayBuffer must be standalone copy (buffer.slice) to avoid Node.js pool sharing corrupting sharp PNG reads
+- [Phase 41-location-intelligence-full-pipeline]: Regex uses lookahead/lookbehind (not \b) to handle place names ending in non-word chars like "Graz (Stadt)"
+- [Phase 41-location-intelligence-full-pipeline]: geocode.ts uses upsert with update:{} (no-op) rather than create+P2002 catch to handle concurrent serverless cache writes
+- [Phase 41-location-intelligence-full-pipeline]: GEOCODING_QUERY_OVERRIDE lives in locextract.ts and imported by geocode.ts — all Steiermark location domain knowledge in one module
 
 ### Pending Todos
 

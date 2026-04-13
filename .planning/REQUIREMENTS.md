@@ -9,8 +9,8 @@ Requirements for basemap.at map image generation. Each maps to roadmap phases.
 
 ### Map Image Pipeline
 
-- [ ] **MAP-01**: System extracts location (city/town/street) from article text using regex patterns for Austrian place names and Bezirk names from config
-- [ ] **MAP-02**: System geocodes extracted location via Nominatim with `countrycodes=at`, caches results in Postgres to avoid rate limit bans
+- [x] **MAP-01**: System extracts location (city/town/street) from article text using regex patterns for Austrian place names and Bezirk names from config
+- [x] **MAP-02**: System geocodes extracted location via Nominatim with `countrycodes=at`, caches results in Postgres to avoid rate limit bans
 - [x] **MAP-03**: System fetches basemap.at tiles at computed XYZ coordinates and stitches them into a single image using sharp
 - [x] **MAP-04**: System auto-selects zoom level (10–15) based on Nominatim result type (city→12, town→13, village→14, street→15)
 - [x] **MAP-05**: System selects map layer based on article topic keywords (greyscale default, terrain for nature, aerial for infrastructure)
@@ -28,7 +28,7 @@ Requirements for basemap.at map image generation. Each maps to roadmap phases.
 ### CMS Editor Tools
 
 - [ ] **CMS-01**: Editor can preview, regenerate, and override map images via a "Karte" tab alongside existing Unsplash picker
-- [ ] **CMS-02**: System uses LLM fallback to extract location when regex finds nothing and article has meaningful geographic content
+- [x] **CMS-02**: System uses LLM fallback to extract location when regex finds nothing and article has meaningful geographic content
 
 ## Future Requirements
 
@@ -59,8 +59,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MAP-01 | Phase 41 | Pending |
-| MAP-02 | Phase 41 | Pending |
+| MAP-01 | Phase 41 | Complete |
+| MAP-02 | Phase 41 | Complete |
 | MAP-03 | Phase 40 | Complete |
 | MAP-04 | Phase 40 | Complete |
 | MAP-05 | Phase 40 | Complete |
@@ -72,7 +72,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INTG-03 | Phase 42 | Pending |
 | INTG-04 | Phase 42 | Pending |
 | CMS-01 | Phase 42 | Pending |
-| CMS-02 | Phase 41 | Pending |
+| CMS-02 | Phase 41 | Complete |
 
 **Coverage:**
 - v3.1 requirements: 14 total
