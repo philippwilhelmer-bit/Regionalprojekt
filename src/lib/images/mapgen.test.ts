@@ -2,10 +2,10 @@
  * Tests for mapgen.ts — basemap.at tile pipeline module.
  *
  * Plan 40-01: Pure function tests + Sharp smoke test.
- * Plan 40-02 will fill in stub tests for async tile-fetch behaviors.
+ * Plan 40-02: Async tile-fetch, stitching, Blob upload, and generateMapImage behaviors.
  */
 
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest'
 import {
   latLonToTile,
   selectLayer,
@@ -13,6 +13,8 @@ import {
   tileUrl,
   buildAttributionSvg,
   generateMapImage,
+  fetchTileWithRetry,
+  fetchTileGrid,
 } from './mapgen'
 
 // ---------------------------------------------------------------------------
@@ -178,18 +180,340 @@ describe('sharp smoke test', () => {
 })
 
 // ---------------------------------------------------------------------------
-// Stub tests for Plan 40-02 async behaviors
+// Minimal valid PNG buffer helper (1x1 white pixel PNG)
 // ---------------------------------------------------------------------------
-describe('generateMapImage (async — implemented in Plan 40-02)', () => {
-  it.todo('returns MapImage with url and credit on successful tile fetch and Blob upload')
-  it.todo('returns null when tile fetch returns HTTP 5xx twice (single retry exhausted)')
-  it.todo('returns null when sharp throws during compositing')
-  it.todo('returns null when Blob upload fails')
-  it.todo('includes © basemap.at as credit in returned MapImage')
+let minimalPng: Buffer
+
+beforeAll(async () => {
+  const sharp = (await import('sharp')).default
+  minimalPng = await sharp({
+    create: { width: 256, height: 256, channels: 3, background: { r: 200, g: 200, b: 200 } },
+  })
+    .png()
+    .toBuffer()
 })
 
-describe('tile grid fetch (async — implemented in Plan 40-02)', () => {
-  it.todo('fetches a 3x3 grid of tiles centered on lat/lon')
-  it.todo('retries once after 500ms on HTTP 5xx from tile server')
-  it.todo('fails through to null on second 5xx (no further retries)')
+// ---------------------------------------------------------------------------
+// fetchTileWithRetry — single tile fetching with retry on 5xx
+// ---------------------------------------------------------------------------
+describe('fetchTileWithRetry', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn())
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('returns Buffer on HTTP 200', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      arrayBuffer: async () => minimalPng.buffer.slice(
+        minimalPng.byteOffset,
+        minimalPng.byteOffset + minimalPng.byteLength
+      ),
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    const result = await fetchTileWithRetry('https://maps.wien.gv.at/basemap/bmapgrau/normal/google3857/13/2879/4447.png')
+    expect(Buffer.isBuffer(result)).toBe(true)
+    expect(result.length).toBeGreaterThan(0)
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+  })
+
+  it('retries once after 500ms on HTTP 500 and succeeds on second attempt', async () => {
+    vi.useFakeTimers()
+    const mockFetch = vi.fn()
+      .mockResolvedValueOnce({ ok: false, status: 500, arrayBuffer: async () => new ArrayBuffer(0) })
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        arrayBuffer: async () => minimalPng.buffer.slice(
+          minimalPng.byteOffset,
+          minimalPng.byteOffset + minimalPng.byteLength
+        ),
+      })
+    vi.stubGlobal('fetch', mockFetch)
+
+    const resultPromise = fetchTileWithRetry('https://maps.wien.gv.at/basemap/bmapgrau/normal/google3857/13/2879/4447.png')
+    // Advance 500ms timer so retry fires
+    await vi.advanceTimersByTimeAsync(500)
+    const result = await resultPromise
+
+    expect(Buffer.isBuffer(result)).toBe(true)
+    expect(mockFetch).toHaveBeenCalledTimes(2)
+    vi.useRealTimers()
+  })
+
+  it('throws after two consecutive 500 failures (no infinite retry)', async () => {
+    vi.useFakeTimers()
+    const mockFetch = vi.fn()
+      .mockResolvedValueOnce({ ok: false, status: 500, arrayBuffer: async () => new ArrayBuffer(0) })
+      .mockResolvedValueOnce({ ok: false, status: 500, arrayBuffer: async () => new ArrayBuffer(0) })
+    vi.stubGlobal('fetch', mockFetch)
+
+    const resultPromise = fetchTileWithRetry('https://maps.wien.gv.at/basemap/bmapgrau/normal/google3857/13/2879/4447.png')
+    await vi.advanceTimersByTimeAsync(500)
+
+    await expect(resultPromise).rejects.toThrow()
+    expect(mockFetch).toHaveBeenCalledTimes(2)
+    vi.useRealTimers()
+  })
+
+  it('throws immediately on HTTP 4xx (no retry)', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 404,
+      arrayBuffer: async () => new ArrayBuffer(0),
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    await expect(
+      fetchTileWithRetry('https://maps.wien.gv.at/basemap/bmapgrau/normal/google3857/13/2879/4447.png')
+    ).rejects.toThrow()
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// fetchTileGrid — 5x3 tile grid concurrent fetch
+// ---------------------------------------------------------------------------
+describe('fetchTileGrid', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn())
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('fetches exactly 15 tiles for a 5x3 grid', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      arrayBuffer: async () => minimalPng.buffer.slice(
+        minimalPng.byteOffset,
+        minimalPng.byteOffset + minimalPng.byteLength
+      ),
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    const result = await fetchTileGrid('bmapgrau', 13, 4447, 2879, 5, 3)
+    expect(mockFetch).toHaveBeenCalledTimes(15)
+    // Result is 3 rows x 5 cols
+    expect(result).toHaveLength(3)
+    expect(result[0]).toHaveLength(5)
+  })
+
+  it('fetches tiles with correct z/y/x coordinate offsets from center', async () => {
+    const calls: string[] = []
+    const mockFetch = vi.fn().mockImplementation((url: string) => {
+      calls.push(url)
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        arrayBuffer: async () => minimalPng.buffer.slice(
+          minimalPng.byteOffset,
+          minimalPng.byteOffset + minimalPng.byteLength
+        ),
+      })
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    // Center tile: cx=4447, cy=2879, zoom=13
+    // Expected cols: 4445, 4446, 4447, 4448, 4449 (cx-2 to cx+2)
+    // Expected rows: 2878, 2879, 2880 (cy-1 to cy+1)
+    await fetchTileGrid('bmapgrau', 13, 4447, 2879, 5, 3)
+
+    // Verify all 15 expected tile coordinates appear in the URLs
+    const expectedCoords = [
+      // row 2878
+      '/13/2878/4445', '/13/2878/4446', '/13/2878/4447', '/13/2878/4448', '/13/2878/4449',
+      // row 2879
+      '/13/2879/4445', '/13/2879/4446', '/13/2879/4447', '/13/2879/4448', '/13/2879/4449',
+      // row 2880
+      '/13/2880/4445', '/13/2880/4446', '/13/2880/4447', '/13/2880/4448', '/13/2880/4449',
+    ]
+
+    for (const coord of expectedCoords) {
+      const found = calls.some((url) => url.includes(coord))
+      expect(found, `Expected tile ${coord} to be fetched`).toBe(true)
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// generateMapImage — full pipeline with Blob upload
+// ---------------------------------------------------------------------------
+vi.mock('@vercel/blob', () => ({
+  put: vi.fn().mockResolvedValue({ url: 'https://blob.example.com/maps/article-1.jpg' }),
+}))
+
+describe('generateMapImage', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn())
+    vi.clearAllMocks()
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('returns MapImage with url and credit on successful tile fetch and Blob upload', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      arrayBuffer: async () => minimalPng.buffer.slice(
+        minimalPng.byteOffset,
+        minimalPng.byteOffset + minimalPng.byteLength
+      ),
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    const result = await generateMapImage(47.07, 15.43, 'Test Headline', 1)
+    expect(result).not.toBeNull()
+    expect(result?.url).toBe('https://blob.example.com/maps/article-1.jpg')
+    expect(result?.credit).toBe('© basemap.at')
+  })
+
+  it('includes © basemap.at as credit in returned MapImage', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      arrayBuffer: async () => minimalPng.buffer.slice(
+        minimalPng.byteOffset,
+        minimalPng.byteOffset + minimalPng.byteLength
+      ),
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    const result = await generateMapImage(47.07, 15.43, 'Test', 1)
+    expect(result?.credit).toBe('© basemap.at')
+  })
+
+  it('calls Blob put() with correct path pattern "maps/article-{id}.jpg"', async () => {
+    const { put } = await import('@vercel/blob')
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      arrayBuffer: async () => minimalPng.buffer.slice(
+        minimalPng.byteOffset,
+        minimalPng.byteOffset + minimalPng.byteLength
+      ),
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    await generateMapImage(47.07, 15.43, 'Test', 42)
+    expect(put).toHaveBeenCalledWith(
+      'maps/article-42.jpg',
+      expect.any(Buffer),
+      expect.objectContaining({ access: 'public', contentType: 'image/jpeg' })
+    )
+  })
+
+  it('returns null (not throws) when fetch fails', async () => {
+    const mockFetch = vi.fn().mockRejectedValue(new Error('Network error'))
+    vi.stubGlobal('fetch', mockFetch)
+
+    const result = await generateMapImage(47.07, 15.43, 'Test', 1)
+    expect(result).toBeNull()
+  })
+
+  it('returns null (not throws) when Blob put() fails', async () => {
+    const { put } = await import('@vercel/blob')
+    vi.mocked(put).mockRejectedValueOnce(new Error('Blob upload failed'))
+
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      arrayBuffer: async () => minimalPng.buffer.slice(
+        minimalPng.byteOffset,
+        minimalPng.byteOffset + minimalPng.byteLength
+      ),
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    const result = await generateMapImage(47.07, 15.43, 'Test', 1)
+    expect(result).toBeNull()
+  })
+
+  it('logs console.warn with article ID and coordinates on failure', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const mockFetch = vi.fn().mockRejectedValue(new Error('Network error'))
+    vi.stubGlobal('fetch', mockFetch)
+
+    await generateMapImage(47.07, 15.43, 'Test', 99)
+    expect(warnSpy).toHaveBeenCalled()
+    const warnArg = warnSpy.mock.calls[0][0] as string
+    expect(warnArg).toContain('99')  // article ID
+    expect(warnArg).toContain('47.07')  // lat
+    expect(warnArg).toContain('15.43')  // lon
+    warnSpy.mockRestore()
+  })
+
+  it('uses zoom 12 for locationType "city" (selectZoom auto-selection)', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      arrayBuffer: async () => minimalPng.buffer.slice(
+        minimalPng.byteOffset,
+        minimalPng.byteOffset + minimalPng.byteLength
+      ),
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    // For zoom=12, Graz tile = latLonToTile(47.07, 15.43, 12) = { x: 2223, y: 1439 }
+    // Verify URLs contain zoom 12
+    await generateMapImage(47.07, 15.43, 'Test', 1, 'city')
+    const urls = mockFetch.mock.calls.map((c: unknown[]) => c[0] as string)
+    expect(urls.some((u: string) => u.includes('/12/'))).toBe(true)
+    expect(urls.every((u: string) => !u.includes('/13/') && !u.includes('/14/'))).toBe(true)
+  })
+
+  it('uses zoom 14 for locationType "village"', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      arrayBuffer: async () => minimalPng.buffer.slice(
+        minimalPng.byteOffset,
+        minimalPng.byteOffset + minimalPng.byteLength
+      ),
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    await generateMapImage(47.07, 15.43, 'Test', 1, 'village')
+    const urls = mockFetch.mock.calls.map((c: unknown[]) => c[0] as string)
+    expect(urls.some((u: string) => u.includes('/14/'))).toBe(true)
+  })
+
+  it('uses zoom 13 (default) when no locationType provided', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      arrayBuffer: async () => minimalPng.buffer.slice(
+        minimalPng.byteOffset,
+        minimalPng.byteOffset + minimalPng.byteLength
+      ),
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    await generateMapImage(47.07, 15.43, 'Test', 1)
+    const urls = mockFetch.mock.calls.map((c: unknown[]) => c[0] as string)
+    expect(urls.some((u: string) => u.includes('/13/'))).toBe(true)
+  })
+
+  it('returns null when tile fetch returns HTTP 5xx twice (single retry exhausted)', async () => {
+    vi.useFakeTimers()
+    const mockFetch = vi.fn()
+      .mockResolvedValue({ ok: false, status: 500, arrayBuffer: async () => new ArrayBuffer(0) })
+    vi.stubGlobal('fetch', mockFetch)
+
+    const resultPromise = generateMapImage(47.07, 15.43, 'Test', 1)
+    // Advance timers for all retries
+    await vi.advanceTimersByTimeAsync(10000)
+    const result = await resultPromise
+    expect(result).toBeNull()
+    vi.useRealTimers()
+  })
 })
