@@ -180,3 +180,15 @@ model PipelineConfig {
   deadManThresholdHours Int      @default(6)
   updatedAt             DateTime @updatedAt
 }
+
+model GeocodingCache {
+  id             Int      @id @default(autoincrement())
+  normalizedName String   @unique
+  displayName    String
+  lat            Float
+  lon            Float
+  locationType   String
+  cachedAt       DateTime @default(now())
+
+  @@index([normalizedName])
+}
