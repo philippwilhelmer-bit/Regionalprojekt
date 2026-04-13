@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: Basemap Article Images
-status: planning
-stopped_at: Phase 40 context gathered
-last_updated: "2026-04-05T21:08:35.123Z"
-last_activity: 2026-04-05 — v3.1 roadmap created, phases 40-42 defined
+status: executing
+stopped_at: Completed 40-tile-pipeline-infrastructure-40-01-PLAN.md
+last_updated: "2026-04-13T14:38:44.237Z"
+last_activity: "2026-04-13 — Plan 40-01 complete: mapgen.ts skeleton with pure functions and sharp smoke test"
 progress:
   total_phases: 3
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
   percent: 0
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-04-05)
 ## Current Position
 
 Phase: 40 of 42 in v3.1 (Tile Pipeline Infrastructure)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-04-05 — v3.1 roadmap created, phases 40-42 defined
+Plan: 1 of 2 in current phase
+Status: In progress
+Last activity: 2026-04-13 — Plan 40-01 complete: mapgen.ts skeleton with pure functions and sharp smoke test
 
 Progress: [░░░░░░░░░░] 0% (v3.1 milestone)
 
@@ -52,6 +52,8 @@ Recent decisions affecting current work:
 - v3.1: Nominatim Postgres cache is mandatory before first API call — serverless burst causes IP bans
 - v3.1: Map generation isolated by inner try/catch in pipeline.ts — failure never blocks article publication
 - v3.1: basemap.at tile URL is /{z}/{y}/{x} (y before x) — validate with Graz test before stitching logic
+- [Phase 40-tile-pipeline-infrastructure]: Graz tile test vector corrected from plan's x=4468,y=2873 to formula-correct x=4447,y=2879 (x=4468 is Vienna's x)
+- [Phase 40-tile-pipeline-infrastructure]: tileUrl uses wien.gv.at domain (maps*.wien.gv.at/basemap/) confirmed from WMTS capabilities XML — not basemap.at domain
 
 ### Pending Todos
 
@@ -66,6 +68,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-05T21:08:35.113Z
-Stopped at: Phase 40 context gathered
-Resume file: .planning/phases/40-tile-pipeline-infrastructure/40-CONTEXT.md
+Last session: 2026-04-13T14:38:44.235Z
+Stopped at: Completed 40-tile-pipeline-infrastructure-40-01-PLAN.md
+Resume file: None
