@@ -419,33 +419,235 @@ function buildGlyphT(x: number, baseline: number): string {
 }
 
 // ---------------------------------------------------------------------------
-// generateMapImage — stub (Plan 40-02 implements the full pipeline)
+// Tile fetching — HTTP fetch with 5xx retry
+// ---------------------------------------------------------------------------
+
+/**
+ * Fetch a single tile with one retry on HTTP 5xx errors.
+ *
+ * - HTTP 200: return Buffer
+ * - HTTP 5xx: wait 500ms and retry once; throw on second failure
+ * - HTTP 4xx: throw immediately (no retry — client error)
+ * - Network error: throw immediately
+ *
+ * @param url - Full tile URL
+ * @returns Buffer containing raw tile image data
+ */
+export async function fetchTileWithRetry(url: string): Promise<Buffer> {
+  async function attempt(): Promise<Buffer> {
+    const res = await fetch(url)
+    if (res.ok) {
+      return Buffer.from(await res.arrayBuffer())
+    }
+    if (res.status >= 400 && res.status < 500) {
+      // 4xx: client error — no retry
+      throw new Error(`Tile fetch HTTP ${res.status}: ${url}`)
+    }
+    // 5xx: server error — signal for retry
+    throw new ServerError(`Tile fetch HTTP ${res.status}: ${url}`)
+  }
+
+  try {
+    return await attempt()
+  } catch (err) {
+    if (err instanceof ServerError) {
+      // Wait 500ms then retry once
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      return await attempt()
+    }
+    throw err
+  }
+}
+
+/** Sentinel error class for HTTP 5xx responses (triggers retry) */
+class ServerError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'ServerError'
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Tile grid fetching — concurrent 5x3 grid
+// ---------------------------------------------------------------------------
+
+/**
+ * Fetch a rectangular grid of tiles centered on (cx, cy).
+ *
+ * Grid extends from cx-floor(cols/2) to cx+floor(cols/2) in x,
+ * and cy-floor(rows/2) to cy+floor(rows/2) in y.
+ * All tiles fetched concurrently via Promise.all.
+ *
+ * @param layer - Tile layer name
+ * @param zoom - Zoom level
+ * @param cx - Center tile x coordinate
+ * @param cy - Center tile y coordinate
+ * @param cols - Number of columns (must be odd for symmetric grid)
+ * @param rows - Number of rows (must be odd for symmetric grid)
+ * @returns 2D array of tile Buffers: result[row][col]
+ */
+export async function fetchTileGrid(
+  layer: LayerName,
+  zoom: number,
+  cx: number,
+  cy: number,
+  cols: number,
+  rows: number,
+): Promise<Buffer[][]> {
+  const halfCols = Math.floor(cols / 2)
+  const halfRows = Math.floor(rows / 2)
+
+  const rowPromises = []
+  for (let dy = -halfRows; dy <= halfRows; dy++) {
+    const y = cy + dy
+    const colPromises = []
+    for (let dx = -halfCols; dx <= halfCols; dx++) {
+      const x = cx + dx
+      const url = tileUrl(layer, zoom, y, x)
+      colPromises.push(fetchTileWithRetry(url))
+    }
+    rowPromises.push(Promise.all(colPromises))
+  }
+
+  return Promise.all(rowPromises)
+}
+
+// ---------------------------------------------------------------------------
+// Image stitching — composite tile grid to 1200x630 JPEG
+// ---------------------------------------------------------------------------
+
+/**
+ * Stitch a tile grid into a center-cropped 1200x630 JPEG with attribution.
+ *
+ * Process (3 sharp passes to work around pipeline limitations):
+ * 1. Create blank canvas (cols*256 x rows*256), composite all tiles
+ * 2. Resize/crop to 1200x630 (cover, centre)
+ * 3. Composite attribution SVG, encode JPEG quality 80
+ *
+ * @param tiles - 2D array of tile Buffers (rows x cols)
+ * @param cols - Number of tile columns
+ * @param rows - Number of tile rows
+ * @returns JPEG Buffer at 1200x630, quality 80
+ */
+async function stitchTiles(tiles: Buffer[][], cols: number, rows: number): Promise<Buffer> {
+  const canvasW = cols * TILE_SIZE
+  const canvasH = rows * TILE_SIZE
+
+  // Build composite inputs: [{input: Buffer, left: x, top: y}, ...]
+  const compositeInputs: sharp.OverlayOptions[] = []
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      compositeInputs.push({
+        input: tiles[row][col],
+        left: col * TILE_SIZE,
+        top: row * TILE_SIZE,
+      })
+    }
+  }
+
+  // Step 1: blank canvas + composite tiles → encode as PNG for next step
+  const stitched = await sharp({
+    create: {
+      width: canvasW,
+      height: canvasH,
+      channels: 3,
+      background: { r: 200, g: 200, b: 200 },
+    },
+  })
+    .composite(compositeInputs)
+    .png()
+    .toBuffer()
+
+  // Step 2: resize/crop to 1200x630 → encode as PNG for next step
+  const cropped = await sharp(stitched)
+    .resize(OUTPUT_WIDTH, OUTPUT_HEIGHT, { fit: 'cover', position: 'centre' })
+    .png()
+    .toBuffer()
+
+  // Step 3: composite attribution + encode JPEG q80
+  const attribution = buildAttributionSvg(OUTPUT_WIDTH, OUTPUT_HEIGHT)
+  return sharp(cropped)
+    .composite([{ input: attribution }])
+    .jpeg({ quality: 80 })
+    .toBuffer()
+}
+
+// ---------------------------------------------------------------------------
+// Blob upload
+// ---------------------------------------------------------------------------
+
+/**
+ * Upload a JPEG image buffer to Vercel Blob storage.
+ *
+ * @param articleId - Article ID used in the storage path
+ * @param imageBuffer - JPEG image buffer
+ * @returns Public URL of the uploaded blob
+ */
+async function uploadToBlob(articleId: number, imageBuffer: Buffer): Promise<string> {
+  const blob = await put(`maps/article-${articleId}.jpg`, imageBuffer, {
+    access: 'public',
+    contentType: 'image/jpeg',
+    allowOverwrite: true,
+  } as Parameters<typeof put>[2])
+  return blob.url
+}
+
+// ---------------------------------------------------------------------------
+// generateMapImage — full pipeline
 // ---------------------------------------------------------------------------
 
 /**
  * Generate a map image for an article and upload to Vercel Blob.
  *
+ * Full pipeline:
+ * 1. Auto-select zoom via selectZoom(locationType) — MAP-04
+ * 2. Convert lat/lon to center tile coordinates
+ * 3. Select layer from headline keywords
+ * 4. Fetch 5x3 tile grid concurrently
+ * 5. Stitch tiles, crop to 1200x630, overlay attribution
+ * 6. Upload JPEG to Vercel Blob
+ * 7. Return { url, credit: '© basemap.at' }
+ *
+ * Any failure returns null (does not throw). Failures are logged via console.warn.
+ *
  * @param lat - Location latitude
  * @param lon - Location longitude
  * @param headline - Article headline (for layer selection)
  * @param articleId - Article ID (for Blob path naming)
- * @param locationType - OSM place type (for zoom selection)
+ * @param locationType - OSM place type (for zoom selection via MAP-04)
  * @returns MapImage with url and credit, or null on any failure
  */
 export async function generateMapImage(
   lat: number,
   lon: number,
   headline: string,
-  articleId: string,
+  articleId: number,
   locationType?: string,
 ): Promise<MapImage | null> {
-  // Plan 40-02 implements the full pipeline:
-  // 1. Select layer + zoom
-  // 2. Calculate tile grid
-  // 3. Fetch tiles with retry
-  // 4. Composite with sharp
-  // 5. Overlay attribution SVG
-  // 6. Upload to Vercel Blob
-  // 7. Return { url, credit: '© basemap.at' }
-  return null
+  try {
+    // 1. Select zoom level based on location type (MAP-04)
+    const zoom = selectZoom(locationType)
+
+    // 2. Calculate center tile coordinates
+    const { x: cx, y: cy } = latLonToTile(lat, lon, zoom)
+
+    // 3. Select tile layer from headline keywords
+    const layer = selectLayer(headline)
+
+    // 4. Fetch 5x3 tile grid (1280x768 raw canvas)
+    const tiles = await fetchTileGrid(layer, zoom, cx, cy, 5, 3)
+
+    // 5. Stitch, crop to 1200x630, overlay attribution SVG
+    const imageBuffer = await stitchTiles(tiles, 5, 3)
+
+    // 6. Upload to Vercel Blob
+    const url = await uploadToBlob(articleId, imageBuffer)
+
+    // 7. Return result
+    return { url, credit: '© basemap.at' }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.warn(`[mapgen] article id=${articleId} -- ${msg} -- lat=${lat} lon=${lon}`)
+    return null
+  }
 }

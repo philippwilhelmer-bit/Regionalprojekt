@@ -180,18 +180,31 @@ describe('sharp smoke test', () => {
 })
 
 // ---------------------------------------------------------------------------
-// Minimal valid PNG buffer helper (1x1 white pixel PNG)
+// Minimal valid PNG buffer helper (256x256 grey PNG, standalone ArrayBuffer)
 // ---------------------------------------------------------------------------
 let minimalPng: Buffer
+let minimalPngArrayBuffer: ArrayBuffer
 
 beforeAll(async () => {
   const sharp = (await import('sharp')).default
-  minimalPng = await sharp({
+  const raw = await sharp({
     create: { width: 256, height: 256, channels: 3, background: { r: 200, g: 200, b: 200 } },
   })
     .png()
     .toBuffer()
+  // Copy into a standalone ArrayBuffer (avoid Node.js buffer pool sharing)
+  minimalPngArrayBuffer = raw.buffer.slice(raw.byteOffset, raw.byteOffset + raw.byteLength)
+  minimalPng = Buffer.from(minimalPngArrayBuffer)
 })
+
+/** Helper: return a fresh mock Response with valid PNG data */
+function mockPngResponse() {
+  return {
+    ok: true,
+    status: 200,
+    arrayBuffer: async () => minimalPngArrayBuffer,
+  }
+}
 
 // ---------------------------------------------------------------------------
 // fetchTileWithRetry — single tile fetching with retry on 5xx
@@ -209,10 +222,7 @@ describe('fetchTileWithRetry', () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      arrayBuffer: async () => minimalPng.buffer.slice(
-        minimalPng.byteOffset,
-        minimalPng.byteOffset + minimalPng.byteLength
-      ),
+      arrayBuffer: async () => minimalPngArrayBuffer,
     })
     vi.stubGlobal('fetch', mockFetch)
 
@@ -226,14 +236,7 @@ describe('fetchTileWithRetry', () => {
     vi.useFakeTimers()
     const mockFetch = vi.fn()
       .mockResolvedValueOnce({ ok: false, status: 500, arrayBuffer: async () => new ArrayBuffer(0) })
-      .mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        arrayBuffer: async () => minimalPng.buffer.slice(
-          minimalPng.byteOffset,
-          minimalPng.byteOffset + minimalPng.byteLength
-        ),
-      })
+      .mockResolvedValueOnce(mockPngResponse())
     vi.stubGlobal('fetch', mockFetch)
 
     const resultPromise = fetchTileWithRetry('https://maps.wien.gv.at/basemap/bmapgrau/normal/google3857/13/2879/4447.png')
@@ -254,9 +257,10 @@ describe('fetchTileWithRetry', () => {
     vi.stubGlobal('fetch', mockFetch)
 
     const resultPromise = fetchTileWithRetry('https://maps.wien.gv.at/basemap/bmapgrau/normal/google3857/13/2879/4447.png')
+    // Attach rejection handler BEFORE advancing timers to avoid PromiseRejectionHandledWarning
+    const assertion = expect(resultPromise).rejects.toThrow()
     await vi.advanceTimersByTimeAsync(500)
-
-    await expect(resultPromise).rejects.toThrow()
+    await assertion
     expect(mockFetch).toHaveBeenCalledTimes(2)
     vi.useRealTimers()
   })
@@ -292,10 +296,7 @@ describe('fetchTileGrid', () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      arrayBuffer: async () => minimalPng.buffer.slice(
-        minimalPng.byteOffset,
-        minimalPng.byteOffset + minimalPng.byteLength
-      ),
+      arrayBuffer: async () => minimalPngArrayBuffer,
     })
     vi.stubGlobal('fetch', mockFetch)
 
@@ -310,14 +311,7 @@ describe('fetchTileGrid', () => {
     const calls: string[] = []
     const mockFetch = vi.fn().mockImplementation((url: string) => {
       calls.push(url)
-      return Promise.resolve({
-        ok: true,
-        status: 200,
-        arrayBuffer: async () => minimalPng.buffer.slice(
-          minimalPng.byteOffset,
-          minimalPng.byteOffset + minimalPng.byteLength
-        ),
-      })
+      return Promise.resolve(mockPngResponse())
     })
     vi.stubGlobal('fetch', mockFetch)
 
@@ -364,10 +358,7 @@ describe('generateMapImage', () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      arrayBuffer: async () => minimalPng.buffer.slice(
-        minimalPng.byteOffset,
-        minimalPng.byteOffset + minimalPng.byteLength
-      ),
+      arrayBuffer: async () => minimalPngArrayBuffer,
     })
     vi.stubGlobal('fetch', mockFetch)
 
@@ -381,10 +372,7 @@ describe('generateMapImage', () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      arrayBuffer: async () => minimalPng.buffer.slice(
-        minimalPng.byteOffset,
-        minimalPng.byteOffset + minimalPng.byteLength
-      ),
+      arrayBuffer: async () => minimalPngArrayBuffer,
     })
     vi.stubGlobal('fetch', mockFetch)
 
@@ -397,10 +385,7 @@ describe('generateMapImage', () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      arrayBuffer: async () => minimalPng.buffer.slice(
-        minimalPng.byteOffset,
-        minimalPng.byteOffset + minimalPng.byteLength
-      ),
+      arrayBuffer: async () => minimalPngArrayBuffer,
     })
     vi.stubGlobal('fetch', mockFetch)
 
@@ -427,10 +412,7 @@ describe('generateMapImage', () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      arrayBuffer: async () => minimalPng.buffer.slice(
-        minimalPng.byteOffset,
-        minimalPng.byteOffset + minimalPng.byteLength
-      ),
+      arrayBuffer: async () => minimalPngArrayBuffer,
     })
     vi.stubGlobal('fetch', mockFetch)
 
@@ -456,10 +438,7 @@ describe('generateMapImage', () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      arrayBuffer: async () => minimalPng.buffer.slice(
-        minimalPng.byteOffset,
-        minimalPng.byteOffset + minimalPng.byteLength
-      ),
+      arrayBuffer: async () => minimalPngArrayBuffer,
     })
     vi.stubGlobal('fetch', mockFetch)
 
@@ -475,10 +454,7 @@ describe('generateMapImage', () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      arrayBuffer: async () => minimalPng.buffer.slice(
-        minimalPng.byteOffset,
-        minimalPng.byteOffset + minimalPng.byteLength
-      ),
+      arrayBuffer: async () => minimalPngArrayBuffer,
     })
     vi.stubGlobal('fetch', mockFetch)
 
@@ -491,10 +467,7 @@ describe('generateMapImage', () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      arrayBuffer: async () => minimalPng.buffer.slice(
-        minimalPng.byteOffset,
-        minimalPng.byteOffset + minimalPng.byteLength
-      ),
+      arrayBuffer: async () => minimalPngArrayBuffer,
     })
     vi.stubGlobal('fetch', mockFetch)
 
