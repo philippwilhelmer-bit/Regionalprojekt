@@ -150,6 +150,6 @@ Plans:
 | 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
 | 33-39 | v3.0 | 12/12 + 2 quick | Complete | 2026-04-05 |
-| 40. Tile Pipeline Infrastructure | 2/2 | Complete   | 2026-04-13 | - |
+| 40. Tile Pipeline Infrastructure | 2/2 | Complete    | 2026-04-13 | - |
 | 41. Location Intelligence and Full Pipeline | v3.1 | 0/TBD | Not started | - |
 | 42. On-Demand Route, CMS Picker, and Backfill | v3.1 | 0/TBD | Not started | - |
