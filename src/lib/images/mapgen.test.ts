@@ -20,18 +20,19 @@ import {
 // ---------------------------------------------------------------------------
 describe('latLonToTile', () => {
   it('returns correct tile for Graz at zoom 13', () => {
+    // Verified via OSM Slippy Map formula: lat=47.07, lon=15.43, zoom=13
+    // https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
     const result = latLonToTile(47.07, 15.43, 13)
-    expect(result).toEqual({ x: 4468, y: 2873 })
+    expect(result).toEqual({ x: 4447, y: 2879 })
   })
 
   it('returns correct tile for Vienna at zoom 13', () => {
+    // Verified via OSM Slippy Map formula: lat=48.21, lon=16.37, zoom=13
     const result = latLonToTile(48.21, 16.37, 13)
-    // Vienna should produce different coords than Graz
-    expect(result.x).toBeGreaterThan(0)
-    expect(result.y).toBeGreaterThan(0)
-    // Vienna is ~50km north and ~1deg east of Graz — x should be higher, y lower
-    expect(result.x).toBeGreaterThan(4468)
-    expect(result.y).toBeLessThan(2873)
+    expect(result).toEqual({ x: 4468, y: 2840 })
+    // Vienna is north and east of Graz — x is higher, y is lower (tile y increases southward)
+    expect(result.x).toBeGreaterThan(4447) // Graz x
+    expect(result.y).toBeLessThan(2879)    // Graz y
   })
 })
 
@@ -95,30 +96,33 @@ describe('selectZoom', () => {
 // ---------------------------------------------------------------------------
 describe('tileUrl', () => {
   it('uses z/y/x ordering in URL (not z/x/y)', () => {
-    const url = tileUrl('bmapgrau', 13, 2873, 4468)
-    // URL should have format: .../13/2873/4468.png or .../13/2873/4468.jpeg
-    expect(url).toMatch(/\/13\/2873\/4468/)
+    // Tile y=2879, x=4447 for Graz — URL must have /13/2879/4447 (y before x)
+    const url = tileUrl('bmapgrau', 13, 2879, 4447)
+    expect(url).toMatch(/\/13\/2879\/4447/)
   })
 
   it('does NOT use z/x/y ordering', () => {
-    // If x/y were swapped, we'd get /13/4468/2873 — this must not happen
-    const url = tileUrl('bmapgrau', 13, 2873, 4468)
-    expect(url).not.toMatch(/\/13\/4468\/2873/)
+    // If x/y were swapped, we'd get /13/4447/2879 — this must not happen
+    const url = tileUrl('bmapgrau', 13, 2879, 4447)
+    expect(url).not.toMatch(/\/13\/4447\/2879/)
   })
 
-  it('produces a basemap.at URL', () => {
-    const url = tileUrl('bmapgrau', 13, 2873, 4468)
-    expect(url).toMatch(/basemap\.at/)
+  it('produces a wien.gv.at/basemap URL (basemap.at official tile service)', () => {
+    // basemap.at tiles are served from maps*.wien.gv.at/basemap/...
+    // Source: https://www.basemap.at/wmts/1.0.0/WMTSCapabilities.xml
+    const url = tileUrl('bmapgrau', 13, 2879, 4447)
+    expect(url).toMatch(/wien\.gv\.at\/basemap/)
   })
 
   it('uses different servers for round-robin (calling multiple times)', () => {
-    // Call enough times to see different server numbers
-    const urls = Array.from({ length: 6 }, (_, i) => tileUrl('bmapgrau', 13, 2873, 4468 + i))
+    // Call enough times to cycle through all 5 servers (maps, maps1–maps4)
+    const urls = Array.from({ length: 10 }, (_, i) => tileUrl('bmapgrau', 13, 2879, 4447 + i))
+    // Extract subdomain (maps, maps1, maps2, maps3, maps4)
     const servers = urls.map((u) => {
-      const match = u.match(/maps(\d)/)
+      const match = u.match(/https:\/\/(maps\d?)\.wien/)
       return match ? match[1] : null
     })
-    // There should be variation in server numbers (not all the same)
+    // There should be variation in server subdomains (not all the same)
     const uniqueServers = new Set(servers.filter(Boolean))
     expect(uniqueServers.size).toBeGreaterThan(1)
   })
