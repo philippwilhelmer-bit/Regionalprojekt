@@ -132,7 +132,7 @@ Plans:
 **Plans:** 2 plans
 Plans:
 - [x] 41-01-PLAN.md — GeocodingCache schema, regex location extraction, LLM fallback, Nominatim geocoding with cache
-- [ ] 41-02-PLAN.md — Pipeline integration: wire location extraction + geocoding + map generation into cron pipeline
+- [x] 41-02-PLAN.md — Pipeline integration: wire location extraction + geocoding + map generation into cron pipeline
 
 ### Phase 42: On-Demand Route, CMS Picker, and Backfill
 **Goal**: Editors can manually generate or replace map images for any article, and existing articles without images can be backfilled in bulk
@@ -142,7 +142,10 @@ Plans:
   1. Calling GET /api/map-image/[articleId] generates a map image for the article (or returns the existing URL if already set) and writes the result to Article.imageUrl
   2. In the article edit page, the "Karte" tab shows the current map image preview and a "Karte generieren" button — clicking it generates a new image and saves it without leaving the edit page
   3. The CMS backfill action processes all articles with imageUrl null in batches of 10 with 1100ms delay between geocoding calls, and progress is visible in console logs
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 42-01-PLAN.md — On-demand route handler, generateMapForArticle and backfillMapImages Server Actions with tests
+- [ ] 42-02-PLAN.md — MapPicker, ImagePickerTabs, BackfillButton components wired into CMS edit and list pages
 
 ## Progress
 
@@ -155,4 +158,4 @@ Plans:
 | 33-39 | v3.0 | 12/12 + 2 quick | Complete | 2026-04-05 |
 | 40. Tile Pipeline Infrastructure | 2/2 | Complete    | 2026-04-13 | - |
 | 41. Location Intelligence and Full Pipeline | 2/2 | Complete    | 2026-04-13 | - |
-| 42. On-Demand Route, CMS Picker, and Backfill | v3.1 | 0/TBD | Not started | - |
+| 42. On-Demand Route, CMS Picker, and Backfill | v3.1 | 0/2 | Not started | - |
