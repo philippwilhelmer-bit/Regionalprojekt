@@ -21,6 +21,9 @@ import { checkCostCircuitBreaker } from './circuit-breaker'
 import { runStep1Tag } from './steps/step1-tag'
 import { runStep2Write } from './steps/step2-write'
 import { getPipelineConfig } from '../admin/pipeline-config-dal'
+import { extractLocation, llmLocationFallback } from '../images/locextract'
+import { geocodeLocation } from '../images/geocode'
+import { generateMapImage } from '../images/mapgen'
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -166,7 +169,42 @@ export async function processArticles(
         totalInputTokens += step2.inputTokens
         totalOutputTokens += step2.outputTokens
 
-        // 5f. Write final status + content + SEO fields
+        // 5f. MAP-01 + CMS-02 + MAP-02 + INTG-01: Location extraction -> geocoding -> map generation
+        // Wrapped in its own try/catch so map errors never affect article status or retryCount.
+        if (!article.imageUrl) {
+          try {
+            const articleContent = [step2.headline, step2.lead, step2.body].join('\n\n')
+            const locationName =
+              extractLocation(articleContent) ??
+              (await llmLocationFallback(anthropicClient, articleContent))
+
+            if (locationName) {
+              const geo = await geocodeLocation(db, locationName)
+              if (geo) {
+                const mapImage = await generateMapImage(
+                  geo.lat,
+                  geo.lon,
+                  step2.headline,
+                  article.id,
+                  geo.locationType,
+                )
+                if (mapImage) {
+                  await db.article.update({
+                    where: { id: article.id },
+                    data: { imageUrl: mapImage.url, imageCredit: mapImage.credit },
+                  })
+                }
+              }
+            }
+          } catch (mapErr) {
+            // INTG-02: map failure never blocks publication
+            console.warn(
+              `[pipeline] map skipped id=${article.id} -- ${mapErr instanceof Error ? mapErr.message : String(mapErr)}`,
+            )
+          }
+        }
+
+        // 5g. Write final status + content + SEO fields
         const finalStatus = step1.hasNamedPerson ? 'REVIEW' : 'WRITTEN'
         await db.article.update({
           where: { id: article.id },
