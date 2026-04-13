@@ -14,7 +14,7 @@ Requirements for basemap.at map image generation. Each maps to roadmap phases.
 - [x] **MAP-03**: System fetches basemap.at tiles at computed XYZ coordinates and stitches them into a single image using sharp
 - [x] **MAP-04**: System auto-selects zoom level (10–15) based on Nominatim result type (city→12, town→13, village→14, street→15)
 - [x] **MAP-05**: System selects map layer based on article topic keywords (greyscale default, terrain for nature, aerial for infrastructure)
-- [ ] **MAP-06**: System stores generated map image in Vercel Blob and writes URL to Article.imageUrl
+- [x] **MAP-06**: System stores generated map image in Vercel Blob and writes URL to Article.imageUrl
 - [x] **MAP-07**: System sets Article.imageCredit to "© basemap.at" for all generated map images (CC-BY 4.0 compliance)
 - [x] **MAP-08**: System falls back gracefully to gradient (imageUrl remains null) when location extraction, geocoding, or tile fetching fails
 
@@ -64,7 +64,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MAP-03 | Phase 40 | Complete |
 | MAP-04 | Phase 40 | Complete |
 | MAP-05 | Phase 40 | Complete |
-| MAP-06 | Phase 40 | Pending |
+| MAP-06 | Phase 40 | Complete |
 | MAP-07 | Phase 40 | Complete |
 | MAP-08 | Phase 40 | Complete |
 | INTG-01 | Phase 41 | Pending |

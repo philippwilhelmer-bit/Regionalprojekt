@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: Basemap Article Images
 status: executing
-stopped_at: Completed 40-tile-pipeline-infrastructure-40-01-PLAN.md
-last_updated: "2026-04-13T14:38:44.237Z"
+stopped_at: Completed 40-tile-pipeline-infrastructure-40-02-PLAN.md
+last_updated: "2026-04-13T14:50:53.950Z"
 last_activity: "2026-04-13 — Plan 40-01 complete: mapgen.ts skeleton with pure functions and sharp smoke test"
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -54,6 +54,8 @@ Recent decisions affecting current work:
 - v3.1: basemap.at tile URL is /{z}/{y}/{x} (y before x) — validate with Graz test before stitching logic
 - [Phase 40-tile-pipeline-infrastructure]: Graz tile test vector corrected from plan's x=4468,y=2873 to formula-correct x=4447,y=2879 (x=4468 is Vienna's x)
 - [Phase 40-tile-pipeline-infrastructure]: tileUrl uses wien.gv.at domain (maps*.wien.gv.at/basemap/) confirmed from WMTS capabilities XML — not basemap.at domain
+- [Phase 40-tile-pipeline-infrastructure]: Sharp intermediate buffers must be PNG-encoded between pipeline steps — toBuffer() returns raw pixel data that sharp cannot auto-detect
+- [Phase 40-tile-pipeline-infrastructure]: Test ArrayBuffer must be standalone copy (buffer.slice) to avoid Node.js pool sharing corrupting sharp PNG reads
 
 ### Pending Todos
 
@@ -68,6 +70,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-13T14:38:44.235Z
-Stopped at: Completed 40-tile-pipeline-infrastructure-40-01-PLAN.md
+Last session: 2026-04-13T14:50:53.948Z
+Stopped at: Completed 40-tile-pipeline-infrastructure-40-02-PLAN.md
 Resume file: None
