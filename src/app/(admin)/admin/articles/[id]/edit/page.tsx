@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { listBezirke } from '@/lib/content/bezirke'
 import { updateArticle } from '@/lib/admin/articles-actions'
-import { UnsplashPicker } from '@/components/admin/UnsplashPicker'
+import { ImagePickerTabs } from '@/components/admin/ImagePickerTabs'
 import { slugify } from '@/lib/reader/slug'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
@@ -165,8 +165,8 @@ export default async function EditArticlePage({ params }: Props) {
           </select>
         </div>
 
-        {/* Artikelbild (Unsplash) */}
-        <UnsplashPicker
+        {/* Artikelbild */}
+        <ImagePickerTabs
           articleId={article.id}
           headline={article.title ?? ''}
           currentImageUrl={article.imageUrl}

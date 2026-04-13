@@ -5,6 +5,7 @@ import { listArticlesAdmin } from '@/lib/admin/articles-actions'
 import { listBezirke } from '@/lib/content/bezirke'
 import { ArticleFilters } from './ArticleFilters'
 import { ArticleRow } from './ArticleRow'
+import { BackfillButton } from '@/components/admin/BackfillButton'
 
 const PAGE_SIZE = 50
 
@@ -63,12 +64,15 @@ export default async function ArticlesPage({
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-ink font-headline">Artikel</h1>
-        <Link
-          href="/admin/articles/new"
-          className="px-4 py-2 bg-gradient-to-br from-ink to-ink-soft text-parchment text-sm font-medium rounded-sm hover:opacity-90"
-        >
-          Neuer Artikel
-        </Link>
+        <div className="flex items-center gap-3">
+          <BackfillButton />
+          <Link
+            href="/admin/articles/new"
+            className="px-4 py-2 bg-gradient-to-br from-ink to-ink-soft text-parchment text-sm font-medium rounded-sm hover:opacity-90"
+          >
+            Neuer Artikel
+          </Link>
+        </div>
       </div>
 
       <div className="bg-surface-elevated rounded-sm p-4 mb-4">
