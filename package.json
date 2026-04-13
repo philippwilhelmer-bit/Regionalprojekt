@@ -15,12 +15,17 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",
     "@prisma/client": "^6.19.2",
+    "@vercel/blob": "^2.3.3",
     "feedsmith": "^2.9.1",
     "next": "^15.5.14",
     "prisma": "^6.19.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "sharp": "0.33.5",
     "zod": "^3.25.76"
+  },
+  "optionalDependencies": {
+    "@img/sharp-linux-x64": "0.33.5"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.4.1",
