@@ -20,7 +20,7 @@ Requirements for basemap.at map image generation. Each maps to roadmap phases.
 
 ### Pipeline Integration
 
-- [ ] **INTG-01**: System automatically generates map image after AI article generation during cron ingestion pipeline
+- [x] **INTG-01**: System automatically generates map image after AI article generation during cron ingestion pipeline
 - [x] **INTG-02**: Map generation failure never blocks article creation or publication
 - [ ] **INTG-03**: System provides on-demand API route to generate map image for any article by ID
 - [ ] **INTG-04**: Editor can trigger bulk backfill to generate maps for existing articles without images
@@ -67,7 +67,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MAP-06 | Phase 40 | Complete |
 | MAP-07 | Phase 40 | Complete |
 | MAP-08 | Phase 40 | Complete |
-| INTG-01 | Phase 41 | Pending |
+| INTG-01 | Phase 41 | Complete |
 | INTG-02 | Phase 40 | Complete |
 | INTG-03 | Phase 42 | Pending |
 | INTG-04 | Phase 42 | Pending |

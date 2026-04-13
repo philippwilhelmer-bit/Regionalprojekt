@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: Basemap Article Images
 status: executing
-stopped_at: Completed 41-location-intelligence-full-pipeline-41-01-PLAN.md
-last_updated: "2026-04-13T18:09:30Z"
+stopped_at: Completed 41-location-intelligence-full-pipeline-41-02-PLAN.md
+last_updated: "2026-04-13T16:15:38.239Z"
 last_activity: "2026-04-13 — Plan 41-01 complete: locextract.ts + geocode.ts + GeocodingCache model with 25 tests"
 progress:
   total_phases: 3
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  completed_phases: 2
+  total_plans: 4
+  completed_plans: 4
   percent: 0
 ---
 
@@ -59,6 +59,8 @@ Recent decisions affecting current work:
 - [Phase 41-location-intelligence-full-pipeline]: Regex uses lookahead/lookbehind (not \b) to handle place names ending in non-word chars like "Graz (Stadt)"
 - [Phase 41-location-intelligence-full-pipeline]: geocode.ts uses upsert with update:{} (no-op) rather than create+P2002 catch to handle concurrent serverless cache writes
 - [Phase 41-location-intelligence-full-pipeline]: GEOCODING_QUERY_OVERRIDE lives in locextract.ts and imported by geocode.ts — all Steiermark location domain knowledge in one module
+- [Phase 41-location-intelligence-full-pipeline]: Inner try/catch for map block in pipeline.ts ensures map errors never block publication or increment retryCount
+- [Phase 41-location-intelligence-full-pipeline]: Separate db.article.update for imageUrl/imageCredit prevents silent overwrite by the status/content update
 
 ### Pending Todos
 
@@ -73,6 +75,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-04-13T14:50:53.948Z
-Stopped at: Completed 40-tile-pipeline-infrastructure-40-02-PLAN.md
+Last session: 2026-04-13T16:15:38.237Z
+Stopped at: Completed 41-location-intelligence-full-pipeline-41-02-PLAN.md
 Resume file: None

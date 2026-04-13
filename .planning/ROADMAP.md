@@ -98,7 +98,7 @@ Full details: `.planning/milestones/v3.0-ROADMAP.md`
 - [x] **Phase 40: Tile Pipeline Infrastructure** - sharp pin, Blob storage, tile fetch, stitching, attribution, graceful fallback, pipeline isolation (completed 2026-04-13)
 
 #### Phase 41: Location Intelligence and Full Pipeline
-- [ ] **Phase 41: Location Intelligence and Full Pipeline** - Regex and LLM location extraction, Nominatim geocoding with Postgres cache, zoom/layer selection, end-to-end cron integration
+- [x] **Phase 41: Location Intelligence and Full Pipeline** - Regex and LLM location extraction, Nominatim geocoding with Postgres cache, zoom/layer selection, end-to-end cron integration (completed 2026-04-13)
 
 #### Phase 42: On-Demand Route, CMS Picker, and Backfill
 - [ ] **Phase 42: On-Demand Route, CMS Picker, and Backfill** - API route, CMS map picker tab, bulk backfill action
@@ -154,5 +154,5 @@ Plans:
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
 | 33-39 | v3.0 | 12/12 + 2 quick | Complete | 2026-04-05 |
 | 40. Tile Pipeline Infrastructure | 2/2 | Complete    | 2026-04-13 | - |
-| 41. Location Intelligence and Full Pipeline | v3.1 | 1/2 | In progress | - |
+| 41. Location Intelligence and Full Pipeline | 2/2 | Complete   | 2026-04-13 | - |
 | 42. On-Demand Route, CMS Picker, and Backfill | v3.1 | 0/TBD | Not started | - |
