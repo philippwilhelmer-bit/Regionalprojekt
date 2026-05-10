@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { ArticleWithBezirke } from "@/lib/content/articles";
-import { groupArticlesByBezirk } from "@/lib/content/articles";
+import { groupArticlesByBezirk, type ArticleWithBezirke } from "@/lib/content/articles-utils";
 import type { BezirkItem } from "@/types/bundesland";
 import { HeroArticle } from "./HeroArticle";
 import { TopMeldungenRow } from "./TopMeldungenRow";

@@ -4,23 +4,11 @@
  * Production usage (no-arg client): functions use the singleton from src/lib/prisma.ts.
  * Test usage: pass a pgLite-backed PrismaClient as the first argument.
  */
-import type { Article, ArticleSource, ArticleStatus, Prisma, PrismaClient } from '@prisma/client'
+import type { ArticleSource, ArticleStatus, Prisma, PrismaClient } from '@prisma/client'
 import { prisma as defaultPrisma } from '../prisma'
+import { groupArticlesByBezirk, type ArticleWithBezirke } from './articles-utils'
 
-export type ArticleWithBezirke = Article & {
-  bezirke: {
-    bezirk: {
-      id: number
-      slug: string
-      name: string
-      gemeindeSynonyms: string[]
-      createdAt: Date
-    }
-    articleId: number
-    bezirkId: number
-    taggedAt: Date
-  }[]
-}
+export { groupArticlesByBezirk, type ArticleWithBezirke }
 
 export async function listArticles(options?: {
   bezirkId?: number
@@ -391,45 +379,6 @@ export async function listArticlesForSearch(
     orderBy: [{ publishedAt: 'desc' }],
     take: limit,
   })
-}
-
-/**
- * Pure function — no DB access.
- *
- * Groups an array of ArticleWithBezirke by the slug of each article's first tagged bezirk.
- * Articles with isStateWide=true appear in every group.
- * Articles with no bezirke are excluded entirely.
- *
- * Returns: Map<bezirkSlug, { name: string, articles: ArticleWithBezirke[] }>
- */
-export function groupArticlesByBezirk(
-  articles: ArticleWithBezirke[]
-): Map<string, { name: string; articles: ArticleWithBezirke[] }> {
-  const result = new Map<string, { name: string; articles: ArticleWithBezirke[] }>()
-
-  // Collect all non-statewide articles that have at least one bezirk
-  const withBezirk = articles.filter(
-    (a) => !a.isStateWide && a.bezirke.length > 0
-  )
-  const stateWide = articles.filter((a) => a.isStateWide)
-
-  // Build groups from normal articles (first bezirk determines the group)
-  for (const article of withBezirk) {
-    const firstEntry = article.bezirke[0]
-    const { slug, name } = firstEntry.bezirk
-
-    if (!result.has(slug)) {
-      result.set(slug, { name, articles: [] })
-    }
-    result.get(slug)!.articles.push(article)
-  }
-
-  // Add stateWide articles to every existing group
-  for (const [, group] of result) {
-    group.articles.push(...stateWide)
-  }
-
-  return result
 }
 
 /**
