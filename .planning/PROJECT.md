@@ -94,20 +94,24 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 - ✓ CMS admin fully migrated to Archivist tokens (20 files) — v3.0
 - ✓ CMS theme tag field for "Grüne der Woche" article assignment — v3.0
 
+- ✓ Regex location extraction (Bezirk names + Steiermark city list) with lookahead/lookbehind word boundaries — v3.1
+- ✓ Haiku LLM location fallback when regex finds nothing — v3.1
+- ✓ Nominatim geocoding (countrycodes=at) with Postgres GeocodingCache to prevent rate-limit bans — v3.1
+- ✓ basemap.at tile fetching (5×3 grid) with 5xx retry and sharp stitching to 1200×630 JPEG — v3.1
+- ✓ Auto-selected zoom (city→12, town→13, village→14, street→15) and layer (greyscale default, terrain/aerial keyword-driven) — v3.1
+- ✓ "© basemap.at" attribution overlay via SVG path-based glyphs (font-free for Vercel lambdas) — v3.1
+- ✓ Generated maps stored in Vercel Blob, URL written to Article.imageUrl, imageCredit="© basemap.at" — v3.1
+- ✓ Map generation wired into cron pipeline with inner try/catch isolation — never blocks publication — v3.1
+- ✓ On-demand POST /api/admin/generate-map route with CRON_SECRET bearer auth — v3.1
+- ✓ generateMapForArticle and backfillMapImages Server Actions with 1100ms Nominatim rate-limiting — v3.1
+- ✓ ImagePickerTabs in CMS: Unsplash + Karte tab switcher, default chosen by current imageCredit — v3.1
+- ✓ MapPicker component: preview, generate, remove map image inline in article edit page — v3.1
+- ✓ BackfillButton in articles list header: bulk backfill with German count display — v3.1
+- ✓ PrismaPg driver adapter replaces Prisma Rust engine (bypasses 5s Neon pooler timeout from local dev) — v3.1
+
 ### Active
 
-## Current Milestone: v3.1 Basemap Article Images
-
-**Goal:** Replace gradient fallbacks with auto-generated basemap.at map images for article headers, using location extraction from article text.
-
-**Target features:**
-- Automatic map image generation during content ingestion pipeline
-- On-demand map image API route for articles missing images
-- CMS map image picker alongside existing Unsplash picker
-- Vercel Blob Storage for generated map images
-- Location extraction from article text (regex + LLM fallback)
-- Geocoding via Nominatim (Austria-focused)
-- Tile stitching from basemap.at (CC-BY 4.0, no API key)
+*(No active milestone — ready for /gsd:new-milestone. Pre-planned next: v3.2 Text Engine Optimization, see `.planning/TEXT-ENGINE-OPTIMIZATION-PLAN.md`.)*
 
 ### Out of Scope
 
@@ -123,15 +127,15 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 
 ## Context
 
-Shipped v3.0 The Modern Archivist on 2026-04-05 (5 days, 7 phases, 12 plans + 2 quick tasks).
+Shipped v3.1 Basemap Article Images on 2026-05-10 (3 phases, 6 plans, 35-day calendar window with ~3 active build days + verification pause).
 Live at: https://regionalprojekt.vercel.app (Vercel Hobby + Neon PostgreSQL).
-Tech stack: Next.js 15, Prisma v6, PostgreSQL (Neon), Anthropic Claude API, Tailwind CSS v4, Vitest with pgLite.
-Architecture: Config-driven Bundesland deployment, adapter-pattern ingestion, Server Component CMS with HMAC auth.
-Reader frontend: "Wurzelwelt" brand with "The Modern Archivist" design identity — Ink/Parchment/Slate/Aged Wood MD3 token system, glassmorphic nav, editorial footer, weather widget, archival article headers, drop caps, sticky sidebar. Plus Jakarta Sans + Newsreader typography, Material Symbols Rounded.
+Tech stack: Next.js 15, Prisma v6 with PrismaPg driver adapter, PostgreSQL (Neon), Anthropic Claude API, Tailwind CSS v4, Vitest with pgLite, sharp@0.33.5 (pinned), @vercel/blob, pg.
+Architecture: Config-driven Bundesland deployment, adapter-pattern ingestion, Server Component CMS with HMAC auth, map image pipeline (regex+LLM extract → Nominatim geocode → basemap.at tile fetch → sharp stitch → Vercel Blob).
+Reader frontend: "Wurzelwelt" brand with "The Modern Archivist" design identity — Ink/Parchment/Slate/Aged Wood MD3 token system, glassmorphic nav, editorial footer, weather widget, archival article headers, drop caps, sticky sidebar. Plus Jakarta Sans + Newsreader typography, Material Symbols Rounded. Article hero images now auto-generated basemap.at maps (CC-BY 4.0) when location is extractable, gradient fallback otherwise.
 Test mode: Single env var (NEXT_PUBLIC_IS_TEST_SITE) gates banners, SEO suppression, and AdSense suppression.
-Cron: Vercel cron → /api/cron route (1/day on Hobby plan), secured with CRON_SECRET.
-Codebase: 14,337 LOC TypeScript across 5 milestones.
-Known items: Impressum fields need real publisher data, OTS source disabled (Cloudflare-blocked, using ORF RSS only), Article.theme field added (Prisma db push, no formal migration file).
+Cron: Vercel cron → /api/cron route (1/day on Hobby plan), secured with CRON_SECRET. Map generation runs inside the cron loop after AI step2, with inner try/catch isolation.
+Codebase: ~24,000 LOC TypeScript across 6 milestones (v3.1 added +9,630/-1,379 across 56 files).
+Known items: Impressum fields need real publisher data, OTS source disabled (Cloudflare-blocked, using ORF RSS only), Article.theme field added (Prisma db push, no formal migration file), basemap subdomain round-robin reduced to single 'maps' after maps1–4 NXDOMAIN, Vercel Blob store `regionalprojekt-blob` (public, eu-central-1) is the map image store.
 
 ## Key Decisions
 
@@ -166,6 +170,20 @@ Known items: Impressum fields need real publisher data, OTS source disabled (Clo
 | Prisma db push for Article.theme | Migration drift made formal migration impractical | ⚠️ Revisit — no migration file exists |
 | Bezirk selector in hamburger drawer + desktop nav | Cleaner header, still accessible | ✓ Good — desktop badge added in v3.0 gap closure |
 | color-mix() for glassmorphism tokens | Native CSS, no JS runtime | ✓ Good — Tailwind v4 auto-prefixes -webkit |
+| basemap.at over Mapbox/Google Maps Static | CC-BY 4.0, free, no API key, EU-hosted | ✓ Good — v3.1 shipped with zero map-API cost |
+| sharp@0.33.5 pinned (not 0.34.x) | 0.34.x linux-x64 binary broken on Vercel | ✓ Good — production builds green |
+| SVG path-based glyphs for attribution | No <text> elements → font-free for Vercel lambdas | ✓ Good — eliminates font runtime dependency |
+| 3-pass sharp pipeline (PNG intermediates) | toBuffer() without format returns raw pixels sharp can't re-decode | ✓ Good — required to make sharp stitching work at all |
+| Postgres GeocodingCache table with upsert | Cleaner than create+P2002 catch; atomic concurrent writes | ✓ Good — handles serverless burst races without error inspection |
+| Inner try/catch around map block in pipeline | Map errors must never block publication or affect retryCount | ✓ Good — preserves v1.0's autonomy guarantee |
+| article.imageUrl guard before map generation | Manually-set Unsplash images must be preserved | ✓ Good — editor overrides survive cron |
+| Server Action (requireAuth) for CMS map ops, Route Handler (CRON_SECRET) for cron | next/headers unavailable in Route Handlers | ✓ Good — auth pattern matches existing cron route |
+| 1100ms inter-call Nominatim delay (uniform, even on cache hits) | Defensive rate-limit hygiene — never trip 1 req/s ban | ✓ Good — backfill cap take:10 keeps Server Action under any timeout tier |
+| ImagePickerTabs default tab driven by currentImageCredit | Editors land on the tab matching the article's current state | ✓ Good — zero-click context |
+| PrismaPg driver adapter over Prisma Rust engine | Rust engine times out at 5s on Neon pooler from local dev | ✓ Good — local dev unblocked; production fine on either |
+| articles-utils.ts split (pure utils file) | pg has Node-builtin deps that webpack can't resolve for client bundle | ✓ Good — keeps pg out of client; surgical 1-file change |
+| basemap subdomain round-robin reduced to single 'maps' | maps1–4.wien.gv.at retired upstream (NXDOMAIN) | ⚠️ Revisit — single subdomain reduces parallel fetch concurrency |
+| Reduced retryCount semantics for map block | retryCount reserved for article-level failures only | ✓ Good — observability stays clean |
 
 ## Constraints
 
@@ -176,4 +194,4 @@ Known items: Impressum fields need real publisher data, OTS source disabled (Clo
 - **Austrian legal**: Impressum must satisfy MedienG/ECG; AI disclosure required on generated articles
 
 ---
-*Last updated: 2026-04-05 after v3.1 milestone started*
+*Last updated: 2026-05-10 after v3.1 milestone shipped*

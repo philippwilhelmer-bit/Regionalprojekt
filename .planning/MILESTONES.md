@@ -1,5 +1,26 @@
 # Milestones
 
+## v3.1 Basemap Article Images (Shipped: 2026-05-10)
+
+**Phases completed:** 3 phases, 6 plans
+**Timeline:** 35 days (2026-04-05 → 2026-05-10, ~3 active days + verification pause)
+**Codebase:** 56 files changed, +9,630 / -1,379 lines
+**Git range:** docs: start milestone v3.1 → fix(42-02): split pure utils out of articles.ts
+
+**Delivered:** Automatic basemap.at map images replace gradient fallbacks on article headers — regex + LLM location extraction, Nominatim geocoding cached in Postgres, tile fetch + sharp stitching to 1200×630 JPEG with attribution, Vercel Blob storage. Editor-side: Karte tab in CMS edit page, bulk backfill button. Graceful null fallback at every layer keeps the cron pipeline unbreakable.
+
+**Key accomplishments:**
+1. mapgen.ts tile pipeline: sharp@0.33.5 pinned, lat/lon→XYZ math, 5×3 grid fetch with 5xx retry, 3-pass sharp stitch to 1200×630 JPEG, SVG path-based "© basemap.at" overlay (font-free for Vercel lambdas), Vercel Blob upload, graceful null fallback — 38 tests
+2. Location intelligence: regex extraction with lookahead/lookbehind word boundaries handling "Graz (Stadt)", Haiku LLM fallback for geographic articles, Nominatim geocoding with GeocodingCache Prisma model + upsert race handling — 25 tests
+3. Cron pipeline integration (INTG-01): map block wired after step2 with inner try/catch isolation — map failures never block publication; imageUrl guard preserves manually-set Unsplash images
+4. On-demand POST /api/admin/generate-map route (CRON_SECRET auth) + generateMapForArticle and backfillMapImages Server Actions (requireAuth) with 1100ms inter-call Nominatim rate-limiting and take:10 batch cap — 23 tests
+5. CMS surface: ImagePickerTabs (Unsplash/Karte switcher with credit-based default tab), MapPicker (preview + generate + remove), BackfillButton (header trigger with result counts in German)
+6. Verification fixes shipped during UAT (af51de6, 5d26bfa): basemap subdomain round-robin reduced to single 'maps' subdomain after NXDOMAIN on maps1–4; PrismaPg driver adapter replaces Prisma Rust engine to bypass 5s Neon pooler timeout; articles-utils.ts split keeps pg/Node-builtins out of the client bundle
+
+**Tech debt:** Phase 42-02 SUMMARY was written retroactively on 2026-05-10 (gap from 2026-04-13 implementation); Phase 42 has UAT.md but no VERIFICATION.md; ROADMAP plan checkboxes for Phase 42 stale until milestone close (same cosmetic issue as v2.0, v3.0); CMS-01 REQUIREMENTS checkbox flipped at milestone close, not at phase close.
+
+---
+
 ## v3.0 The Modern Archivist (Shipped: 2026-04-05)
 
 **Phases completed:** 7 phases, 12 plans + 2 quick tasks

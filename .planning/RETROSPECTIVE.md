@@ -2,6 +2,65 @@
 
 *A living document updated after each milestone. Lessons feed forward into future planning.*
 
+## Milestone: v3.1 — Basemap Article Images
+
+**Shipped:** 2026-05-10
+**Phases:** 3 | **Plans:** 6 | **Timeline:** 35-day calendar window (~3 active build days + verification pause)
+
+### What Was Built
+- mapgen.ts tile pipeline: sharp@0.33.5, lat/lon→XYZ math, 5×3 grid fetch with 5xx retry, 3-pass sharp stitch to 1200×630 JPEG, font-free SVG-glyph attribution, Vercel Blob upload, graceful null fallback
+- Location intelligence: regex with lookahead/lookbehind word boundaries, Haiku LLM fallback, Nominatim geocoding, GeocodingCache Prisma model with upsert race handling
+- Cron pipeline integration: map block after AI step2 with inner try/catch isolation, imageUrl guard preserving manually-set Unsplash images
+- On-demand POST /api/admin/generate-map route (CRON_SECRET auth) + generateMapForArticle/backfillMapImages Server Actions (requireAuth) with 1100ms inter-call rate-limiting and take:10 batch cap
+- CMS surface: ImagePickerTabs (Unsplash/Karte switcher, credit-driven default), MapPicker (preview + generate + remove), BackfillButton with German count display
+- Verification fixes: basemap subdomain reduced to 'maps' after maps1–4 NXDOMAIN; PrismaPg driver adapter bypasses 5s Neon Rust-engine timeout from local dev; articles-utils.ts split keeps pg/Node-builtins off the client bundle
+
+### What Worked
+- TDD with RED→GREEN commits per task — every plan executed cleanly with test-vector corrections caught at GREEN phase (Graz tile coords, basemap.at vs wien.gv.at domain), not in production
+- Graceful null fallback as a layered pattern — fetch fails, stitch fails, blob fails, geocode fails all return null and the article still publishes
+- 1100ms inter-call delay applied uniformly (even on cache hits) — defensive hygiene that paid off when Nominatim was strict
+- Inner try/catch separation for map block: clean autonomy guarantee preserved from v1.0
+- Pre-existing v1.0 bezirke test failures correctly noted as out-of-scope rather than scope-creeping into v3.1
+- Verification phase surfaced three real production-blocking bugs (basemap subdomains, Prisma timeout, pg in client bundle) — UAT pause was costly in calendar time but saved a broken prod deploy
+
+### What Was Inefficient
+- Phase 42-02 SUMMARY written retroactively on 2026-05-10 (gap from 2026-04-13 implementation) — GSD accounting drifted during the verification pause
+- ROADMAP plan checkboxes for Phase 42 stale until milestone close (same cosmetic issue as v2.0 and v3.0) — auto-flip on plan completion would close this loop
+- CMS-01 REQUIREMENTS checkbox flipped at milestone close, not at phase close — same documentation drift class
+- Verification surfaced three pre-existing infrastructure issues that should have been caught earlier: af51de6 had to fix mapgen subdomain round-robin (Phase 40 regression as upstream maps1–4 retired), Prisma timeout (env drift), and Blob store provisioning gap
+- Build failure on first Vercel deploy after af51de6 — pg pulled into client bundle via HomepageLayout → articles.ts → prisma.ts → adapter-pg → pg chain. Would have been caught by `next build` locally before push
+- 35-day calendar window vs ~3 active days — implementation finished 2026-04-13 but verification slipped 27 days. Validation should happen the same week as implementation while context is fresh
+- No VERIFICATION.md for Phase 42 (only UAT.md) — Phases 40 and 41 had both; Phase 42 took the UAT-only path
+
+### Patterns Established
+- TDD RED commit + GREEN commit per task (separate commits for failing tests vs implementation) — clean git history showing what was tested before built
+- Pure functions extracted to test-friendly module (mapgen.ts) — DB-free, fetch-mockable, sharp-only-at-edge
+- Inner try/catch around resilient background work (map generation) — separate from per-article catch to prevent retryCount inflation
+- Server Action (requireAuth) for CMS, Route Handler (CRON_SECRET) for cron — splits auth concern by entry point because next/headers is Route-Handler-unavailable
+- 1100ms setTimeout AFTER each external API call (not before) — rate-limit hygiene at the call site, not speculative
+- Cache-aside upsert with `update: {}` (no-op) — clean concurrent-write race handling in Prisma without P2002 inspection
+- vi.useFakeTimers + vi.runAllTimersAsync for testing async setTimeout delays in Server Actions
+- "Pure utils" file pattern: when a module pulls in heavy backend deps (pg, sharp) but exports a tiny pure helper, extract the pure helper to its own file so client bundles can import safely
+- SVG path-based glyphs (no `<text>`) for attribution overlays — font-free, lambda-portable
+- 3-pass sharp pipeline with PNG intermediates — required for sharp re-input compatibility
+
+### Key Lessons
+1. **Verify locally before pushing to Vercel** — `next build` would have caught the pg-in-client-bundle webpack failure that burned one deploy. Add to muscle memory before milestone push.
+2. **Verification should happen the same week as implementation** — 27-day gap let context fade and surfaced three infrastructure issues at once instead of in isolation
+3. **Auto-flip ROADMAP/REQUIREMENTS checkboxes on plan completion** — the same cosmetic drift hit v2.0, v3.0, and now v3.1. Stop documenting; automate.
+4. **Layered graceful fallback is worth the explicit code** — every layer (fetch, stitch, blob, geocode, regex, LLM) returns null cleanly. Cron stays unbreakable, which is the v1.0 autonomy guarantee.
+5. **Heavy backend deps must not leak into client bundles** — when a util lives next to prisma/pg code, extract it the moment a client component touches it; don't wait for the webpack error
+6. **External infrastructure decays** — basemap.at maps1–4 subdomains were valid in Phase 40 research, NXDOMAIN by Phase 42 UAT. Smoke-test external endpoints during verification, not just at research time.
+7. **TDD test-vector corrections at GREEN phase are normal** — three Rule-1 bug fixes in Phase 40 alone (Graz coords, URL domain, sharp PNG intermediates) were all caught by tests before merge. Trust the cycle.
+8. **Driver adapter migrations need bundle-impact testing** — switching from `@prisma/client` to `@prisma/adapter-pg` solved local timeouts but introduced raw `pg` which broke client bundling. Bundle should be verified after any transport-level dep change.
+
+### Cost Observations
+- Model mix: balanced profile (opus for orchestration + verification, sonnet for execution + TDD)
+- Sessions: ~3 active implementation sessions (2026-04-13) + 1 long verification session (2026-05-10)
+- Notable: implementation phase was extremely fast (~3 hours total across 6 plans) — verification pause + diagnostic detour dominated calendar time
+
+---
+
 ## Milestone: v3.0 — The Modern Archivist
 
 **Shipped:** 2026-04-05
@@ -237,6 +296,7 @@
 | v1.2 | 2 days | 5 | Deployment + test mode — 3 gap-closure phases from audit |
 | v2.0 | 3 days | 7 | Full rebrand — 2 gap-closure phases from audit |
 | v3.0 | 5 days | 7 | Archivist identity — 2 quick-task gap-closure phases |
+| v3.1 | 35d calendar / ~3 active | 3 | First backend-heavy milestone since v1.0 — verification pause exposed external-infra decay |
 
 ### Cumulative Quality
 
@@ -247,6 +307,7 @@
 | v1.2 | +4,976 | 79 | Env-var test mode, Vercel+Neon deployment, defense-in-depth AdSense |
 | v2.0 | +6,704 | 129 | Wurzelwelt rebrand, semantic tokens, tonal design, mascot identity |
 | v3.0 | +3,515 | 55 | Archivist identity, MD3 tokens, glassmorphism, weather, drop caps |
+| v3.1 | +9,630 | 56 | basemap.at tile pipeline, Nominatim geocoding cache, PrismaPg adapter, CMS Karte tab |
 
 ### Top Lessons (Verified Across Milestones)
 
@@ -259,3 +320,6 @@
 7. Design rebrand milestones execute fastest with foundation-first sequencing — verified across v1.1, v2.0, and v3.0
 8. Quick tasks are the right tool for small gap-closure fixes — faster than full plan/execute cycles (v3.0)
 9. Desktop UX must be verified alongside mobile — hamburger-only patterns can regress desktop discoverability (v3.0)
+10. Run `next build` locally before pushing milestone-close commits to Vercel — webpack client-bundle failures aren't caught by unit tests (v3.1)
+11. Same-week verification keeps context fresh and surfaces infrastructure issues in isolation, not all at once (v3.1)
+12. Layered graceful null fallback at every external boundary preserves the v1.0 autonomy guarantee through backend-heavy milestones (v3.1)

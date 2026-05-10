@@ -146,3 +146,11 @@ Pre-existing test failures in `src/lib/content/bezirke.test.ts` (2 tests) and `s
 ---
 *Phase: 40-tile-pipeline-infrastructure*
 *Completed: 2026-04-13*
+
+## Self-Check: PASSED
+
+- FOUND: `src/lib/images/mapgen.ts`
+- FOUND: `src/lib/images/mapgen.test.ts`
+- FOUND: `.planning/phases/40-tile-pipeline-infrastructure/40-02-SUMMARY.md`
+- FOUND: commit `28ef69e` (RED phase — failing tests)
+- FOUND: commit `6f8a6c3` (GREEN phase — full pipeline implementation)
