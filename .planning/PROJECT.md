@@ -111,7 +111,20 @@ Steiermark residents get relevant, hyperlocal news for their Bezirk — automati
 
 ### Active
 
-*(No active milestone — ready for /gsd:new-milestone. Pre-planned next: v3.2 Text Engine Optimization, see `.planning/TEXT-ENGINE-OPTIMIZATION-PLAN.md`.)*
+## Current Milestone: v3.2 Text Engine Optimization
+
+**Goal:** Cut AI input-token cost ~60–70%, double pipeline throughput, eliminate source-metadata bleed and REVIEW-queue noise. Add per-article cost telemetry. Close with an offline quality-eval loop so prompt iterations are safe.
+
+**Target features:**
+- Single merged structured-output AI call (`runWriteAndTag`) replacing the dual Step-1/Step-2 path
+- Prompt caching on the static system prefix (Bezirk list + tone/length/styleNotes)
+- Clean per-source extractors replacing `JSON.stringify(rawPayload)` (no more EMITTENT/WEBLINK bleed)
+- Per-article cost telemetry: `aiInputTokens`, `aiCachedInputTokens`, `aiOutputTokens`, `aiCostUsd`, `aiModel`
+- Anthropic Message Batches API integration (50% discount)
+- Adapter hardening: bulk dedup, AbortController timeouts, RSS conditional GET, adaptive OTS lookback cursor, transactional health update
+- Sharper REVIEW heuristic: `mentionsPrivateIndividual` with explicit officeholder exclusion
+- Quality-scoring loop (5% sample) + A/B prompt eval harness on a frozen 50-article fixture
+- Drop `'steiermark-weit'` magic slug → structured `isStateWide: boolean`
 
 ### Out of Scope
 
@@ -194,4 +207,4 @@ Known items: Impressum fields need real publisher data, OTS source disabled (Clo
 - **Austrian legal**: Impressum must satisfy MedienG/ECG; AI disclosure required on generated articles
 
 ---
-*Last updated: 2026-05-10 after v3.1 milestone shipped*
+*Last updated: 2026-05-10 after v3.2 milestone started*
