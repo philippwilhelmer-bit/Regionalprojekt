@@ -98,44 +98,44 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AIPL-01 | TBD | Pending |
-| AIPL-02 | TBD | Pending |
-| AIPL-03 | TBD | Pending |
-| AIPL-04 | TBD | Pending |
-| AIPL-05 | TBD | Pending |
-| AIPL-06 | TBD | Pending |
-| AIPL-07 | TBD | Pending |
-| AIPL-08 | TBD | Pending |
-| AIPL-09 | TBD | Pending |
-| AIPL-10 | TBD | Pending |
-| TLM-01 | TBD | Pending |
-| TLM-02 | TBD | Pending |
-| TLM-03 | TBD | Pending |
-| TLM-04 | TBD | Pending |
-| TLM-05 | TBD | Pending |
-| TLM-06 | TBD | Pending |
-| TLM-07 | TBD | Pending |
-| INGEST-01 | TBD | Pending |
-| INGEST-02 | TBD | Pending |
-| INGEST-03 | TBD | Pending |
-| INGEST-04 | TBD | Pending |
-| INGEST-05 | TBD | Pending |
-| QUAL-01 | TBD | Pending |
-| QUAL-02 | TBD | Pending |
-| QUAL-03 | TBD | Pending |
-| QUAL-04 | TBD | Pending |
-| QUAL-05 | TBD | Pending |
-| QUAL-06 | TBD | Pending |
-| QUAL-07 | TBD | Pending |
-| QUAL-08 | TBD | Pending |
-| QUAL-09 | TBD | Pending |
-| QUAL-10 | TBD | Pending |
+| AIPL-01 | Phase 43 | Pending |
+| AIPL-02 | Phase 43 | Pending |
+| AIPL-03 | Phase 43 | Pending |
+| AIPL-04 | Phase 43 | Pending |
+| AIPL-05 | Phase 43 | Pending |
+| AIPL-06 | Phase 43 | Pending |
+| AIPL-07 | Phase 43 | Pending |
+| AIPL-08 | Phase 43 | Pending |
+| AIPL-09 | Phase 43 | Pending |
+| AIPL-10 | Phase 43 | Pending |
+| TLM-01 | Phase 44 | Pending |
+| TLM-02 | Phase 44 | Pending |
+| TLM-03 | Phase 44 | Pending |
+| TLM-04 | Phase 44 | Pending |
+| TLM-05 | Phase 44 | Pending |
+| TLM-06 | Phase 44 | Pending |
+| TLM-07 | Phase 44 | Pending |
+| INGEST-01 | Phase 44 | Pending |
+| INGEST-02 | Phase 44 | Pending |
+| INGEST-03 | Phase 44 | Pending |
+| INGEST-04 | Phase 44 | Pending |
+| INGEST-05 | Phase 44 | Pending |
+| QUAL-01 | Phase 45 | Pending |
+| QUAL-02 | Phase 45 | Pending |
+| QUAL-03 | Phase 45 | Pending |
+| QUAL-04 | Phase 45 | Pending |
+| QUAL-05 | Phase 45 | Pending |
+| QUAL-06 | Phase 45 | Pending |
+| QUAL-07 | Phase 45 | Pending |
+| QUAL-08 | Phase 45 | Pending |
+| QUAL-09 | Phase 45 | Pending |
+| QUAL-10 | Phase 45 | Pending |
 
 **Coverage:**
 - v3.2 requirements: 32 total
-- Mapped to phases: 0 (filled in by roadmapper)
-- Unmapped: 32 ⚠️ (will be 0 after roadmap)
+- Mapped to phases: 32
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-05-10*
-*Last updated: 2026-05-10 after initial definition for v3.2*
+*Last updated: 2026-05-10 — traceability filled in by roadmapper (Phases 43-45)*

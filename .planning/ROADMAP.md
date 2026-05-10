@@ -8,6 +8,7 @@
 - ✅ **v2.0 Wurzelwelt Rebrand** — Phases 26-32 (shipped 2026-03-30)
 - ✅ **v3.0 The Modern Archivist** — Phases 33-39 (shipped 2026-04-05)
 - ✅ **v3.1 Basemap Article Images** — Phases 40-42 (shipped 2026-05-10)
+- 🔄 **v3.2 Text Engine Optimization** — Phases 43-45 (in progress)
 
 ## Phases
 
@@ -101,6 +102,83 @@ Full details: `.planning/milestones/v3.1-ROADMAP.md`
 
 </details>
 
+<details open>
+<summary>🔄 v3.2 Text Engine Optimization (Phases 43-45) — IN PROGRESS</summary>
+
+- [ ] **Phase 43: AI Pipeline Quick Wins** - Merged single-call pipeline, prompt caching, clean source extractors, orphan and accounting fixes (no schema changes)
+- [ ] **Phase 44: Cost Telemetry & Adapter Hardening** - Per-article cost columns, Message Batches API, adapter timeout/dedup/cursor/conditional-GET hardening
+- [ ] **Phase 45: REVIEW Heuristic & Quality Loop** - Sharper private-individual detection, quality scoring, prompt eval harness, structured state-wide boolean
+
+</details>
+
+## Phase Details
+
+### Phase 43: AI Pipeline Quick Wins
+
+**Goal:** Pipeline processes every article with a single Anthropic call, source metadata no longer bleeds into article text, and orphaned TAGGED rows and undercounted tokens are eliminated — all without any schema migration.
+
+**Depends on:** Phase 42 (v3.1 complete)
+
+**Requirements:** AIPL-01, AIPL-02, AIPL-03, AIPL-04, AIPL-05, AIPL-06, AIPL-07, AIPL-08, AIPL-09, AIPL-10
+
+**Success Criteria** (what must be TRUE):
+1. A FETCHED article reaches WRITTEN or REVIEW status via exactly one Anthropic API call (verifiable by mock or log inspection — no step1-tag + step2-write sequence)
+2. Total `inputTokens` in PipelineRun drops by at least 50% compared to the pre-merge baseline on an equivalent article set
+3. `cache_read_input_tokens > 0` appears in PipelineRun on the second article of a run that shares a system prefix
+4. Published article text contains no occurrences of source-system strings such as `EMITTENT`, `WEBLINK`, or OTS contact-block fragments across a 50-article sample
+5. A TAGGED article is picked up and processed on the next pipeline run (does not strand indefinitely)
+
+**Plans:** TBD
+
+**Risk:** Merged prompt may regress article quality vs two specialized prompts. Mitigation: side-by-side eval on a 20-article fixture before the merged call goes to production. Keep the two-step path behind a flag for one milestone as fallback.
+
+---
+
+### Phase 44: Cost Telemetry & Adapter Hardening
+
+**Goal:** Every processed article carries its AI cost in the database, the Message Batches API provides the 50% discount by default, and ingestion adapters no longer stall, over-query, or lose health state on crash.
+
+**Depends on:** Phase 43 (merged-call shape is the interface into which telemetry and batching plug)
+
+**Requirements:** TLM-01, TLM-02, TLM-03, TLM-04, TLM-05, TLM-06, TLM-07, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05
+
+**Success Criteria** (what must be TRUE):
+1. Every WRITTEN or PUBLISHED article produced after this phase has `aiInputTokens`, `aiOutputTokens`, `aiCostUsd`, and `aiModel` populated (NULL only on pre-v3.2 rows)
+2. Admin can open the articles list, sort by `aiCostUsd` descending, and read the source name next to each cost figure
+3. The pipeline submits articles to the Anthropic Message Batches API by default; switching to per-article mode requires only toggling a feature flag
+4. The OTS adapter issues at most one DB query to check for duplicate external IDs regardless of list size
+5. An unchanged RSS feed returns HTTP 304 and the adapter skips body parsing entirely (verifiable by log or test)
+6. A process kill between `IngestionRun.update` and `Source.healthStatus` update leaves both fields consistent on the next read
+
+**Plans:** TBD
+
+**Risk:** Message Batches API response latency (minutes to hours) may exceed the 15-minute cron window. Spike-test batch round-trip time before committing; if latency is unfit, fall back to `p-limit(4)` concurrency on the per-article path (AIPL-FUTURE-06). The per-article fallback flag (TLM-05) is preserved regardless.
+
+**Ordering note within phase:** TLM-01–04 (schema + telemetry population + admin views) should be implemented and verified before TLM-05–07 (Batches API + BATCHED status), so telemetry instrumentation is already in place when the async batch path is wired.
+
+---
+
+### Phase 45: REVIEW Heuristic & Quality Loop
+
+**Goal:** The REVIEW queue reflects genuine privacy risk rather than officeholder mentions, a quality score baseline is established for every source, and future prompt changes can be evaluated safely against a frozen fixture before reaching production.
+
+**Depends on:** Phase 43 (merged-call output schema carries `mentionsPrivateIndividual` and `isStateWide`), Phase 44 (telemetry columns enable quality regression detection by cost)
+
+**Requirements:** QUAL-01, QUAL-02, QUAL-03, QUAL-04, QUAL-05, QUAL-06, QUAL-07, QUAL-08, QUAL-09, QUAL-10
+
+**Success Criteria** (what must be TRUE):
+1. A replay of the last 200 REVIEW-status articles against the new prompt reclassifies at least 60% as WRITTEN (officeholder-only mentions no longer trigger REVIEW)
+2. The admin can trigger the historical REVIEW re-evaluation via a button in the CMS — it does not run automatically
+3. The string `'steiermark-weit'` appears in zero source files and zero database rows after this phase
+4. Rolling 7-day quality scores per source are visible in the admin dashboard
+5. The prompt eval harness runs the candidate prompt against the frozen 50-article fixture and produces a side-by-side diff report in under 5 minutes
+
+**Plans:** TBD
+
+**Risk:** Re-classifying historical REVIEW rows is irreversible if the new heuristic is wrong. Mitigation: make it opt-in via the admin button (QUAL-03), not automatic. Run the eval harness against the fixture first to confirm the new prompt's reclassification rate before triggering the backlog sweep.
+
+---
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -111,3 +189,6 @@ Full details: `.planning/milestones/v3.1-ROADMAP.md`
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
 | 33-39 | v3.0 | 12/12 + 2 quick | Complete | 2026-04-05 |
 | 40-42 | v3.1 | 6/6 | Complete | 2026-05-10 |
+| 43 | v3.2 | 0/TBD | Not started | - |
+| 44 | v3.2 | 0/TBD | Not started | - |
+| 45 | v3.2 | 0/TBD | Not started | - |
