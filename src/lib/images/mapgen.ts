@@ -45,7 +45,8 @@ export const OUTPUT_HEIGHT = 630
  * Full URL: https://{server}.wien.gv.at/basemap/{layer}/normal/google3857/{z}/{y}/{x}.{ext}
  * Source: https://www.basemap.at/wmts/1.0.0/WMTSCapabilities.xml
  */
-export const BASEMAP_SERVERS = ['maps', 'maps1', 'maps2', 'maps3', 'maps4']
+// Only 'maps.wien.gv.at' resolves; maps1-4 returned NXDOMAIN as of 2026-05-09.
+export const BASEMAP_SERVERS = ['maps']
 
 /** Layer configuration — extension and max zoom per layer */
 export const LAYER_CONFIG: Record<LayerName, LayerConfig> = {

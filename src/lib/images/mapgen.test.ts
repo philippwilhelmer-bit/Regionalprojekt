@@ -116,17 +116,14 @@ describe('tileUrl', () => {
     expect(url).toMatch(/wien\.gv\.at\/basemap/)
   })
 
-  it('uses different servers for round-robin (calling multiple times)', () => {
-    // Call enough times to cycle through all 5 servers (maps, maps1–maps4)
+  it('uses only the surviving "maps" subdomain (maps1-4 retired 2026-05-09)', () => {
     const urls = Array.from({ length: 10 }, (_, i) => tileUrl('bmapgrau', 13, 2879, 4447 + i))
-    // Extract subdomain (maps, maps1, maps2, maps3, maps4)
     const servers = urls.map((u) => {
       const match = u.match(/https:\/\/(maps\d?)\.wien/)
       return match ? match[1] : null
     })
-    // There should be variation in server subdomains (not all the same)
     const uniqueServers = new Set(servers.filter(Boolean))
-    expect(uniqueServers.size).toBeGreaterThan(1)
+    expect(uniqueServers).toEqual(new Set(['maps']))
   })
 })
 
