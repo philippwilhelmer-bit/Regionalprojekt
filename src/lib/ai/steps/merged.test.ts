@@ -34,7 +34,11 @@ function makeToolUseBlock(input: object) {
 
 function makeMockClient(
   overrides?: Partial<{
-    content: Anthropic.Messages.ContentBlock[]
+    // Loosely typed: the SDK's full ContentBlock union requires fields
+    // (e.g. `caller`) that the duck-typed mock omits intentionally. The
+    // runtime code reads `b.type` and `b.name` only, so a minimal shape
+    // suffices here.
+    content: Array<Record<string, unknown>>
     usage: {
       input_tokens: number
       output_tokens: number
