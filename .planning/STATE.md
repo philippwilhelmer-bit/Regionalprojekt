@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 43-02-PLAN.md (source-typed extractors)
-last_updated: "2026-05-11T11:44:22.809Z"
-last_activity: 2026-05-11 — Plan 43-02 complete (source-typed extractors, AIPL-06 closed)
+stopped_at: Completed 43-01-PLAN.md
+last_updated: "2026-05-11T11:46:57.718Z"
+last_activity: 2026-05-11 — Plan 43-01 complete (runMergedCall — single tool_use call, cache-aware tokens, AIPL-01..05 closed)
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -20,17 +20,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-10)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** v3.2 Text Engine Optimization — Phase 43 (AI Pipeline Quick Wins), Plan 43-02 complete
+**Current focus:** v3.2 Text Engine Optimization — Phase 43 (AI Pipeline Quick Wins), Plans 43-01 + 43-02 complete
 
 ## Current Position
 
 Phase: 43 — AI Pipeline Quick Wins
-Plan: 43-03 (next — wires extractArticleText into pipeline.ts)
-Status: In progress (1 of 4 plans complete)
-Last activity: 2026-05-11 — Plan 43-02 complete (source-typed extractors, AIPL-06 closed)
+Plan: 43-03 (next — wires extractArticleText into pipeline.ts and swaps in runMergedCall)
+Status: In progress (2 of 4 plans complete)
+Last activity: 2026-05-11 — Plan 43-01 complete (runMergedCall — single tool_use call, cache-aware tokens, AIPL-01..05 closed)
 
 ```
-v3.2 Progress: [██░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 8% — 0/3 phases · 1/4 plans in phase 43
+v3.2 Progress: [████░░░░░░░░░░░░░░░░░░░░░░░░░░] 14% — 0/3 phases · 2/4 plans in phase 43
 ```
 
 ## Performance Metrics
@@ -45,6 +45,7 @@ v3.2 Progress: [██░░░░░░░░░░░░░░░░░░░�
 | Phase | Plan | Duration | Tasks | Files | Completed       |
 | ----- | ---- | -------- | ----- | ----- | --------------- |
 | 43    | 02   | 7min     | 2     | 6     | 2026-05-11      |
+| 43    | 01   | 8min     | 2     | 2     | 2026-05-11      |
 
 *Updated after each milestone completion*
 
@@ -62,6 +63,12 @@ See PROJECT.md Key Decisions for full history.
 - **43-02:** Inline CANDIDATE_BODY_FIELDS in `extractors/ots.ts` rather than refactoring `ingestion/adapters/ots-at.ts` to export `extractBody` — keeps plan 43-02 scoped to the new package only.
 - **43-02:** Apply two-layer strip (field-name allowlist + line-level regex) — defence-in-depth against contact blocks embedded in OTS body text.
 - **43-02:** MANUAL absent from `extractorRegistry` — mirrors existing `adapterRegistry` pattern; default fallback is `[title, content].filter(Boolean).join('\n\n')`.
+- **43-01:** Schema typing via `satisfies Anthropic.Messages.Tool.InputSchema` (not `as const`) — SDK's `required` is mutable `Array<string>`, so `as const` would have forced an `as any` cast that violates AIPL-02.
+- **43-01:** Replicate `buildBezirkContext` format from `step1-tag.ts` verbatim in `merged.ts` rather than import — isolates the new module so `step1-tag.ts` can be deleted in v3.3 without touching `merged.ts`.
+- **43-01:** Defensive `isStateWide → bezirkSlugs=[]` guard lives at the schema boundary inside `runMergedCall`, not in the pipeline integration — keeps the contract clean for all downstream consumers.
+- [Phase 43-01]: Schema typed via 'satisfies Anthropic.Messages.Tool.InputSchema' (not 'as const') to keep AIPL-02 invariant (no 'as any')
+- [Phase 43-01]: Replicate buildBezirkContext format from step1-tag.ts verbatim in merged.ts (no shared import) — isolates new module for v3.3 cleanup
+- [Phase 43-01]: Defensive isStateWide → bezirkSlugs=[] guard lives at the schema boundary in runMergedCall, not the pipeline
 
 ### Pending Todos
 
@@ -79,6 +86,6 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-11T11:43:44.242Z
-Stopped at: Completed 43-02-PLAN.md (source-typed extractors)
-Resume with: `/gsd:execute-plan 43-03` (next plan: wire extractArticleText into pipeline.ts)
+Last session: 2026-05-11T11:46:57.715Z
+Stopped at: Completed 43-01-PLAN.md
+Resume with: `/gsd:execute-plan 43-03` (next plan: wire extractArticleText + runMergedCall into pipeline.ts)

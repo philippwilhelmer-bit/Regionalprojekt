@@ -11,11 +11,11 @@ Requirements for milestone v3.2. Each maps to a roadmap phase. v1 here means "th
 
 Single merged structured-output AI call replacing the two-step Tag+Write path, with prompt caching, clean source extraction, and orphan/accounting fixes.
 
-- [ ] **AIPL-01**: System calls Anthropic exactly once per article in the AI pipeline, returning `{bezirkSlugs, isStateWide, mentionsPrivateIndividual, headline, lead, body, seoTitle, metaDescription}` in a single structured-output response (`runWriteAndTag`)
-- [ ] **AIPL-02**: System uses typed `tools:[{name, input_schema}] + tool_choice` for structured output (no `output_config as any` casts)
-- [ ] **AIPL-03**: System sets `max_tokens: 1024` for the merged call and throws on `stop_reason === 'max_tokens'` (no silent truncation)
-- [ ] **AIPL-04**: System applies `cache_control: {"type": "ephemeral"}` to the static system prefix (Bezirk list + tone/length/styleNotes block)
-- [ ] **AIPL-05**: PipelineRun token totals include `cache_creation_input_tokens` and `cache_read_input_tokens` from the Anthropic usage response
+- [x] **AIPL-01**: System calls Anthropic exactly once per article in the AI pipeline, returning `{bezirkSlugs, isStateWide, mentionsPrivateIndividual, headline, lead, body, seoTitle, metaDescription}` in a single structured-output response (`runWriteAndTag`)
+- [x] **AIPL-02**: System uses typed `tools:[{name, input_schema}] + tool_choice` for structured output (no `output_config as any` casts)
+- [x] **AIPL-03**: System sets `max_tokens: 1024` for the merged call and throws on `stop_reason === 'max_tokens'` (no silent truncation)
+- [x] **AIPL-04**: System applies `cache_control: {"type": "ephemeral"}` to the static system prefix (Bezirk list + tone/length/styleNotes block)
+- [x] **AIPL-05**: PipelineRun token totals include `cache_creation_input_tokens` and `cache_read_input_tokens` from the Anthropic usage response
 - [x] **AIPL-06**: System uses per-source clean extractors (`extractors/ots.ts`, `extractors/rss.ts`) instead of `JSON.stringify(rawPayload)` when building LLM input — `EMITTENT`, `WEBLINK`, and contact metadata never reach the prompt
 - [ ] **AIPL-07**: System includes `TAGGED` status in the AI retry selector so a crash mid-pipeline does not strand articles
 - [ ] **AIPL-08**: System sums `llmLocationFallback` token usage into PipelineRun `totalInputTokens` / `totalOutputTokens`
@@ -98,11 +98,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AIPL-01 | Phase 43 | Pending |
-| AIPL-02 | Phase 43 | Pending |
-| AIPL-03 | Phase 43 | Pending |
-| AIPL-04 | Phase 43 | Pending |
-| AIPL-05 | Phase 43 | Pending |
+| AIPL-01 | Phase 43 | Complete |
+| AIPL-02 | Phase 43 | Complete |
+| AIPL-03 | Phase 43 | Complete |
+| AIPL-04 | Phase 43 | Complete |
+| AIPL-05 | Phase 43 | Complete |
 | AIPL-06 | Phase 43 | Complete |
 | AIPL-07 | Phase 43 | Pending |
 | AIPL-08 | Phase 43 | Pending |
