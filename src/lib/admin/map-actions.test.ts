@@ -109,7 +109,11 @@ describe('generateMapForArticle', () => {
       content: 'No location mentioned anywhere',
     } as any)
     vi.mocked(extractLocation).mockReturnValue(null)
-    vi.mocked(llmLocationFallback).mockResolvedValue(null)
+    vi.mocked(llmLocationFallback).mockResolvedValue({
+      location: null,
+      inputTokens: 0,
+      outputTokens: 0,
+    })
 
     const result = await generateMapForArticle(7)
 
@@ -138,7 +142,11 @@ describe('generateMapForArticle', () => {
       content: 'A long article about some Austrian city',
     } as any)
     vi.mocked(extractLocation).mockReturnValue(null)
-    vi.mocked(llmLocationFallback).mockResolvedValue('Wien')
+    vi.mocked(llmLocationFallback).mockResolvedValue({
+      location: 'Wien',
+      inputTokens: 0,
+      outputTokens: 0,
+    })
     vi.mocked(geocodeLocation).mockResolvedValue({
       lat: 48.2082,
       lon: 16.3738,
@@ -229,7 +237,11 @@ describe('backfillMapImages', () => {
       .mockReturnValueOnce(null)     // article 2
       .mockReturnValueOnce('Leoben') // article 3
 
-    vi.mocked(llmLocationFallback).mockResolvedValueOnce(null) // article 2 fallback
+    vi.mocked(llmLocationFallback).mockResolvedValueOnce({
+      location: null,
+      inputTokens: 0,
+      outputTokens: 0,
+    }) // article 2 fallback
 
     vi.mocked(geocodeLocation)
       .mockResolvedValueOnce({ lat: 47.07, lon: 15.44, locationType: 'city', displayName: 'Graz' }) // article 1

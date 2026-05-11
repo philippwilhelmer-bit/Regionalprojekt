@@ -43,9 +43,11 @@ export async function POST(request: NextRequest) {
   const articleContent = [article.title, article.content].filter(Boolean).join('\n\n')
   const anthropicClient = new Anthropic()
 
-  const locationName =
-    extractLocation(articleContent) ??
-    (await llmLocationFallback(anthropicClient, articleContent))
+  let locationName = extractLocation(articleContent)
+  if (!locationName) {
+    const fallback = await llmLocationFallback(anthropicClient, articleContent)
+    locationName = fallback.location
+  }
 
   if (!locationName) {
     return NextResponse.json({ error: 'No location found in article' }, { status: 422 })

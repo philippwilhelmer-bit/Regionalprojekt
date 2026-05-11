@@ -75,19 +75,31 @@ export function extractLocation(text: string): string | null {
 }
 
 // ---------------------------------------------------------------------------
-// llmLocationFallback (CMS-02)
+// llmLocationFallback (CMS-02 + AIPL-08)
 //
 // Called only when extractLocation returns null. Uses claude-haiku to extract
 // the most specific Austrian place name from the article text.
-// Returns null on short text, LLM error, or when LLM has no place.
+//
+// AIPL-08: Returns {location, inputTokens, outputTokens} so the pipeline can
+// attribute fallback API spend to the PipelineRun totals only when the
+// fallback was actually invoked. Token counts are 0 when the guard fires or
+// the API call throws (no charge to attribute); they are populated from
+// response.usage on any successful API call, even when location parses to null.
 // ---------------------------------------------------------------------------
+
+export interface LocationFallbackResult {
+  location: string | null
+  inputTokens: number
+  outputTokens: number
+}
 
 export async function llmLocationFallback(
   client: Anthropic,
   articleText: string
-): Promise<string | null> {
-  // Guard: skip if text too short to contain meaningful geographic content
-  if (articleText.length < 100) return null
+): Promise<LocationFallbackResult> {
+  // Guard: skip if text too short to contain meaningful geographic content.
+  // No API call → no tokens to attribute.
+  if (articleText.length < 100) return { location: null, inputTokens: 0, outputTokens: 0 }
 
   try {
     const response = await (client.messages.create as Function)({
@@ -111,12 +123,23 @@ export async function llmLocationFallback(
       },
     } as any) // output_config is a project-local non-standard extension — same cast as step1-tag.ts
 
-    const textBlock = response.content.find((b: { type: string }) => b.type === 'text')
-    if (!textBlock || textBlock.type !== 'text') return null
+    const inputTokens = response.usage?.input_tokens ?? 0
+    const outputTokens = response.usage?.output_tokens ?? 0
 
-    const parsed = JSON.parse((textBlock as { text: string }).text) as { location: string | null }
-    return parsed.location ?? null
+    const textBlock = response.content.find((b: { type: string }) => b.type === 'text')
+    if (!textBlock || textBlock.type !== 'text') {
+      return { location: null, inputTokens, outputTokens }
+    }
+
+    try {
+      const parsed = JSON.parse((textBlock as { text: string }).text) as { location: string | null }
+      return { location: parsed.location ?? null, inputTokens, outputTokens }
+    } catch {
+      // Malformed JSON — tokens were spent, attribute them
+      return { location: null, inputTokens, outputTokens }
+    }
   } catch {
-    return null
+    // API call itself threw — no tokens to attribute
+    return { location: null, inputTokens: 0, outputTokens: 0 }
   }
 }

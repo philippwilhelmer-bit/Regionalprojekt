@@ -17,7 +17,10 @@ import { processArticles, _clientFactory } from './pipeline'
 
 vi.mock('../images/locextract', () => ({
   extractLocation: vi.fn().mockReturnValue(null),
-  llmLocationFallback: vi.fn().mockResolvedValue(null),
+  // AIPL-08: default mock returns the new LocationFallbackResult shape with zero tokens
+  llmLocationFallback: vi
+    .fn()
+    .mockResolvedValue({ location: null, inputTokens: 0, outputTokens: 0 }),
 }))
 
 vi.mock('../images/geocode', () => ({
@@ -548,7 +551,11 @@ describe('processArticles()', () => {
     _clientFactory.create = () => makeMockAnthropicClient() as any
 
     vi.mocked(extractLocation).mockReturnValue(null)
-    vi.mocked(llmLocationFallback).mockResolvedValue('Kapfenberg')
+    vi.mocked(llmLocationFallback).mockResolvedValue({
+      location: 'Kapfenberg',
+      inputTokens: 0,
+      outputTokens: 0,
+    })
     vi.mocked(geocodeLocation).mockResolvedValue({
       lat: 47.4439,
       lon: 15.2981,
@@ -573,7 +580,11 @@ describe('processArticles()', () => {
     _clientFactory.create = () => makeMockAnthropicClient() as any
 
     vi.mocked(extractLocation).mockReturnValue(null)
-    vi.mocked(llmLocationFallback).mockResolvedValue(null)
+    vi.mocked(llmLocationFallback).mockResolvedValue({
+      location: null,
+      inputTokens: 0,
+      outputTokens: 0,
+    })
 
     await processArticles(db)
 

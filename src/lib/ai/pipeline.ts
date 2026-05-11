@@ -174,9 +174,14 @@ export async function processArticles(
         if (!article.imageUrl) {
           try {
             const articleContent = [step2.headline, step2.lead, step2.body].join('\n\n')
-            const locationName =
-              extractLocation(articleContent) ??
-              (await llmLocationFallback(anthropicClient, articleContent))
+            let locationName = extractLocation(articleContent)
+            if (!locationName) {
+              // AIPL-08: account fallback tokens against PipelineRun totals only when invoked
+              const fallbackResult = await llmLocationFallback(anthropicClient, articleContent)
+              totalInputTokens += fallbackResult.inputTokens
+              totalOutputTokens += fallbackResult.outputTokens
+              locationName = fallbackResult.location
+            }
 
             if (locationName) {
               const geo = await geocodeLocation(db, locationName)

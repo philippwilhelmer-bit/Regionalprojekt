@@ -126,7 +126,11 @@ describe('POST /api/admin/generate-map', () => {
       content: 'No location here',
     } as any)
     vi.mocked(extractLocation).mockReturnValue(null)
-    vi.mocked(llmLocationFallback).mockResolvedValue(null)
+    vi.mocked(llmLocationFallback).mockResolvedValue({
+      location: null,
+      inputTokens: 0,
+      outputTokens: 0,
+    })
 
     const { POST } = await import('./route')
     const req = makeRequest({ articleId: 1 }, 'Bearer test-secret')

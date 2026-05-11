@@ -49,9 +49,11 @@ export async function generateMapForArticle(
   const articleContent = [article.title, article.content].filter(Boolean).join('\n\n')
   const client = new Anthropic()
 
-  const locationName =
-    extractLocation(articleContent) ??
-    (await llmLocationFallback(client, articleContent))
+  let locationName = extractLocation(articleContent)
+  if (!locationName) {
+    const fallback = await llmLocationFallback(client, articleContent)
+    locationName = fallback.location
+  }
 
   if (!locationName) {
     return { error: 'No location found in article' }
@@ -114,9 +116,11 @@ export async function backfillMapImages(): Promise<BackfillResult> {
 
     try {
       const articleContent = [article.title, article.content].filter(Boolean).join('\n\n')
-      const locationName =
-        extractLocation(articleContent) ??
-        (await llmLocationFallback(client, articleContent))
+      let locationName = extractLocation(articleContent)
+      if (!locationName) {
+        const fallback = await llmLocationFallback(client, articleContent)
+        locationName = fallback.location
+      }
 
       if (!locationName) {
         skipped++
