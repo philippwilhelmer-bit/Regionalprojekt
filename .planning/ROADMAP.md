@@ -195,6 +195,6 @@ Plans:
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
 | 33-39 | v3.0 | 12/12 + 2 quick | Complete | 2026-04-05 |
 | 40-42 | v3.1 | 6/6 | Complete | 2026-05-10 |
-| 43 | 4/4 | Complete   | 2026-05-11 | - |
+| 43 | 4/4 | Complete    | 2026-05-11 | - |
 | 44 | v3.2 | 0/TBD | Not started | - |
 | 45 | v3.2 | 0/TBD | Not started | - |
