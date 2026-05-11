@@ -128,7 +128,7 @@ Full details: `.planning/milestones/v3.1-ROADMAP.md`
 4. Published article text contains no occurrences of source-system strings such as `EMITTENT`, `WEBLINK`, or OTS contact-block fragments across a 50-article sample
 5. A TAGGED article is picked up and processed on the next pipeline run (does not strand indefinitely)
 
-**Plans:** 2/4 plans executed
+**Plans:** 3/4 plans executed
 
 Plans:
 - [ ] 43-01-PLAN.md — Merged AI call (`runMergedCall`) + unit suite — single `tool_use` call, `cache_control` on static prefix, `max_tokens: 1024`, cache-aware token split, `isStateWide` defensive guard (AIPL-01..05)
@@ -195,6 +195,6 @@ Plans:
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
 | 33-39 | v3.0 | 12/12 + 2 quick | Complete | 2026-04-05 |
 | 40-42 | v3.1 | 6/6 | Complete | 2026-05-10 |
-| 43 | 2/4 | In Progress|  | - |
+| 43 | 3/4 | In Progress|  | - |
 | 44 | v3.2 | 0/TBD | Not started | - |
 | 45 | v3.2 | 0/TBD | Not started | - |

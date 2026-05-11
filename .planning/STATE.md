@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 43-01-PLAN.md
-last_updated: "2026-05-11T11:46:57.718Z"
-last_activity: 2026-05-11 — Plan 43-01 complete (runMergedCall — single tool_use call, cache-aware tokens, AIPL-01..05 closed)
+stopped_at: Completed 43-04-PLAN.md
+last_updated: "2026-05-11T12:17:48.369Z"
+last_activity: 2026-05-11 — Plan 43-04 complete (20 captured-payload fixtures + ai-replay-fixtures harness — Phase 43 cutover gate ready)
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -20,17 +20,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-10)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** v3.2 Text Engine Optimization — Phase 43 (AI Pipeline Quick Wins), Plans 43-01 + 43-02 complete
+**Current focus:** v3.2 Text Engine Optimization — Phase 43 (AI Pipeline Quick Wins), Plans 43-01 + 43-02 + 43-04 complete; 43-03 was executing in parallel.
 
 ## Current Position
 
 Phase: 43 — AI Pipeline Quick Wins
-Plan: 43-03 (next — wires extractArticleText into pipeline.ts and swaps in runMergedCall)
-Status: In progress (2 of 4 plans complete)
-Last activity: 2026-05-11 — Plan 43-01 complete (runMergedCall — single tool_use call, cache-aware tokens, AIPL-01..05 closed)
+Plan: 43-04 just completed (fixtures + replay harness — Phase 43 cutover gate ready)
+Status: In progress (3 of 4 plans complete after 43-04; 43-03 ran in parallel)
+Last activity: 2026-05-11 — Plan 43-04 complete (20 fixtures + ai-replay-fixtures harness)
 
 ```
-v3.2 Progress: [████░░░░░░░░░░░░░░░░░░░░░░░░░░] 14% — 0/3 phases · 2/4 plans in phase 43
+v3.2 Progress: [█████████░] 93% — 13/14 plans (auto-computed)
 ```
 
 ## Performance Metrics
@@ -44,6 +44,7 @@ v3.2 Progress: [████░░░░░░░░░░░░░░░░░�
 
 | Phase | Plan | Duration | Tasks | Files | Completed       |
 | ----- | ---- | -------- | ----- | ----- | --------------- |
+| 43    | 04   | 28min    | 3     | 23    | 2026-05-11      |
 | 43    | 02   | 7min     | 2     | 6     | 2026-05-11      |
 | 43    | 01   | 8min     | 2     | 2     | 2026-05-11      |
 
@@ -69,12 +70,14 @@ See PROJECT.md Key Decisions for full history.
 - [Phase 43-01]: Schema typed via 'satisfies Anthropic.Messages.Tool.InputSchema' (not 'as const') to keep AIPL-02 invariant (no 'as any')
 - [Phase 43-01]: Replicate buildBezirkContext format from step1-tag.ts verbatim in merged.ts (no shared import) — isolates new module for v3.3 cleanup
 - [Phase 43-01]: Defensive isStateWide → bezirkSlugs=[] guard lives at the schema boundary in runMergedCall, not the pipeline
+- [Phase 43]: 43-04: f08 expectedFinalStatus overridden REVIEW per CONTEXT.md — bezirkSlugs=[] + isStateWide=false routes through existing REVIEW path (schema-free, no reviewReason column)
+- [Phase 43]: 43-04: assertFixture extracted as pure exported function so smoke test can unit-test comparison logic against synthetic MergedResult — no HTTP, sub-second CI runtime
+- [Phase 43]: 43-04: harness entry-point guard via process.argv[1] filename check (works in both tsx CLI and vitest contexts); harness always uses runMergedCall directly — never branches on AI_USE_MERGED_CALL
 
 ### Pending Todos
 
-- Plan 43-03: wire `extractArticleText` from `@/lib/ai/extractors` into `pipeline.ts:115-117`, replacing the `JSON.stringify(rawPayload)` call
+- Phase 43 cutover gate (operator runbook in `.planning/phases/43-ai-pipeline-quick-wins/43-04-SUMMARY.md`): capture legacy-path token baseline → run `npx tsx scripts/ai-replay-fixtures.ts` and paste 20/20 output into PR → run AIPL-10 SQL → merge + verify ≥50% input-token reduction
 - Spike-test Anthropic Message Batches API round-trip latency before committing to it as default in Phase 44 (15-min cron window constraint)
-- Record pre-merge token baseline on a representative article set before Phase 43 cutover (needed to validate 50% reduction criterion)
 - Address out-of-scope pre-existing TSC/vitest failures noted in `.planning/phases/43-ai-pipeline-quick-wins/deferred-items.md`
 
 ### Blockers/Concerns
@@ -86,6 +89,6 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-11T11:46:57.715Z
-Stopped at: Completed 43-01-PLAN.md
-Resume with: `/gsd:execute-plan 43-03` (next plan: wire extractArticleText + runMergedCall into pipeline.ts)
+Last session: 2026-05-11T12:17:48.367Z
+Stopped at: Completed 43-04-PLAN.md
+Resume with: Phase 43 cutover gate (see `.planning/phases/43-ai-pipeline-quick-wins/43-04-SUMMARY.md` operator runbook) once 43-03's SUMMARY also lands.
