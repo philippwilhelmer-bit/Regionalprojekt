@@ -16,7 +16,7 @@ Single merged structured-output AI call replacing the two-step Tag+Write path, w
 - [ ] **AIPL-03**: System sets `max_tokens: 1024` for the merged call and throws on `stop_reason === 'max_tokens'` (no silent truncation)
 - [ ] **AIPL-04**: System applies `cache_control: {"type": "ephemeral"}` to the static system prefix (Bezirk list + tone/length/styleNotes block)
 - [ ] **AIPL-05**: PipelineRun token totals include `cache_creation_input_tokens` and `cache_read_input_tokens` from the Anthropic usage response
-- [ ] **AIPL-06**: System uses per-source clean extractors (`extractors/ots.ts`, `extractors/rss.ts`) instead of `JSON.stringify(rawPayload)` when building LLM input — `EMITTENT`, `WEBLINK`, and contact metadata never reach the prompt
+- [x] **AIPL-06**: System uses per-source clean extractors (`extractors/ots.ts`, `extractors/rss.ts`) instead of `JSON.stringify(rawPayload)` when building LLM input — `EMITTENT`, `WEBLINK`, and contact metadata never reach the prompt
 - [ ] **AIPL-07**: System includes `TAGGED` status in the AI retry selector so a crash mid-pipeline does not strand articles
 - [ ] **AIPL-08**: System sums `llmLocationFallback` token usage into PipelineRun `totalInputTokens` / `totalOutputTokens`
 - [ ] **AIPL-09**: System sets the Anthropic SDK `maxRetries` explicitly so SDK-level transient retries do not inflate `Article.retryCount`
@@ -103,7 +103,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AIPL-03 | Phase 43 | Pending |
 | AIPL-04 | Phase 43 | Pending |
 | AIPL-05 | Phase 43 | Pending |
-| AIPL-06 | Phase 43 | Pending |
+| AIPL-06 | Phase 43 | Complete |
 | AIPL-07 | Phase 43 | Pending |
 | AIPL-08 | Phase 43 | Pending |
 | AIPL-09 | Phase 43 | Pending |
