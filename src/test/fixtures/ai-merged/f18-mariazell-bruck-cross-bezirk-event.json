@@ -1,0 +1,21 @@
+{
+  "id": "f18-mariazell-bruck-cross-bezirk-event",
+  "description": "Border story between Mariazell (Niederösterreich) and Bruck-Mürzzuschlag (Steiermark). Tests that only the Steiermark side maps to a Bezirk slug; the Niederösterreich location is reported but does NOT add a slug.",
+  "sourceType": "OTS_AT",
+  "rawArticleText": "Eine grenzüberschreitende Pilgerwanderung führt am Samstag von Mariazell nach Bruck an der Mur. Rund 600 Teilnehmerinnen und Teilnehmer haben sich angemeldet. Die Strecke verläuft auf 38 Kilometern entlang historischer Wallfahrtswege und endet am Hauptplatz von Bruck. Veranstalter ist der Tourismusverband Hochsteiermark.",
+  "expectedOutput": {
+    "bezirkSlugs": ["bruck-muerzzuschlag"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Mariazell", "Bruck"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "Mariazell is in Niederösterreich, not Steiermark — the LLM must NOT invent a slug for it. Only 'bruck-muerzzuschlag' (Bruck an der Mur is a gemeindeSynonym) qualifies. Multi-Bezirk fixture (single-slug here, but harness still sorts arrays before comparison)."
+}

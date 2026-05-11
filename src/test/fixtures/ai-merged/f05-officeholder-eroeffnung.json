@@ -1,0 +1,21 @@
+{
+  "id": "f05-officeholder-eroeffnung",
+  "description": "Officeholders only (Bürgermeister, Landesrat) in official capacity. PHASE REGRESSION MARKER: Phase 43 keeps current behavior (REVIEW). Phase 45 sharpens prompt to exclude officeholders → expected to flip to WRITTEN.",
+  "sourceType": "OTS_AT",
+  "rawArticleText": "Bürgermeister Walter Müller eröffnete heute den neuen Kindergarten in Knittelfeld. Im Beisein von Landesrat Karlheinz Kornhäusl wurde das Gebäude offiziell seiner Bestimmung übergeben. Die Baukosten beliefen sich auf 4,2 Millionen Euro.",
+  "expectedOutput": {
+    "bezirkSlugs": ["murtal"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": true
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Knittelfeld", "Kindergarten"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "REVIEW",
+  "notes": "Phase 45 expected: mentionsPrivateIndividual=false, finalStatus=WRITTEN. Update this fixture's expectedOutput and expectedFinalStatus when Phase 45 lands. Do not delete — its drift IS the regression signal."
+}

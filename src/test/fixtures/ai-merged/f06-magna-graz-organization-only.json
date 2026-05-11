@@ -1,0 +1,20 @@
+{
+  "id": "f06-magna-graz-organization-only",
+  "description": "Organisation as subject, no individual. Tests that company names alone do not trigger REVIEW.",
+  "sourceType": "OTS_AT",
+  "rawArticleText": "Die Firma Magna Steyr in Graz hat einen neuen Großauftrag eines deutschen Premiumherstellers erhalten. 200 zusätzliche Arbeitsplätze sollen am Standort geschaffen werden. Der Auftrag läuft über fünf Jahre.",
+  "expectedOutput": {
+    "bezirkSlugs": ["graz"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Magna", "Arbeitsplätze"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN"
+}

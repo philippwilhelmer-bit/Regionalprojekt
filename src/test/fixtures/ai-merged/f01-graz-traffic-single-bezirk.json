@@ -1,0 +1,20 @@
+{
+  "id": "f01-graz-traffic-single-bezirk",
+  "description": "Single-Bezirk traffic incident, no named individual. Baseline WRITTEN path.",
+  "sourceType": "OTS_AT",
+  "rawArticleText": "Auf der A2 zwischen den Anschlussstellen Graz-Ost und Graz-Webling kommt es derzeit zu erheblichen Verkehrsbehinderungen aufgrund eines Auffahrunfalls. Die Polizei bittet um Vorsicht und empfiehlt großräumige Umfahrung. Der Stau erstreckt sich aktuell über fünf Kilometer.",
+  "expectedOutput": {
+    "bezirkSlugs": ["graz"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["A2", "Auffahrunfall"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN"
+}

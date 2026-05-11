@@ -1,0 +1,21 @@
+{
+  "id": "f03-landesbudget-state-wide",
+  "description": "Land Steiermark beschluss → isStateWide=true, bezirkSlugs=[]. Tests structured state-wide signal replacing the old 'steiermark-weit' magic slug.",
+  "sourceType": "OTS_AT",
+  "rawArticleText": "Die Steiermärkische Landesregierung hat heute das Budget für 2027 beschlossen. Insgesamt sind 7,2 Milliarden Euro vorgesehen, davon 1,1 Milliarden für den Gesundheitsbereich und 850 Millionen für Bildung. Der Beschluss erfolgte einstimmig.",
+  "expectedOutput": {
+    "bezirkSlugs": [],
+    "isStateWide": true,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["7,2", "Budget"],
+    "bodyMustNotContain": ["steiermark-weit"],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "Defensive-guard regression: model must NOT return 'steiermark-weit' as a slug. The bezirkSlugs[] must be EMPTY when isStateWide=true."
+}

@@ -1,0 +1,21 @@
+{
+  "id": "f10-schladming-synonym-match",
+  "description": "Gemeinde-synonym lookup: 'Schladming' must map to bezirk slug 'liezen' via gemeindeSynonyms. Validates that the LLM uses the synonym list.",
+  "sourceType": "RSS",
+  "rawArticleText": "In Schladming hat heute der alpine Skiweltcup begonnen. Tausende Fans säumen die Strecke. Die Veranstalter rechnen mit insgesamt 30.000 Besuchern über das gesamte Wochenende.",
+  "expectedOutput": {
+    "bezirkSlugs": ["liezen"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Schladming", "Skiweltcup"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "Common false-positive risk: model returns 'schladming' as a slug (it isn't one). Defensive guard in pipeline.ts already filters via bezirkBySlug.get(slug) — fixture asserts the LLM returns the canonical 'liezen' slug."
+}

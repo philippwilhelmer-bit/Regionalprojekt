@@ -1,0 +1,21 @@
+{
+  "id": "f14-voitsberg-synonym-disambiguation",
+  "description": "Synonym disambiguation: the article mentions 'Köflach' and 'Bärnbach' — both Voitsberg synonyms. Tests that the LLM consolidates two synonyms from the SAME Bezirk into a single slug (voitsberg), not two.",
+  "sourceType": "RSS",
+  "rawArticleText": "In Köflach und Bärnbach laufen die Vorbereitungen für das gemeinsame Sommerkulturfest auf Hochtouren. Zwölf Veranstaltungen werden zwischen Juni und August an beiden Standorten angeboten. Erwartet werden insgesamt rund achttausend Besucherinnen und Besucher. Die Programmkoordination teilen sich die Tourismusverbände der beiden Gemeinden.",
+  "expectedOutput": {
+    "bezirkSlugs": ["voitsberg"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Köflach", "Bärnbach"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "Two Gemeinden from the same Bezirk (Voitsberg). Regression marker: model must collapse to ONE slug, not return ['köflach', 'baernbach'] or duplicate 'voitsberg' twice."
+}

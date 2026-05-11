@@ -1,0 +1,21 @@
+{
+  "id": "f12-leoben-long-form",
+  "description": "Long-form article (~400 words input) — tests LONG length tolerance and that the model summarises rather than truncates. Single Bezirk (Leoben).",
+  "sourceType": "RSS",
+  "rawArticleText": "An der Montanuniversität Leoben startet im Wintersemester ein neuer Studienzweig im Bereich nachhaltige Rohstoffgewinnung. Die Universität reagiert damit auf die wachsende Nachfrage nach Fachkräften in der Kreislaufwirtschaft und im urban mining. Der Studienplan umfasst sechs Semester und kombiniert klassische bergmännische Inhalte mit Modulen zu Recyclingverfahren, Lebenszyklusanalyse und ressourceneffizientem Design. Erwartet werden im ersten Jahrgang rund einhundertzwanzig Studierende, davon ein Drittel aus dem Ausland. Die Rektorin betont, dass der Standort Leoben international für seine Bergbau-Tradition bekannt ist und nun bewusst die Brücke in eine post-fossile Industrie schlagen wolle. Industriepartner aus der Steiermark, darunter Voestalpine und Sandvik, beteiligen sich an Praktika und an der Finanzierung von Stipendien. Insgesamt fließen drei Millionen Euro aus Bundes- und Landesmitteln in den Aufbau zusätzlicher Laborkapazitäten. Eisenerz und Trofaiach sollen über Außenstellen in praxisnahen Modulen eingebunden werden. Bewerbungen sind ab dem 1. Juni möglich. Die ersten Lehrveranstaltungen beginnen Anfang Oktober. Eine begleitende Vortragsreihe ist öffentlich und soll der Bevölkerung den Wandel der Branche näherbringen.",
+  "expectedOutput": {
+    "bezirkSlugs": ["leoben"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Leoben", "Montanuniversität"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "Long-form input (~400 words). With AiConfig.articleLength=LONG the output is bounded at 200-350 words. Tests that the summariser preserves the key facts (Studienzweig, Montanuniversität, Leoben) under length pressure."
+}

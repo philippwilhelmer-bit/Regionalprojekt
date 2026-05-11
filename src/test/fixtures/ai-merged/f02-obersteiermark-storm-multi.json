@@ -1,0 +1,21 @@
+{
+  "id": "f02-obersteiermark-storm-multi",
+  "description": "Multi-Bezirk weather alert covering Liezen and Murau. Tests multi-slug return.",
+  "sourceType": "RSS",
+  "rawArticleText": "Eine Sturmfront zieht über die Obersteiermark. Besonders betroffen sind die Bezirke Liezen und Murau. Die ZAMG erwartet Windböen bis 120 Stundenkilometer und Niederschlag von bis zu 40 Litern pro Quadratmeter. Die Feuerwehr bereitet sich auf zahlreiche Einsätze vor.",
+  "expectedOutput": {
+    "bezirkSlugs": ["liezen", "murau"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Sturm", "120"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "Order of bezirkSlugs is not asserted — sort before comparing."
+}

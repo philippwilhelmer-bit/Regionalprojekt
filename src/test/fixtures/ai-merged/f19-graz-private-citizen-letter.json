@@ -1,0 +1,21 @@
+{
+  "id": "f19-graz-private-citizen-letter",
+  "description": "Letter-to-the-editor style piece quoting a named private citizen by full name. Must route to REVIEW (mentionsPrivateIndividual=true).",
+  "sourceType": "RSS",
+  "rawArticleText": "Anrainer in Graz-Eggenberg machen weiter Druck gegen den Lärm der nahegelegenen Bahnstrecke. In einem offenen Brief an die Stadtregierung schildert Bewohnerin Sabine Lechner ihre Situation: nachts vorbeirollende Güterzüge raubten ihrer Familie seit Monaten den Schlaf. Sie fordert konkrete Schallschutzmaßnahmen bis Ende des Jahres. Die ÖBB verweisen auf laufende Planungen.",
+  "expectedOutput": {
+    "bezirkSlugs": ["graz"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": true
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Graz", "Schallschutz"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "REVIEW",
+  "notes": "Sabine Lechner is a fictional placeholder name representing a private citizen (not an officeholder, not a press spokesperson). This is the canonical mentionsPrivateIndividual=true case besides f04 (accident victim) and f05 (officeholder regression marker)."
+}

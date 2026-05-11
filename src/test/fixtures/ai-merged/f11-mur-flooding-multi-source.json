@@ -1,0 +1,21 @@
+{
+  "id": "f11-mur-flooding-multi-source",
+  "description": "Cross-Bezirk Hochwasser-Lage entlang der Mur. Tests three-Bezirk multi-slug return (Murau, Liezen, Murtal) — wider coverage than f02.",
+  "sourceType": "OTS_AT",
+  "rawArticleText": "Anhaltende Niederschläge haben in der Obersteiermark zu einer angespannten Hochwasserlage geführt. Die Pegel der Mur steigen in Murau, im Bezirk Liezen sowie im Murtal kontinuierlich an. Die Hydrographie warnt vor weiteren Niederschlägen in den nächsten 24 Stunden. Feuerwehren der drei Bezirke sind in Bereitschaft, mobile Hochwasserschutzwände werden an neuralgischen Punkten errichtet.",
+  "expectedOutput": {
+    "bezirkSlugs": ["murau", "liezen", "murtal"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Mur", "Hochwasser"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "Multi-Bezirk fixture: harness sorts both arrays before comparison (RESEARCH.md Pitfall 7). Order in expectedOutput is irrelevant."
+}

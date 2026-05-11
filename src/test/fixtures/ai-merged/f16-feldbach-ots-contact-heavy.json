@@ -1,0 +1,31 @@
+{
+  "id": "f16-feldbach-ots-contact-heavy",
+  "description": "OTS press release with a heavy contact block. Validates second-line-of-defence: even if the extractor leaks some metadata, the merged prompt's 'no contact data' rules must keep it out of the rewritten body.",
+  "sourceType": "OTS_AT",
+  "rawArticleText": "Feldbach setzt auf E-Mobilität\n\nFeldbach (OTS) - Die Stadtgemeinde Feldbach in der Südoststeiermark eröffnet kommende Woche zwölf neue Ladepunkte für Elektrofahrzeuge. Die Standorte verteilen sich auf den Hauptplatz, das Hallenbad sowie zwei Park-and-Ride-Anlagen. Die Investition beläuft sich auf rund 280.000 Euro.\n\nRückfragen & Kontakt:\nStadtgemeinde Feldbach\nMag. Anna Beispiel, Pressesprecherin\nTel: +43 3152 12345-67\nE-Mail: presse@feldbach.gv.at\nWeb: www.feldbach.gv.at\nOTS0234 5 II 0001 NXX0001",
+  "expectedOutput": {
+    "bezirkSlugs": ["suedoststeiermark"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Feldbach", "Ladepunkte"],
+    "bodyMustNotContain": [
+      "Rückfragen",
+      "Tel:",
+      "+43",
+      "E-Mail",
+      "presse@",
+      "www.",
+      "OTS0234",
+      "Pressesprecherin",
+      "Anna Beispiel"
+    ],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "Companion to f09. f09's rawArticleText is the POST-extractor input; f16 simulates the worst-case where the extractor leaks the contact block and the prompt is the last defence. Anna Beispiel is a fictional placeholder name — NOT a real private individual signal; the prompt should recognise a press-spokesperson role and NOT flip mentionsPrivateIndividual to true."
+}

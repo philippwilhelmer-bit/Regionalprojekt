@@ -1,0 +1,21 @@
+{
+  "id": "f17-bezirk-wahl-state-wide-event",
+  "description": "Steiermark-weite Landtagswahl — isStateWide=true with empty bezirkSlugs. Second state-wide fixture besides f03 (budget) to broaden coverage of the structured isStateWide path.",
+  "sourceType": "RSS",
+  "rawArticleText": "Die Steiermärkische Landtagswahl findet am 17. November statt. Insgesamt rund eine Million Wahlberechtigte sind aufgerufen, die Zusammensetzung des Landtags neu zu bestimmen. Die Wahlkarten können bis zum 13. November bei der jeweiligen Wohnsitz-Gemeinde beantragt werden. Erste Hochrechnungen werden gegen 17 Uhr am Wahlabend erwartet.",
+  "expectedOutput": {
+    "bezirkSlugs": [],
+    "isStateWide": true,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Landtagswahl", "November"],
+    "bodyMustNotContain": ["steiermark-weit"],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "Verifies the structured isStateWide:true path replaces the legacy 'steiermark-weit' magic-slug behavior. Companion to f03 — that fixture covers Landesbudget, this one covers an electoral event."
+}

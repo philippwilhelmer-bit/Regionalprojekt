@@ -1,0 +1,21 @@
+{
+  "id": "f15-weiz-mixed-bezirke",
+  "description": "Mixed-Bezirk regional cooperation announcement (Weiz + Hartberg-Fürstenfeld). Tests that adjacent Bezirke remain distinct in the slug list.",
+  "sourceType": "OTS_AT",
+  "rawArticleText": "Die Bezirke Weiz und Hartberg-Fürstenfeld bündeln ihre Kräfte in der Wirtschaftsförderung. Eine gemeinsame Tochtergesellschaft soll Investoren aus dem Ausland gezielt für die Oststeiermark gewinnen. Die Gründung wurde von beiden Bezirkshauptmannschaften am Mittwoch bekanntgegeben. Das Startkapital von 600.000 Euro tragen Weiz und Hartberg-Fürstenfeld zu gleichen Teilen.",
+  "expectedOutput": {
+    "bezirkSlugs": ["weiz", "hartberg-fuerstenfeld"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Weiz", "Hartberg"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "Multi-Bezirk fixture: harness sorts both arrays before comparison (RESEARCH.md Pitfall 7)."
+}

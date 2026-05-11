@@ -1,0 +1,20 @@
+{
+  "id": "f04-hartberg-accident-private-person",
+  "description": "Private individual named as accident victim. Must route to REVIEW.",
+  "sourceType": "RSS",
+  "rawArticleText": "Bei einem Verkehrsunfall in Hartberg wurde am Donnerstagabend Maria Huber, 34 Jahre alt, schwer verletzt. Sie wurde mit dem Rettungshubschrauber ins LKH Graz geflogen. Die Unfallursache ist Gegenstand der polizeilichen Ermittlungen.",
+  "expectedOutput": {
+    "bezirkSlugs": ["hartberg-fuerstenfeld"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": true
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Hartberg", "Unfall"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "REVIEW"
+}

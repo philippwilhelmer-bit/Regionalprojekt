@@ -1,0 +1,20 @@
+{
+  "id": "f07-eggenberg-historical-figure",
+  "description": "Historical figure (Erzherzog Johann, 19th century) must NOT trigger REVIEW.",
+  "sourceType": "RSS",
+  "rawArticleText": "Eine umfassende Ausstellung zu Erzherzog Johann eröffnet morgen im Schloss Eggenberg in Graz. Der Habsburger Reformer prägte die Steiermark im 19. Jahrhundert maßgeblich. Die Schau läuft bis Ende Oktober.",
+  "expectedOutput": {
+    "bezirkSlugs": ["graz"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Eggenberg", "Ausstellung"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN"
+}

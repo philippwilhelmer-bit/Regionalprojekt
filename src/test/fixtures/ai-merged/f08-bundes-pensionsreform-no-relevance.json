@@ -1,0 +1,21 @@
+{
+  "id": "f08-bundes-pensionsreform-no-relevance",
+  "description": "Federal-level (Nationalrat) — no Steiermark relevance. bezirkSlugs=[], isStateWide=false → REVIEW per Phase 43 decision.",
+  "sourceType": "OTS_AT",
+  "rawArticleText": "Der Nationalrat hat heute eine umfassende Pensionsreform beschlossen. Die Anhebung des Antrittsalters wird in mehreren Stufen ab 2028 erfolgen. Die Beschlussfassung erfolgte mit den Stimmen der Regierungsparteien.",
+  "expectedOutput": {
+    "bezirkSlugs": [],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Pensionsreform"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "REVIEW",
+  "notes": "Phase 43 decision (CONTEXT.md): bezirkSlugs=[] + isStateWide=false → REVIEW. Reuses existing REVIEW path; no reviewReason column added (schema-free)."
+}

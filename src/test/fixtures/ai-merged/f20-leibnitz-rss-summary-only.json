@@ -1,0 +1,21 @@
+{
+  "id": "f20-leibnitz-rss-summary-only",
+  "description": "RSS/Atom shape where only a short summary is available (no full body). Tests that the model produces a complete article (headline/lead/body/SEO) even from minimal input.",
+  "sourceType": "RSS",
+  "rawArticleText": "Leibnitz. Das Weinkultur-Festival in Gamlitz lockt am Wochenende erneut tausende Besucher. Eröffnung Freitag um 18 Uhr am Hauptplatz.",
+  "expectedOutput": {
+    "bezirkSlugs": ["leibnitz"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Gamlitz", "Weinkultur"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "Minimal-input fixture: Atom <summary>-only feeds typically deliver 100-200 chars. Validates that the merged prompt does not hallucinate facts to pad the body. Gamlitz is a Leibnitz gemeindeSynonym."
+}

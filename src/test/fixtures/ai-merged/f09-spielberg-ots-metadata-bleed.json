@@ -1,0 +1,32 @@
+{
+  "id": "f09-spielberg-ots-metadata-bleed",
+  "description": "Raw OTS press release with header, contact block, and disclaimer. Validates that Plan 43-03 extractor strips this BEFORE the prompt sees it. If extractor is bypassed, the merged prompt's 'no metadata' rules are the second line of defense — both must hold.",
+  "sourceType": "OTS_AT",
+  "rawArticleText": "Großbrand bei Knittelfeld gelöscht\n\nKnittelfeld - Ein Großbrand auf einem landwirtschaftlichen Anwesen in Knittelfeld konnte nach mehreren Stunden gelöscht werden. Verletzt wurde niemand. Die Brandursache ist noch unklar; die Ermittlungen laufen.",
+  "expectedOutput": {
+    "bezirkSlugs": ["murtal"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Knittelfeld", "Brand"],
+    "bodyMustNotContain": [
+      "OTS0123",
+      "Rückfragen",
+      "Tel:",
+      "+43",
+      "E-Mail",
+      "@ff-",
+      "Kommandant",
+      "Hans Berger",
+      "Aussender",
+      "Pressekontakt"
+    ],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "TWO-INPUT FIXTURE: this fixture's rawArticleText shows the POST-EXTRACTION input. A second variant with metadata exists in the draft for end-to-end testing of the extractor + merged-call combination. The 'bodyMustNotContain' invariants apply to both."
+}

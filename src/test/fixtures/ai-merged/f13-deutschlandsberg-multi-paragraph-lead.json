@@ -1,0 +1,21 @@
+{
+  "id": "f13-deutschlandsberg-multi-paragraph-lead",
+  "description": "Article whose source copy stacks multiple short paragraphs of lead-like context before the main fact. Tests that the merged prompt's leadMaxSentences: 2 invariant holds even when the input invites a longer lead.",
+  "sourceType": "OTS_AT",
+  "rawArticleText": "Im Bezirk Deutschlandsberg wird der öffentliche Verkehr ab Herbst spürbar ausgebaut.\n\nDie neue Buslinie 762 verbindet künftig Stainz, Schwanberg und Wies stündlich miteinander. Eine Anbindung an den Bahnhof Deutschlandsberg ist vorgesehen.\n\nDas Land Steiermark investiert dafür 1,4 Millionen Euro pro Jahr und finanziert zusätzlich fünf neue Fahrzeuge mit Hybridantrieb.",
+  "expectedOutput": {
+    "bezirkSlugs": ["deutschlandsberg"],
+    "isStateWide": false,
+    "mentionsPrivateIndividual": false
+  },
+  "contentInvariants": {
+    "headlineMaxChars": 80,
+    "leadMaxSentences": 2,
+    "bodyMustContain": ["Deutschlandsberg", "762"],
+    "bodyMustNotContain": [],
+    "seoTitleMaxChars": 60,
+    "metaDescriptionMaxChars": 160
+  },
+  "expectedFinalStatus": "WRITTEN",
+  "notes": "Source has three paragraphs in lead position. The merged prompt's '1-2 Sätze' lead-rule is the regression marker — leadMaxSentences=2 is the soft assertion (the harness asserts bodyMustContain, not lead length directly; lead length lives in the prompt invariant)."
+}
