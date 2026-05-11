@@ -105,7 +105,7 @@ Full details: `.planning/milestones/v3.1-ROADMAP.md`
 <details open>
 <summary>🔄 v3.2 Text Engine Optimization (Phases 43-45) — IN PROGRESS</summary>
 
-- [ ] **Phase 43: AI Pipeline Quick Wins** - Merged single-call pipeline, prompt caching, clean source extractors, orphan and accounting fixes (no schema changes)
+- [x] **Phase 43: AI Pipeline Quick Wins** - Merged single-call pipeline, prompt caching, clean source extractors, orphan and accounting fixes (no schema changes) (completed 2026-05-11)
 - [ ] **Phase 44: Cost Telemetry & Adapter Hardening** - Per-article cost columns, Message Batches API, adapter timeout/dedup/cursor/conditional-GET hardening
 - [ ] **Phase 45: REVIEW Heuristic & Quality Loop** - Sharper private-individual detection, quality scoring, prompt eval harness, structured state-wide boolean
 
@@ -128,13 +128,13 @@ Full details: `.planning/milestones/v3.1-ROADMAP.md`
 4. Published article text contains no occurrences of source-system strings such as `EMITTENT`, `WEBLINK`, or OTS contact-block fragments across a 50-article sample
 5. A TAGGED article is picked up and processed on the next pipeline run (does not strand indefinitely)
 
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
-- [ ] 43-01-PLAN.md — Merged AI call (`runMergedCall`) + unit suite — single `tool_use` call, `cache_control` on static prefix, `max_tokens: 1024`, cache-aware token split, `isStateWide` defensive guard (AIPL-01..05)
+- [x] 43-01-PLAN.md — Merged AI call (`runMergedCall`) + unit suite — single `tool_use` call, `cache_control` on static prefix, `max_tokens: 1024`, cache-aware token split, `isStateWide` defensive guard (AIPL-01..05)
 - [x] 43-02-PLAN.md — Per-source clean extractors (`extractors/ots.ts`, `extractors/rss.ts`, `extractors/index.ts`) — strip OTS metadata + dispatch by `ArticleSource` enum (AIPL-06)
-- [ ] 43-03-PLAN.md — Pipeline integration — flag-gated merged branch, TAGGED retry selector, `llmLocationFallback` signature change + token accounting, Anthropic `maxRetries: 2`, TAGGED enum deprecation comment, AIPL-10 SQL doc (AIPL-07..10)
-- [ ] 43-04-PLAN.md — 20-fixture corpus + `scripts/ai-replay-fixtures.ts` replay harness + smoke test + cutover protocol SUMMARY (verifies AIPL-01)
+- [x] 43-03-PLAN.md — Pipeline integration — flag-gated merged branch, TAGGED retry selector, `llmLocationFallback` signature change + token accounting, Anthropic `maxRetries: 2`, TAGGED enum deprecation comment, AIPL-10 SQL doc (AIPL-07..10)
+- [x] 43-04-PLAN.md — 20-fixture corpus + `scripts/ai-replay-fixtures.ts` replay harness + smoke test + cutover protocol SUMMARY (verifies AIPL-01)
 
 **Risk:** Merged prompt may regress article quality vs two specialized prompts. Mitigation: side-by-side eval on a 20-article fixture before the merged call goes to production. Keep the two-step path behind a flag for one milestone as fallback.
 
@@ -195,6 +195,6 @@ Plans:
 | 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
 | 33-39 | v3.0 | 12/12 + 2 quick | Complete | 2026-04-05 |
 | 40-42 | v3.1 | 6/6 | Complete | 2026-05-10 |
-| 43 | 3/4 | In Progress|  | - |
+| 43 | 4/4 | Complete   | 2026-05-11 | - |
 | 44 | v3.2 | 0/TBD | Not started | - |
 | 45 | v3.2 | 0/TBD | Not started | - |

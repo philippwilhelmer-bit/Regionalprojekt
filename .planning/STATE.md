@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 43-04-PLAN.md
-last_updated: "2026-05-11T12:17:48.369Z"
-last_activity: 2026-05-11 — Plan 43-04 complete (20 captured-payload fixtures + ai-replay-fixtures harness — Phase 43 cutover gate ready)
+stopped_at: Completed 43-03-PLAN.md (Phase 43 plans 01/02/03/04 all done — cutover gate ready)
+last_updated: "2026-05-11T12:18:00.000Z"
+last_activity: 2026-05-11 — Plan 43-03 complete (pipeline integration — flag-gated merged path, AIPL-07/08/09/10 fixes); Phase 43 plans 01–04 all done
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -20,17 +20,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-10)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** v3.2 Text Engine Optimization — Phase 43 (AI Pipeline Quick Wins), Plans 43-01 + 43-02 + 43-04 complete; 43-03 was executing in parallel.
+**Current focus:** v3.2 Text Engine Optimization — Phase 43 (AI Pipeline Quick Wins) COMPLETE. All 4 plans landed (01/02 wave 1 → 03/04 wave 2 in parallel). Next: cutover gate (manual operator runbook in 43-04-SUMMARY.md).
 
 ## Current Position
 
-Phase: 43 — AI Pipeline Quick Wins
-Plan: 43-04 just completed (fixtures + replay harness — Phase 43 cutover gate ready)
-Status: In progress (3 of 4 plans complete after 43-04; 43-03 ran in parallel)
-Last activity: 2026-05-11 — Plan 43-04 complete (20 fixtures + ai-replay-fixtures harness)
+Phase: 43 — AI Pipeline Quick Wins (4/4 plans complete)
+Plan: 43-03 just completed (pipeline integration — wires merged path + AIPL-07/08/09/10)
+Status: Phase complete; awaiting cutover-gate execution (replay harness + AIPL-10 SQL + token-baseline check)
+Last activity: 2026-05-11 — Plan 43-03 complete (flag-gated merged path, AIPL-07/08/09/10 fixes; 34/34 pipeline tests green)
 
 ```
-v3.2 Progress: [█████████░] 93% — 13/14 plans (auto-computed)
+v3.2 Progress: [██████████] 100% — 14/14 plans in phase 43 (auto-computed; cutover gate is operator-side, not a plan)
 ```
 
 ## Performance Metrics
@@ -44,6 +44,7 @@ v3.2 Progress: [█████████░] 93% — 13/14 plans (auto-comput
 
 | Phase | Plan | Duration | Tasks | Files | Completed       |
 | ----- | ---- | -------- | ----- | ----- | --------------- |
+| 43    | 03   | 28min    | 4     | 9     | 2026-05-11      |
 | 43    | 04   | 28min    | 3     | 23    | 2026-05-11      |
 | 43    | 02   | 7min     | 2     | 6     | 2026-05-11      |
 | 43    | 01   | 8min     | 2     | 2     | 2026-05-11      |
@@ -73,22 +74,27 @@ See PROJECT.md Key Decisions for full history.
 - [Phase 43]: 43-04: f08 expectedFinalStatus overridden REVIEW per CONTEXT.md — bezirkSlugs=[] + isStateWide=false routes through existing REVIEW path (schema-free, no reviewReason column)
 - [Phase 43]: 43-04: assertFixture extracted as pure exported function so smoke test can unit-test comparison logic against synthetic MergedResult — no HTTP, sub-second CI runtime
 - [Phase 43]: 43-04: harness entry-point guard via process.argv[1] filename check (works in both tsx CLI and vitest contexts); harness always uses runMergedCall directly — never branches on AI_USE_MERGED_CALL
+- [Phase 43]: 43-03: ProcessResult.totalCachedInputTokens kept in-memory only (not persisted to PipelineRun column this phase) so v3.2 stays schema-free; Phase 44 persists it
+- [Phase 43]: 43-03: AIPL-09 test asserts factory source string contains 'maxRetries: 2' (SDK constructor internals are private) — brittle to formatting, stable to API drift; accepted trade-off
+- [Phase 43]: 43-03: Out-of-plan callers (map-actions.ts, generate-map/route.ts + their tests) updated as Rule 3 deviation — llmLocationFallback signature change ripples there; plan's <done> only listed pipeline.ts + locextract.ts
+- [Phase 43]: 43-03: Pipeline-level `isStateWide && bezirkSlugs.length > 0` warn is unreachable under runMergedCall (schema-boundary guard pre-clears) — retained as defence-in-depth tripwire; merged-path test asserts observable contract (no ArticleBezirk rows) not the warn
+- [Phase 43]: 43-03: AIPL-07 retry selector + AIPL-10 one-time SQL together provide defence-in-depth orphan cleanup for the TAGGED → FETCHED cutover
 
 ### Pending Todos
 
-- Phase 43 cutover gate (operator runbook in `.planning/phases/43-ai-pipeline-quick-wins/43-04-SUMMARY.md`): capture legacy-path token baseline → run `npx tsx scripts/ai-replay-fixtures.ts` and paste 20/20 output into PR → run AIPL-10 SQL → merge + verify ≥50% input-token reduction
+- Phase 43 cutover gate (operator runbook in `.planning/phases/43-ai-pipeline-quick-wins/43-04-SUMMARY.md`): capture legacy-path token baseline → run `npx tsx scripts/ai-replay-fixtures.ts` and paste 20/20 output into PR → run AIPL-10 SQL (`UPDATE article SET status='FETCHED' WHERE status='TAGGED';`) in Neon console → merge + verify ≥50% input-token reduction
 - Spike-test Anthropic Message Batches API round-trip latency before committing to it as default in Phase 44 (15-min cron window constraint)
-- Address out-of-scope pre-existing TSC/vitest failures noted in `.planning/phases/43-ai-pipeline-quick-wins/deferred-items.md`
+- Address out-of-scope pre-existing TSC/vitest failures noted in `.planning/phases/43-ai-pipeline-quick-wins/deferred-items.md` (bezirke.test.ts CONF-02 data drift, root-layout-adsense.test.ts Plus_Jakarta_Sans, mapgen.test.ts ArrayBuffer/SharedArrayBuffer post-Node24, map-actions.test.ts afterEach import)
 
 ### Blockers/Concerns
 
 - Batches API latency (minutes to hours) may exceed 15-min Vercel cron window — spike required before Phase 44-02 commits
-- Merged prompt quality regression risk — side-by-side eval on 20-article fixture is the Phase 43 gate before cutover
+- Merged prompt quality regression risk — gate-tooling now ready (Plan 43-04 ai-replay-fixtures harness + 20 fixtures). Operator must run side-by-side eval before flipping production traffic to AI_USE_MERGED_CALL='true' permanently
 - basemap subdomain round-robin still at single 'maps' subdomain after maps1–4 NXDOMAIN — monitor whether basemap.at restores them (carry-over from v3.1)
 - ROADMAP/REQUIREMENTS plan checkboxes drift on plan completion (recurring cosmetic issue across v2.0, v3.0, v3.1) — low priority
 
 ## Session Continuity
 
-Last session: 2026-05-11T12:17:48.367Z
-Stopped at: Completed 43-04-PLAN.md
-Resume with: Phase 43 cutover gate (see `.planning/phases/43-ai-pipeline-quick-wins/43-04-SUMMARY.md` operator runbook) once 43-03's SUMMARY also lands.
+Last session: 2026-05-11T12:18:00.000Z
+Stopped at: Completed 43-03-PLAN.md (Phase 43 fully landed: 01/02/03/04)
+Resume with: Phase 43 cutover gate (see `.planning/phases/43-ai-pipeline-quick-wins/43-04-SUMMARY.md` operator runbook). Steps: 1) capture legacy-path token baseline, 2) run AIPL-10 SQL in Neon console, 3) `npx tsx scripts/ai-replay-fixtures.ts` and paste 20/20 output into PR, 4) merge + verify ≥50% input-token reduction. Next plan: Phase 44 (TLM-* telemetry).

@@ -17,10 +17,10 @@ Single merged structured-output AI call replacing the two-step Tag+Write path, w
 - [x] **AIPL-04**: System applies `cache_control: {"type": "ephemeral"}` to the static system prefix (Bezirk list + tone/length/styleNotes block)
 - [x] **AIPL-05**: PipelineRun token totals include `cache_creation_input_tokens` and `cache_read_input_tokens` from the Anthropic usage response
 - [x] **AIPL-06**: System uses per-source clean extractors (`extractors/ots.ts`, `extractors/rss.ts`) instead of `JSON.stringify(rawPayload)` when building LLM input — `EMITTENT`, `WEBLINK`, and contact metadata never reach the prompt
-- [ ] **AIPL-07**: System includes `TAGGED` status in the AI retry selector so a crash mid-pipeline does not strand articles
-- [ ] **AIPL-08**: System sums `llmLocationFallback` token usage into PipelineRun `totalInputTokens` / `totalOutputTokens`
-- [ ] **AIPL-09**: System sets the Anthropic SDK `maxRetries` explicitly so SDK-level transient retries do not inflate `Article.retryCount`
-- [ ] **AIPL-10**: One-time migration converts in-flight `TAGGED` rows back to `FETCHED` on first deploy of the merged pipeline
+- [x] **AIPL-07**: System includes `TAGGED` status in the AI retry selector so a crash mid-pipeline does not strand articles
+- [x] **AIPL-08**: System sums `llmLocationFallback` token usage into PipelineRun `totalInputTokens` / `totalOutputTokens`
+- [x] **AIPL-09**: System sets the Anthropic SDK `maxRetries` explicitly so SDK-level transient retries do not inflate `Article.retryCount`
+- [x] **AIPL-10**: One-time migration converts in-flight `TAGGED` rows back to `FETCHED` on first deploy of the merged pipeline
 
 ### Cost Telemetry (TLM)
 
@@ -104,10 +104,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AIPL-04 | Phase 43 | Complete |
 | AIPL-05 | Phase 43 | Complete |
 | AIPL-06 | Phase 43 | Complete |
-| AIPL-07 | Phase 43 | Pending |
-| AIPL-08 | Phase 43 | Pending |
-| AIPL-09 | Phase 43 | Pending |
-| AIPL-10 | Phase 43 | Pending |
+| AIPL-07 | Phase 43 | Complete |
+| AIPL-08 | Phase 43 | Complete |
+| AIPL-09 | Phase 43 | Complete |
+| AIPL-10 | Phase 43 | Complete |
 | TLM-01 | Phase 44 | Pending |
 | TLM-02 | Phase 44 | Pending |
 | TLM-03 | Phase 44 | Pending |
