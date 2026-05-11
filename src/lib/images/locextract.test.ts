@@ -2,6 +2,10 @@
  * Unit tests for locextract.ts
  *
  * Covers MAP-01 (extractLocation regex) and CMS-02 (llmLocationFallback).
+ *
+ * AIPL-08: llmLocationFallback returns {location, inputTokens, outputTokens}
+ * so callers can attribute fallback API spend to the PipelineRun totals only
+ * when the fallback was actually invoked.
  */
 
 import { describe, it, expect, vi } from 'vitest'
@@ -69,61 +73,66 @@ describe('GEOCODING_QUERY_OVERRIDE', () => {
 })
 
 // ---------------------------------------------------------------------------
-// llmLocationFallback tests (CMS-02)
+// llmLocationFallback tests (CMS-02 + AIPL-08)
 // ---------------------------------------------------------------------------
 
-function makeMockClient(locationValue: string | null | undefined, throwError = false): Anthropic {
+function makeMockClient(
+  locationValue: string | null | undefined,
+  throwError = false,
+  usage: { input_tokens: number; output_tokens: number } = { input_tokens: 50, output_tokens: 10 },
+): Anthropic {
   const create = throwError
     ? vi.fn().mockRejectedValue(new Error('API error'))
     : vi.fn().mockResolvedValue({
         content: [
           {
             type: 'text',
-            text: locationValue === undefined
-              ? 'not json at all'
-              : JSON.stringify({ location: locationValue }),
+            text:
+              locationValue === undefined
+                ? 'not json at all'
+                : JSON.stringify({ location: locationValue }),
           },
         ],
-        usage: { input_tokens: 10, output_tokens: 5 },
+        usage,
       })
 
   return { messages: { create } } as unknown as Anthropic
 }
 
-describe('llmLocationFallback', () => {
-  it('returns null when text is shorter than 100 characters', async () => {
+describe('llmLocationFallback (AIPL-08 return shape)', () => {
+  it('returns {location: null, inputTokens: 0, outputTokens: 0} when text is shorter than 100 characters (guard fires before API call)', async () => {
     const client = makeMockClient('Graz')
     const result = await llmLocationFallback(client, 'short text')
-    expect(result).toBeNull()
-    expect((client.messages.create as ReturnType<typeof vi.fn>)).not.toHaveBeenCalled()
+    expect(result).toEqual({ location: null, inputTokens: 0, outputTokens: 0 })
+    expect(client.messages.create as ReturnType<typeof vi.fn>).not.toHaveBeenCalled()
   })
 
-  it('returns the location string from LLM JSON response', async () => {
-    const client = makeMockClient('Leoben')
+  it('returns {location: "Leoben", inputTokens, outputTokens} on successful LLM extraction', async () => {
+    const client = makeMockClient('Leoben', false, { input_tokens: 50, output_tokens: 10 })
     const text = 'a'.repeat(101)
     const result = await llmLocationFallback(client, text)
-    expect(result).toBe('Leoben')
+    expect(result).toEqual({ location: 'Leoben', inputTokens: 50, outputTokens: 10 })
   })
 
-  it('returns null when LLM response has location: null', async () => {
-    const client = makeMockClient(null)
+  it('returns {location: null, inputTokens, outputTokens} when LLM response has location: null (tokens were spent)', async () => {
+    const client = makeMockClient(null, false, { input_tokens: 50, output_tokens: 10 })
     const text = 'a'.repeat(101)
     const result = await llmLocationFallback(client, text)
-    expect(result).toBeNull()
+    expect(result).toEqual({ location: null, inputTokens: 50, outputTokens: 10 })
   })
 
-  it('returns null when LLM response is malformed JSON', async () => {
-    const client = makeMockClient(undefined) // triggers non-JSON text
+  it('returns {location: null, inputTokens, outputTokens} when LLM response is malformed JSON (tokens were spent)', async () => {
+    const client = makeMockClient(undefined, false, { input_tokens: 50, output_tokens: 10 }) // triggers non-JSON text
     const text = 'a'.repeat(101)
     const result = await llmLocationFallback(client, text)
-    expect(result).toBeNull()
+    expect(result).toEqual({ location: null, inputTokens: 50, outputTokens: 10 })
   })
 
-  it('returns null when LLM throws an error', async () => {
+  it('returns {location: null, inputTokens: 0, outputTokens: 0} when LLM throws an error (no tokens charged)', async () => {
     const client = makeMockClient(null, true)
     const text = 'a'.repeat(101)
     const result = await llmLocationFallback(client, text)
-    expect(result).toBeNull()
+    expect(result).toEqual({ location: null, inputTokens: 0, outputTokens: 0 })
   })
 
   it('calls messages.create with correct model and max_tokens', async () => {
@@ -135,5 +144,17 @@ describe('llmLocationFallback', () => {
     const callArg = createFn.mock.calls[0][0] as { model: string; max_tokens: number }
     expect(callArg.model).toBe('claude-haiku-4-5-20251001')
     expect(callArg.max_tokens).toBe(64)
+  })
+
+  it('defaults missing usage fields to 0 (defensive when SDK omits usage)', async () => {
+    // Mock client whose usage object lacks input_tokens / output_tokens
+    const create = vi.fn().mockResolvedValue({
+      content: [{ type: 'text', text: JSON.stringify({ location: 'Graz' }) }],
+      usage: {}, // no fields
+    })
+    const client = { messages: { create } } as unknown as Anthropic
+    const text = 'a'.repeat(101)
+    const result = await llmLocationFallback(client, text)
+    expect(result).toEqual({ location: 'Graz', inputTokens: 0, outputTokens: 0 })
   })
 })
