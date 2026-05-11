@@ -12,7 +12,7 @@ datasource db {
 
 enum ArticleStatus {
   FETCHED     // raw item ingested from source
-  TAGGED      // Bezirk(e) assigned by AI
+  TAGGED      // Bezirk(e) assigned by AI — deprecated post-v3.2: written only when AI_USE_MERGED_CALL=false
   WRITTEN     // AI-rewritten article ready
   REVIEW      // flagged: named person detected
   PUBLISHED   // live on site
