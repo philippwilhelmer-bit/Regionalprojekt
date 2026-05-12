@@ -2,16 +2,16 @@ import type { BundeslandConfig } from './src/types/bundesland'
 
 export default {
   bundesland: 'steiermark',
-  siteName: 'Wurzelwelt',
+  siteName: 'Loden & Leute',
   tagline: 'Nachrichten aus der Steiermark',
   branding: {
     primaryColor: '#154212',
     secondaryColor: '#2d7a1f',
     logoPath: '/images/logo-steiermark.svg',
     impressum: {
-      publisherName: 'Wurzelwelt Medien GmbH',
+      publisherName: 'Loden & Leute Medien GmbH',
       address: 'Mustergasse 1, 8940 Liezen, Steiermark',
-      email: 'redaktion@wurzelwelt.at',
+      email: 'redaktion@lodenundleute.at',
       telefon: 'TODO: +43 XXX XXXXXXX',
       unternehmensgegenstand: 'TODO: Betrieb eines regionalen Nachrichtenportals',
       blattlinie: 'TODO: Blattlinie hier eintragen',

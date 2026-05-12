@@ -6,11 +6,11 @@ import config from "@/../bundesland.config";
 import type { BezirkItem } from "@/types/bundesland";
 import { computeBezirkLabel } from "@/lib/bezirk-label";
 
-interface WurzelAppBarProps {
+interface LodenAppBarProps {
   bezirke: BezirkItem[];
 }
 
-export function WurzelAppBar({ bezirke }: WurzelAppBarProps) {
+export function LodenAppBar({ bezirke }: LodenAppBarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [bezirkLabel, setBezirkLabel] = useState<string>("Steiermark");
 
@@ -43,7 +43,7 @@ export function WurzelAppBar({ bezirke }: WurzelAppBarProps) {
       <div className="bg-ink px-4 h-14 flex items-center justify-between">
         {/* Left: serif brand name */}
         <Link href="/" className="font-headline italic text-parchment text-xl">
-          Wurzelwelt
+          Loden &amp; Leute
         </Link>
 
         {/* Mobile: hamburger button — hidden on md+ */}

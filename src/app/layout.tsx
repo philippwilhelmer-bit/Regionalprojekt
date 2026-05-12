@@ -22,7 +22,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: config.siteName,
-  description: "Wurzelwelt — Nachrichten aus der Steiermark",
+  description: "Loden & Leute — Nachrichten aus der Steiermark",
 };
 
 export default function RootLayout({

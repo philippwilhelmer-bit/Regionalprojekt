@@ -24,7 +24,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <div className="flex h-screen bg-parchment">
       <aside className="w-56 bg-surface-elevated flex flex-col py-6 px-4 shrink-0">
         <p className="text-xs font-semibold text-slate uppercase tracking-wide mb-4">
-          Wurzelwelt
+          Loden &amp; Leute
         </p>
         <nav className="space-y-1 flex-1">
           {navItems.map(item => (

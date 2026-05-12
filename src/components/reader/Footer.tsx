@@ -21,7 +21,7 @@ export function Footer() {
     <footer className="bg-ink text-parchment px-[var(--spacing-gutter)] pt-12 pb-28">
       <div className="max-w-3xl mx-auto">
         {/* Brand mark */}
-        <span className="font-headline italic text-parchment text-2xl block mb-6">Wurzelwelt</span>
+        <span className="font-headline italic text-parchment text-2xl block mb-6">Loden &amp; Leute</span>
 
         {/* Navigation columns */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-8">
@@ -58,7 +58,7 @@ export function Footer() {
 
         {/* Copyright divider */}
         <div className="border-t border-parchment/10 pt-4 text-xs text-parchment/40">
-          &copy; {new Date().getFullYear()} Wurzelwelt
+          &copy; {new Date().getFullYear()} Loden &amp; Leute
         </div>
       </div>
     </footer>

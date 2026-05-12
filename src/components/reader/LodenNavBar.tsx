@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { href: "/suche", icon: "book_2", label: "Bibliothek", enabled: true },
 ] as const;
 
-export function WurzelNavBar() {
+export function LodenNavBar() {
   const pathname = usePathname();
 
   return (

@@ -1,6 +1,6 @@
 "use client"
 
-export function FragDenWurzelmannCard() {
+export function FragDenSeppCard() {
   return (
     <div className="px-[var(--spacing-gutter)]">
       <button
@@ -11,7 +11,7 @@ export function FragDenWurzelmannCard() {
           Dein Bezirk
         </p>
         <p className="font-headline text-xl font-semibold text-parchment leading-tight mb-2">
-          Frag den Wurzelmann
+          Frag den Sepp
         </p>
         <p className="font-label text-sm text-parchment/70">
           Waehle deinen Bezirk fuer hyperlokal gefilterte Nachrichten.

@@ -30,7 +30,7 @@ export function MascotGreeting() {
     <div className="px-[var(--spacing-gutter)]">
       <div className="bg-surface rounded-xs px-4 py-3">
         <p className="font-label uppercase text-xs font-semibold text-ink-muted mb-1 tracking-wider">
-          Wurzel sagt ...
+          Sepp sagt ...
         </p>
         <p className="font-headline text-base font-semibold text-ink leading-snug">
           {greeting}!

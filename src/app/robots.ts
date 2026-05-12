@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 
 export const dynamic = 'force-dynamic'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wurzelwelt.at'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://lodenundleute.at'
 
 /**
  * Next.js 15 robots.ts default export.

@@ -62,7 +62,7 @@ export async function geocodeLocation(
     `?q=${encodeURIComponent(query)}&countrycodes=at&format=jsonv2&limit=1`
 
   const res = await fetch(url, {
-    headers: { 'User-Agent': 'Wurzelwelt/1.0 (https://wurzelwelt.at)' },
+    headers: { 'User-Agent': 'LodenUndLeute/1.0 (https://lodenundleute.at)' },
   })
 
   if (!res.ok) throw new Error(`Nominatim HTTP ${res.status}`)

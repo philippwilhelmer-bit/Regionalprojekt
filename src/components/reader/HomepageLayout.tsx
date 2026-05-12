@@ -10,7 +10,7 @@ import { RegionalEditorialCard } from "./RegionalEditorialCard";
 import { ListItem } from "./ListItem";
 import { AdUnit } from "./AdUnit";
 import { WeatherWidget } from "./WeatherWidget";
-import { FragDenWurzelmannCard } from "./FragDenWurzelmannCard";
+import { FragDenSeppCard } from "./FragDenSeppCard";
 import { GrueneWocheSection } from "./GrueneWocheSection";
 
 interface HomepageLayoutProps {
@@ -117,11 +117,11 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
         </div>
       )}
 
-      {/* 4. Weather + Frag den Wurzelmann — dark accent zone */}
+      {/* 4. Weather + Frag den Sepp — dark accent zone */}
       <div className="bg-ink py-[var(--spacing-section)]">
         <WeatherWidget />
         <div className="mt-4">
-          <FragDenWurzelmannCard />
+          <FragDenSeppCard />
         </div>
       </div>
 
