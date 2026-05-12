@@ -15,6 +15,9 @@
  *     overrides don't invalidate the cache
  *   - `max_tokens: 1024` with explicit `stop_reason === 'max_tokens'` throw —
  *     truncated tool input is invalid JSON; fail loudly
+ *   - `temperature: 0` for deterministic output — news rewrites do not benefit
+ *     from sampling variance, and the cutover gate (Plan 43-04) needs stable
+ *     behaviour to test prompt quality rather than dice rolls
  *   - Defensive `isStateWide → bezirkSlugs=[]` guard at the schema boundary so
  *     a misbehaving model can't double-classify
  *   - Cache-aware token split surfaces `cache_read_input_tokens` and
@@ -216,6 +219,7 @@ export async function runMergedCall(
   const response = await client.messages.create({
     model: resolvedConfig.modelOverride ?? 'claude-haiku-4-5-20251001',
     max_tokens: 1024,
+    temperature: 0,
     system: [
       {
         type: 'text',
