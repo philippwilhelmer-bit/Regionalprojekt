@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: v3.2 merged-call closed as "infeasible with cost target"; production on legacy Haiku
-last_updated: "2026-05-12T17:00:00.000Z"
-last_activity: 2026-05-12 — 3 merged-prompt tuning iterations (9→10→7→7) + Sonnet 4.6 experiment (16/20). Closed: Haiku 4.5 model-capability limits cannot be overcome by prompt-engineering; Sonnet 4.6 quality acceptable but defeats v3.2 cost goal
+status: "4 harness iterations explored (Haiku 9→10→7→7, Sonnet 16/20). Closed: Haiku model-capability limits, Sonnet defeats cost target. Production on legacy Haiku stays. v3.2 success criterion ≥50% input-token reduction NOT met — explicitly deferred."
+stopped_at: "Completed 44-04-PLAN.md (ingest hardening: bulk dedup, conditional GET, transactional close)"
+last_updated: "2026-05-12T15:40:00.390Z"
+last_activity: 2026-05-12 — final iter 4 Sonnet 4.6 experiment 16/20, DECISIONS.md closure entry written
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 8
+  completed_plans: 5
 ---
 
 # Project State
@@ -50,6 +50,7 @@ v3.2 Progress: [██████████] 100% — 14/14 plans in phase 43
 | 43    | 01   | 8min     | 2     | 2     | 2026-05-11      |
 
 *Updated after each milestone completion*
+| Phase 44 P04 | 20min | 4 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,9 @@ See PROJECT.md Key Decisions for full history.
 - [Phase 43]: 43-03: Out-of-plan callers (map-actions.ts, generate-map/route.ts + their tests) updated as Rule 3 deviation — llmLocationFallback signature change ripples there; plan's <done> only listed pipeline.ts + locextract.ts
 - [Phase 43]: 43-03: Pipeline-level `isStateWide && bezirkSlugs.length > 0` warn is unreachable under runMergedCall (schema-boundary guard pre-clears) — retained as defence-in-depth tripwire; merged-path test asserts observable contract (no ArticleBezirk rows) not the warn
 - [Phase 43]: 43-03: AIPL-07 retry selector + AIPL-10 one-time SQL together provide defence-in-depth orphan cleanup for the TAGGED → FETCHED cutover
+- [Phase 44]: 44-04: Option A — unified AdapterResult envelope for all adapters; OTS sets etag/lastModified=null (tri-state skip). Keeps ingest.ts as single transaction site.
+- [Phase 44]: 44-04: Tri-state etag/lastModified semantics — null=no support, undefined=304 preserve, string=200 persist. Mapped to Prisma via conditional spread of update payload.
+- [Phase 44]: 44-04: Proxy-wrap PrismaClient in tests when vi.spyOn can't see $-methods — Prisma client is a Proxy with value:undefined descriptors until accessed. Pattern reusable for future transactional tests.
 
 ### Pending Todos
 
@@ -100,8 +104,8 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-12T17:00:00Z
-Stopped at: v3.2 merged-call work CLOSED. Path A (tune merged.ts) was exhausted across 3 Haiku iterations + 1 Sonnet experiment. Production on legacy Haiku stays. v3.2 ≥50% reduction target deferred.
+Last session: 2026-05-12T15:40:00.388Z
+Stopped at: Completed 44-04-PLAN.md (ingest hardening: bulk dedup, conditional GET, transactional close)
 Resume with: Phase 44 (TLM-01..04 telemetry + Batches API + ingest hardening). Plans already drafted:
 - `.planning/phases/44-cost-telemetry-adapter-hardening/44-01-telemetry-PLAN.md`
 - `.planning/phases/44-cost-telemetry-adapter-hardening/44-02-batches-spike-PLAN.md`

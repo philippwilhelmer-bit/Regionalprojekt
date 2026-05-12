@@ -156,7 +156,7 @@ Plans:
 5. An unchanged RSS feed returns HTTP 304 and the adapter skips body parsing entirely (verifiable by log or test)
 6. A process kill between `IngestionRun.update` and `Source.healthStatus` update leaves both fields consistent on the next read
 
-**Plans:** TBD
+**Plans:** 1/4 plans executed
 
 **Risk:** Message Batches API response latency (minutes to hours) may exceed the 15-minute cron window. Spike-test batch round-trip time before committing; if latency is unfit, fall back to `p-limit(4)` concurrency on the per-article path (AIPL-FUTURE-06). The per-article fallback flag (TLM-05) is preserved regardless.
 
@@ -196,5 +196,5 @@ Plans:
 | 33-39 | v3.0 | 12/12 + 2 quick | Complete | 2026-04-05 |
 | 40-42 | v3.1 | 6/6 | Complete | 2026-05-10 |
 | 43 | 4/4 | Complete    | 2026-05-11 | - |
-| 44 | v3.2 | 0/TBD | Not started | - |
+| 44 | 1/4 | In Progress|  | - |
 | 45 | v3.2 | 0/TBD | Not started | - |

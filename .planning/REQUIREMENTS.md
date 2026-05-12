@@ -38,11 +38,11 @@ Per-article AI cost observability and Message Batches API integration for the 50
 
 Tighter HTTP behavior, fewer DB roundtrips, transactional health updates.
 
-- [ ] **INGEST-01**: OTS adapter dedupes new items with a single `findMany({where: {source, externalId: {in: keys}}})` (not N sequential `findFirst` calls)
-- [ ] **INGEST-02**: Every external `fetch()` in ingestion adapters uses `AbortController` with a 10s timeout
-- [ ] **INGEST-03**: `Source` model has `lastFetchedAt DateTime?` cursor; OTS adapter uses it to compute the `von=` parameter (typically dropping the lookback window from 24h to ~15–30 min)
-- [ ] **INGEST-04**: `Source` model has `etag String?` and `lastModified String?` columns; RSS adapter sends `If-None-Match` / `If-Modified-Since` and short-circuits on HTTP 304 without re-parsing the body
-- [ ] **INGEST-05**: `IngestionRun.update` and `Source.consecutiveFailures` / `Source.healthStatus` updates are wrapped in a single `db.$transaction` so a crash between them never leaves them divergent
+- [x] **INGEST-01**: OTS adapter dedupes new items with a single `findMany({where: {source, externalId: {in: keys}}})` (not N sequential `findFirst` calls)
+- [x] **INGEST-02**: Every external `fetch()` in ingestion adapters uses `AbortController` with a 10s timeout
+- [x] **INGEST-03**: `Source` model has `lastFetchedAt DateTime?` cursor; OTS adapter uses it to compute the `von=` parameter (typically dropping the lookback window from 24h to ~15–30 min)
+- [x] **INGEST-04**: `Source` model has `etag String?` and `lastModified String?` columns; RSS adapter sends `If-None-Match` / `If-Modified-Since` and short-circuits on HTTP 304 without re-parsing the body
+- [x] **INGEST-05**: `IngestionRun.update` and `Source.consecutiveFailures` / `Source.healthStatus` updates are wrapped in a single `db.$transaction` so a crash between them never leaves them divergent
 
 ### Quality & Eval (QUAL)
 
@@ -115,11 +115,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TLM-05 | Phase 44 | Pending |
 | TLM-06 | Phase 44 | Pending |
 | TLM-07 | Phase 44 | Pending |
-| INGEST-01 | Phase 44 | Pending |
-| INGEST-02 | Phase 44 | Pending |
-| INGEST-03 | Phase 44 | Pending |
-| INGEST-04 | Phase 44 | Pending |
-| INGEST-05 | Phase 44 | Pending |
+| INGEST-01 | Phase 44 | Complete |
+| INGEST-02 | Phase 44 | Complete |
+| INGEST-03 | Phase 44 | Complete |
+| INGEST-04 | Phase 44 | Complete |
+| INGEST-05 | Phase 44 | Complete |
 | QUAL-01 | Phase 45 | Pending |
 | QUAL-02 | Phase 45 | Pending |
 | QUAL-03 | Phase 45 | Pending |
