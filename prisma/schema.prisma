@@ -119,6 +119,10 @@ model Source {
   healthFailureThreshold Int          @default(3)
   category              String?       // OTS RSS category: politik, wirtschaft, kultur, medien, chronik, sport
   keywords              String[]      @default([]) // Filter keywords — articles must contain at least one
+  // Phase 44 (INGEST-03/04): polling cursor + HTTP cache validators (all nullable for back-compat)
+  lastFetchedAt         DateTime?     // OTS: last successful list-window upper bound; RSS: time of last 2xx/304
+  etag                  String?       // RSS conditional GET — If-None-Match
+  lastModified          String?       // RSS conditional GET — If-Modified-Since (RFC 7231 string, verbatim)
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
   articles              Article[]
