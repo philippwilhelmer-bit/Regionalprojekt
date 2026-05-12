@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: "Completed 43-03-PLAN.md (Phase 43 fully landed: 01/02/03/04)"
-last_updated: "2026-05-11T12:55:50.930Z"
+stopped_at: Phase 44 context gathered
+last_updated: "2026-05-12T06:56:50.662Z"
 last_activity: 2026-05-11 — Plan 43-03 complete (flag-gated merged path, AIPL-07/08/09/10 fixes; 34/34 pipeline tests green)
 progress:
   total_phases: 3
@@ -95,6 +95,6 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-11T12:18:00.000Z
-Stopped at: Completed 43-03-PLAN.md (Phase 43 fully landed: 01/02/03/04)
+Last session: 2026-05-12T06:56:50.654Z
+Stopped at: Phase 44 context gathered
 Resume with: Phase 43 cutover gate (see `.planning/phases/43-ai-pipeline-quick-wins/43-04-SUMMARY.md` operator runbook). Steps: 1) capture legacy-path token baseline, 2) run AIPL-10 SQL in Neon console, 3) `npx tsx scripts/ai-replay-fixtures.ts` and paste 20/20 output into PR, 4) merge + verify ≥50% input-token reduction. Next plan: Phase 44 (TLM-* telemetry).
