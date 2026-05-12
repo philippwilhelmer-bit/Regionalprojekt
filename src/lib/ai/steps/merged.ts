@@ -218,7 +218,10 @@ export async function runMergedCall(
   const dynamicSuffix = buildDynamicSuffix(resolvedConfig)
 
   const response = await client.messages.create({
-    model: resolvedConfig.modelOverride ?? 'claude-haiku-4-5-20251001',
+    model:
+      process.env.AI_MODEL_OVERRIDE ??
+      resolvedConfig.modelOverride ??
+      'claude-haiku-4-5-20251001',
     max_tokens: 1024,
     temperature: 0,
     system: [
