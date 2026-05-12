@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: "4 harness iterations explored (Haiku 9→10→7→7, Sonnet 16/20). Closed: Haiku model-capability limits, Sonnet defeats cost target. Production on legacy Haiku stays. v3.2 success criterion ≥50% input-token reduction NOT met — explicitly deferred."
-stopped_at: "Completed 44-04-PLAN.md (ingest hardening: bulk dedup, conditional GET, transactional close)"
-last_updated: "2026-05-12T15:40:00.390Z"
-last_activity: 2026-05-12 — final iter 4 Sonnet 4.6 experiment 16/20, DECISIONS.md closure entry written
+stopped_at: "44-04 deployed + verified in prod (BMI RSS 19 items, Source.lastFetchedAt/etag/lastModified populated). Accept-header regression caught + fixed mid-rollout."
+last_updated: "2026-05-12T19:10:00.000Z"
+last_activity: 2026-05-12 — 48 commits pushed to origin/main; Prisma migrate-resolve on stale 20260401_add_article_theme + migrate deploy of 20260514_phase44_source_cursor; Accept-header regression (BMI 302) caught and fixed in 21ade92; cron run 21:08 CEST green
 progress:
   total_phases: 3
   completed_phases: 1
@@ -24,10 +24,10 @@ See: .planning/PROJECT.md (updated 2026-05-10)
 
 ## Current Position
 
-Phase: 43 — AI Pipeline Quick Wins (4/4 plans complete; cutover gate FAILED + rolled back; merged-call tuning closed as infeasible)
-Plan: 43-tune (informal post-gate work) closed 2026-05-12
-Status: 4 harness iterations explored (Haiku 9→10→7→7, Sonnet 16/20). Closed: Haiku model-capability limits, Sonnet defeats cost target. Production on legacy Haiku stays. v3.2 success criterion ≥50% input-token reduction NOT met — explicitly deferred.
-Last activity: 2026-05-12 — final iter 4 Sonnet 4.6 experiment 16/20, DECISIONS.md closure entry written
+Phase: 44 — Cost Telemetry & Adapter Hardening (44-04 ✅ deployed + verified; 44-01/02/03 DEFERRED pending replan)
+Plan: 44-04 closed + verified in prod 2026-05-12
+Status: 48 commits live on origin/main; migration applied to Neon; BMI RSS cron green with cursor + conditional GET populated. v3.2 success criterion ≥50% input-token reduction remains NOT met — explicitly deferred. 44-04 is the only Phase 44 plan actually shipped.
+Last activity: 2026-05-12 21:08 CEST — verification cron HTTP 200, `found=19 new=1`, Source 3 lastFetchedAt/etag/lastModified persisted
 
 ```
 v3.2 Progress: [██████████] 100% — 14/14 plans in phase 43 (auto-computed; cutover gate is operator-side, not a plan)
@@ -83,10 +83,14 @@ See PROJECT.md Key Decisions for full history.
 - [Phase 44]: 44-04: Option A — unified AdapterResult envelope for all adapters; OTS sets etag/lastModified=null (tri-state skip). Keeps ingest.ts as single transaction site.
 - [Phase 44]: 44-04: Tri-state etag/lastModified semantics — null=no support, undefined=304 preserve, string=200 persist. Mapped to Prisma via conditional spread of update payload.
 - [Phase 44]: 44-04: Proxy-wrap PrismaClient in tests when vi.spyOn can't see $-methods — Prisma client is a Proxy with value:undefined descriptors until accessed. Pattern reusable for future transactional tests.
+- [Phase 44]: 44-04 post-deploy: drop Accept header from rssAdapter. BMI's myracloud-fronted feed (https://www.bmi.gv.at/rss/stmk_presse.xml) 302-redirects to an error page when the request advertises `Accept: application/rss+xml, application/atom+xml, application/xml` — server serves text/xml and its content-negotiator does not recognize the canonical RSS media types. Trust the server's default. Commit 21ade92.
+- [Deploy]: prisma migrate deploy can fail to bootstrap when an earlier migration was applied via `prisma db push` (Article.theme case from v3.1). Recovery path: `prisma migrate resolve --applied <migration-name>` after verifying the schema state matches the migration's intent (column + index both already present), then `prisma migrate deploy` runs the remaining pending migrations cleanly. Pattern reusable if future db-push debt surfaces.
 
 ### Pending Todos
 
 - **v3.2 ROADMAP success-criterion revision:** the ≥50% input-token reduction goal needs to be marked as "deferred" or "not achieved with current model class" — separate edit to `.planning/PROJECT.md` and roadmap docs after this session's closure.
+- **Replan 44-01/02/03** via `/gsd:plan-phase` with legacy-is-live context. Plans currently have DEFERRED admonitions explaining the conflict with v3.2 closure. Until replanned, Phase 44 is partial.
+- **Add `prisma migrate deploy` to Vercel build script** so future migrations apply automatically on push instead of requiring manual local invocation. One-line `package.json` change: `"build": "prisma migrate deploy && next build"`. Track as separate task to avoid coupling to bigger changes.
 - **Phase 44 telemetry schema (TLM-01..04)** must log both legacy and merged paths, so future re-cutover attempts have native cost telemetry. Decision recorded in DECISIONS.md 2026-05-12 closure entry.
 - **Phase 45 quality-eval harness** should generalize from the 20-fixture corpus and bake in `AI_MODEL_OVERRIDE` for model-comparison runs (the env-var hook now exists in merged.ts).
 - **Cron-Runbook-Korrektur:** `43-04-SUMMARY.md` Step 1 dokumentiert `curl -X POST /api/cron` — Route akzeptiert nur GET (Vercel-Cron-Konvention). Manuell-Trigger-Beispiel auf GET ändern.
@@ -104,19 +108,15 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-12T15:40:00.388Z
-Stopped at: Completed 44-04-PLAN.md (ingest hardening: bulk dedup, conditional GET, transactional close)
-Resume with: Phase 44 (TLM-01..04 telemetry + Batches API + ingest hardening). Plans already drafted:
-- `.planning/phases/44-cost-telemetry-adapter-hardening/44-01-telemetry-PLAN.md`
-- `.planning/phases/44-cost-telemetry-adapter-hardening/44-02-batches-spike-PLAN.md`
-- `.planning/phases/44-cost-telemetry-adapter-hardening/44-03-batches-integration-PLAN.md`
-- `.planning/phases/44-cost-telemetry-adapter-hardening/44-04-ingest-hardening-PLAN.md`
-
-Per DECISIONS.md 2026-05-12 closure: Phase 44 telemetry schema MUST log both legacy and merged paths.
+Last session: 2026-05-12T19:10:00Z
+Stopped at: 44-04 deployed + verified in prod (HTTP 200, BMI RSS 19 items, Source.lastFetchedAt/etag/lastModified populated). 48 commits live on origin/main. Accept-header regression caught + fixed mid-rollout (commit 21ade92).
+Resume with one of:
+1) **Replan 44-01/02/03** via `/gsd:plan-phase` with legacy-is-live context (DEFERRED admonitions in each PLAN.md explain the gap).
+2) **Close v3.2 milestone** — revise PROJECT.md + ROADMAP.md to mark the ≥50% reduction success criterion as "deferred"; archive Phase 43 + partial Phase 44 via `/gsd:audit-milestone` + `/gsd:complete-milestone`; set up v3.3 for the AI cost work.
+3) **Build-script fix** — add `prisma migrate deploy` to the Vercel build command so future migrations land automatically.
+4) **Cosmetic cleanups** — cron-runbook GET-vs-POST in 43-04-SUMMARY.md.
 
 Artifacts from this session:
-- `/tmp/baseline.json` — historical PipelineRun data
-- `/tmp/baseline-post-rollback.json` — post-rollback snapshot with run #53
-- `/tmp/replay-v3-cutover-fail.log` — initial harness output (9/20 failures)
-- `/tmp/replay-iter1.log` (10/20), `/tmp/replay-iter2.log` (7/20), `/tmp/replay-iter3.log` (7/20), `/tmp/replay-iter4-sonnet.log` (16/20)
-- `/tmp/baseline-query.ts`, `/tmp/aipl-10-sql.ts` — one-off scripts (kept for reproducibility, not committed)
+- `/tmp/baseline.json`, `/tmp/baseline-post-rollback.json` — PipelineRun history
+- `/tmp/replay-v3-cutover-fail.log`, `/tmp/replay-iter1..4*.log` — merged-prompt tuning harness runs
+- `/tmp/baseline-query.ts`, `/tmp/aipl-10-sql.ts`, `/tmp/verify-source-schema.ts`, `/tmp/verify-44-04-features.ts`, `/tmp/inspect-migrations.ts`, `/tmp/check-idx.ts`, `/tmp/bezirke-q.ts` — one-off DB-inspection scripts (kept for reproducibility, not committed)
