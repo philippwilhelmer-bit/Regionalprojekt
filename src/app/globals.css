@@ -5,6 +5,7 @@
 
   /* Ink — editorial dark, body text */
   --color-ink:       #071806;
+  --color-ink-deep:  #1B2D18;  /* design.md primary-container — lifted ink for dark sections + CTA gradient */
   --color-ink-soft:  #2a3a28;
   --color-ink-muted: #4a5a48;
   --color-ink-dim:   #6a7a68;
@@ -30,6 +31,11 @@
   --color-surface:          var(--color-parchment-dim);
   --color-surface-elevated: var(--color-parchment-bright);
   --color-surface-overlay:  var(--color-parchment);
+  --color-surface-deep:     var(--color-ink-deep);
+
+  /* === SEMANTIC FOREGROUNDS & OUTLINES === */
+  --color-on-primary:      #FFFFFF;     /* design.md on-primary — text on ink/ink-deep */
+  --color-outline-variant: #C4C8BE;     /* design.md outline-variant — ghost border @ 15% opacity */
 
   /* === GLASSMORPHISM (literal hex in color-mix — no var() references) === */
   --color-glass-nav:     color-mix(in srgb, #FCF9EF 85%, transparent);
@@ -52,11 +58,38 @@
   --spacing-gutter:   1rem;    /* horizontal gutters (was 1.7rem — corrected) */
   --spacing-vertical: 1.7rem;  /* vertical rhythm (new token, 3:5 ratio) */
   --spacing-section:  4rem;    /* section separation */
+  --spacing-void-md:  5.5rem;  /* design.md "16" — section void medium (no-line separation) */
+  --spacing-void-lg:  7rem;    /* design.md "20" — section void large */
 
   /* === TYPOGRAPHY === */
   --font-headline: var(--font-newsreader), serif;
   --font-body:     var(--font-jakarta), sans-serif;
   --font-label:    var(--font-jakarta), sans-serif;
+
+  /* === TYPE SCALE (design.md editorial voice) === */
+  --text-display-lg: 2.25rem;
+  --text-display-lg--line-height: 1.05;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 700;
+
+  --text-display-sm: 1.75rem;
+  --text-display-sm--line-height: 1.1;
+  --text-display-sm--letter-spacing: -0.01em;
+  --text-display-sm--font-weight: 700;
+
+  --text-headline-md: 1.375rem;
+  --text-headline-md--line-height: 1.2;
+  --text-headline-md--letter-spacing: -0.005em;
+  --text-headline-md--font-weight: 600;
+
+  --text-body-lg: 1.0625rem;
+  --text-body-lg--line-height: 1.6;
+  --text-body-lg--font-weight: 400;
+
+  --text-label-md: 0.75rem;
+  --text-label-md--line-height: 1.4;
+  --text-label-md--letter-spacing: 0.08em;
+  --text-label-md--font-weight: 600;
 }
 
 body {
