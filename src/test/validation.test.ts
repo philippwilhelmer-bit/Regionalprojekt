@@ -49,10 +49,9 @@ describe('Criterion 1: Adapter Extensibility', () => {
   })
 
   it('ingests ORF Steiermark via RSS adapter with no new adapter code', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValue({
-      ok: true,
-      text: async () => fixtureXml,
-    } as Response)
+    vi.spyOn(global, 'fetch').mockResolvedValue(
+      new Response(fixtureXml, { status: 200 }),
+    )
 
     const source = await db.source.create({
       data: {
@@ -100,15 +99,19 @@ describe('Criterion 2: Cross-Source Deduplication', () => {
       },
     })
 
-    adapterRegistry.RSS = vi.fn().mockResolvedValue([
-      {
-        externalId: 'rss-999',
-        title,
-        body,
-        sourceUrl: 'https://steiermark.orf.at/stories/999',
-        publishedAt: new Date(),
-      },
-    ])
+    adapterRegistry.RSS = vi.fn().mockResolvedValue({
+      items: [
+        {
+          externalId: 'rss-999',
+          title,
+          body,
+          sourceUrl: 'https://steiermark.orf.at/stories/999',
+          publishedAt: new Date(),
+        },
+      ],
+      etag: null,
+      lastModified: null,
+    })
 
     const rssSource = await db.source.create({
       data: { type: 'RSS', url: 'https://steiermark.orf.at/rss', enabled: true, pollIntervalMinutes: 30 },
@@ -122,15 +125,19 @@ describe('Criterion 2: Cross-Source Deduplication', () => {
   })
 
   it('allows article that has different content via RSS', async () => {
-    adapterRegistry.RSS = vi.fn().mockResolvedValue([
-      {
-        externalId: 'rss-new-1',
-        title: 'Anderer Artikel in Leoben',
-        body: 'Völlig andere Nachricht aus Leoben.',
-        sourceUrl: 'https://steiermark.orf.at/stories/new-1',
-        publishedAt: new Date(),
-      },
-    ])
+    adapterRegistry.RSS = vi.fn().mockResolvedValue({
+      items: [
+        {
+          externalId: 'rss-new-1',
+          title: 'Anderer Artikel in Leoben',
+          body: 'Völlig andere Nachricht aus Leoben.',
+          sourceUrl: 'https://steiermark.orf.at/stories/new-1',
+          publishedAt: new Date(),
+        },
+      ],
+      etag: null,
+      lastModified: null,
+    })
 
     const rssSource = await db.source.create({
       data: { type: 'RSS', url: 'https://steiermark.orf.at/rss', enabled: true, pollIntervalMinutes: 30 },
