@@ -91,3 +91,12 @@
 - [21:09] Production-DB-Verifikation (Source-Tabelle): Source 3 zeigt `lastFetchedAt=Tue May 12 2026 21:08:12 GMT+0200`, `etag="31e9b54042e2dc1:0"`, `lastModified="Tue, 12 May 2026 19:05:09 GMT"`, `healthStatus=OK consecutiveFailures=0 lastSuccessAt=...`. Alle INGEST-01..05-Truths in Produktion bestätigt.
 - [21:10] Phase 44-04 vollständig deployed + verifiziert. 48 Commits live auf `origin/main`. v3.2 hat ein gelandetes Improvement (44-04 Ingest-Hardening) plus die Closure-Doku.
 
+## 2026-05-12 — Homepage-Redesign "LODEN & LEUTE" (Iteration 1)
+
+Mockup-driven visuelles Refresh + Brand-Rename. Scope: Homepage + Shell
+(AppBar, Footer). Detail-Page/Suche/Admin bleiben alt.
+Drei-Commit-Plan: Tokens → Primitives → HomepageLayout+Shell.
+
+- [21:25] DESIGN.md (User-eingereichtes Design-System-Doc) und globals.css Token-Erweiterung committed (commit: dbff8c3). Neue Tokens: `--color-ink-deep` (#1B2D18, Loden-Green für dunkle Sektionen + CTA-Gradient), `--color-on-primary`, `--color-outline-variant`, `--color-surface-deep`, `--spacing-void-md/lg` (5.5/7rem), Type-Scale (display-lg/sm, headline-md, body-lg, label-md) mit line-height/letter-spacing/font-weight Modifiern. Tailwind v4 `@theme`. Keine Komponenten-Touches.
+- [21:35] Vier Primitive in `src/components/ui/`: `Eyebrow` (uppercase label-md, tone default/on-dark), `Heading` (variant display-lg/sm + headline-md, `as`-Prop für Tag, tone default/on-dark), `Button` (variant primary mit Ink→Ink-Deep Gradient, tertiary mit 2px-Underline, optional `href` für Next-Link), `SectionBlock` (bg-Variant über alle Surface-Token + voidSize md/lg/none + opt. gutter). Server-renderable, keine `'use client'`-Directives. Typecheck grün (2 vorbestehende Baseline-Failures unverändert).
+
