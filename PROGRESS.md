@@ -25,4 +25,9 @@
   - `diff` zwischen Clean-Baseline-Errors und Clean-Post-Errors: leer
   → Exit-Code-Shift 1→2 im ersten Post-Run war stale-cache-Artefakt; State ist real "gleich".
 - [10:28] Löschung committet: `8f0c31f refactor: remove unused auth.ts barrel`
+- [11:05] Konkurrierende CLI-Session entdeckt (PID 25281), zwei Phase-44-Doku-Commits (df8c2d4, d25bc48) auf chore/cleanup-auth-barrel gelandet, kein src/-Touch.
+- [11:10] Andere Session beendet (verifiziert per `ps -p 25281` → exit 1).
+- [11:14] Phase-44-Commits auf neuen Branch `wip/phase-44` verschoben; ROADMAP.md-WIP dort gesichert als `a81d045 wip(44): roadmap update from parallel session`.
+- [11:16] `chore/cleanup-auth-barrel` via `reset --hard fb26a8a` auf sauberen Auth-Cleanup-Stand zurückgesetzt. NEBENWIRKUNG / DATENVERLUST: `.planning/config.json` working-tree-Modifikation wurde dabei mit zurückgesetzt (war nirgendwo committed). `AGENTS.md` hat User manuell rekonstruiert.
+- [11:20] `main` per `--ff-only` auf `fb26a8a` vorgerückt; `chore/cleanup-auth-barrel` gelöscht. Tag `vor-aufraeumen-phase-45` bleibt als Rollback-Anker auf `a936796`.
 
