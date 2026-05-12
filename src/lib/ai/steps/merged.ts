@@ -63,7 +63,7 @@ const MERGED_OUTPUT_SCHEMA = {
     isStateWide: {
       type: 'boolean',
       description:
-        'true, wenn der Artikel die gesamte Steiermark betrifft und nicht einem einzelnen Bezirk zugeordnet werden kann. Wenn true, MUSS bezirkSlugs leer sein.',
+        'true NUR für Steiermark-spezifische Themen, die die gesamte Steiermark betreffen und nicht einem einzelnen Bezirk zugeordnet werden können (z.B. Landesbudget, Landtagswahl, landesweite Verordnungen). Bundes-/Österreich-weite Themen (z.B. nationale Pensionsreform, Bundespolitik, Außenpolitik) sind NICHT Steiermark-weit: in diesem Fall isStateWide=false und bezirkSlugs=[]. Wenn isStateWide=true, MUSS bezirkSlugs leer sein.',
     },
     mentionsPrivateIndividual: {
       type: 'boolean',
@@ -80,12 +80,13 @@ const MERGED_OUTPUT_SCHEMA = {
     },
     body: {
       type: 'string',
-      description: 'Restlicher Artikeltext nach dem Lead.',
+      description:
+        'Restlicher Artikeltext nach dem Lead. FAKTENTREUE: Behalte alle in der Quelle namentlich genannten Orte, Straßen, Autobahnen (z.B. "A2"), Bezirke, Gemeinden, Organisationen, Veranstaltungsnamen, Ereignisbegriffe (z.B. "Auffahrunfall", "Pensionsreform", "Landtagswahl", "Skiweltcup", "Weinkultur") und konkrete Zahlen wörtlich. Ersetze sie NICHT durch Synonyme ("Autobahn" statt "A2", "Unfall" statt "Auffahrunfall"). Erfinde nichts dazu, lass nichts weg. Bei kurzen Quelltexten kurzen, faktentreuen body; nicht mit erfundenen Details padden.',
     },
     seoTitle: {
       type: 'string',
       description:
-        'SEO-optimierter Titel, MAXIMAL 60 Zeichen (harte Obergrenze, vor der Ausgabe zählen und ggf. kürzen).',
+        'SEO-optimierter Titel. WICHTIG: HÖCHSTENS 60 ZEICHEN (harte Obergrenze). Zähle die Zeichen deines Entwurfs vor der Ausgabe. Wenn er länger als 60 Zeichen ist, kürze ihn auf ≤ 60. Beispiele für gute Länge: "Neuer Studienzweig an der Montanuniversität" (45), "Pilgerwanderung Mariazell–Bruck am Samstag" (43). KEIN Ausgeben von Titeln > 60 Zeichen.',
     },
     metaDescription: {
       type: 'string',
