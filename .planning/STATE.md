@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 44 context gathered
-last_updated: "2026-05-12T06:56:50.662Z"
-last_activity: 2026-05-11 — Plan 43-03 complete (flag-gated merged path, AIPL-07/08/09/10 fixes; 34/34 pipeline tests green)
+stopped_at: Phase 43 cutover gate FAILED — awaiting rollback decision
+last_updated: "2026-05-12T10:35:00.000Z"
+last_activity: 2026-05-12 — Phase 43 cutover gate run; 9/20 fixtures + 1.3% input-token reduction (target 20/20 + ≥50%); AIPL-10 SQL executed (1 row TAGGED→FETCHED)
 progress:
   total_phases: 3
   completed_phases: 1
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-10)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** v3.2 Text Engine Optimization — Phase 43 (AI Pipeline Quick Wins) COMPLETE. All 4 plans landed (01/02 wave 1 → 03/04 wave 2 in parallel). Next: cutover gate (manual operator runbook in 43-04-SUMMARY.md).
+**Current focus:** v3.2 Text Engine Optimization — Phase 43 (AI Pipeline Quick Wins) plans complete, BUT cutover gate FAILED 2026-05-12 (9/20 harness fixtures passed; 1.3% input-token reduction vs ≥50% target). Merged path is currently live in production (code default 'true', no Vercel override). Rollback recommended (`AI_USE_MERGED_CALL=false` on Vercel) — pending operator action.
 
 ## Current Position
 
-Phase: 43 — AI Pipeline Quick Wins (4/4 plans complete)
-Plan: 43-03 just completed (pipeline integration — wires merged path + AIPL-07/08/09/10)
-Status: Phase complete; awaiting cutover-gate execution (replay harness + AIPL-10 SQL + token-baseline check)
-Last activity: 2026-05-11 — Plan 43-03 complete (flag-gated merged path, AIPL-07/08/09/10 fixes; 34/34 pipeline tests green)
+Phase: 43 — AI Pipeline Quick Wins (4/4 plans complete; cutover gate FAILED)
+Plan: 43-04 cutover gate executed 2026-05-12
+Status: Cutover gate FAILED — quality regressions in merged path. Awaiting operator decision on rollback (`AI_USE_MERGED_CALL=false` Vercel env). AIPL-10 SQL already executed (1 row updated).
+Last activity: 2026-05-12 — cutover gate run, baseline + harness + AIPL-10 complete; DECISIONS.md entry written documenting rollback rationale
 
 ```
 v3.2 Progress: [██████████] 100% — 14/14 plans in phase 43 (auto-computed; cutover gate is operator-side, not a plan)
@@ -82,19 +82,31 @@ See PROJECT.md Key Decisions for full history.
 
 ### Pending Todos
 
-- Phase 43 cutover gate (operator runbook in `.planning/phases/43-ai-pipeline-quick-wins/43-04-SUMMARY.md`): capture legacy-path token baseline → run `npx tsx scripts/ai-replay-fixtures.ts` and paste 20/20 output into PR → run AIPL-10 SQL (`UPDATE article SET status='FETCHED' WHERE status='TAGGED';`) in Neon console → merge + verify ≥50% input-token reduction
-- Spike-test Anthropic Message Batches API round-trip latency before committing to it as default in Phase 44 (15-min cron window constraint)
-- Address out-of-scope pre-existing TSC/vitest failures noted in `.planning/phases/43-ai-pipeline-quick-wins/deferred-items.md` (bezirke.test.ts CONF-02 data drift, root-layout-adsense.test.ts Plus_Jakarta_Sans, mapgen.test.ts ArrayBuffer/SharedArrayBuffer post-Node24, map-actions.test.ts afterEach import)
+- **Phase 43 cutover gate ROLLBACK (operator action):** set `AI_USE_MERGED_CALL=false` in Vercel Production env (Settings → Environment Variables → Add → Production), then redeploy. Reverts production to the legacy two-step path. See DECISIONS.md 2026-05-12 entry for rationale. Already-generated merged-path articles in DB stay untouched.
+- **Phase 43 merged-prompt tuning (before any re-cutover):** address the 11 harness failures — body-missing factual fidelity (f01/f04/f05/f08/f09/f16/f17/f18/f20), seoTitle length overflow (f12 +1, f15 +11), bezirk tag hallucination on f18. After tuning, re-run `scripts/ai-replay-fixtures.ts`; gate is 20/20.
+- Spike-test Anthropic Message Batches API round-trip latency before committing to it as default in Phase 44 (15-min cron window constraint).
+- Phase 44 telemetry schema (TLM-01..04) should be designed to log both legacy and merged paths so future cutover attempts have native cost telemetry, not historical aggregates.
+- Address out-of-scope pre-existing TSC/vitest failures noted in `.planning/phases/43-ai-pipeline-quick-wins/deferred-items.md` (bezirke.test.ts CONF-02 data drift, root-layout-adsense.test.ts Plus_Jakarta_Sans, mapgen.test.ts ArrayBuffer/SharedArrayBuffer post-Node24, map-actions.test.ts afterEach import).
 
 ### Blockers/Concerns
 
+- **Phase 43 cutover gate FAILED 2026-05-12** — merged path is live in prod (code default 'true', no Vercel override) but fails 11/20 fixtures. Real regressions: source-central facts dropped from body (A2/Auffahrunfall, Pensionsreform, Knittelfeld, Mariazell, Hartberg, Gamlitz/Weinkultur, Ladepunkte, Landtagswahl). Production reader-facing quality is degraded until rollback. See DECISIONS.md 2026-05-12.
+- **Anthropic prompt cache structurally useless under Vercel-Hobby 1/day cron** — cache TTL is 5 min, so every cron start is cold. The ≥50% input-token reduction target on v3.2 ROADMAP may be unreachable without either (a) more frequent cron (Pro plan) or (b) the cache architecture redesigned to write to a longer-lived medium. Document this constraint in v3.2 retrospective.
 - Batches API latency (minutes to hours) may exceed 15-min Vercel cron window — spike required before Phase 44-02 commits
-- Merged prompt quality regression risk — gate-tooling now ready (Plan 43-04 ai-replay-fixtures harness + 20 fixtures). Operator must run side-by-side eval before flipping production traffic to AI_USE_MERGED_CALL='true' permanently
 - basemap subdomain round-robin still at single 'maps' subdomain after maps1–4 NXDOMAIN — monitor whether basemap.at restores them (carry-over from v3.1)
 - ROADMAP/REQUIREMENTS plan checkboxes drift on plan completion (recurring cosmetic issue across v2.0, v3.0, v3.1) — low priority
 
 ## Session Continuity
 
-Last session: 2026-05-12T06:56:50.654Z
-Stopped at: Phase 44 context gathered
-Resume with: Phase 43 cutover gate (see `.planning/phases/43-ai-pipeline-quick-wins/43-04-SUMMARY.md` operator runbook). Steps: 1) capture legacy-path token baseline, 2) run AIPL-10 SQL in Neon console, 3) `npx tsx scripts/ai-replay-fixtures.ts` and paste 20/20 output into PR, 4) merge + verify ≥50% input-token reduction. Next plan: Phase 44 (TLM-* telemetry).
+Last session: 2026-05-12T10:35:00Z
+Stopped at: Phase 43 cutover gate executed, FAILED, rollback documented in DECISIONS.md; awaiting operator Vercel env flip (`AI_USE_MERGED_CALL=false`).
+Resume with:
+1) **Operator action:** flip `AI_USE_MERGED_CALL=false` in Vercel Production env + redeploy.
+2) Verify next prod cron (run #53+) routes through legacy path (token-per-article should jump back to ~1884 mean range).
+3) Optional: append the cutover-gate finding to `.planning/phases/43-ai-pipeline-quick-wins/43-04-SUMMARY.md` as a "Post-merge addendum" section.
+4) Decide: tune merged prompt now (re-cutover attempt) OR park merged work and proceed to Phase 44 telemetry (TLM-01..04). DECISIONS.md outlines trade-offs.
+
+Artifacts from this session:
+- `/tmp/baseline.json` — historical PipelineRun data + post-cutover run #52
+- `/tmp/replay-v3-cutover-fail.log` — harness output with 11 failures detailed
+- `/tmp/baseline-query.ts`, `/tmp/aipl-10-sql.ts` — one-off scripts (kept for reproducibility, not committed)

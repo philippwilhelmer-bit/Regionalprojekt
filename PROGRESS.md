@@ -31,3 +31,15 @@
 - [11:16] `chore/cleanup-auth-barrel` via `reset --hard fb26a8a` auf sauberen Auth-Cleanup-Stand zurückgesetzt. NEBENWIRKUNG / DATENVERLUST: `.planning/config.json` working-tree-Modifikation wurde dabei mit zurückgesetzt (war nirgendwo committed). `AGENTS.md` hat User manuell rekonstruiert.
 - [11:20] `main` per `--ff-only` auf `fb26a8a` vorgerückt; `chore/cleanup-auth-barrel` gelöscht. Tag `vor-aufraeumen-phase-45` bleibt als Rollback-Anker auf `a936796`.
 
+## 2026-05-12 — Phase 43 Cutover-Gate (nachgeholt)
+
+- [12:15] Resume-Session: `/gsd:resume-work` ausgeführt; State geladen. Befund: Phase-43-Code seit ~2026-05-11 14:21 (`690eab5`) auf `main`, Vercel auto-deployed; merged-Pfad ist live (Code-Default `AI_USE_MERGED_CALL='true'` in `pipeline.ts:151`, kein Vercel-Override). Cutover-Gate war nie vor Deployment gelaufen.
+- [12:20] Operator-Bestätigung: `AI_USE_MERGED_CALL` ist in Vercel-Production NICHT gesetzt → Code-Default greift → merged-Pfad serviert Prod-Traffic.
+- [12:22] Step 1 (Token-Baseline) aus historischer `PipelineRun`-Tabelle abgefragt (`/tmp/baseline-query.ts`, lokal mit `.env.vercel`-DATABASE_URL): 24 Legacy-Runs (2026-04-15..2026-05-08, 182 Artikel) Ø 1884 Input/Artikel; 1 Post-Cutover-Run #52 (2026-05-12, 6 Artikel) Ø 1860 Input/Artikel → **1,3 % Reduktion** (Ziel ≥ 50 %). N=1 + strukturelle Cache-TTL-Blockade dokumentiert.
+- [12:25] Tool-Setup-Probleme behoben: (1) `.env.local` hatte malformed `ANTHROPIC_API_KEY` (127 statt 108 Chars) → `.env.vercel`-Wert verwendet. (2) `.env` enthielt eine veraltete Supabase-DATABASE_URL, die Prisma auto-loadete und Neon-URL überschrieb → DATABASE_URL inline an Aufrufe übergeben. (3) `tsx` aus `/tmp/` brauchte `NODE_PATH=$PWD/node_modules` für Prisma-Auflösung.
+- [12:28] Step 2 (Replay-Harness) ausgeführt: `ANTHROPIC_API_KEY=… DATABASE_URL=… NODE_PATH=$PWD/node_modules npx tsx scripts/ai-replay-fixtures.ts` → **9/20 passed** (Output: `/tmp/replay-v3-cutover-fail.log`). 11 Failures: 9× body-missing Source-Fakten, 2× SEO-Title-Overflow, 1× Tag-Halluzination (f18).
+- [12:32] Triage von 6 Fixtures (f01/f08/f09/f12/f15/f18): Mehrheit sind echte Quality-Regresse, nicht über­strenge Invariants. f12/f15 sind leichte Prompt-Tunes.
+- [12:35] Step 3 (AIPL-10 SQL) ausgeführt: `UPDATE Article SET status='FETCHED' WHERE status='TAGGED'` via `/tmp/aipl-10-sql.ts` → 1 Zeile aktualisiert (Article id=181, "Verkehrsunfall zwischen Pkw und Fahrrad"), 0 verbleibend.
+- [12:40] DECISIONS.md angelegt mit Rollback-Empfehlung (Vercel `AI_USE_MERGED_CALL=false`) inklusive verworfener Alternativen (commit: 9d1c2f4). STATE.md aktualisiert (last_activity, stopped_at, Pending Todos, Blockers, Session Continuity).
+- [12:42] Step 4 (Deploy + Verify ≥50 % Reduktion) bleibt PENDING — wartet auf Operator-Vercel-Env-Flip. (commit: pending)
+
