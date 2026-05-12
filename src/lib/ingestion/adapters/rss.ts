@@ -41,10 +41,12 @@ function matchesKeywords(text: string, keywords: string[]): boolean {
  */
 export async function rssAdapter(source: Source): Promise<AdapterResult> {
   // Build headers conditionally — sending literal "null" would trigger 412 on
-  // strict servers (research pitfall #7).
-  const headers: Record<string, string> = {
-    Accept: 'application/rss+xml, application/atom+xml, application/xml',
-  }
+  // strict servers (research pitfall #7). No Accept header: BMI's
+  // myracloud-fronted feed 302-redirects to an error page when the request
+  // advertises Accept: application/rss+xml,application/atom+xml,application/xml
+  // (it serves Content-Type: text/xml and its content-negotiator does not
+  // recognize the canonical RSS media types). Trust the server's default.
+  const headers: Record<string, string> = {}
   if (source.etag) headers['If-None-Match'] = source.etag
   if (source.lastModified) headers['If-Modified-Since'] = source.lastModified
 
