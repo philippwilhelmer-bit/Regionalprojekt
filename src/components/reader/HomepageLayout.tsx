@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { groupArticlesByBezirk, type ArticleWithBezirke } from "@/lib/content/articles-utils";
-import type { BezirkItem } from "@/types/bundesland";
 import { HeroArticle } from "./HeroArticle";
-import { TopMeldungenRow } from "./TopMeldungenRow";
 import { MascotGreeting } from "./MascotGreeting";
 import { RegionalEditorialCard } from "./RegionalEditorialCard";
 import { ListItem } from "./ListItem";
@@ -12,16 +11,20 @@ import { AdUnit } from "./AdUnit";
 import { WeatherWidget } from "./WeatherWidget";
 import { FragDenSeppCard } from "./FragDenSeppCard";
 import { GrueneWocheSection } from "./GrueneWocheSection";
+import { SectionBlock } from "@/components/ui/SectionBlock";
+import { Heading } from "@/components/ui/Heading";
 
 interface HomepageLayoutProps {
   hero: ArticleWithBezirke | null;
-  pinnedArticles: ArticleWithBezirke[];
   allArticles: ArticleWithBezirke[];
-  bezirke?: BezirkItem[];
   grueneWocheArticles?: ArticleWithBezirke[];
 }
 
-export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = [], grueneWocheArticles = [] }: HomepageLayoutProps) {
+export function HomepageLayout({
+  hero,
+  allArticles,
+  grueneWocheArticles = [],
+}: HomepageLayoutProps) {
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
 
@@ -34,21 +37,12 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
           setSelectedSlugs(parsed as string[]);
         }
       } catch {
-        // Invalid JSON — ignore and treat as "no selection"
+        // Invalid JSON — ignore
       }
     }
     setMounted(true);
   }, []);
 
-  // Derive filtered pinned articles
-  const filteredPinned = selectedSlugs.length === 0
-    ? pinnedArticles
-    : pinnedArticles.filter((a) =>
-        a.isStateWide ||
-        a.bezirke.some((entry) => selectedSlugs.includes(entry.bezirk.slug))
-      );
-
-  // Derive bezirk sections or flat view
   const hasBezirkSelection = mounted && selectedSlugs.length > 0;
 
   let bezirkSections: Array<{ slug: string; name: string; articles: ArticleWithBezirke[] }> = [];
@@ -59,36 +53,21 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
       .map(([slug, { name, articles }]) => ({ slug, name, articles }));
   }
 
-  // Flat view articles (when no bezirk selected)
-  const flatFirst = allArticles.slice(0, 1);
-  const flatList = allArticles.slice(1, 4);
-  const flatRemainder = allArticles.slice(4);
-
-  // Empty state
+  const flatFeatured = allArticles[0];
+  const flatList = allArticles.slice(1);
   const isEmpty = allArticles.length === 0 && !hero;
 
-  // Render a bezirk section: RegionalEditorialCard + up to 3 ListItems
-  function renderBezirkSection(
-    name: string,
-    articles: ArticleWithBezirke[],
-  ) {
+  function renderBezirkGroup(name: string, articles: ArticleWithBezirke[]) {
     if (articles.length === 0) return null;
     const [featured, ...rest] = articles;
     const listArticles = rest.slice(0, 3);
 
     return (
-      <section className="px-[var(--spacing-gutter)] py-[var(--spacing-section)]">
-        {/* Bezirk section heading — no Styrian flag */}
-        <h3 className="font-headline text-lg font-semibold text-ink mb-3 px-0">
-          {name}
-        </h3>
-
-        {/* Featured card — RegionalEditorialCard */}
+      <div className="mb-6">
+        <h3 className="font-headline text-headline-md text-ink mb-3">{name}</h3>
         <div className="mb-3">
           <RegionalEditorialCard article={featured} />
         </div>
-
-        {/* Compact list rows */}
         {listArticles.length > 0 && (
           <div className="bg-surface-elevated rounded-sm shadow-sm px-3">
             {listArticles.map((article) => (
@@ -96,134 +75,107 @@ export function HomepageLayout({ hero, pinnedArticles, allArticles, bezirke = []
             ))}
           </div>
         )}
-      </section>
+      </div>
     );
   }
 
   return (
     <div className="max-w-2xl mx-auto">
-      {/* 1. Hero zone — Topmeldung (no bg needed, image fills) */}
+      {/* 1. Hero — Topmeldung, full-bleed photo */}
       {hero && <HeroArticle article={hero} />}
 
-      {/* 2. MascotGreeting — bg-surface for tonal contrast */}
-      <div className="bg-surface py-[var(--spacing-section)]">
+      {/* 2. Mascot — parchment greeting block */}
+      <SectionBlock bg="parchment" voidSize="md">
         <MascotGreeting />
-      </div>
+      </SectionBlock>
 
-      {/* 3. TopMeldungenRow — bg-parchment */}
-      {filteredPinned.length > 0 && (
-        <div className="bg-parchment py-[var(--spacing-section)]">
-          <TopMeldungenRow articles={filteredPinned} />
+      {/* 3. Ad slot — surface, compact (no big void) */}
+      <SectionBlock bg="surface" voidSize="none">
+        <div className="py-4">
+          <AdUnit zone="between-articles" />
         </div>
-      )}
+      </SectionBlock>
 
-      {/* 4. Weather + Frag den Sepp — dark accent zone */}
-      <div className="bg-ink py-[var(--spacing-section)]">
-        <WeatherWidget />
-        <div className="mt-4">
-          <FragDenSeppCard />
+      {/* 4. Mein Bezirk — surface, with "Alle Nachrichten" exit link */}
+      <SectionBlock bg="surface" voidSize="md">
+        <div className="flex items-baseline justify-between mb-4">
+          <Heading variant="headline-md">Mein Bezirk</Heading>
+          <Link
+            href="/suche"
+            className="font-label text-label-md uppercase text-ink-muted underline decoration-2 underline-offset-4"
+          >
+            Alle Nachrichten
+          </Link>
         </div>
-      </div>
 
-      {/* 5. Ad slot — bg-surface */}
-      <div className="bg-surface px-[var(--spacing-gutter)] py-4">
-        <AdUnit zone="hero" />
-      </div>
-
-      {/* 6/7. Editorial sections */}
-      {hasBezirkSelection ? (
-        /* Mein Bezirk — grouped by bezirk */
-        <div>
-          {/* "Dein Bezirk" heading */}
-          <div className="px-[var(--spacing-gutter)] pt-4 pb-1 bg-parchment">
-            <h2 className="font-headline text-xl font-semibold text-ink">
-              Dein Bezirk
-            </h2>
+        {isEmpty && (
+          <div className="py-8 text-center text-ink/50">
+            <p>Noch keine Nachrichten.</p>
           </div>
+        )}
 
-          {bezirkSections.map(({ slug, name, articles }, index) => (
-            <div
-              key={slug}
-              className={index % 2 === 0 ? "bg-parchment" : "bg-surface"}
-            >
-              {renderBezirkSection(name, articles)}
-              {/* Ad every 2nd section */}
-              {(index + 1) % 2 === 0 && (
-                <div className="px-[var(--spacing-gutter)] py-2">
-                  <AdUnit zone="between-articles" />
-                </div>
-              )}
-            </div>
-          ))}
-
-          {/* Empty state for bezirk filter */}
-          {bezirkSections.length === 0 && (
-            <div className="px-[var(--spacing-gutter)] py-8 text-center text-ink/50 bg-parchment">
-              <p className="mb-3">Noch keine Nachrichten für deinen Bezirk.</p>
-              <button
-                onClick={() => {
-                  localStorage.removeItem("bezirk_selection");
-                  setSelectedSlugs([]);
-                }}
-                className="text-sm text-ink-muted underline"
-              >
-                Bezirksauswahl zurücksetzen
-              </button>
-            </div>
-          )}
-        </div>
-      ) : (
-        /* Flat view — all articles */
-        <div>
-          {/* "Alle Nachrichten" heading */}
-          <div className="px-[var(--spacing-gutter)] pt-4 pb-1 bg-parchment">
-            <h2 className="font-headline text-xl font-semibold text-ink">
-              Alle Nachrichten
-            </h2>
-          </div>
-
-          {isEmpty ? (
-            <div className="px-[var(--spacing-gutter)] py-8 text-center text-ink/50 bg-parchment">
-              <p>Noch keine Nachrichten.</p>
-            </div>
-          ) : (
-            <>
-              {/* First article as RegionalEditorialCard + next 3 as ListItems */}
-              <div className="bg-parchment px-[var(--spacing-gutter)] py-[var(--spacing-section)]">
-                {flatFirst.length > 0 && (
-                  <div className="mb-3">
-                    <RegionalEditorialCard article={flatFirst[0]} />
-                  </div>
-                )}
-                {flatList.length > 0 && (
-                  <div className="bg-surface-elevated rounded-sm shadow-sm px-3">
-                    {flatList.map((article) => (
-                      <ListItem key={article.id} article={article} />
-                    ))}
-                  </div>
-                )}
+        {!isEmpty && hasBezirkSelection && (
+          <>
+            {bezirkSections.map(({ slug, name, articles }) => (
+              <div key={slug}>{renderBezirkGroup(name, articles)}</div>
+            ))}
+            {bezirkSections.length === 0 && (
+              <div className="py-8 text-center text-ink/50">
+                <p className="mb-3">Noch keine Nachrichten für deinen Bezirk.</p>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("bezirk_selection");
+                    setSelectedSlugs([]);
+                  }}
+                  className="text-sm text-ink-muted underline"
+                >
+                  Bezirksauswahl zurücksetzen
+                </button>
               </div>
+            )}
+          </>
+        )}
 
-              {/* Remainder articles in list format — bg-surface */}
-              {flatRemainder.length > 0 && (
-                <div className="px-[var(--spacing-gutter)] pb-4 bg-surface">
-                  <div className="bg-surface-elevated rounded-sm shadow-sm px-3">
-                    {flatRemainder.map((article) => (
-                      <ListItem key={article.id} article={article} />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </>
-          )}
+        {!isEmpty && !hasBezirkSelection && (
+          <>
+            {flatFeatured && (
+              <div className="mb-3">
+                <RegionalEditorialCard article={flatFeatured} />
+              </div>
+            )}
+            {flatList.length > 0 && (
+              <div className="bg-surface-elevated rounded-sm shadow-sm px-3">
+                {flatList.map((article) => (
+                  <ListItem key={article.id} article={article} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </SectionBlock>
+
+      {/* 5. Frag den Sepp — surface-deep (dark loden), Bezirk-Modal-Trigger */}
+      <SectionBlock bg="surface-deep" voidSize="md">
+        <FragDenSeppCard />
+      </SectionBlock>
+
+      {/* 6. Wetter — parchment, compact */}
+      <SectionBlock bg="parchment" voidSize="md">
+        <WeatherWidget />
+      </SectionBlock>
+
+      {/* 7. Ad slot — parchment (same zone as Wetter) */}
+      <SectionBlock bg="parchment" voidSize="none">
+        <div className="py-4">
+          <AdUnit zone="between-articles" />
         </div>
-      )}
+      </SectionBlock>
 
-      {/* 8. Gruene der Woche — tonal surface */}
+      {/* 8. Das Archiv der Woche — parchment, editorial cards */}
       {grueneWocheArticles.length > 0 && (
-        <div className="bg-surface">
+        <SectionBlock bg="parchment" voidSize="md">
           <GrueneWocheSection articles={grueneWocheArticles} />
-        </div>
+        </SectionBlock>
       )}
     </div>
   );

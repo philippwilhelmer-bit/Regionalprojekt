@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { ArticleWithBezirke } from "@/lib/content/articles";
 import { slugify } from "@/lib/reader/slug";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Heading } from "@/components/ui/Heading";
 
 interface HeroArticleProps {
   article: ArticleWithBezirke;
@@ -12,12 +14,14 @@ export function HeroArticle({ article }: HeroArticleProps) {
   const firstBezirk = article.bezirke[0]?.bezirk;
 
   const excerpt = article.content
-    ? article.content.slice(0, 200) + (article.content.length > 200 ? "…" : "")
+    ? article.content.slice(0, 180) + (article.content.length > 180 ? "…" : "")
     : null;
 
+  const eyebrowLabel = firstBezirk ? firstBezirk.name : "Steiermark aktuell";
+
   return (
-    <Link href={href} className="relative block rounded-sm overflow-hidden min-h-[60vh]">
-      {/* Background: image or gradient fallback */}
+    <Link href={href} className="relative block overflow-hidden min-h-[60vh]">
+      {/* Background photo or gradient fallback */}
       {article.imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -27,39 +31,30 @@ export function HeroArticle({ article }: HeroArticleProps) {
           className="absolute inset-0 w-full h-full object-cover img-matte"
         />
       ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-ink to-ink-soft" />
+        <div className="absolute inset-0 bg-gradient-to-br from-ink to-ink-deep" />
       )}
 
-      {/* Gradient overlay for text legibility */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+      {/* Legibility gradient — bottom-up */}
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/40 to-transparent" />
 
-      {/* Content: positioned at bottom */}
-      <div className="relative z-10 flex flex-col justify-end min-h-[60vh] p-[var(--spacing-gutter)] pb-8">
-        {/* Topmeldung label — ink gradient pill */}
-        <span className="inline-block self-start mb-2 px-3 py-1 rounded-xs font-label font-semibold uppercase text-xs tracking-wider text-parchment bg-gradient-to-br from-ink to-ink-soft">
-          Topmeldung
-        </span>
+      <div className="relative z-10 flex flex-col justify-end min-h-[60vh] px-[var(--spacing-gutter)] pb-10 pt-[var(--spacing-void-md)]">
+        <Eyebrow tone="on-dark" className="mb-3">
+          {eyebrowLabel}
+        </Eyebrow>
 
-        {/* Bezirk badge */}
-        {firstBezirk && (
-          <span className="inline-block self-start mb-1 px-2 py-0.5 rounded-xs font-label font-semibold uppercase text-xs text-parchment bg-ink-soft">
-            {firstBezirk.name}
-          </span>
-        )}
-
-        {/* Headline */}
-        <h1 className="font-headline text-parchment text-2xl md:text-3xl font-semibold leading-tight mb-2">
+        <Heading variant="display-lg" as="h1" tone="on-dark" className="mb-3">
           {article.title}
-        </h1>
+        </Heading>
 
-        {/* Excerpt */}
         {excerpt && (
-          <p className="text-parchment/80 text-sm line-clamp-2">{excerpt}</p>
+          <p className="text-on-primary/80 text-body-lg line-clamp-3 mb-6">
+            {excerpt}
+          </p>
         )}
 
-        {/* CTA — decorative span (outer Link handles navigation) */}
-        <span className="mt-4 inline-block self-start px-4 py-2 font-label font-semibold uppercase text-xs tracking-wider text-parchment bg-ink/70 border border-parchment/30 rounded-xs">
-          VOLLSTAENDIGEN ARTIKEL LESEN
+        {/* CTA styled as primary button (decorative span — outer Link handles navigation) */}
+        <span className="inline-flex self-start items-center justify-center px-6 py-3 rounded font-label text-label-md uppercase text-on-primary bg-gradient-to-br from-ink to-ink-deep">
+          Vollständigen Bericht lesen
         </span>
       </div>
     </Link>
