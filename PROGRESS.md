@@ -42,4 +42,15 @@
 - [12:35] Step 3 (AIPL-10 SQL) ausgeführt: `UPDATE Article SET status='FETCHED' WHERE status='TAGGED'` via `/tmp/aipl-10-sql.ts` → 1 Zeile aktualisiert (Article id=181, "Verkehrsunfall zwischen Pkw und Fahrrad"), 0 verbleibend.
 - [12:40] DECISIONS.md angelegt mit Rollback-Empfehlung (Vercel `AI_USE_MERGED_CALL=false`) inklusive verworfener Alternativen (commit: 9d1c2f4). STATE.md aktualisiert (last_activity, stopped_at, Pending Todos, Blockers, Session Continuity).
 - [12:42] Step 4 (Deploy + Verify ≥50 % Reduktion) bleibt PENDING — wartet auf Operator-Vercel-Env-Flip. (commit: pending)
+- [13:00] Operator-Bestätigung: `AI_USE_MERGED_CALL=false` in Vercel-Production gesetzt + Redeploy ausgeführt.
+- [13:01] Cron-Manual-Trigger via `curl POST` → HTTP 405 (Method Not Allowed). Runbook in `43-04-SUMMARY.md` ist hier falsch — Route nutzt GET.
+- [13:02] Cron-Re-Trigger via `curl GET -H "Authorization: Bearer $CRON_SECRET" /api/cron` → HTTP 200, 37 s Laufzeit, Response: `processed=4 written=3 published=3 reviewBacklog=2`.
+- [13:05] Verifikation per `/tmp/baseline-query.ts`: Run #53 (4 Artikel, 3 written, 75 %) Ø 2593 Input / Ø 389 Output / Artikel. Drei unabhängige Signale matchen Legacy-Pfad, nicht merged:
+  - Output-Magnitude 389/Art liegt in Legacy-Band 165–414; merged #52 war 189 (flach).
+  - Output skaliert mit written-Ratio (Legacy-Pattern): #53 75 % → 389 Out, vergleichbar mit Legacy #40 (83 %) → 414 Out. Merged-Pfad skaliert nicht.
+  - Input/Output-Ratio 6,7 passt zu Legacy-Band 5–7; merged #52 war 9,8.
+- [13:10] **Rollback verifiziert.** Production läuft wieder auf Legacy-Pfad seit Cron-Run #53. Reader-Quality-Regress (fehlende Source-Fakten in merged-Output) ist gestoppt.
+- [13:15] Step 4 als completed markiert: Original-Ziel (≥ 50 % Input-Reduktion via merged) ist moot, weil Gate gefailt + Rollback durchgeführt. ≥ 50 %-Ziel wird auf einen zukünftigen Re-Cutover-Versuch verschoben (nach Merged-Prompt-Quality-Fixes oder im Rahmen von Phase 45 Quality-Eval).
+- [13:16] Carry-over: Cron-Runbook in `43-04-SUMMARY.md` Step 1 zeigt `curl -X POST` — sollte `GET` sein. Cosmetic; in eine Folge-PR korrigieren.
+
 
