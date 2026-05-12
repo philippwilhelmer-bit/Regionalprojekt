@@ -1,4 +1,14 @@
-# Task: Merged-Prompt Quality-Tuning (Phase 43 Re-Cutover Preparation)
+# Task: Merged-Prompt Quality-Tuning (Phase 43 Re-Cutover Preparation) — CLOSED 2026-05-12
+
+**Status:** Closed without convergence. Three Haiku 4.5 iterations did not
+reach 20/20; Sonnet 4.6 experiment hit 16/20 but defeats v3.2 cost target.
+v3.2 merged-call work is shelved pending Phase 44 telemetry + Phase 45
+quality-loop + a model-class re-evaluation. Production stays on legacy
+Haiku via `AI_USE_MERGED_CALL=false` on Vercel. See DECISIONS.md
+2026-05-12 closure entry for full rationale.
+
+---
+
 
 ## Hintergrund
 

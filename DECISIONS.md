@@ -117,3 +117,115 @@ unverändert (Phase 43 ist schema-frei), kein DB-Rollback nötig.
 - `/tmp/replay-v3-cutover-fail.log` — Harness-Output mit allen 11 Failures
 
 ---
+
+## 2026-05-12 — Merged-Call-Tuning erschöpft → v3.2 als "Merged-Call mit Haiku 4.5 + 50% Kostenziel infeasible" geschlossen
+
+**Kontext:**
+Nach dem Rollback (Entry oben) drei Tuning-Iterationen plus ein
+Sonnet-4.6-Experiment durchgeführt. Ergebnis: das ≥ 50 % Kostenziel
+der v3.2-Roadmap ist mit Haiku 4.5 als merged-call-Modell strukturell
+nicht erreichbar bei gleichzeitig ausreichender Faktentreue.
+
+**Beobachtung — 4 Harness-Iterationen mit `scripts/ai-replay-fixtures.ts`:**
+
+| Iter | Modell    | Temperatur | Pass | Commit  |
+| ---- | --------- | ---------- | ---- | ------- |
+| Base | Haiku 4.5 | default    | 9/20 | (Phase 43-04) |
+| 1    | Haiku 4.5 | default    | 10/20| 25007cc |
+| 2    | Haiku 4.5 | 0          | 7/20 | 27bc1f3 |
+| 3    | Haiku 4.5 | 0          | 7/20 | 6a0c63f |
+| 4    | Sonnet 4.6| 0          | 16/20| (uncommitted env-override) |
+
+Iter-1-Änderungen: FAKTENTREUE-Regel in UMSCHREIBUNG, KURZE QUELLEN,
+seoTitle harte Grenze, Bezirk-Strenge gegen Regional-Sammelbegriffe
+(System-Prompt-Ebene).
+Iter-2: `temperature: 0` global gesetzt — entfernt Sampling-Rauschen,
+exponiert dafür Haikus deterministische Paraphrasierungs-Neigung
+("A2" → "Autobahn", "Auffahrunfall" → "Unfall", "Pensionsreform" →
+"Reform der Altersvorsorge").
+Iter-3: Regeln in die Schema-Field-Descriptions (`body`, `seoTitle`,
+`isStateWide`) verschoben — Tool-Use-Modelle gewichten Field-Level-
+Descriptions stärker als das System-Prompt für Per-Field-Generierung.
+Trotzdem kein Sprung.
+Iter-4: AI_MODEL_OVERRIDE=claude-sonnet-4-6, sonst identisch zu
+Iter-3. Sprung auf 16/20.
+
+**Verbleibende Failures auf Sonnet 4.6 (4):**
+- f05: `mentionsPrivateIndividual: got false, expected true` —
+  dokumentierter Regression-Marker, sollte laut 43-04-SUMMARY
+  bei Phase-45-Officeholder-Exclusion flippen. Sonnet trifft die
+  Phase-45-Entscheidung implizit; bei Bewertung mit aktualisierten
+  Markern: real 17/20.
+- f08: body fehlt "Pensionsreform" — Paraphrase-stur auch auf Sonnet.
+- f10: body fehlt "Skiweltcup" — Paraphrase-stur auch auf Sonnet.
+- f18: bezirk-over-tag `["bruck-muerzzuschlag","liezen"]` — körperliche
+  Faktentreue (Mariazell im body) ist gewonnen, Tag-Halluzination bleibt.
+  Hochsteiermark-Assoziation grenzwertig-defensibel; wenn als soft-tag-
+  Toleranz akzeptiert: real 18/20.
+
+**Entscheidung:**
+
+v3.2 Merged-Call-Arbeit wird als "infeasible mit Kostenziel" geschlossen:
+- Production bleibt auf Legacy (Vercel `AI_USE_MERGED_CALL=false`, gesetzt
+  am 2026-05-12, verifiziert in PipelineRun #53).
+- Merged-Call-Code bleibt im Tree (dormant), inklusive der drei Tuning-
+  Iterationen — als Startpunkt für eine spätere Re-Cutover-Attempt nach
+  Phase 44 Telemetrie + Phase 45 Quality-Loop.
+- Das v3.2 "≥ 50 % Input-Token-Reduktion"-Erfolgskriterium wird NICHT
+  als erreicht markiert; v3.2 muss in PROJECT.md/ROADMAP.md mit dieser
+  Realität reflektiert werden (separater Edit, nicht in dieser Commit-
+  Welle).
+
+**Begründung:**
+- Drei Prompt-Iterationen konvergierten nicht (9 → 10 → 7 → 7).
+- Sonnet-Sprung auf 16/20 zeigt: die verbleibenden Haiku-Failures sind
+  Modell-Kapazitäts-Grenzen, nicht Prompt-Engineering-Grenzen.
+- Sonnet 4.6 kostet ~5× Haiku/Token → switch auf Sonnet macht die Input-
+  Kosten gegenüber Legacy *steigen*, trotz merged-call-Architektur-Vorteils.
+  Das v3.2-Hauptziel ist damit defeatet.
+- Production-Sicherheit ist bereits hergestellt (Run #53 verifiziert
+  Legacy-Routing). Kein operationaler Druck.
+- "Honest closure" — die Annahme, dass merged-call mit Haiku 4.5 das
+  Kostenziel ohne Quality-Regress trifft, ist falsifiziert. Eine
+  zukünftige Re-Attempt sollte:
+  (a) auf einer model-class-Entscheidung beruhen (Haiku 4.7 Release?
+      Sonnet-mit-Caching-Strategy? Hybrid Haiku-tag + Sonnet-write?),
+  (b) Phase-44-Telemetrie als Kostentelemetrie-Basis nutzen (sieht
+      auch cached_input_tokens separat),
+  (c) Phase 45 Quality-Loop als kontinuierliche Gate-Maschinerie
+      nutzen, nicht als one-shot 20/20.
+
+**Verworfene Alternativen:**
+
+| Alternative | Verworfen weil |
+| ----------- | -------------- |
+| Re-Cutover auf Sonnet 4.6 + Marker-/Borderline-Relaxierung | Defeatet das v3.2 Kostenziel komplett; net-negativ auf Cost-pro-Artikel; Re-Cutover ohne Cost-Win ist eine Architektur-Änderung ohne Business-Begründung. |
+| Hybrid: Haiku-Tag + Sonnet-Rewrite (Two-Call) | Defeatet das merged-call-Design von 43-01. Größerer Scope, neuer Plan nötig, Kostenwin unklar (vermutlich +2-3× gegenüber Legacy). Kein No-Brainer; verdient eigene Phase mit Research. |
+| Eine weitere Sonnet-Iteration auf f08/f10/f18 | Würde maximal auf 18-20/20 schließen, ohne das Hauptproblem (Sonnet-Kostenziel) zu adressieren. Mehr Ausgaben, gleiche Architektur-Frage offen. |
+| Stilllegung des Merged-Call-Codes (Removal aus dem Tree) | Code bleibt nützlich für künftige Re-Attempts oder Phase-45-Quality-Loop. Removal ist destruktive Aktion ohne Nutzen. |
+
+**Konsequenzen:**
+
+- v3.2-Roadmap: das ≥ 50 % Reduktion-Erfolgskriterium muss als
+  "deferred" markiert werden; v3.2 schließt mit "AI Pipeline Quick
+  Wins" geliefert (43-01..04 Code-Artefakte, 43-04 Fixtures), aber das
+  primäre Business-Ziel nicht erreicht.
+- Phase 44 Token-Telemetry-Schema MUSS auch im Legacy-Pfad Daten
+  loggen — das Schema-Design darf nicht merged-only sein.
+- Phase 45 Quality-Eval-Harness sollte direkt auf den 20 Fixtures
+  aufbauen + Model-Comparison-Mode (`AI_MODEL_OVERRIDE`) als Built-in
+  haben — der Mechanismus existiert jetzt im Code.
+- Spätere Re-Attempt-Trigger: (a) neues Haiku-Release mit besserer
+  Instruction-Following, (b) Anthropic-Cache-TTL-Änderung, (c) Vercel-
+  Pro-Cron-Plan-Entscheidung, (d) Quality-Toleranz-Diskussion mit
+  Domain-Eigentümer (sind Synonyme wie "Autobahn" für "A2" wirklich
+  ein Reader-Quality-Problem?).
+
+**Artefakte:**
+- `/tmp/replay-iter1.log` (10/20, Haiku, default temp)
+- `/tmp/replay-iter2.log` (7/20, Haiku, temp=0)
+- `/tmp/replay-iter3.log` (7/20, Haiku, temp=0, schema-edits)
+- `/tmp/replay-iter4-sonnet.log` (16/20, Sonnet 4.6, temp=0)
+- Commits: 25007cc, 27bc1f3, 6a0c63f (alle Code-Änderungen bleiben in tree, dormant)
+
+---

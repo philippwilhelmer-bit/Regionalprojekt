@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 43 cutover gate FAILED + rolled back to legacy; production verified on legacy path via run #53
-last_updated: "2026-05-12T13:16:00.000Z"
-last_activity: 2026-05-12 — Phase 43 cutover gate run; gate FAILED (9/20 fixtures + 1.3% reduction); rollback executed via Vercel AI_USE_MERGED_CALL=false; verified by cron run #53 matching legacy token shape
+stopped_at: v3.2 merged-call closed as "infeasible with cost target"; production on legacy Haiku
+last_updated: "2026-05-12T17:00:00.000Z"
+last_activity: 2026-05-12 — 3 merged-prompt tuning iterations (9→10→7→7) + Sonnet 4.6 experiment (16/20). Closed: Haiku 4.5 model-capability limits cannot be overcome by prompt-engineering; Sonnet 4.6 quality acceptable but defeats v3.2 cost goal
 progress:
   total_phases: 3
   completed_phases: 1
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-10)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** v3.2 Text Engine Optimization — Phase 43 (AI Pipeline Quick Wins) plans complete; cutover gate FAILED + ROLLED BACK 2026-05-12. Production reverted to legacy two-step path via Vercel env `AI_USE_MERGED_CALL=false`; verified by cron run #53 (Ø 2593 input / Ø 389 output per article, output-scaling-with-written-ratio signal matches legacy). v3.2 ≥50% input-token reduction target deferred to a future re-cutover attempt after merged-prompt quality fixes.
+**Current focus:** v3.2 Text Engine Optimization — Phase 43 plans complete; cutover gate FAILED + ROLLED BACK; merged-call tuning explored across 4 harness iterations and CLOSED as "infeasible with Haiku 4.5 + cost target". Production on legacy two-step Haiku path (Vercel `AI_USE_MERGED_CALL=false`, verified on run #53). Merged-call code dormant in tree (commits 25007cc, 27bc1f3, 6a0c63f). The v3.2 ≥50% input-token reduction success criterion is NOT met and is explicitly deferred — next attempt should follow Phase 44 telemetry + Phase 45 quality-eval loop + a model-class re-evaluation.
 
 ## Current Position
 
-Phase: 43 — AI Pipeline Quick Wins (4/4 plans complete; cutover gate FAILED + rolled back)
-Plan: 43-04 cutover gate executed + rolled back 2026-05-12
-Status: Rollback complete. Production on legacy path verified via run #53. Phase 43 closed minus the ≥50% reduction success criterion — that goal is deferred to a future re-cutover attempt after merged-prompt quality fixes (or to Phase 45 quality-eval loop).
-Last activity: 2026-05-12 — operator flipped Vercel env, redeployed, manual cron triggered, verification query confirms legacy shape on run #53
+Phase: 43 — AI Pipeline Quick Wins (4/4 plans complete; cutover gate FAILED + rolled back; merged-call tuning closed as infeasible)
+Plan: 43-tune (informal post-gate work) closed 2026-05-12
+Status: 4 harness iterations explored (Haiku 9→10→7→7, Sonnet 16/20). Closed: Haiku model-capability limits, Sonnet defeats cost target. Production on legacy Haiku stays. v3.2 success criterion ≥50% input-token reduction NOT met — explicitly deferred.
+Last activity: 2026-05-12 — final iter 4 Sonnet 4.6 experiment 16/20, DECISIONS.md closure entry written
 
 ```
 v3.2 Progress: [██████████] 100% — 14/14 plans in phase 43 (auto-computed; cutover gate is operator-side, not a plan)
@@ -82,7 +82,9 @@ See PROJECT.md Key Decisions for full history.
 
 ### Pending Todos
 
-- **Phase 43 merged-prompt tuning (before any re-cutover):** address the 11 harness failures — body-missing factual fidelity (f01/f04/f05/f08/f09/f16/f17/f18/f20), seoTitle length overflow (f12 +1, f15 +11), bezirk tag hallucination on f18. After tuning, re-run `scripts/ai-replay-fixtures.ts`; gate is 20/20.
+- **v3.2 ROADMAP success-criterion revision:** the ≥50% input-token reduction goal needs to be marked as "deferred" or "not achieved with current model class" — separate edit to `.planning/PROJECT.md` and roadmap docs after this session's closure.
+- **Phase 44 telemetry schema (TLM-01..04)** must log both legacy and merged paths, so future re-cutover attempts have native cost telemetry. Decision recorded in DECISIONS.md 2026-05-12 closure entry.
+- **Phase 45 quality-eval harness** should generalize from the 20-fixture corpus and bake in `AI_MODEL_OVERRIDE` for model-comparison runs (the env-var hook now exists in merged.ts).
 - **Cron-Runbook-Korrektur:** `43-04-SUMMARY.md` Step 1 dokumentiert `curl -X POST /api/cron` — Route akzeptiert nur GET (Vercel-Cron-Konvention). Manuell-Trigger-Beispiel auf GET ändern.
 - Spike-test Anthropic Message Batches API round-trip latency before committing to it as default in Phase 44 (15-min cron window constraint).
 - Phase 44 telemetry schema (TLM-01..04) should be designed to log both legacy and merged paths so future cutover attempts have native cost telemetry, not historical aggregates.
@@ -90,7 +92,7 @@ See PROJECT.md Key Decisions for full history.
 
 ### Blockers/Concerns
 
-- **Phase 43 cutover gate FAILED 2026-05-12 — RESOLVED via rollback.** Merged path fails 11/20 fixtures (real regressions: source-central facts dropped from body — A2/Auffahrunfall, Pensionsreform, Knittelfeld, Mariazell, Hartberg, Gamlitz/Weinkultur, Ladepunkte, Landtagswahl). Production reverted to legacy via `AI_USE_MERGED_CALL=false` on Vercel + redeploy + verified on run #53 (2026-05-12 13:02 UTC). See DECISIONS.md 2026-05-12. Re-cutover requires merged-prompt quality fixes first.
+- **Phase 43 cutover gate FAILED + merged-call tuning CLOSED 2026-05-12.** Production safe on legacy Haiku. Three Haiku prompt iterations (9/10/7/7) + Sonnet 4.6 experiment (16/20) established that the v3.2 ≥50% reduction goal is structurally incompatible with adequate fact-preservation on Haiku 4.5. Sonnet hits the quality bar but defeats the cost goal (5x cost/token). Closure recorded in DECISIONS.md 2026-05-12 closure entry. Re-attempt later needs model-class re-evaluation + Phase 44 telemetry + Phase 45 quality-loop.
 - **Anthropic prompt cache structurally useless under Vercel-Hobby 1/day cron** — cache TTL is 5 min, so every cron start is cold. The ≥50% input-token reduction target on v3.2 ROADMAP may be unreachable without either (a) more frequent cron (Pro plan) or (b) the cache architecture redesigned to write to a longer-lived medium. Document this constraint in v3.2 retrospective.
 - Batches API latency (minutes to hours) may exceed 15-min Vercel cron window — spike required before Phase 44-02 commits
 - basemap subdomain round-robin still at single 'maps' subdomain after maps1–4 NXDOMAIN — monitor whether basemap.at restores them (carry-over from v3.1)
@@ -98,17 +100,19 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-12T13:16:00Z
-Stopped at: Phase 43 cutover gate FAILED + rolled back; production verified on legacy path via cron run #53. Phase 43 is now operationally closed with the ≥50% reduction success criterion explicitly deferred.
-Resume with:
-1) Optional: append a "Post-merge addendum" to `.planning/phases/43-ai-pipeline-quick-wins/43-04-SUMMARY.md` recording the gate failure + rollback (parallel to DECISIONS.md). Low priority.
-2) Decide what comes next:
-   - **Path A:** tune `merged.ts` system prompt to fix the 11 harness failures (body factual-fidelity, seoTitle length, bezirk tagging), re-run harness, attempt re-cutover. Couples merged-quality work with a follow-up Phase 43.x or rolls into Phase 45 quality loop.
-   - **Path B:** park merged work, proceed to Phase 44 (TLM-01..04 telemetry + Batches API). DECISIONS.md outlines trade-offs.
-3) Either path: address the cron-runbook GET-vs-POST correction in `43-04-SUMMARY.md`.
+Last session: 2026-05-12T17:00:00Z
+Stopped at: v3.2 merged-call work CLOSED. Path A (tune merged.ts) was exhausted across 3 Haiku iterations + 1 Sonnet experiment. Production on legacy Haiku stays. v3.2 ≥50% reduction target deferred.
+Resume with: Phase 44 (TLM-01..04 telemetry + Batches API + ingest hardening). Plans already drafted:
+- `.planning/phases/44-cost-telemetry-adapter-hardening/44-01-telemetry-PLAN.md`
+- `.planning/phases/44-cost-telemetry-adapter-hardening/44-02-batches-spike-PLAN.md`
+- `.planning/phases/44-cost-telemetry-adapter-hardening/44-03-batches-integration-PLAN.md`
+- `.planning/phases/44-cost-telemetry-adapter-hardening/44-04-ingest-hardening-PLAN.md`
+
+Per DECISIONS.md 2026-05-12 closure: Phase 44 telemetry schema MUST log both legacy and merged paths.
 
 Artifacts from this session:
 - `/tmp/baseline.json` — historical PipelineRun data
 - `/tmp/baseline-post-rollback.json` — post-rollback snapshot with run #53
-- `/tmp/replay-v3-cutover-fail.log` — harness output with 11 failures detailed
+- `/tmp/replay-v3-cutover-fail.log` — initial harness output (9/20 failures)
+- `/tmp/replay-iter1.log` (10/20), `/tmp/replay-iter2.log` (7/20), `/tmp/replay-iter3.log` (7/20), `/tmp/replay-iter4-sonnet.log` (16/20)
 - `/tmp/baseline-query.ts`, `/tmp/aipl-10-sql.ts` — one-off scripts (kept for reproducibility, not committed)
