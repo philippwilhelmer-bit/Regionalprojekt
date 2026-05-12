@@ -2,23 +2,29 @@
  * OTS.at REST API adapter.
  *
  * Requirements:
- *   ING-01 — Press releases from OTS.at appear in the ingestion queue within one polling cycle.
+ *   ING-01     — Press releases from OTS.at appear in the ingestion queue.
+ *   INGEST-01  — Bulk dedup: single Prisma findMany regardless of list size.
+ *   INGEST-02  — AbortController + 10s timeout on every external fetch.
+ *   INGEST-03  — Cursor: `Source.lastFetchedAt - 30min` overlap, NULL → 24h fallback.
  *
  * Design:
- *   - Uses a factory function createOtsAtAdapter(db) to allow DI of PrismaClient in tests
- *     without violating the AdapterFn interface (which takes only ArticleSource)
- *   - Reads OTS_API_KEY from process.env — never stored in the Source row
- *   - Deduplicates by externalId BEFORE fetching /api/detail to respect the 2,500 req/day limit
- *   - Body field extracted defensively from a candidate list — OTS API body field name is MEDIUM confidence
+ *   - Factory `createOtsAtAdapter(db)` injects PrismaClient for tests.
+ *   - Reads OTS_API_KEY from process.env — never stored in the Source row.
+ *   - Pre-filters by keywords before fetching /api/detail (rate-limit protection).
+ *   - Returns AdapterResult (Phase 44 unified envelope); OTS has no conditional
+ *     GET support, so etag/lastModified are always null.
  */
 import type { PrismaClient } from '@prisma/client'
 import { prisma as defaultPrisma } from '../../prisma'
-import type { AdapterFn, RawItem } from '../types'
+import type { AdapterFn, AdapterResult, RawItem } from '../types'
+import { fetchWithTimeout } from '../fetch-utils'
 
 const OTS_BASE_URL = 'https://www.ots.at/api'
 const LIST_SIZE = 50
-// 24 hours in seconds — look back one full polling window
+// 24 hours in seconds — used only when source.lastFetchedAt is null (first run / new source)
 const LOOKBACK_SECONDS = 24 * 60 * 60
+// INGEST-03: overlap window when cursor is set, prevents missed items at the seam
+const CURSOR_OVERLAP_SECONDS = 30 * 60
 
 /**
  * Candidate field names for the article body in the OTS detail response.
@@ -40,16 +46,19 @@ interface OtsListItem {
 
 /**
  * Fetch the OTS list endpoint.
+ * Caller computes `vonEpochSeconds` from Source.lastFetchedAt (INGEST-03).
  * Throws Error if the response is not 2xx.
  */
-async function fetchOtsList(apiKey: string): Promise<OtsListItem[]> {
-  const sinceTimestamp = Math.floor(Date.now() / 1000) - LOOKBACK_SECONDS
-  const url = `${OTS_BASE_URL}/liste?app=${encodeURIComponent(apiKey)}&anz=${LIST_SIZE}&von=${sinceTimestamp}`
+async function fetchOtsList(
+  apiKey: string,
+  vonEpochSeconds: number,
+): Promise<OtsListItem[]> {
+  const url = `${OTS_BASE_URL}/liste?app=${encodeURIComponent(apiKey)}&anz=${LIST_SIZE}&von=${vonEpochSeconds}`
 
-  const response = await fetch(url)
+  const response = await fetchWithTimeout(url)
   if (!response.ok) {
     throw new Error(
-      `OTS /api/liste returned HTTP ${response.status} — aborting ingestion run`
+      `OTS /api/liste returned HTTP ${response.status} — aborting ingestion run`,
     )
   }
 
@@ -63,10 +72,10 @@ async function fetchOtsList(apiKey: string): Promise<OtsListItem[]> {
 async function fetchOtsDetail(apiKey: string, otsKey: string): Promise<unknown> {
   const url = `${OTS_BASE_URL}/detail?app=${encodeURIComponent(apiKey)}&id=${encodeURIComponent(otsKey)}`
 
-  const response = await fetch(url)
+  const response = await fetchWithTimeout(url)
   if (!response.ok) {
     throw new Error(
-      `OTS /api/detail returned HTTP ${response.status} for OTSKEY=${otsKey} — aborting ingestion run`
+      `OTS /api/detail returned HTTP ${response.status} for OTSKEY=${otsKey} — aborting ingestion run`,
     )
   }
 
@@ -74,12 +83,17 @@ async function fetchOtsDetail(apiKey: string, otsKey: string): Promise<unknown> 
 }
 
 /** Candidate field names for an image URL in the OTS detail response. */
-const CANDIDATE_IMAGE_FIELDS = ['BILD', 'IMAGE', 'FOTO', 'bild', 'image', 'foto', 'BILDURL', 'bildurl'] as const
+const CANDIDATE_IMAGE_FIELDS = [
+  'BILD',
+  'IMAGE',
+  'FOTO',
+  'bild',
+  'image',
+  'foto',
+  'BILDURL',
+  'bildurl',
+] as const
 
-/**
- * Extract an image URL from a detail response object.
- * Returns the first non-empty URL string found, or undefined.
- */
 function extractImageUrl(detail: Record<string, unknown>): string | undefined {
   for (const field of CANDIDATE_IMAGE_FIELDS) {
     const value = detail[field]
@@ -90,10 +104,6 @@ function extractImageUrl(detail: Record<string, unknown>): string | undefined {
   return undefined
 }
 
-/**
- * Extract the body text from a detail response object.
- * Tries CANDIDATE_BODY_FIELDS in order; logs a warning and returns "" if none found.
- */
 function extractBody(detail: Record<string, unknown>): string {
   for (const field of CANDIDATE_BODY_FIELDS) {
     const value = detail[field]
@@ -103,7 +113,7 @@ function extractBody(detail: Record<string, unknown>): string {
   }
 
   console.warn(
-    `[ots-at] Body field not found in detail response. Tried: ${CANDIDATE_BODY_FIELDS.join(', ')}. Falling back to empty string.`
+    `[ots-at] Body field not found in detail response. Tried: ${CANDIDATE_BODY_FIELDS.join(', ')}. Falling back to empty string.`,
   )
   return ''
 }
@@ -111,16 +121,13 @@ function extractBody(detail: Record<string, unknown>): string {
 /**
  * Factory that creates an OTS.at AdapterFn with an injected PrismaClient.
  *
- * Usage in production:
- *   const otsAtAdapter = createOtsAtAdapter()
- *
- * Usage in tests (DI):
- *   const adapter = createOtsAtAdapter(testPrisma)
+ * Production: const otsAtAdapter = createOtsAtAdapter()
+ * Tests (DI): const adapter = createOtsAtAdapter(testPrisma)
  */
 export function createOtsAtAdapter(db?: PrismaClient): AdapterFn {
   const prismaClient = db ?? defaultPrisma
 
-  return async (source): Promise<RawItem[]> => {
+  return async (source): Promise<AdapterResult> => {
     const apiKey = process.env.OTS_API_KEY
     if (!apiKey) {
       throw new Error('OTS_API_KEY environment variable is not set')
@@ -128,28 +135,37 @@ export function createOtsAtAdapter(db?: PrismaClient): AdapterFn {
 
     const keywords = source.keywords ?? []
 
+    // INGEST-03: compute the list-window cursor.
+    // - lastFetchedAt set    → look back to lastFetchedAt - 30min (overlap to cover seam)
+    // - lastFetchedAt null   → first run / new source: fall back to 24h window
+    const von = source.lastFetchedAt
+      ? Math.floor(source.lastFetchedAt.getTime() / 1000) - CURSOR_OVERLAP_SECONDS
+      : Math.floor(Date.now() / 1000) - LOOKBACK_SECONDS
+
     // Step 1: Fetch the list of recent press releases
-    const listItems = await fetchOtsList(apiKey)
+    const listItems = await fetchOtsList(apiKey, von)
 
     // Step 1b: Pre-filter by keywords (before expensive detail fetches)
-    const filteredList = keywords.length > 0
-      ? listItems.filter((item) => {
-          const text = `${item.TITEL} ${item.UTL ?? ''}`.toLowerCase()
-          return keywords.some((kw) => text.includes(kw.toLowerCase()))
-        })
-      : listItems
+    const filteredList =
+      keywords.length > 0
+        ? listItems.filter((item) => {
+            const text = `${item.TITEL} ${item.UTL ?? ''}`.toLowerCase()
+            return keywords.some((kw) => text.includes(kw.toLowerCase()))
+          })
+        : listItems
 
-    // Step 2: Deduplicate — filter out items already in Article DB by source+externalId
-    const newItems: OtsListItem[] = []
-    for (const item of filteredList) {
-      const existing = await prismaClient.article.findFirst({
-        where: { source: 'OTS_AT', externalId: item.OTSKEY },
-        select: { id: true },
-      })
-      if (existing === null) {
-        newItems.push(item)
-      }
-    }
+    // INGEST-01: bulk dedup via single findMany + Set diff.
+    // Defensive: when filteredList is empty, skip the DB roundtrip entirely.
+    const externalIds = filteredList.map((item) => item.OTSKEY)
+    const existing =
+      externalIds.length === 0
+        ? []
+        : await prismaClient.article.findMany({
+            where: { source: 'OTS_AT', externalId: { in: externalIds } },
+            select: { externalId: true },
+          })
+    const existingKeys = new Set(existing.map((e) => e.externalId))
+    const newItems = filteredList.filter((item) => !existingKeys.has(item.OTSKEY))
 
     // Step 3: Fetch detail only for new items (rate limit protection)
     const rawItems: RawItem[] = []
@@ -168,7 +184,9 @@ export function createOtsAtAdapter(db?: PrismaClient): AdapterFn {
       })
     }
 
-    return rawItems
+    // OTS has no conditional GET — etag/lastModified are always null.
+    // ingest.ts treats null as "do not touch the column" (see AdapterResult docs).
+    return { items: rawItems, etag: null, lastModified: null }
   }
 }
 
