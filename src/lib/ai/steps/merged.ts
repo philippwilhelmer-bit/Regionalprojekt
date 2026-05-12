@@ -81,7 +81,8 @@ const MERGED_OUTPUT_SCHEMA = {
     },
     seoTitle: {
       type: 'string',
-      description: 'SEO-optimierter Titel, maximal 60 Zeichen.',
+      description:
+        'SEO-optimierter Titel, MAXIMAL 60 Zeichen (harte Obergrenze, vor der Ausgabe zählen und ggf. kürzen).',
     },
     metaDescription: {
       type: 'string',
@@ -140,6 +141,7 @@ Antworte ausschließlich über das bereitgestellte Tool "${TOOL_NAME}". Freitext
 
 KLASSIFIZIERUNG
 - bezirkSlugs: Wähle Slugs ausschließlich aus der Liste am Ende dieser Nachricht. Erfinde keine Slugs.
+- Schließe einen Bezirk-Slug NUR ein, wenn der Bezirksname (z.B. "Liezen", "Hartberg-Fürstenfeld") ODER eine seiner Gemeinde-Synonyme wörtlich im Quelltext steht. Regional-Sammelbegriffe wie "Hochsteiermark", "Oststeiermark", "Obersteiermark", "Südsteiermark", "Weststeiermark" allein reichen NICHT zur Bezirks-Zuweisung — es muss eine namentliche Erwähnung eines konkreten Bezirks oder einer konkreten Gemeinde aus der Liste vorliegen.
 - isStateWide=true, wenn der Artikel die gesamte Steiermark betrifft und nicht einem einzelnen Bezirk zugeordnet werden kann. In diesem Fall MUSS bezirkSlugs ein leeres Array sein.
 - isStateWide=false und bezirkSlugs leer, wenn der Artikel keinen Bezug zur Steiermark hat.
 - mentionsPrivateIndividual=true nur dann, wenn eine reale, lebende, namentlich genannte Privatperson erwähnt wird. Organisationen, historische Figuren, fiktive Charaktere und Marken zählen nicht.
@@ -147,12 +149,14 @@ KLASSIFIZIERUNG
 UMSCHREIBUNG
 - Schreibe in Hochdeutsch, ohne Dialekt oder Umgangssprache.
 - Struktur: headline (Überschrift) + lead (1-2 Sätze, fasst die Kernaussage zusammen) + body (restlicher Text).
+- FAKTENTREUE: Behalte alle in der Quelle namentlich genannten Orte, Straßen, Autobahnen, Bezirke, Gemeinden, Organisationen, Veranstaltungsnamen, Ereignisbezeichnungen und konkrete Zahlen wörtlich im body. Erfinde nichts dazu, lass nichts weg. Wenn die Quelle eine bestimmte Sache benennt (z.B. "A2", "Auffahrunfall", "Pensionsreform", "Landtagswahl", "Weinkultur-Festival"), MUSS dieser Begriff im body vorkommen.
+- KURZE QUELLEN: Bei Quelltexten unter 80 Wörtern halte den body kurz und faktentreu. Pad NICHT mit erfundenen Details, um eine Wunschlänge zu erreichen. Die in der Quelle vorhandenen Fakten sind die Obergrenze des body.
 - Übernimm KEINE Presseformular-Floskeln ("OTS0123", "Rückfragen & Kontakt", "Aussender", "Pressekontakt").
 - Übernimm KEINE Telefonnummern, E-Mail-Adressen, Webadressen oder Kontaktdaten.
 - Nenne keinen Aussender, keine Quelle, keinen Verteiler.
 
 SEO
-- seoTitle: maximal 60 Zeichen, prägnant, suchmaschinenfreundlich.
+- seoTitle: MAXIMAL 60 Zeichen (harte Obergrenze). Zähle die Zeichen deines Entwurfs. Wenn er länger als 60 Zeichen ist, kürze ihn auf ≤ 60 Zeichen, bevor du ihn ausgibst.
 - metaDescription: maximal 160 Zeichen, basierend auf dem lead.
 
 VERFÜGBARE BEZIRKE
