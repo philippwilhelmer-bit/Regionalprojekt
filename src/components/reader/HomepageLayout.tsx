@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { groupArticlesByBezirk, type ArticleWithBezirke } from "@/lib/content/articles-utils";
+import { type ArticleWithBezirke } from "@/lib/content/articles-utils";
 import type { BezirkItem } from "@/types/bundesland";
 import { HeroArticle } from "./HeroArticle";
 import { MascotGreeting } from "./MascotGreeting";
-import { RegionalEditorialCard } from "./RegionalEditorialCard";
-import { ListItem } from "./ListItem";
+import { EditorialStackCard } from "./EditorialStackCard";
 import { AdUnit } from "./AdUnit";
 import { WeatherWidget } from "./WeatherWidget";
 import { FragDenSeppCard } from "./FragDenSeppCard";
@@ -61,39 +60,15 @@ export function HomepageLayout({
       )
     : pinnedArticles;
 
-  let bezirkSections: Array<{ slug: string; name: string; articles: ArticleWithBezirke[] }> = [];
-  if (hasBezirkSelection) {
-    const grouped = groupArticlesByBezirk(allArticles);
-    bezirkSections = Array.from(grouped.entries())
-      .filter(([slug]) => selectedSlugs.includes(slug))
-      .map(([slug, { name, articles }]) => ({ slug, name, articles }));
-  }
+  // Build flat list of articles for the editorial stack.
+  // When a bezirk filter is active, restrict to articles tagged with the selected bezirke.
+  const bezirkArticles: ArticleWithBezirke[] = hasBezirkSelection
+    ? allArticles.filter((a) =>
+        a.bezirke.some((entry) => selectedSlugs.includes(entry.bezirk.slug)),
+      )
+    : allArticles;
 
-  const flatFeatured = allArticles[0];
-  const flatList = allArticles.slice(1);
   const isEmpty = allArticles.length === 0 && !hero;
-
-  function renderBezirkGroup(name: string, articles: ArticleWithBezirke[]) {
-    if (articles.length === 0) return null;
-    const [featured, ...rest] = articles;
-    const listArticles = rest.slice(0, 3);
-
-    return (
-      <div className="mb-6">
-        <h3 className="font-headline tracking-tight text-headline-md text-ink mb-3">{name}</h3>
-        <div className="mb-3">
-          <RegionalEditorialCard article={featured} />
-        </div>
-        {listArticles.length > 0 && (
-          <div className="bg-surface-elevated rounded-sm shadow-sm px-3">
-            {listArticles.map((article) => (
-              <ListItem key={article.id} article={article} />
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -124,15 +99,18 @@ export function HomepageLayout({
         </div>
       </SectionBlock>
 
-      {/* 6. Mein Bezirk — surface, with "Alle Nachrichten" exit link */}
+      {/* 6. Mein Bezirk — surface, editorial card stack */}
       <SectionBlock bg="surface" voidSize="md">
-        <div className="flex items-baseline justify-between mb-4">
-          <Heading variant="headline-md">Mein Bezirk</Heading>
+        <div className="flex items-start justify-between mb-6 gap-4">
+          <div>
+            <Heading variant="headline-md" className="mb-1">Mein Bezirk</Heading>
+            <p className="font-body text-sm text-ink-muted">Aktuelles aus deiner Region</p>
+          </div>
           <Link
             href="/suche"
-            className="font-label text-label-md uppercase text-ink-muted underline decoration-2 underline-offset-4 transition-colors hover:text-accent"
+            className="font-label text-sm text-accent transition-colors hover:text-primary shrink-0 mt-1"
           >
-            Alle Nachrichten
+            Alle anzeigen
           </Link>
         </div>
 
@@ -142,43 +120,34 @@ export function HomepageLayout({
           </div>
         )}
 
-        {!isEmpty && hasBezirkSelection && (
-          <>
-            {bezirkSections.map(({ slug, name, articles }) => (
-              <div key={slug}>{renderBezirkGroup(name, articles)}</div>
-            ))}
-            {bezirkSections.length === 0 && (
-              <div className="py-8 text-center text-ink/50">
-                <p className="mb-3">Noch keine Nachrichten für deinen Bezirk.</p>
-                <button
-                  onClick={() => {
-                    localStorage.removeItem("bezirk_selection");
-                    setSelectedSlugs([]);
-                  }}
-                  className="text-sm text-ink-muted underline"
-                >
-                  Bezirksauswahl zurücksetzen
-                </button>
-              </div>
-            )}
-          </>
+        {!isEmpty && bezirkArticles.length === 0 && hasBezirkSelection && (
+          <div className="py-8 text-center text-ink/50">
+            <p className="mb-3">Noch keine Nachrichten für deinen Bezirk.</p>
+            <button
+              onClick={() => {
+                localStorage.removeItem("bezirk_selection");
+                setSelectedSlugs([]);
+              }}
+              className="text-sm text-ink-muted underline"
+            >
+              Bezirksauswahl zurücksetzen
+            </button>
+          </div>
         )}
 
-        {!isEmpty && !hasBezirkSelection && (
-          <>
-            {flatFeatured && (
-              <div className="mb-3">
-                <RegionalEditorialCard article={flatFeatured} />
-              </div>
-            )}
-            {flatList.length > 0 && (
-              <div className="bg-surface-elevated rounded-sm shadow-sm px-3">
-                {flatList.map((article) => (
-                  <ListItem key={article.id} article={article} />
+        {bezirkArticles.length > 0 && (
+          <div className="space-y-6">
+            {bezirkArticles.slice(0, 3).map((article) => (
+              <EditorialStackCard key={article.id} article={article} variant="hero" />
+            ))}
+            {bezirkArticles.slice(3).length > 0 && (
+              <div className="divide-y divide-outline-variant/20">
+                {bezirkArticles.slice(3, 8).map((article) => (
+                  <EditorialStackCard key={article.id} article={article} variant="row" />
                 ))}
               </div>
             )}
-          </>
+          </div>
         )}
       </SectionBlock>
 
