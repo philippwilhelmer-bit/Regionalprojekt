@@ -32,10 +32,10 @@ export function ShareButton({ title, url }: ShareButtonProps) {
   return (
     <button
       onClick={handleShare}
-      className="inline-flex items-center gap-2 rounded-sm bg-surface-elevated text-slate shadow-sm px-4 py-2 text-sm font-medium hover:bg-surface transition-colors"
+      className="group inline-flex items-center gap-2 bg-primary text-on-primary px-6 py-3 font-label text-label-md uppercase transition-colors hover:bg-accent"
     >
-      <span className="material-symbols-rounded text-base" aria-hidden="true">share</span>
-      {copied ? "Link kopiert!" : "Teilen"}
+      {copied ? "Link kopiert!" : "Artikel teilen"}
+      <span className="material-symbols-rounded text-sm transition-transform group-hover:translate-x-1" aria-hidden="true">arrow_right_alt</span>
     </button>
   );
 }

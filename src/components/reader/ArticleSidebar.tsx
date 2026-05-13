@@ -11,6 +11,17 @@ interface ArticleSidebarProps {
   shareUrl: string;
 }
 
+function MetaItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-[11px] uppercase tracking-widest font-bold text-ink-muted mb-2">
+        {label}
+      </p>
+      <p className="font-headline italic text-lg text-ink">{value}</p>
+    </div>
+  );
+}
+
 export function ArticleSidebar({
   publisherName,
   sourceLabel,
@@ -20,28 +31,13 @@ export function ArticleSidebar({
   shareUrl,
 }: ArticleSidebarProps) {
   return (
-    <aside className="sticky top-[4rem]">
-      <div className="p-4 bg-surface rounded-sm space-y-3">
-        {/* Attribution */}
-        <div>
-          {sourceLabel && (
-            <p className="text-sm text-slate">{sourceLabel}</p>
-          )}
-          <p className="font-headline text-sm text-ink-muted">Von {publisherName}</p>
-        </div>
+    <aside className="sticky top-24 space-y-8">
+      <MetaItem label="Herausgeber" value={publisherName} />
+      <MetaItem label="Lesezeit" value={`${readingTime} Minuten`} />
+      {publishedAt && <MetaItem label="Erschienen" value={`${publishedAt} Uhr`} />}
+      {sourceLabel && <MetaItem label="Quelle" value={sourceLabel.replace(/^Quelle: /, "")} />}
 
-        {/* Reading time */}
-        <p className="text-sm text-slate">{readingTime} Min. Lesezeit</p>
-
-        {/* Published date */}
-        {publishedAt && (
-          <p className="text-sm text-slate">{publishedAt} Uhr</p>
-        )}
-
-        {/* Divider */}
-        <hr className="border-parchment-dim my-4" />
-
-        {/* Share button */}
+      <div className="pt-4 border-t border-outline-variant/20">
         <ShareButton title={shareTitle} url={shareUrl} />
       </div>
     </aside>

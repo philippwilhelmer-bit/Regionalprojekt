@@ -9,6 +9,8 @@ import { AdUnit } from "@/components/reader/AdUnit";
 import { ShareButton } from "@/components/reader/ShareButton";
 import { ArticleSidebar } from "@/components/reader/ArticleSidebar";
 import { TopMeldungenRow } from "@/components/reader/TopMeldungenRow";
+import { SeppTipBox } from "@/components/reader/SeppTipBox";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 import config from "@/../bundesland.config";
 
 type Props = { params: Promise<{ publicId: string; slug: string }> };
@@ -28,7 +30,6 @@ export default async function ArticlePage({ params }: Props) {
   const article = await getArticleByPublicId(publicId);
   if (!article) notFound();
 
-  // Canonical slug enforcement — permanent redirect on wrong slug
   const canonical = slugify(article.title ?? "");
   if (slug !== canonical) {
     permanentRedirect(`/artikel/${publicId}/${canonical}`);
@@ -36,7 +37,6 @@ export default async function ArticlePage({ params }: Props) {
 
   const canonicalUrl = `${BASE_URL}/artikel/${publicId}/${canonical}`;
 
-  // JSON-LD NewsArticle schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -48,7 +48,6 @@ export default async function ArticlePage({ params }: Props) {
     url: canonicalUrl,
   };
 
-  // Related articles (same first Bezirk, exclude current)
   const firstBezirk = article.bezirke[0]?.bezirk;
   const relatedArticles = firstBezirk
     ? (
@@ -56,7 +55,6 @@ export default async function ArticlePage({ params }: Props) {
       ).filter((a) => a.publicId !== article.publicId)
     : [];
 
-  // Source attribution
   let sourceLabel: string | null = null;
   if (article.source === "OTS_AT") {
     sourceLabel = "Quelle: OTS.at";
@@ -64,7 +62,6 @@ export default async function ArticlePage({ params }: Props) {
     sourceLabel = "Quelle: RSS";
   }
 
-  // Publication timestamp in de-AT locale
   const publishedAt = article.publishedAt
     ? new Intl.DateTimeFormat("de-AT", {
         day: "2-digit",
@@ -75,153 +72,87 @@ export default async function ArticlePage({ params }: Props) {
       }).format(article.publishedAt)
     : null;
 
-  // Reading time and publisher name for sidebar
+  const eyebrowParts: string[] = [];
+  if (firstBezirk) eyebrowParts.push(firstBezirk.name);
+  if (publishedAt) eyebrowParts.push(publishedAt);
+  const eyebrowText = eyebrowParts.join(" • ");
+
   const readingTime = estimateReadingTime(article.content ?? "");
   const publisherName = config.branding.impressum.publisherName;
 
-  // Parse paragraphs for body rendering
   const paragraphs = (article.content ?? "").split("\n\n").filter(Boolean);
-
-  // Track whether drop cap has been applied (skip blockquotes)
   let dropCapApplied = false;
 
   return (
     <>
-      {/* JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="bg-parchment min-h-screen">
-        {/* Archival Header */}
-        {article.imageUrl ? (
-          <>
-            <header className="relative overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={article.imageUrl}
-                alt={article.title ?? ""}
-                className="w-full object-cover max-h-[55vh] img-matte"
-                loading="eager"
-              />
-              {/* Gradient scrim */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              {/* Overlay content — title + breadcrumb + date */}
-              <div className="absolute bottom-0 left-0 right-0 p-[var(--spacing-gutter)] pb-8 z-10">
-                {/* Breadcrumb */}
-                <nav className="font-label text-sm text-parchment/80 mb-3" aria-label="Breadcrumb">
-                  <Link href="/" className="hover:underline">
-                    Startseite
-                  </Link>
-                  {firstBezirk && (
-                    <>
-                      <span className="mx-1">/</span>
-                      <Link
-                        href={`/bezirk/${firstBezirk.slug}`}
-                        className="hover:underline"
-                      >
-                        {firstBezirk.name}
-                      </Link>
-                    </>
-                  )}
-                  <span className="mx-1">/</span>
-                  <span>Artikel</span>
-                </nav>
-                <h1 className="font-headline tracking-tight text-parchment text-2xl md:text-3xl font-semibold leading-tight">
-                  {article.title}
-                </h1>
-                {publishedAt && (
-                  <p className="text-parchment/70 text-sm mt-2">{publishedAt} Uhr</p>
-                )}
-              </div>
-            </header>
-            {article.imageCredit && (
-              <p className="text-xs text-slate text-right px-[var(--spacing-gutter)] py-1">
-                {article.imageCredit}
-              </p>
+      <div className="bg-background min-h-screen">
+        <main className="max-w-5xl mx-auto px-[var(--spacing-gutter)] pt-12 md:pt-20 pb-24">
+          {/* Editorial Header — eyebrow + huge headline */}
+          <div className="mb-12 md:mb-20">
+            {eyebrowText && (
+              <Eyebrow className="mb-4 tracking-[0.2em] text-accent font-semibold">
+                {eyebrowText}
+              </Eyebrow>
             )}
-          </>
-        ) : (
-          <header className="bg-parchment-dim px-[var(--spacing-gutter)] pt-8 pb-6">
-            {/* Breadcrumb */}
-            <nav className="font-label text-sm text-slate mb-4" aria-label="Breadcrumb">
-              <Link href="/" className="hover:underline">
-                Startseite
-              </Link>
+
+            <h1 className="font-headline tracking-tight text-primary text-4xl md:text-6xl lg:text-7xl font-bold leading-[0.95] mb-6">
+              {article.title}
+            </h1>
+
+            {/* Breadcrumb minimal — secondary navigation */}
+            <nav className="font-label text-sm text-ink-muted" aria-label="Breadcrumb">
+              <Link href="/" className="transition-colors hover:text-accent">Startseite</Link>
               {firstBezirk && (
                 <>
-                  <span className="mx-1">/</span>
+                  <span className="mx-2">/</span>
                   <Link
                     href={`/bezirk/${firstBezirk.slug}`}
-                    className="hover:underline"
+                    className="transition-colors hover:text-accent"
                   >
                     {firstBezirk.name}
                   </Link>
                 </>
               )}
-              <span className="mx-1">/</span>
-              <span>Artikel</span>
             </nav>
-            <h1 className="font-headline tracking-tight text-ink text-2xl md:text-3xl font-semibold leading-tight">
-              {article.title}
-            </h1>
-            {publishedAt && (
-              <p className="text-slate text-sm mt-2">{publishedAt} Uhr</p>
-            )}
-          </header>
-        )}
+          </div>
 
-        {/* Content column — constrained */}
-        <div className="max-w-3xl mx-auto px-[var(--spacing-gutter)] pt-[var(--spacing-vertical)] pb-[var(--spacing-section)]">
-
-          {/* Two-column grid on desktop */}
-          <div className="lg:grid lg:grid-cols-[1fr_240px] lg:gap-8">
-            {/* Left column — article body */}
-            <div>
-              {/* Mobile metadata strip — visible below lg */}
-              <div className="lg:hidden flex items-center flex-wrap gap-x-4 gap-y-2 text-sm text-slate py-3 mb-[var(--spacing-vertical)]">
-                {sourceLabel && <span>{sourceLabel}</span>}
-                <span>{readingTime} Min. Lesezeit</span>
-                <ShareButton title={article.seoTitle ?? article.title ?? ""} url={canonicalUrl} />
-              </div>
-
-              {/* Article body */}
-              <article className="max-w-none mb-6">
-                {paragraphs.map((paragraph, index) => {
-                  if (isBlockquote(paragraph)) {
-                    return (
-                      <blockquote key={index} className="article-blockquote">
-                        {stripBlockquotePrefix(paragraph)}
-                      </blockquote>
-                    );
-                  }
-                  const isFirst = !dropCapApplied;
-                  if (!dropCapApplied) dropCapApplied = true;
-                  return (
-                    <p
-                      key={index}
-                      className={
-                        isFirst
-                          ? "drop-cap font-body text-ink leading-relaxed"
-                          : "font-body text-ink leading-relaxed mb-[var(--spacing-vertical)]"
-                      }
-                    >
-                      {paragraph}
-                    </p>
-                  );
-                })}
-              </article>
-
-              {/* Source attribution + AI label */}
-              <div className="flex items-center gap-3 text-xs text-slate mb-4">
-                {sourceLabel && <span>{sourceLabel}</span>}
-                {article.isAutoGenerated && <span>AI</span>}
-              </div>
+          {/* Hero image — full-width, below editorial header */}
+          {article.imageUrl && (
+            <div className="relative w-full aspect-[16/9] mb-12 md:mb-20 overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={article.imageUrl}
+                alt={article.title ?? ""}
+                className="w-full h-full object-cover grayscale-[0.2] contrast-110"
+                loading="eager"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-primary/10 mix-blend-multiply"
+              />
             </div>
+          )}
+          {article.imageCredit && (
+            <p className="text-xs text-ink-muted text-right mb-12 -mt-8">
+              {article.imageCredit}
+            </p>
+          )}
 
-            {/* Right column — desktop sidebar, hidden on mobile */}
-            <div className="hidden lg:block">
+          {/* Mobile metadata strip — visible below md */}
+          <div className="md:hidden flex items-center flex-wrap gap-x-4 gap-y-2 text-sm text-ink-muted mb-8">
+            <span>{readingTime} Min. Lesezeit</span>
+            {sourceLabel && <span>{sourceLabel}</span>}
+          </div>
+
+          {/* Article body — 12-col grid on md+ */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 mb-16">
+            {/* Aside — desktop-only sticky sidebar */}
+            <div className="hidden md:block md:col-span-3">
               <ArticleSidebar
                 publisherName={publisherName}
                 sourceLabel={sourceLabel}
@@ -231,20 +162,65 @@ export default async function ArticlePage({ params }: Props) {
                 shareUrl={canonicalUrl}
               />
             </div>
+
+            <article className="md:col-span-8 md:col-start-5 space-y-8">
+              {paragraphs.map((paragraph, index) => {
+                if (isBlockquote(paragraph)) {
+                  return (
+                    <blockquote key={index} className="article-blockquote">
+                      {stripBlockquotePrefix(paragraph)}
+                    </blockquote>
+                  );
+                }
+                const isFirst = !dropCapApplied;
+                if (!dropCapApplied) dropCapApplied = true;
+                return (
+                  <p
+                    key={index}
+                    className={
+                      isFirst
+                        ? "drop-cap font-body text-lg md:text-xl leading-relaxed text-ink"
+                        : "font-body text-lg md:text-xl leading-relaxed text-ink"
+                    }
+                  >
+                    {paragraph}
+                  </p>
+                );
+              })}
+
+              {/* Sepp tip-box at end of article body */}
+              <SeppTipBox />
+
+              {/* Source attribution + AI label */}
+              {(sourceLabel || article.isAutoGenerated) && (
+                <div className="flex items-center gap-3 text-xs text-ink-muted pt-4">
+                  {sourceLabel && <span>{sourceLabel}</span>}
+                  {article.isAutoGenerated && <span>AI</span>}
+                </div>
+              )}
+
+              {/* Mobile share fallback — sidebar already covers desktop */}
+              <div className="md:hidden pt-4 border-t border-outline-variant/20">
+                <ShareButton
+                  title={article.seoTitle ?? article.title ?? ""}
+                  url={canonicalUrl}
+                />
+              </div>
+            </article>
           </div>
 
-          {/* Ad unit — full content width */}
-          <div className="mb-8">
+          {/* Ad — between article and related */}
+          <div className="mb-12">
             <AdUnit zone="article-detail" />
           </div>
 
-          {/* Related articles — horizontal scroll cards */}
+          {/* Related articles — same bezirk */}
           {relatedArticles.length > 0 && (
             <section aria-labelledby="related-heading">
               <TopMeldungenRow articles={relatedArticles} heading="Weitere Artikel" />
             </section>
           )}
-        </div>
+        </main>
       </div>
     </>
   );
