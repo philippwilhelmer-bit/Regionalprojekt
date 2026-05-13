@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import type { BezirkItem } from "@/types/bundesland";
 import { computeBezirkLabel } from "@/lib/bezirk-label";
 
@@ -59,30 +58,33 @@ export function MascotGreeting({ bezirke }: MascotGreetingProps) {
   const ctaLabel = bezirkLabel ? "Bezirk wechseln" : "Mein Bezirk wählen";
 
   return (
-    <div className="flex items-start gap-4">
-      {/* Sepp avatar — full figure on parchment (no blend needed) */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/images/wurzelmann.png"
-        alt="Sepp"
-        className="w-16 h-16 rounded-full object-contain shrink-0"
-      />
-
-      <div className="flex-1">
-        <Eyebrow className="mb-1">Sepp sagt</Eyebrow>
-        <p className="font-headline text-headline-md text-ink leading-snug mb-1">
-          {greeting}!
-        </p>
-        <p className="font-label text-body-lg text-ink-muted mb-3">{quote}</p>
-
-        <button
-          type="button"
-          onClick={openBezirkModal}
-          className="inline-flex items-center font-label text-label-md uppercase text-ink underline decoration-2 underline-offset-4 transition-colors hover:text-accent"
-        >
-          {ctaLabel}
-        </button>
+    <div className="flex flex-col items-start">
+      {/* Sepp avatar — white rounded-rect frame with shadow */}
+      <div className="bg-background rounded-md shadow-sm p-2 mb-4 self-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/wurzelmann.png"
+          alt="Sepp"
+          className="w-20 h-20 object-contain"
+        />
       </div>
+
+      <h2 className="font-headline tracking-tight text-headline-md text-primary mb-3">
+        Sepp meint&hellip;
+      </h2>
+
+      <p className="font-headline italic text-body-lg text-ink-muted leading-relaxed mb-4">
+        &laquo;{quote}&raquo;
+      </p>
+
+      <button
+        type="button"
+        onClick={openBezirkModal}
+        className="inline-flex items-center gap-1 font-label text-label-md text-accent transition-colors hover:text-primary"
+      >
+        {ctaLabel}
+        <span className="material-symbols-rounded text-[16px]" aria-hidden="true">arrow_right_alt</span>
+      </button>
     </div>
   );
 }
