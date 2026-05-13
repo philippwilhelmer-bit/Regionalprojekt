@@ -45,7 +45,7 @@ export function SearchPageLayout({ articles, bezirke, recommended }: SearchPageL
     <div className="bg-parchment min-h-screen">
       {/* Zone 1 — Search input (SRCH-01) */}
       <div className="px-4 pt-6 pb-4">
-        <h1 className="font-headline text-3xl text-ink mb-4">Suche</h1>
+        <h1 className="font-headline tracking-tight text-3xl text-ink mb-4">Suche</h1>
         <div className="relative">
           <span
             className="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-slate"

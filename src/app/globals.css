@@ -74,20 +74,19 @@
   --font-body:     var(--font-jakarta), sans-serif;
   --font-label:    var(--font-jakarta), sans-serif;
 
-  /* === TYPE SCALE (design.md editorial voice) === */
+  /* === TYPE SCALE (DESIGN.md editorial voice) ===
+     Heading sizes — per-scale letter-spacing dropped; the Heading
+     primitive applies `tracking-tight` for all titles. */
   --text-display-lg: 2.25rem;
   --text-display-lg--line-height: 1.05;
-  --text-display-lg--letter-spacing: -0.02em;
   --text-display-lg--font-weight: 700;
 
   --text-display-sm: 1.75rem;
   --text-display-sm--line-height: 1.1;
-  --text-display-sm--letter-spacing: -0.01em;
   --text-display-sm--font-weight: 700;
 
   --text-headline-md: 1.375rem;
   --text-headline-md--line-height: 1.2;
-  --text-headline-md--letter-spacing: -0.005em;
   --text-headline-md--font-weight: 600;
 
   --text-body-lg: 1.0625rem;

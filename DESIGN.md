@@ -33,10 +33,12 @@ To avoid a "flat" digital look, apply a subtle linear gradient to main CTAs tran
 ## 3. Typography: The Editorial Voice
 We use a high-contrast pairing to balance heritage with modern precision.
 
-*   **Display & Headlines (Newsreader):** This is our "Editorial Voice." Newsreader must be used with generous letter-spacing (optical sizing) and tight line-heights for a prestigious, printed-press look.
-    *   *Usage:* `display-lg` for hero statements; `headline-md` for section entries.
-*   **Body & UI (Plus Jakarta Sans):** This is our "Functional Voice." It provides a clean, technical counterpoint to the serif headers. 
-    *   *Usage:* `body-lg` for long-form reading; `label-md` for metadata and micro-copy.
+**Official typography spec (2026-05-13):**
+
+*   **Headlines (Newsreader, serif):** Use for *all titles* with `tracking-tight`. Covers display sizes (hero statements), section headings, and card titles. The Heading primitive applies `tracking-tight` by default; free-floating `font-headline` usages must add it explicitly.
+*   **Body / UI (Plus Jakarta Sans, sans-serif):** Use for long-form body text, labels, buttons, and navigation. Work Sans is an interchangeable alternative if Plus Jakarta Sans becomes unavailable. The body default font-family is set on `<body>` in `globals.css`.
+
+Eyebrow labels (`label-md`) keep their wide positive letter-spacing (0.08em) — they are not titles. Body text uses the default Plus Jakarta Sans tracking.
 
 ---
 

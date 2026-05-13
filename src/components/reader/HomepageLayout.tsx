@@ -64,7 +64,7 @@ export function HomepageLayout({
 
     return (
       <div className="mb-6">
-        <h3 className="font-headline text-headline-md text-ink mb-3">{name}</h3>
+        <h3 className="font-headline tracking-tight text-headline-md text-ink mb-3">{name}</h3>
         <div className="mb-3">
           <RegionalEditorialCard article={featured} />
         </div>

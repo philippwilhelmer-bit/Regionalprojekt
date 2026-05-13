@@ -37,7 +37,7 @@ export function RegionalEditorialCard({ article }: RegionalEditorialCardProps) {
         )}
 
         {/* Newsreader headline */}
-        <h2 className="font-headline text-lg font-semibold text-ink leading-snug mb-1">
+        <h2 className="font-headline tracking-tight text-lg font-semibold text-ink leading-snug mb-1">
           {article.title}
         </h2>
 

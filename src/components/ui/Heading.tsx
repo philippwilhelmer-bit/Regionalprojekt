@@ -25,7 +25,7 @@ export function Heading({
 }: Props) {
   const toneClass = tone === "on-dark" ? "text-on-primary" : "text-ink";
   return (
-    <As className={`font-headline ${variantClass[variant]} ${toneClass} ${className}`.trim()}>
+    <As className={`font-headline tracking-tight ${variantClass[variant]} ${toneClass} ${className}`.trim()}>
       {children}
     </As>
   );

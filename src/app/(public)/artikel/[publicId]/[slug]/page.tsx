@@ -128,7 +128,7 @@ export default async function ArticlePage({ params }: Props) {
                   <span className="mx-1">/</span>
                   <span>Artikel</span>
                 </nav>
-                <h1 className="font-headline text-parchment text-2xl md:text-3xl font-semibold leading-tight">
+                <h1 className="font-headline tracking-tight text-parchment text-2xl md:text-3xl font-semibold leading-tight">
                   {article.title}
                 </h1>
                 {publishedAt && (
@@ -163,7 +163,7 @@ export default async function ArticlePage({ params }: Props) {
               <span className="mx-1">/</span>
               <span>Artikel</span>
             </nav>
-            <h1 className="font-headline text-ink text-2xl md:text-3xl font-semibold leading-tight">
+            <h1 className="font-headline tracking-tight text-ink text-2xl md:text-3xl font-semibold leading-tight">
               {article.title}
             </h1>
             {publishedAt && (
