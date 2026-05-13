@@ -23,9 +23,21 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <TestSiteBanner />
       <div className="flex h-screen bg-parchment">
       <aside className="w-56 bg-surface-elevated flex flex-col py-6 px-4 shrink-0">
-        <p className="text-xs font-semibold text-slate uppercase tracking-wide mb-4">
-          Loden &amp; Leute
-        </p>
+        <Link
+          href="/"
+          className="group flex items-center gap-2 mb-6 transition-colors"
+          aria-label="Zur Startseite"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/wurzelmann.png"
+            alt=""
+            className="w-10 h-10 rounded-full object-contain shrink-0 bg-parchment"
+          />
+          <span className="font-headline italic text-lg text-primary group-hover:text-accent transition-colors">
+            Loden &amp; Leute
+          </span>
+        </Link>
         <nav className="space-y-1 flex-1">
           {navItems.map(item => (
             <Link
