@@ -35,11 +35,11 @@ export function LodenAppBar({ bezirke }: LodenAppBarProps) {
       {/* Styrian flag stripe — preserved per Phase 33 decision */}
       <div
         className="w-full h-[4px]"
-        style={{ background: 'linear-gradient(to bottom, #fff 50%, #2D5A27 50%)' }}
+        style={{ background: 'linear-gradient(to bottom, #fff 50%, var(--color-secondary) 50%)' }}
         aria-hidden="true"
       />
 
-      <div className="bg-ink px-4 h-14 flex items-center justify-between">
+      <div className="bg-primary px-4 h-14 flex items-center justify-between">
         {/* Left: round mascot emblem (full figure) + serif wordmark */}
         <Link href="/" className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}

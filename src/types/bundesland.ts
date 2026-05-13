@@ -5,7 +5,7 @@ export interface AdZone {
 }
 
 export interface BundeslandBranding {
-  primaryColor: string   // hex value, e.g. '#154212'
+  primaryColor: string   // hex value, e.g. '#1B2D18'
   secondaryColor: string
   logoPath: string
   impressum: {

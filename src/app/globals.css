@@ -1,17 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  /* === BASE PALETTE === */
+  /* === SEMANTIC PALETTE (official color spec, 2026-05-13) === */
+  --color-primary:    #1B2D18;  /* Deep Forest Green — dark surfaces, CTAs */
+  --color-secondary:  #2D5A27;  /* Loden Green — Steiermark-flag stripe, brand accents */
+  --color-background: #FCF9EF;  /* Warm Paper — page background */
+  --color-text:       #154212;  /* Deep Charcoal Green — body text */
+  --color-accent:     #9F411E;  /* Alpine Clay — interactive hover/active states */
 
-  /* Ink — editorial dark, body text */
-  --color-ink:       #071806;
-  --color-ink-deep:  #1B2D18;  /* design.md primary-container — lifted ink for dark sections + CTA gradient */
+  /* === LEGACY ALIASES === */
+  /* Class names like text-ink / bg-ink-deep / bg-parchment continue working
+     and now render with the official palette values. */
+  --color-ink:       var(--color-text);
+  --color-ink-deep:  var(--color-primary);
+  --color-parchment: var(--color-background);
+
+  /* === TONAL VARIANTS (kept for shadows + tonal layering) === */
   --color-ink-soft:  #2a3a28;
   --color-ink-muted: #4a5a48;
   --color-ink-dim:   #6a7a68;
 
-  /* Parchment — warm paper background */
-  --color-parchment:        #FCF9EF;
   --color-parchment-dim:    #F6F4EA;
   --color-parchment-bright: #FFFFFF;
 

@@ -5,8 +5,8 @@ export default {
   siteName: 'Loden & Leute',
   tagline: 'Nachrichten aus der Steiermark',
   branding: {
-    primaryColor: '#154212',
-    secondaryColor: '#2d7a1f',
+    primaryColor: '#1B2D18',
+    secondaryColor: '#2D5A27',
     logoPath: '/images/logo-steiermark.svg',
     impressum: {
       publisherName: 'Loden & Leute Medien GmbH',

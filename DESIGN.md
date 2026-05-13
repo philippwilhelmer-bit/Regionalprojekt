@@ -10,10 +10,15 @@ We are moving away from "app-like" interfaces toward a high-end editorial experi
 ## 2. Color & Atmospheric Theory
 The palette is rooted in high-contrast naturalism. We use depth to guide the eye, not decoration.
 
-*   **Primary (#071806) & Primary Container (#1B2D18):** These represent our "Ink." Use them for high-impact headers, hero sections, and primary actions. They provide the "Moody" anchor of the brand.
-*   **Surface (#FCF9EF) & Surface Variants:** This is our "Parchment." It is never stark white; it is warm, tactile, and grounded.
-*   **Secondary (#50606F):** Our "Slate." Use this for utilitarian elements that need to feel distinct from the organic forest tones.
-*   **Tertiary (#230E08):** Our "Aged Wood." Reserved for moments of extreme prestige or deep emphasis (e.g., a signature quote or a footer background).
+**Official semantic palette (2026-05-13):**
+
+*   **primary — `#1B2D18` (Deep Forest Green):** Dark surfaces, app-bar, footer, CTAs, dark-zone backgrounds. The "Moody" anchor of the brand.
+*   **secondary — `#2D5A27` (Loden Green):** Steiermark-flag stripe and brand accents that need to feel distinct from the deeper primary.
+*   **background — `#FCF9EF` (Warm Paper):** Page background — never stark white. Warm, tactile, grounded.
+*   **text — `#154212` (Deep Charcoal Green):** Body text and headings on light surfaces.
+*   **accent — `#9F411E` (Alpine Clay):** Reserved for **interactive states only** — hover, active, focus on links, buttons, nav. Not for decoration.
+
+Tonal variants (`ink-soft`, `ink-muted`, `parchment-dim`, etc.) exist in `globals.css` for shadow tints and tonal layering, but are not part of the official palette.
 
 ### The "No-Line" Rule
 **Explicit Instruction:** Designers are prohibited from using 1px solid borders to define sections. Content areas must be separated by:
@@ -21,7 +26,7 @@ The palette is rooted in high-contrast naturalism. We use depth to guide the eye
 2.  **Structural Negative Space:** Using the `16` (5.5rem) or `20` (7rem) spacing tokens to create a "void" that defines a boundary.
 
 ### Signature Textures & Glassmorphism
-To avoid a "flat" digital look, apply a subtle linear gradient to main CTAs transitioning from `primary` (#071806) to `primary-container` (#1B2D18). For floating navigation or overlays, use **Glassmorphism**: apply `surface-bright` at 85% opacity with a `20px` backdrop-blur to allow the "parchment" textures underneath to bleed through.
+To avoid a "flat" digital look, apply a subtle linear gradient to main CTAs transitioning from `text` (#154212) to `primary` (#1B2D18). For floating navigation or overlays, use **Glassmorphism**: apply `surface-bright` at 85% opacity with a `20px` backdrop-blur to allow the "parchment" textures underneath to bleed through.
 
 ---
 
