@@ -10,11 +10,12 @@ export function FragDenSeppCard() {
       onClick={() => window.dispatchEvent(new Event("openBezirkModal"))}
       className="w-full text-left flex items-start gap-4"
     >
+      {/* Sepp avatar — full figure, white wappen-circle on dark loden bg */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/images/wurzelmann.png"
         alt="Sepp"
-        className="w-16 h-16 rounded-full bg-ink object-cover shrink-0"
+        className="w-16 h-16 rounded-full object-contain shrink-0"
       />
       <div className="flex-1">
         <Eyebrow tone="on-dark" className="mb-1">

@@ -34,12 +34,12 @@ export function MascotGreeting() {
 
   return (
     <div className="flex items-start gap-4">
-      {/* Sepp avatar — round mascot crop */}
+      {/* Sepp avatar — full figure on parchment (no blend needed) */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/images/wurzelmann.png"
         alt="Sepp"
-        className="w-16 h-16 rounded-full bg-ink-deep object-cover shrink-0"
+        className="w-16 h-16 rounded-full object-contain shrink-0"
       />
 
       <div className="flex-1">

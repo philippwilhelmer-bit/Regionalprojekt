@@ -40,13 +40,13 @@ export function LodenAppBar({ bezirke }: LodenAppBarProps) {
       />
 
       <div className="bg-ink px-4 h-14 flex items-center justify-between">
-        {/* Left: round mascot emblem + serif wordmark */}
+        {/* Left: round mascot emblem (full figure) + serif wordmark */}
         <Link href="/" className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/wurzelmann.png"
             alt=""
-            className="w-9 h-9 rounded-full bg-ink-deep object-cover shrink-0"
+            className="w-9 h-9 rounded-full object-contain shrink-0"
           />
           <span className="font-headline italic text-parchment text-xl">
             Loden &amp; Leute
