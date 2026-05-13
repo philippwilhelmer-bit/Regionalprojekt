@@ -99,20 +99,34 @@ export function BezirkModal({ bezirke }: { bezirke: BezirkItem[] }) {
 
       {/* Modal panel */}
       <div className="relative z-10 w-full max-w-md bg-surface-elevated rounded-t-sm sm:rounded-sm p-6 shadow-xl max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-bold text-ink mb-4">Mein Bezirk</h2>
+        <div className="flex items-baseline justify-between mb-4">
+          <h2 className="text-xl font-bold text-ink">Mein Bezirk</h2>
+          <span className="text-xs text-ink-muted">
+            {selected.size} von {bezirke.length} gewählt
+          </span>
+        </div>
 
-        {/* "Alle Bezirke" toggle */}
-        <button
-          onClick={toggleAll}
-          className={
-            "w-full mb-4 py-2 px-4 rounded-sm text-sm font-medium transition-colors " +
-            (allSelected
-              ? "bg-ink text-parchment"
-              : "bg-surface text-ink-soft shadow-sm hover:bg-surface-elevated")
-          }
-        >
-          Alle Bezirke
-        </button>
+        {/* Bulk-action row — toggle all / clear all */}
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <button
+            onClick={toggleAll}
+            className={
+              "py-2 px-4 rounded-sm text-sm font-medium transition-colors " +
+              (allSelected
+                ? "bg-ink text-parchment"
+                : "bg-surface text-ink-soft shadow-sm hover:bg-surface-elevated")
+            }
+          >
+            {allSelected ? "Alle abwählen" : "Alle wählen"}
+          </button>
+          <button
+            onClick={() => setSelected(new Set())}
+            disabled={selected.size === 0}
+            className="py-2 px-4 rounded-sm text-sm font-medium bg-surface text-ink-soft shadow-sm transition-colors hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Auswahl löschen
+          </button>
+        </div>
 
         {/* Chip grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
