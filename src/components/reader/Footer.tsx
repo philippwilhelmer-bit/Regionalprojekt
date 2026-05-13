@@ -34,7 +34,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-12">
           <div>
             <Eyebrow as="h3" tone="on-dark" className="mb-3">Rubriken</Eyebrow>
-            <ul className="space-y-2 text-sm text-on-primary/80">
+            <ul className="space-y-2 text-sm text-on-primary/80 [&_a]:transition-colors [&_a:hover]:text-accent">
               <li><Link href="/">Archiv</Link></li>
               <li><Link href="/suche">Bibliothek</Link></li>
             </ul>
@@ -42,7 +42,7 @@ export function Footer() {
 
           <div>
             <Eyebrow as="h3" tone="on-dark" className="mb-3">RSS-Feeds</Eyebrow>
-            <ul className="space-y-2 text-sm text-on-primary/80">
+            <ul className="space-y-2 text-sm text-on-primary/80 [&_a]:transition-colors [&_a:hover]:text-accent">
               <li><a href="/rss/steiermark.xml">Steiermark (alle)</a></li>
               {BEZIRK_SLUGS.slice(0, 4).map(slug => (
                 <li key={slug}><a href={`/rss/${slug}.xml`}>{slug}</a></li>
@@ -52,7 +52,7 @@ export function Footer() {
 
           <div>
             <Eyebrow as="h3" tone="on-dark" className="mb-3">Rechtliches</Eyebrow>
-            <ul className="space-y-2 text-sm text-on-primary/80">
+            <ul className="space-y-2 text-sm text-on-primary/80 [&_a]:transition-colors [&_a:hover]:text-accent">
               <li><Link href="/impressum">Impressum</Link></li>
               <li><Link href="/impressum#kontakt">Kontakt</Link></li>
             </ul>

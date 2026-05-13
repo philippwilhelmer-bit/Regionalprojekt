@@ -43,7 +43,7 @@ export function LodenNavBar() {
             key={item.label}
             href={item.href}
             className={`flex flex-col items-center gap-0.5 min-w-[56px] pt-1 border-t-2 ${
-              isActive ? "border-ink" : "border-transparent"
+              isActive ? "border-accent" : "border-transparent"
             }`}
           >
             <span

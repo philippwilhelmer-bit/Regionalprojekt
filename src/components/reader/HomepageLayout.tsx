@@ -102,7 +102,7 @@ export function HomepageLayout({
           <Heading variant="headline-md">Mein Bezirk</Heading>
           <Link
             href="/suche"
-            className="font-label text-label-md uppercase text-ink-muted underline decoration-2 underline-offset-4"
+            className="font-label text-label-md uppercase text-ink-muted underline decoration-2 underline-offset-4 transition-colors hover:text-accent"
           >
             Alle Nachrichten
           </Link>

@@ -8,7 +8,7 @@ export function FragDenSeppCard() {
     <button
       type="button"
       onClick={() => window.dispatchEvent(new Event("openBezirkModal"))}
-      className="w-full text-left flex items-start gap-4"
+      className="group w-full text-left flex items-start gap-4"
     >
       {/* Sepp avatar — full figure, white wappen-circle on dark loden bg */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -27,7 +27,7 @@ export function FragDenSeppCard() {
         <p className="font-label text-body-lg text-on-primary/70 mb-3">
           Wähle deinen Bezirk für hyperlokal gefilterte Nachrichten.
         </p>
-        <span className="inline-flex items-center font-label text-label-md uppercase text-on-primary underline decoration-2 underline-offset-4">
+        <span className="inline-flex items-center font-label text-label-md uppercase text-on-primary underline decoration-2 underline-offset-4 transition-colors group-hover:text-accent">
           Jetzt auswählen
         </span>
       </div>

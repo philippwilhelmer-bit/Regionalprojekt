@@ -52,7 +52,7 @@ export function MascotGreeting() {
         <button
           type="button"
           onClick={openBezirkModal}
-          className="inline-flex items-center font-label text-label-md uppercase text-ink underline decoration-2 underline-offset-4"
+          className="inline-flex items-center font-label text-label-md uppercase text-ink underline decoration-2 underline-offset-4 transition-colors hover:text-accent"
         >
           Mein Bezirk wählen
         </button>

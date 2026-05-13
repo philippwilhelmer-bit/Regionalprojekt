@@ -11,11 +11,11 @@ type Props = {
   className?: string;
 };
 
-const baseClass = "inline-flex items-center justify-center font-label text-label-md uppercase";
+const baseClass = "inline-flex items-center justify-center font-label text-label-md uppercase transition-colors";
 
 const variantClass: Record<Variant, string> = {
-  primary: "px-6 py-3 rounded text-on-primary bg-gradient-to-br from-ink to-ink-deep",
-  tertiary: "text-ink underline decoration-2 underline-offset-4",
+  primary: "px-6 py-3 rounded text-on-primary bg-gradient-to-br from-ink to-ink-deep hover:from-accent hover:to-accent",
+  tertiary: "text-ink underline decoration-2 underline-offset-4 hover:text-accent",
 };
 
 export function Button({

@@ -66,13 +66,13 @@ export function LodenAppBar({ bezirke }: LodenAppBarProps) {
 
         {/* Desktop: nav links + bezirk selector — hidden below md */}
         <nav className="hidden md:flex items-center gap-6 text-sm text-parchment/80">
-          <Link href="/" className="hover:text-parchment transition-colors">Archiv</Link>
-          <Link href="/" className="hover:text-parchment transition-colors opacity-40 cursor-default">Wald</Link>
-          <Link href="/" className="hover:text-parchment transition-colors opacity-40 cursor-default">Ratgeber</Link>
-          <Link href="/suche" className="hover:text-parchment transition-colors">Bibliothek</Link>
+          <Link href="/" className="hover:text-accent transition-colors">Archiv</Link>
+          <Link href="/" className="hover:text-accent transition-colors opacity-40 cursor-default">Wald</Link>
+          <Link href="/" className="hover:text-accent transition-colors opacity-40 cursor-default">Ratgeber</Link>
+          <Link href="/suche" className="hover:text-accent transition-colors">Bibliothek</Link>
           <button
             onClick={handleBezirkClick}
-            className="flex items-center gap-1 hover:text-parchment transition-colors"
+            className="flex items-center gap-1 hover:text-accent transition-colors"
             aria-label="Bezirk auswählen"
           >
             <span className="material-symbols-rounded text-[16px]" aria-hidden="true">location_on</span>
