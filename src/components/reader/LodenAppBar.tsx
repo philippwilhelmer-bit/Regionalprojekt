@@ -66,7 +66,7 @@ export function LodenAppBar({ bezirke }: LodenAppBarProps) {
 
         {/* Desktop: nav links + bezirk selector — hidden below md */}
         <nav className="hidden md:flex items-center gap-6 text-sm text-parchment/80">
-          <Link href="/" className="hover:text-accent transition-colors">Archiv</Link>
+          <Link href="/" className="hover:text-accent transition-colors">Startseite</Link>
           <Link href="/" className="hover:text-accent transition-colors opacity-40 cursor-default">Wald</Link>
           <Link href="/" className="hover:text-accent transition-colors opacity-40 cursor-default">Ratgeber</Link>
           <Link href="/suche" className="hover:text-accent transition-colors">Bibliothek</Link>
@@ -85,7 +85,7 @@ export function LodenAppBar({ bezirke }: LodenAppBarProps) {
       {/* Mobile drawer */}
       {menuOpen && (
         <nav className="md:hidden bg-ink-soft px-4 py-4 flex flex-col gap-3 text-parchment text-sm">
-          <Link href="/" onClick={() => setMenuOpen(false)}>Archiv</Link>
+          <Link href="/" onClick={() => setMenuOpen(false)}>Startseite</Link>
           <span className="opacity-40">Wald (bald verfügbar)</span>
           <span className="opacity-40">Ratgeber (bald verfügbar)</span>
           <Link href="/suche" onClick={() => setMenuOpen(false)}>Bibliothek</Link>

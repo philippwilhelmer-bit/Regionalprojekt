@@ -35,7 +35,7 @@ export function Footer() {
           <div>
             <Eyebrow as="h3" tone="on-dark" className="mb-3">Rubriken</Eyebrow>
             <ul className="space-y-2 text-sm text-on-primary/80 [&_a]:transition-colors [&_a:hover]:text-accent">
-              <li><Link href="/">Archiv</Link></li>
+              <li><Link href="/">Startseite</Link></li>
               <li><Link href="/suche">Bibliothek</Link></li>
             </ul>
           </div>
