@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { groupArticlesByBezirk, type ArticleWithBezirke } from "@/lib/content/articles-utils";
+import type { BezirkItem } from "@/types/bundesland";
 import { HeroArticle } from "./HeroArticle";
 import { MascotGreeting } from "./MascotGreeting";
 import { RegionalEditorialCard } from "./RegionalEditorialCard";
@@ -20,6 +21,7 @@ interface HomepageLayoutProps {
   pinnedArticles: ArticleWithBezirke[];
   allArticles: ArticleWithBezirke[];
   grueneWocheArticles?: ArticleWithBezirke[];
+  bezirke: BezirkItem[];
 }
 
 export function HomepageLayout({
@@ -27,6 +29,7 @@ export function HomepageLayout({
   pinnedArticles,
   allArticles,
   grueneWocheArticles = [],
+  bezirke,
 }: HomepageLayoutProps) {
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -104,7 +107,7 @@ export function HomepageLayout({
 
       {/* 3. Mascot — surface, tonal shift down */}
       <SectionBlock bg="surface" voidSize="md">
-        <MascotGreeting />
+        <MascotGreeting bezirke={bezirke} />
       </SectionBlock>
 
       {/* 4. TopMeldungen — horizontal article overview slider */}

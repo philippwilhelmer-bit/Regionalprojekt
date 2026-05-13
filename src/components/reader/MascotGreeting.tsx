@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import type { BezirkItem } from "@/types/bundesland";
+import { computeBezirkLabel } from "@/lib/bezirk-label";
 
 function getTimeOfDay(): "morning" | "afternoon" | "evening" {
   const hour = new Date().getHours();
@@ -28,9 +31,32 @@ function openBezirkModal() {
   window.dispatchEvent(new Event("openBezirkModal"));
 }
 
-export function MascotGreeting() {
+interface MascotGreetingProps {
+  bezirke: BezirkItem[];
+}
+
+export function MascotGreeting({ bezirke }: MascotGreetingProps) {
   const slot = getTimeOfDay();
-  const { greeting, quote } = GREETINGS[slot];
+  const { greeting, quote: defaultQuote } = GREETINGS[slot];
+
+  const [bezirkLabel, setBezirkLabel] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("bezirk_selection");
+      if (raw) {
+        const slugs: string[] = JSON.parse(raw);
+        if (Array.isArray(slugs) && slugs.length > 0) {
+          setBezirkLabel(computeBezirkLabel(slugs, bezirke));
+        }
+      }
+    } catch { /* Ignore localStorage errors */ }
+  }, [bezirke]);
+
+  const quote = bezirkLabel
+    ? `Das gibt es Neues in ${bezirkLabel}.`
+    : defaultQuote;
+  const ctaLabel = bezirkLabel ? "Bezirk wechseln" : "Mein Bezirk wählen";
 
   return (
     <div className="flex items-start gap-4">
@@ -54,7 +80,7 @@ export function MascotGreeting() {
           onClick={openBezirkModal}
           className="inline-flex items-center font-label text-label-md uppercase text-ink underline decoration-2 underline-offset-4 transition-colors hover:text-accent"
         >
-          Mein Bezirk wählen
+          {ctaLabel}
         </button>
       </div>
     </div>
