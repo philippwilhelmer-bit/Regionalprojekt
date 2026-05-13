@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import config from "@/../bundesland.config";
 import type { BezirkItem } from "@/types/bundesland";
 import { computeBezirkLabel } from "@/lib/bezirk-label";
 
@@ -41,9 +40,17 @@ export function LodenAppBar({ bezirke }: LodenAppBarProps) {
       />
 
       <div className="bg-ink px-4 h-14 flex items-center justify-between">
-        {/* Left: serif brand name */}
-        <Link href="/" className="font-headline italic text-parchment text-xl">
-          Loden &amp; Leute
+        {/* Left: round mascot emblem + serif wordmark */}
+        <Link href="/" className="flex items-center gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/wurzelmann.png"
+            alt=""
+            className="w-9 h-9 rounded-full bg-ink-deep object-cover shrink-0"
+          />
+          <span className="font-headline italic text-parchment text-xl">
+            Loden &amp; Leute
+          </span>
         </Link>
 
         {/* Mobile: hamburger button — hidden on md+ */}

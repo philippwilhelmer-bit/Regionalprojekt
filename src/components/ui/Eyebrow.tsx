@@ -1,16 +1,17 @@
-import type { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
   tone?: "default" | "on-dark";
+  as?: ElementType;
   className?: string;
 };
 
-export function Eyebrow({ children, tone = "default", className = "" }: Props) {
+export function Eyebrow({ children, tone = "default", as: As = "p", className = "" }: Props) {
   const toneClass = tone === "on-dark" ? "text-on-primary/80" : "text-ink-muted";
   return (
-    <p className={`font-label text-label-md uppercase ${toneClass} ${className}`.trim()}>
+    <As className={`font-label text-label-md uppercase ${toneClass} ${className}`.trim()}>
       {children}
-    </p>
+    </As>
   );
 }
