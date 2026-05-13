@@ -11,17 +11,20 @@ import { AdUnit } from "./AdUnit";
 import { WeatherWidget } from "./WeatherWidget";
 import { FragDenSeppCard } from "./FragDenSeppCard";
 import { GrueneWocheSection } from "./GrueneWocheSection";
+import { TopMeldungenRow } from "./TopMeldungenRow";
 import { SectionBlock } from "@/components/ui/SectionBlock";
 import { Heading } from "@/components/ui/Heading";
 
 interface HomepageLayoutProps {
   hero: ArticleWithBezirke | null;
+  pinnedArticles: ArticleWithBezirke[];
   allArticles: ArticleWithBezirke[];
   grueneWocheArticles?: ArticleWithBezirke[];
 }
 
 export function HomepageLayout({
   hero,
+  pinnedArticles,
   allArticles,
   grueneWocheArticles = [],
 }: HomepageLayoutProps) {
@@ -44,6 +47,16 @@ export function HomepageLayout({
   }, []);
 
   const hasBezirkSelection = mounted && selectedSlugs.length > 0;
+
+  // Pinned articles filter — show statewide pins always, plus pins matching
+  // the selected bezirks when the user has picked any.
+  const filteredPinned = hasBezirkSelection
+    ? pinnedArticles.filter(
+        (a) =>
+          a.isStateWide ||
+          a.bezirke.some((entry) => selectedSlugs.includes(entry.bezirk.slug)),
+      )
+    : pinnedArticles;
 
   let bezirkSections: Array<{ slug: string; name: string; articles: ArticleWithBezirke[] }> = [];
   if (hasBezirkSelection) {
@@ -84,19 +97,31 @@ export function HomepageLayout({
       {/* 1. Hero — Topmeldung, full-bleed photo */}
       {hero && <HeroArticle article={hero} />}
 
-      {/* 2. Mascot — parchment greeting block */}
+      {/* 2. Wetter — parchment, prominent under hero */}
       <SectionBlock bg="parchment" voidSize="md">
+        <WeatherWidget />
+      </SectionBlock>
+
+      {/* 3. Mascot — surface, tonal shift down */}
+      <SectionBlock bg="surface" voidSize="md">
         <MascotGreeting />
       </SectionBlock>
 
-      {/* 3. Ad slot — surface, compact (no big void) */}
+      {/* 4. TopMeldungen — horizontal article overview slider */}
+      {filteredPinned.length > 0 && (
+        <SectionBlock bg="parchment" voidSize="none" gutter={false}>
+          <TopMeldungenRow articles={filteredPinned} />
+        </SectionBlock>
+      )}
+
+      {/* 5. Ad slot — surface, compact (no big void) */}
       <SectionBlock bg="surface" voidSize="none">
         <div className="py-4">
           <AdUnit zone="between-articles" />
         </div>
       </SectionBlock>
 
-      {/* 4. Mein Bezirk — surface, with "Alle Nachrichten" exit link */}
+      {/* 6. Mein Bezirk — surface, with "Alle Nachrichten" exit link */}
       <SectionBlock bg="surface" voidSize="md">
         <div className="flex items-baseline justify-between mb-4">
           <Heading variant="headline-md">Mein Bezirk</Heading>
@@ -154,24 +179,19 @@ export function HomepageLayout({
         )}
       </SectionBlock>
 
-      {/* 5. Frag den Sepp — surface-deep (dark loden), Bezirk-Modal-Trigger */}
+      {/* 7. Frag den Sepp — surface-deep (dark loden), Bezirk-Modal-Trigger */}
       <SectionBlock bg="surface-deep" voidSize="md">
         <FragDenSeppCard />
       </SectionBlock>
 
-      {/* 6. Wetter — parchment, compact */}
-      <SectionBlock bg="parchment" voidSize="md">
-        <WeatherWidget />
-      </SectionBlock>
-
-      {/* 7. Ad slot — parchment (same zone as Wetter) */}
+      {/* 8. Ad slot — parchment */}
       <SectionBlock bg="parchment" voidSize="none">
         <div className="py-4">
           <AdUnit zone="between-articles" />
         </div>
       </SectionBlock>
 
-      {/* 8. Das Archiv der Woche — parchment, editorial cards */}
+      {/* 9. Das Archiv der Woche — parchment, editorial cards */}
       {grueneWocheArticles.length > 0 && (
         <SectionBlock bg="parchment" voidSize="md">
           <GrueneWocheSection articles={grueneWocheArticles} />

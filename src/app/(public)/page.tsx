@@ -2,15 +2,16 @@
 // Prevents Next.js from attempting to statically pre-render at build time.
 export const dynamic = 'force-dynamic'
 
-import { getFeaturedArticle, listArticlesForHomepage, listGrueneWocheArticles } from "@/lib/content/articles";
+import { getFeaturedArticle, getPinnedArticles, listArticlesForHomepage, listGrueneWocheArticles } from "@/lib/content/articles";
 import { HomepageLayout } from "@/components/reader/HomepageLayout";
 
 export default async function HomePage() {
-  const [hero, allArticles, grueneWocheArticles] = await Promise.all([
+  const [hero, pinned, allArticles, grueneWocheArticles] = await Promise.all([
     getFeaturedArticle(),
+    getPinnedArticles(),
     listArticlesForHomepage(),
     listGrueneWocheArticles({ limit: 10 }),
   ]);
 
-  return <HomepageLayout hero={hero} allArticles={allArticles} grueneWocheArticles={grueneWocheArticles} />;
+  return <HomepageLayout hero={hero} pinnedArticles={pinned} allArticles={allArticles} grueneWocheArticles={grueneWocheArticles} />;
 }

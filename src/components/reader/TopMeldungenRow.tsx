@@ -50,7 +50,7 @@ export function TopMeldungenRow({ articles, heading = "Top-Meldungen" }: TopMeld
                 )}
 
                 {/* Headline */}
-                <h3 className="font-headline text-sm font-semibold text-ink leading-snug line-clamp-2 mb-1">
+                <h3 className="font-headline tracking-tight text-sm font-semibold text-ink leading-snug line-clamp-2 mb-1">
                   {article.title}
                 </h3>
 
