@@ -37,6 +37,11 @@ export function HeroArticle({ article }: HeroArticleProps) {
       {/* Legibility gradient — bottom-up */}
       <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/40 to-transparent" />
 
+      {/* TOP STORY pill — accent badge, top-left */}
+      <span className="absolute top-[var(--spacing-void-md)] left-[var(--spacing-gutter)] z-10 inline-flex items-center px-3 py-1 rounded-sm bg-accent text-on-primary font-label uppercase text-[11px] tracking-[0.15em] font-semibold">
+        Top Story
+      </span>
+
       <div className="relative z-10 flex flex-col justify-end min-h-[60vh] px-[var(--spacing-gutter)] pb-10 pt-[var(--spacing-void-md)]">
         <Eyebrow tone="on-dark" className="mb-3">
           {eyebrowLabel}
