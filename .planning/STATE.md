@@ -1,11 +1,11 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: "4 harness iterations explored (Haiku 9→10→7→7, Sonnet 16/20). Closed: Haiku model-capability limits, Sonnet defeats cost target. Production on legacy Haiku stays. v3.2 success criterion ≥50% input-token reduction NOT met — explicitly deferred."
-stopped_at: "44-04 deployed + verified in prod (BMI RSS 19 items, Source.lastFetchedAt/etag/lastModified populated). Accept-header regression caught + fixed mid-rollout."
-last_updated: "2026-05-12T19:10:00.000Z"
-last_activity: 2026-05-12 — 48 commits pushed to origin/main; Prisma migrate-resolve on stale 20260401_add_article_theme + migrate deploy of 20260514_phase44_source_cursor; Accept-header regression (BMI 302) caught and fixed in 21ade92; cron run 21:08 CEST green
+milestone: v3.3
+milestone_name: Directory Expansion
+status: "Phase 46 (Ärzteverzeichnis) discussed and CONTEXT.md drafted. Ready for /gsd:plan-phase 46. v3.2 still has 44-01/02/03 DEFERRED + Phase 45 not started — those are parked and remain orthogonal."
+stopped_at: "Phase 46 context-gathering complete. CONTEXT.md + phase-local DESIGN.md (with reconciliation against live tokens) written in .planning/phases/46-aerzteverzeichnis/. Next: plan-phase."
+last_updated: "2026-05-14T13:35:00.000Z"
+last_activity: 2026-05-14 — Phase 46 discuss-phase: scope captured (full MVP: Editorial CRUD + map + editorial notes + cross-links + verification badge; /aerzte route; Alle Arzt-Kategorien; phase-local design tokens). Plus ad-hoc Bright & Modern UI iteration + freigestellt mascot asset swap + clip-path fix + WeatherWidget umlaut fix shipped to main.
 progress:
   total_phases: 3
   completed_phases: 1
@@ -20,18 +20,25 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-10)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** v3.2 Text Engine Optimization — Phase 43 plans complete; cutover gate FAILED + ROLLED BACK; merged-call tuning explored across 4 harness iterations and CLOSED as "infeasible with Haiku 4.5 + cost target". Production on legacy two-step Haiku path (Vercel `AI_USE_MERGED_CALL=false`, verified on run #53). Merged-call code dormant in tree (commits 25007cc, 27bc1f3, 6a0c63f). The v3.2 ≥50% input-token reduction success criterion is NOT met and is explicitly deferred — next attempt should follow Phase 44 telemetry + Phase 45 quality-eval loop + a model-class re-evaluation.
+**Current focus:** v3.3 Directory Expansion — adding a public doctor directory under `/aerzte` with editorial admin CRUD, map pins, editorial notes and verification badges. Phase 46 is freshly discussed (CONTEXT.md + phase-local DESIGN.md drafted on 2026-05-14). v3.2 work is parked: Phase 43 closed, 44-04 deployed, 44-01/02/03 + Phase 45 remain DEFERRED. The v3.2 ≥50% input-token reduction success criterion remains NOT met — explicitly deferred to a future model-class re-evaluation.
 
 ## Current Position
 
-Phase: 44 — Cost Telemetry & Adapter Hardening (44-04 ✅ deployed + verified; 44-01/02/03 DEFERRED pending replan)
-Plan: 44-04 closed + verified in prod 2026-05-12
-Status: 48 commits live on origin/main; migration applied to Neon; BMI RSS cron green with cursor + conditional GET populated. v3.2 success criterion ≥50% input-token reduction remains NOT met — explicitly deferred. 44-04 is the only Phase 44 plan actually shipped.
-Last activity: 2026-05-12 21:08 CEST — verification cron HTTP 200, `found=19 new=1`, Source 3 lastFetchedAt/etag/lastModified persisted
+Milestone: v3.3 Directory Expansion (new, scaffolded 2026-05-14)
+Phase: 46 — Ärzteverzeichnis (Doctor Directory)
+Plan: none yet — `/gsd:plan-phase 46` is the next step
+Status: CONTEXT.md captures scope, decisions and 9 open questions; phase-local DESIGN.md captures the new design-token system with reconciliation against the live tokens (YAML authoritative on the two YAML-vs-prose conflicts).
+Last activity: 2026-05-14 — Phase 46 discuss-phase complete.
 
 ```
-v3.2 Progress: [██████████] 100% — 14/14 plans in phase 43 (auto-computed; cutover gate is operator-side, not a plan)
+v3.3 Progress: [░░░░░░░░░░] 0% — Phase 46 awaiting plan
 ```
+
+**Parked from v3.2 (carried forward, untouched here):**
+- Phase 44 Plan 04 ✅ deployed + verified in prod 2026-05-12
+- Phase 44 Plans 01/02/03 DEFERRED pending replan with legacy-is-live context
+- Phase 45 (REVIEW Heuristic & Quality Loop) not started
+- v3.2 ≥50% input-token reduction success criterion NOT met — explicitly deferred
 
 ## Performance Metrics
 
@@ -108,15 +115,17 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-12T19:10:00Z
-Stopped at: 44-04 deployed + verified in prod (HTTP 200, BMI RSS 19 items, Source.lastFetchedAt/etag/lastModified populated). 48 commits live on origin/main. Accept-header regression caught + fixed mid-rollout (commit 21ade92).
-Resume with one of:
-1) **Replan 44-01/02/03** via `/gsd:plan-phase` with legacy-is-live context (DEFERRED admonitions in each PLAN.md explain the gap).
-2) **Close v3.2 milestone** — revise PROJECT.md + ROADMAP.md to mark the ≥50% reduction success criterion as "deferred"; archive Phase 43 + partial Phase 44 via `/gsd:audit-milestone` + `/gsd:complete-milestone`; set up v3.3 for the AI cost work.
-3) **Build-script fix** — add `prisma migrate deploy` to the Vercel build command so future migrations land automatically.
-4) **Cosmetic cleanups** — cron-runbook GET-vs-POST in 43-04-SUMMARY.md.
+Last session: 2026-05-14T13:35:00Z
+Stopped at: Phase 46 (Ärzteverzeichnis) discuss-phase complete. `.planning/phases/46-aerzteverzeichnis/46-CONTEXT.md` + phase-local `DESIGN.md` written. v3.3 milestone scaffolded (note: ROADMAP.md not yet updated to add v3.3 entry — happens at plan-phase or new-milestone). Working tree clean since `e9a60da fix(weather): use bezirke lookup instead of capitalised slug`.
 
-Artifacts from this session:
-- `/tmp/baseline.json`, `/tmp/baseline-post-rollback.json` — PipelineRun history
+Resume with one of:
+1) **Plan Phase 46** — `/gsd:plan-phase 46` resolves the 9 open questions in CONTEXT.md (felder-vollkatalog, map-engine, suche-modus, JSON-LD, sortierung, bulk-import, AppBar-link, sitemap, token-prefix) and breaks the work into plans.
+2) **Research Phase 46** — `/gsd:research-phase 46` if Nominatim-rate-limit or Leaflet-bundle-size needs spiking before plan.
+3) **Update ROADMAP.md** — add v3.3 Directory Expansion entry under the milestones list. Currently not yet done — STATE.md leads, ROADMAP.md follows.
+4) **Resume v3.2 parked work** — `/gsd:plan-phase 44` (replan 44-01/02/03 with legacy-is-live context) or `/gsd:plan-phase 45` (REVIEW Heuristic & Quality Loop).
+5) **Continue ad-hoc UI iteration** — outside GSD; recent: Bright & Modern mockup, freigestellt mascot asset, clip-path fix, WeatherWidget umlaut fix.
+
+Carry-over artifacts (still relevant, untouched):
+- `/tmp/baseline.json`, `/tmp/baseline-post-rollback.json` — PipelineRun history from v3.2
 - `/tmp/replay-v3-cutover-fail.log`, `/tmp/replay-iter1..4*.log` — merged-prompt tuning harness runs
 - `/tmp/baseline-query.ts`, `/tmp/aipl-10-sql.ts`, `/tmp/verify-source-schema.ts`, `/tmp/verify-44-04-features.ts`, `/tmp/inspect-migrations.ts`, `/tmp/check-idx.ts`, `/tmp/bezirke-q.ts` — one-off DB-inspection scripts (kept for reproducibility, not committed)
