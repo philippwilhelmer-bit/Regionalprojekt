@@ -8,7 +8,8 @@
 - ✅ **v2.0 Wurzelwelt Rebrand** — Phases 26-32 (shipped 2026-03-30)
 - ✅ **v3.0 The Modern Archivist** — Phases 33-39 (shipped 2026-04-05)
 - ✅ **v3.1 Basemap Article Images** — Phases 40-42 (shipped 2026-05-10)
-- 🔄 **v3.2 Text Engine Optimization** — Phases 43-45 (in progress)
+- 🔄 **v3.2 Text Engine Optimization** — Phases 43-45 (43 complete, 44 partial, 45 not started — PARKED 2026-05-14)
+- 🔄 **v3.3 Directory Expansion** — Phase 46 (Ärzteverzeichnis — in progress)
 
 ## Phases
 
@@ -111,6 +112,15 @@ Full details: `.planning/milestones/v3.1-ROADMAP.md`
 
 </details>
 
+<details open>
+<summary>🔄 v3.3 Directory Expansion (Phase 46) — IN PROGRESS</summary>
+
+- [ ] **Phase 46: Ärzteverzeichnis (Doctor Directory)** — Editorial CRUD-pflegte Liste aller Allgemeinmediziner / Fachärzte / Zahnärzte mit Bezirk-Filter, Detail-Pages mit Map-Pin (Nominatim-geocoded), editorial notes + verifizierungs-badge + manuelle Artikel-Cross-Links. Eigenständige Route `/aerzte` + Admin-CRUD unter `/admin/aerzte`. Neue Design-Tokens additiv, phase-local (Master DESIGN.md unangetastet).
+
+Full details: `.planning/phases/46-aerzteverzeichnis/46-CONTEXT.md` + phase-local DESIGN.md
+
+</details>
+
 ## Phase Details
 
 ### Phase 43: AI Pipeline Quick Wins
@@ -185,6 +195,45 @@ Plans:
 
 ---
 
+### Phase 46: Ärzteverzeichnis (Doctor Directory)
+
+**Goal:** Loden & Leute serves a public doctor directory under `/aerzte` where Steiermark residents can browse Allgemeinmediziner, Fachärzte and Zahnärzte filtered by Bezirk and Fachrichtung. Each entry has a Nominatim-geocoded detail page with optional editorial notes, manual article cross-links, and a verification badge. Editorial team owns the data through an admin CRUD under `/admin/aerzte`. New design tokens are introduced phase-local in `globals.css` without touching the rest of the site.
+
+**Depends on:** None (orthogonal to v3.2 — does not touch Article table or AI pipeline)
+
+**Requirements:** DIR-01, DIR-02, DIR-03, DIR-04, DIR-05, DIR-06, DIR-07, DIR-08, DIR-09, DIR-10, DIR-11, DIR-12, DIR-13
+
+(IDs to be minted in `.planning/REQUIREMENTS.md` as part of Plan 01 Task 1.4.)
+
+**Success Criteria** (what must be TRUE):
+1. A public-facing list at `/aerzte` shows all `Doctor` rows filterable by Bezirk and Kategorie (Allgemeinmedizin / Facharzt / Zahnarzt) and Fachrichtung
+2. Each `Doctor` has a public detail page at `/aerzte/{publicId}/{slug}` with canonical slug redirect, address, optional map pin (when Nominatim succeeded), editorial note (rendered Markdown), and "Mehr zum Thema" article cross-links
+3. Admin can create / edit / delete / verify-toggle a doctor entry from `/admin/aerzte` using the project's Server-Action-Trinity pattern (Db / Action / Form)
+4. Nominatim geocoding runs synchronously on save (single call per save, rate-limit safe); when it fails, the entry is saved with `lat=null,lon=null` and the admin sees a non-blocking warning
+5. The site continues to pass typecheck and the existing test suite — Doctor schema is additive (new table, no Article-table changes)
+6. The new design tokens introduced for the directory live in `globals.css` under a namespace prefix; no live token semantics changed
+7. `sitemap.ts` includes all `Doctor` detail URLs; SEO emits `Physician` (or `Dentist`) JSON-LD per detail page
+
+**Plans:** 6 plans (0/6 complete)
+
+Plans:
+- [ ] 46-00-PLAN.md — Foundation prep: parameterize `mapgen.ts` Blob path prefix + add `--dir-*` design tokens to `globals.css` (DIR-09 prep, DIR-13)
+- [ ] 46-01-PLAN.md — Prisma `Doctor` model + additive migration + DAL `doctors.ts` with overload + duck-typed DI + DAL pglite tests + `REQUIREMENTS.md` DIR-01..13 backfill (DIR-01, DIR-02, DIR-03)
+- [ ] 46-02-PLAN.md — Server-Action-Trinity `doctors-actions.ts`: pure `*Db` + `*Action` (auth + two-phase create with geocode + mapgen) + `*Form` wrappers; vi.mock'd tests for happy + failure paths (DIR-04, DIR-05, DIR-09)
+- [ ] 46-03-PLAN.md — Admin CRUD UI: `/admin/aerzte` list with filter chips, `/admin/aerzte/new`, `/admin/aerzte/[id]/edit`, row component with toggle-verified + delete forms (DIR-06)
+- [ ] 46-04-PLAN.md — Public pages: `/aerzte` list + filter chips + `/aerzte/[publicId]/[slug]` detail with slug canonicalization, JSON-LD (Physician/Dentist), static map display, related-articles cross-links, `Angaben ohne Gewähr` disclaimer (DIR-07, DIR-08, DIR-10)
+- [ ] 46-05-PLAN.md — Sitemap inclusion, AppBar + Footer nav-link "Ärzte", end-to-end integration smoke checkpoint (DIR-11, DIR-12)
+
+**Wave structure:**
+- Wave 1: 46-00, 46-01 (parallel — different files)
+- Wave 2: 46-02 (depends on 00+01), 46-04 (depends on 01)
+- Wave 3: 46-03 (depends on 02)
+- Wave 4: 46-05 (depends on 03+04)
+
+**Risk:** Manual data pflege at scale is unsustainable beyond a few hundred entries (Steiermark has ~2000+ active doctors). Mitigation: MVP launch covers Graz + 2-3 angrenzende Bezirke; growth is operator-driven, not feature-driven. Verification-badge is a signal not a guarantee — clear disclaimer in detail-page footer is mandatory ("Angaben ohne Gewähr").
+
+---
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -198,3 +247,4 @@ Plans:
 | 43 | 4/4 | Complete    | 2026-05-11 | - |
 | 44 | 1/4 | In Progress|  | - |
 | 45 | v3.2 | 0/TBD | Not started | - |
+| 46 | v3.3 | 0/6 | Planned — execute-phase next | - |
