@@ -120,7 +120,7 @@ describe('createDoctorDb', () => {
       db,
       {
         name: 'Dr. Y',
-        kategorie: 'APOTHEKE',
+        kategorie: 'FACHARZT',
         address: 'B',
         bezirkId: grazId,
       },
@@ -262,7 +262,12 @@ describe('createDoctor (Server Action)', () => {
     expect(doctor.lon).toBe(15.43)
     expect(doctor.mapImageUrl).toBe('https://blob.example/maps/doctor-1.jpg')
 
-    expect(mockedGeocode).toHaveBeenCalledWith(db, 'Hauptplatz 1, 8010 Graz')
+    // Assert geocode args positionally — toHaveBeenCalledWith would deep-equal
+    // the entire PrismaClient (which is circular) and blow the stack.
+    expect(mockedGeocode).toHaveBeenCalledTimes(1)
+    const gcCall = mockedGeocode.mock.calls[0]
+    expect(gcCall[1]).toBe('Hauptplatz 1, 8010 Graz')
+
     expect(mockedMapgen).toHaveBeenCalledTimes(1)
     // generateMapImage(lat, lon, name, doctorId, locationType, options)
     const mgCall = mockedMapgen.mock.calls[0]
@@ -410,7 +415,9 @@ describe('updateDoctor (Server Action)', () => {
     expect(updated.lat).toBe(48.0)
     expect(updated.lon).toBe(16.0)
     expect(updated.mapImageUrl).toBe('https://blob.example/maps/doctor-new.jpg')
-    expect(mockedGeocode).toHaveBeenCalledWith(db, 'New Address')
+    // Positional assert — avoid deep-equality of circular PrismaClient.
+    expect(mockedGeocode).toHaveBeenCalledTimes(1)
+    expect(mockedGeocode.mock.calls[0][1]).toBe('New Address')
   })
 })
 
