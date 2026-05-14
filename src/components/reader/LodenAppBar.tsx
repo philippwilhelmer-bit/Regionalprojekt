@@ -71,6 +71,7 @@ export function LodenAppBar({ bezirke }: LodenAppBarProps) {
         <nav className="hidden md:flex items-center gap-6 text-sm text-primary/80">
           <Link href="/" className="hover:text-accent transition-colors">Startseite</Link>
           <Link href="/suche" className="hover:text-accent transition-colors">Bibliothek</Link>
+          <Link href="/aerzte" className="hover:text-accent transition-colors">Ärzte</Link>
           <button
             onClick={handleBezirkClick}
             className="flex items-center gap-1 hover:text-accent transition-colors"
@@ -95,6 +96,7 @@ export function LodenAppBar({ bezirke }: LodenAppBarProps) {
         <nav className="md:hidden bg-background px-4 py-4 flex flex-col gap-3 text-primary text-sm border-b border-outline-variant/30">
           <Link href="/" onClick={() => setMenuOpen(false)} className="transition-colors hover:text-accent">Startseite</Link>
           <Link href="/suche" onClick={() => setMenuOpen(false)} className="transition-colors hover:text-accent">Bibliothek</Link>
+          <Link href="/aerzte" onClick={() => setMenuOpen(false)} className="transition-colors hover:text-accent">Ärzte</Link>
           {/* Bezirk selector in drawer */}
           <button
             onClick={handleBezirkClick}

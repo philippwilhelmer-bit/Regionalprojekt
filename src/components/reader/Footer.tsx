@@ -37,6 +37,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-on-primary/80 [&_a]:transition-colors [&_a:hover]:text-accent">
               <li><Link href="/">Startseite</Link></li>
               <li><Link href="/suche">Bibliothek</Link></li>
+              <li><Link href="/aerzte">Ärzteverzeichnis</Link></li>
             </ul>
           </div>
 
