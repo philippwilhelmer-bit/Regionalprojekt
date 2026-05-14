@@ -28,15 +28,13 @@ export function SeppTipBox({
       />
 
       <div className="relative z-10 flex flex-col md:flex-row gap-6 md:gap-8 items-start">
-        {/* Sepp avatar — ring + bg-primary backdrop */}
-        <div className="w-24 h-24 shrink-0 rounded-full bg-primary p-1 ring-4 ring-surface shadow-lg">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/wurzelmann%20freigestellt.png"
-            alt="Sepp"
-            className="w-full h-full object-cover [clip-path:circle(38%)]"
-          />
-        </div>
+        {/* Sepp avatar — clipped to circle */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/wurzelmann%20freigestellt.png"
+          alt="Sepp"
+          className="w-24 h-24 shrink-0 object-cover [clip-path:circle(38%)]"
+        />
 
         <div className="flex-1">
           <Heading variant="headline-md" as="h3" className="mb-2">
