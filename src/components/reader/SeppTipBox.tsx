@@ -32,9 +32,9 @@ export function SeppTipBox({
         <div className="w-24 h-24 shrink-0 rounded-full bg-primary p-1 ring-4 ring-surface shadow-lg">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/wurzelmann.png"
+            src="/images/wurzelmann%20freigestellt.png"
             alt="Sepp"
-            className="w-full h-full object-contain rounded-full"
+            className="w-full h-full object-contain"
           />
         </div>
 

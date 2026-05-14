@@ -30,9 +30,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/wurzelmann.png"
+            src="/images/wurzelmann%20freigestellt.png"
             alt=""
-            className="w-10 h-10 rounded-full object-contain shrink-0 bg-parchment"
+            className="w-10 h-10 object-contain shrink-0"
           />
           <span className="font-headline italic text-lg text-primary group-hover:text-accent transition-colors">
             Loden &amp; Leute

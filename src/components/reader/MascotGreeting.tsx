@@ -63,7 +63,7 @@ export function MascotGreeting({ bezirke }: MascotGreetingProps) {
       <div className="bg-background rounded-md shadow-sm p-2 mb-4 self-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/images/wurzelmann.png"
+          src="/images/wurzelmann%20freigestellt.png"
           alt="Sepp"
           className="w-20 h-20 object-contain"
         />
