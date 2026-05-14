@@ -394,6 +394,43 @@ describe('generateMapImage', () => {
     )
   })
 
+  it('uses "maps/doctor-{id}.jpg" when pathPrefix="doctor" option is passed (Phase 46 DIR-09)', async () => {
+    const { put } = await import('@vercel/blob')
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      arrayBuffer: async () => minimalPngArrayBuffer,
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    await generateMapImage(47.07, 15.43, 'Test', 7, undefined, { pathPrefix: 'doctor' })
+    expect(put).toHaveBeenCalledWith(
+      'maps/doctor-7.jpg',
+      expect.any(Buffer),
+      expect.objectContaining({ access: 'public', contentType: 'image/jpeg' })
+    )
+  })
+
+  it('falls back to "maps/article-{id}.jpg" when pathPrefix is empty string (|| guard, not JS default-param)', async () => {
+    const { put } = await import('@vercel/blob')
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      arrayBuffer: async () => minimalPngArrayBuffer,
+    })
+    vi.stubGlobal('fetch', mockFetch)
+
+    // Empty string MUST NOT produce "maps/-99.jpg" — the `|| 'article'` guard catches it.
+    // A JS default-parameter (`pathPrefix: string = 'article'`) would NOT fire on '',
+    // only on undefined — hence the explicit `||` check in uploadToBlob.
+    await generateMapImage(47.07, 15.43, 'Test', 99, undefined, { pathPrefix: '' })
+    expect(put).toHaveBeenCalledWith(
+      'maps/article-99.jpg',
+      expect.any(Buffer),
+      expect.objectContaining({ access: 'public', contentType: 'image/jpeg' })
+    )
+  })
+
   it('returns null (not throws) when fetch fails', async () => {
     const mockFetch = vi.fn().mockRejectedValue(new Error('Network error'))
     vi.stubGlobal('fetch', mockFetch)
