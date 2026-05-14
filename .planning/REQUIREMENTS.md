@@ -69,10 +69,10 @@ Public doctor directory under `/aerzte` with editorial CRUD, Nominatim geocoding
 - [ ] **DIR-04**: Server-Action-Trinity in `src/lib/admin/doctors-actions.ts`: pure `*Db` (no auth), `*Action` (requireAuth + delegate), `*Form` (FormData parser + revalidate/redirect) — for `create`, `update`, `softDelete`, `toggleVerified`
 - [ ] **DIR-05**: `createDoctor` / `updateDoctor` Server Action geocodes `address` via existing `geocodeLocation()` — single Nominatim call per save, no sleep needed; failure persists row with `lat/lon=null` and surfaces non-blocking admin warning
 - [ ] **DIR-06**: Admin pages `/admin/aerzte` (list with filters + "Neu" link), `/admin/aerzte/new`, `/admin/aerzte/[id]/edit` — mirror `/admin/articles` patterns
-- [ ] **DIR-07**: Public `/aerzte` list page, Server Component, `dynamic = 'force-dynamic'`, query-param filters bezirk/kategorie/fachrichtung; "Mein Bezirk" auto-prefill from `bezirk_selection` localStorage convention (client-island reads, server reads query param)
-- [ ] **DIR-08**: Public `/aerzte/[publicId]/[slug]` detail page with `permanentRedirect` slug canonicalization via `slugify()` from `lib/reader/slug`
+- [x] **DIR-07**: Public `/aerzte` list page, Server Component, `dynamic = 'force-dynamic'`, query-param filters bezirk/kategorie/fachrichtung; "Mein Bezirk" auto-prefill from `bezirk_selection` localStorage convention (client-island reads, server reads query param)
+- [x] **DIR-08**: Public `/aerzte/[publicId]/[slug]` detail page with `permanentRedirect` slug canonicalization via `slugify()` from `lib/reader/slug`
 - [x] **DIR-09**: Doctor map asset generated at admin save via `generateMapImage(lat, lon, name, doctorId, locType, { pathPrefix: 'doctor' })`; persisted as `mapImageUrl`; failure logs warn but does not block save
-- [ ] **DIR-10**: Detail page emits JSON-LD: `@type: 'Physician'` for ALLGEMEINMEDIZIN+FACHARZT, `@type: 'Dentist'` for ZAHNARZT, with `address: PostalAddress`, optional `geo: GeoCoordinates`, optional `medicalSpecialty` for FACHARZT
+- [x] **DIR-10**: Detail page emits JSON-LD: `@type: 'Physician'` for ALLGEMEINMEDIZIN+FACHARZT, `@type: 'Dentist'` for ZAHNARZT, with `address: PostalAddress`, optional `geo: GeoCoordinates`, optional `medicalSpecialty` for FACHARZT
 - [ ] **DIR-11**: `src/app/sitemap.ts` includes `/aerzte` index + all `/aerzte/{publicId}/{slug}` URLs (priority 0.7, weekly); bounded `take: 5000`
 - [ ] **DIR-12**: `LodenAppBar` desktop + mobile drawer gain "Ärzte" link; `Footer` "Rubriken" column gains "Ärzteverzeichnis"; "Angaben ohne Gewähr" disclaimer rendered in detail-page footer
 - [x] **DIR-13**: Phase-local CSS tokens added to `src/app/globals.css @theme` under `--color-dir-*` / `--radius-dir-*` / `--spacing-dir-*` namespace — full DESIGN.md YAML token set, additive only, no master-token edits
@@ -154,10 +154,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DIR-04 | Phase 46 | Pending |
 | DIR-05 | Phase 46 | Pending |
 | DIR-06 | Phase 46 | Pending |
-| DIR-07 | Phase 46 | Pending |
-| DIR-08 | Phase 46 | Pending |
+| DIR-07 | Phase 46 | Complete |
+| DIR-08 | Phase 46 | Complete |
 | DIR-09 | Phase 46 | Complete |
-| DIR-10 | Phase 46 | Pending |
+| DIR-10 | Phase 46 | Complete |
 | DIR-11 | Phase 46 | Pending |
 | DIR-12 | Phase 46 | Pending |
 | DIR-13 | Phase 46 | Complete |

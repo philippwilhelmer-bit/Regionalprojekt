@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_plan: "1 of 6 (next: 46-02 — action layer)"
-status: 46-00 SHIPPED — mapgen.uploadToBlob gains optional pathPrefix parameter (empty-string-safe via `|| 'article'` guard); globals.css gains 47 `--color-dir-*` + 6 `--radius-dir-*` + 8 `--spacing-dir-*` Phase-46 tokens inside `@theme`. Master tokens untouched, build green, 54 mapgen/map-actions tests pass. Plan 46-01 (Doctor model + DAL) also shipped on a parallel track. v3.2 work parked.
-stopped_at: Completed 46-01-PLAN.md (Doctor schema + DAL + DIR-01..13 minted). Plan 46-02 (doctors-actions.ts trinity) is next — schema/types/DAL are all in place.
-last_updated: "2026-05-14T12:51:21.439Z"
-last_activity: "2026-05-14 — Plan 46-00 executed (7 min, 2 tasks, 3 files modified). Three commits: `414bb3b` (test RED) → `bc85cbb` (refactor GREEN) → `e557c1e` (feat tokens)."
+current_plan: 3
+status: "46-00 + 46-01 SHIPPED. Foundation in place: mapgen.uploadToBlob pathPrefix option (46-00), Phase 46 design tokens (46-00), Doctor model + additive migration (DIR-01/02), doctors.ts read-only DAL with duck-typed DI (DIR-03), 21 pglite tests passing, REQUIREMENTS.md DIR-01..DIR-13 minted. v3.2 work parked."
+stopped_at: "Completed 46-04-PLAN.md (public Ärzte routes: list + detail + JSON-LD + slug canonical + map). Next: Plan 46-02 (doctors-actions trinity, running in parallel) or Plan 46-03 (admin pages)."
+last_updated: "2026-05-14T13:01:34.032Z"
+last_activity: 2026-05-14
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 14
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # Project State
@@ -27,10 +27,10 @@ See: .planning/PROJECT.md (updated 2026-05-10)
 
 Milestone: v3.3 Directory Expansion (scaffolded 2026-05-14, executing)
 Phase: 46 — Ärzteverzeichnis (Doctor Directory)
-Current Plan: 2 of 6 (next: 46-02 — action layer)
+Current Plan: 3
 Total Plans in Phase: 6 (46-00 through 46-05)
 Status: 46-00 + 46-01 SHIPPED. Foundation in place: mapgen.uploadToBlob pathPrefix option (46-00), Phase 46 design tokens (46-00), Doctor model + additive migration (DIR-01/02), doctors.ts read-only DAL with duck-typed DI (DIR-03), 21 pglite tests passing, REQUIREMENTS.md DIR-01..DIR-13 minted. v3.2 work parked.
-Last activity: 2026-05-14 — Plan 46-01 executed (7 min, 4 tasks, 5 files). Four commits: `758ba3b` (feat schema+migration) → `b0cee4d` (feat DAL) → `7800b6a` (test pglite) → `3fa67fb` (docs DIR-* mint).
+Last activity: 2026-05-14
 
 ```
 v3.3 Progress: [███░░░░░░░] ~33% — Phase 46 Plans 00 + 01 of 6 complete
@@ -62,6 +62,7 @@ v3.3 Progress: [███░░░░░░░] ~33% — Phase 46 Plans 00 + 01 
 | Phase 44 P04 | 20min | 4 tasks | 11 files |
 | Phase 46-aerzteverzeichnis P00 | 7 min | 2 tasks | 3 files |
 | Phase 46 P01 | 7 min | 4 tasks | 5 files |
+| Phase 46-aerzteverzeichnis P04 | 4 min | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,9 @@ See PROJECT.md Key Decisions for full history.
 - [Phase 46]: Doctor.publicId is non-null String (vs Article.publicId nullable) — public detail URL requires it from row birth; Prisma @default(nanoid()) runs client-side, so migration SQL emits no server-side default
 - [Phase 46]: Doctor.bezirkId FK uses ON DELETE RESTRICT — Bezirke cannot be deleted while doctors reference them, requires explicit migration if a Bezirk ever needs decommissioning
 - [Phase 46]: Doctor DAL is read-only (listDoctors/getDoctorByPublicId/getDoctorById); write paths (create/update/softDelete/toggleVerified) live in doctors-actions.ts per Plan 46-02 — same shape as articles.ts vs articles-actions.ts
+- [Phase 46-aerzteverzeichnis]: BASE_URL in /aerzte detail page is character-for-character identical to src/app/sitemap.ts:10 (no www. prefix) — single source of truth for canonical host — Article detail page (artikel/[publicId]/[slug]/page.tsx:19) uses 'www.lodenundleute.at' which is a pre-existing drift; aerzte plan deliberately matches sitemap.ts so detail metadata, JSON-LD, and sitemap entries all resolve to the same host
+- [Phase 46-aerzteverzeichnis]: Optional JSON-LD keys (geo, medicalSpecialty, email, telephone, sameAs) are OMITTED not nulled when source values are missing — keeps the schema.org payload minimal and avoids 'null' showing up as a schema value — Schema.org consumers (Google Rich Results, Bing) treat absent keys correctly; explicit null can trigger validation warnings. Pattern matches the conditional emit in the article JSON-LD.
+- [Phase 46-aerzteverzeichnis]: Related-article lookups on the doctor detail page use getArticleByPublicId(id).catch(() => null) + filter(non-null) — resilient when a referenced article is unpublished/deleted — Editorial relatedArticleIds is a manual list maintained by the admin; a single missing reference must not break the entire detail render. No try/catch in the page body per AGENTS.md; the .catch() is per-promise inside the Promise.all map call.
 
 ### Pending Todos
 
@@ -125,8 +129,8 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-14T12:50:50.861Z
-Stopped at: Completed 46-01-PLAN.md (Doctor schema + DAL + DIR-01..13 minted). Plan 46-02 (doctors-actions.ts trinity) is next — schema/types/DAL are all in place.
+Last session: 2026-05-14T13:01:34.030Z
+Stopped at: Completed 46-04-PLAN.md (public Ärzte routes: list + detail + JSON-LD + slug canonical + map). Next: Plan 46-02 (doctors-actions trinity, running in parallel) or Plan 46-03 (admin pages).
 
 Resume with one of:
 1) **Plan Phase 46** — `/gsd:plan-phase 46` resolves the 9 open questions in CONTEXT.md (felder-vollkatalog, map-engine, suche-modus, JSON-LD, sortierung, bulk-import, AppBar-link, sitemap, token-prefix) and breaks the work into plans.
