@@ -45,6 +45,7 @@ model Bezirk {
   name             String           @unique  // e.g. "Liezen", "Graz (Stadt)"
   gemeindeSynonyms String[]         // AI geo-tagging hints, e.g. ["Ennstal", "Schladming"]
   articles         ArticleBezirk[]
+  doctors          Doctor[]
   createdAt        DateTime         @default(now())
 
   @@index([slug])
@@ -195,4 +196,37 @@ model GeocodingCache {
   cachedAt       DateTime @default(now())
 
   @@index([normalizedName])
+}
+
+enum DoctorKategorie {
+  ALLGEMEINMEDIZIN
+  FACHARZT
+  ZAHNARZT
+}
+
+model Doctor {
+  id                Int             @id @default(autoincrement())
+  publicId          String          @unique @default(nanoid())
+  name              String
+  titel             String?
+  kategorie         DoctorKategorie
+  fachrichtung      String?
+  address           String
+  lat               Float?
+  lon               Float?
+  bezirk            Bezirk          @relation(fields: [bezirkId], references: [id])
+  bezirkId          Int
+  email             String?
+  website           String?
+  phone             String?
+  editorialNote     String?
+  relatedArticleIds String[]        @default([])
+  mapImageUrl       String?
+  isVerified        Boolean         @default(false)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([bezirkId])
+  @@index([kategorie])
+  @@index([isVerified, name])
 }
