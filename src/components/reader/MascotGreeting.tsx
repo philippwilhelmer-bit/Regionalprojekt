@@ -59,15 +59,13 @@ export function MascotGreeting({ bezirke }: MascotGreetingProps) {
 
   return (
     <div className="flex flex-col items-start">
-      {/* Sepp avatar — white rounded-rect frame with shadow */}
-      <div className="bg-background rounded-md shadow-sm p-2 mb-4 self-center">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/wurzelmann%20freigestellt.png"
-          alt="Sepp"
-          className="w-20 h-20 object-contain"
-        />
-      </div>
+      {/* Sepp avatar — clipped to circle to hide baked-in checker corners */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/wurzelmann%20freigestellt.png"
+        alt="Sepp"
+        className="w-full aspect-square object-contain mb-6 self-stretch [clip-path:circle(38%)]"
+      />
 
       <h2 className="font-headline tracking-tight text-headline-md text-primary mb-3">
         Sepp meint&hellip;
