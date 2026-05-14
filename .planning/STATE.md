@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_plan: 5
-status: "46-00 + 46-01 + 46-02 SHIPPED (and 46-04 in parallel). Foundation in place: mapgen.uploadToBlob pathPrefix option (46-00), Phase 46 design tokens (46-00), Doctor model + additive migration (DIR-01/02), doctors.ts read-only DAL with duck-typed DI (DIR-03), doctors-actions.ts Server-Action-Trinity (DIR-04/05/09), public list+detail pages (DIR-07/08/10 via parallel-track 46-04). v3.2 work parked."
-stopped_at: "Completed 46-03-PLAN.md (Admin CRUD UI: 6 files, 3 tasks incl. checkpoint, ~40 min wall-clock; Doctor table migration deployed to Neon out-of-band). Plan 46-05 (sitemap + AppBar/Footer Ärzte-link + smoke checkpoint) is the only remaining plan in Phase 46."
-last_updated: "2026-05-14T13:48:40.123Z"
+current_plan: 6
+status: "Phase 46 COMPLETE 2026-05-14 — Ärzteverzeichnis MVP shipped (all 13 DIR-* requirements complete, 6/6 plans, end-to-end smoke approved). Doctor schema + DAL + Server-Action-Trinity + admin CRUD + public list/detail + sitemap + nav-links + JSON-LD + slug-canonical + phase-local design tokens + disclaimer all in place. v3.2 work parked: 44-01/02/03 + Phase 45 still DEFERRED."
+stopped_at: Completed 46-05-PLAN.md (sitemap + nav-link + Phase 46 end-to-end smoke approved). Phase 46 COMPLETE — Ärzteverzeichnis MVP shipped, all 13 DIR-* requirements satisfied.
+last_updated: "2026-05-14T14:39:48.550Z"
 last_activity: 2026-05-14
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 14
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -25,15 +25,15 @@ See: .planning/PROJECT.md (updated 2026-05-10)
 
 ## Current Position
 
-Milestone: v3.3 Directory Expansion (scaffolded 2026-05-14, executing)
-Phase: 46 — Ärzteverzeichnis (Doctor Directory)
-Current Plan: 5
-Total Plans in Phase: 6 (46-00 through 46-05)
-Status: 46-00 + 46-01 + 46-02 SHIPPED (and 46-04 in parallel). Foundation in place: mapgen.uploadToBlob pathPrefix option (46-00), Phase 46 design tokens (46-00), Doctor model + additive migration (DIR-01/02), doctors.ts read-only DAL with duck-typed DI (DIR-03), doctors-actions.ts Server-Action-Trinity (DIR-04/05/09), public list+detail pages (DIR-07/08/10 via parallel-track 46-04). v3.2 work parked.
+Milestone: v3.3 Directory Expansion (scaffolded 2026-05-14, SHIPPED 2026-05-14)
+Phase: 46 — Ärzteverzeichnis (Doctor Directory) — COMPLETE
+Current Plan: 6 (last — phase complete)
+Total Plans in Phase: 6 (46-00 through 46-05) — all shipped
+Status: Phase 46 COMPLETE 2026-05-14. All 13 DIR-* requirements complete, 6/6 plans shipped, end-to-end smoke approved across all 9 verifier steps (admin create → list filter → detail render → JSON-LD + slug-canonical + 404 → discoverability via AppBar/Footer → sitemap → token scoping → disclaimer → build green → test baseline). v3.2 work still parked: 44-01/02/03 + Phase 45 DEFERRED.
 Last activity: 2026-05-14
 
 ```
-v3.3 Progress: [████████░░] ~79% — Phase 46 Plans 00/01/02/04 of 6 complete
+v3.3 Progress: [██████████] 100% — Phase 46 Plans 00..05 all shipped (6/6)
 ```
 
 **Parked from v3.2 (carried forward, untouched here):**
@@ -65,6 +65,7 @@ v3.3 Progress: [████████░░] ~79% — Phase 46 Plans 00/01/02
 | Phase 46-aerzteverzeichnis P04 | 4 min | 3 tasks | 7 files |
 | Phase 46-aerzteverzeichnis P02 | 7 min | 3 tasks | 2 files |
 | Phase 46-aerzteverzeichnis P03 | 40 min | 3 tasks | 6 files |
+| Phase 46-aerzteverzeichnis P05 | 7 min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -115,6 +116,9 @@ See PROJECT.md Key Decisions for full history.
 - [Phase 46-aerzteverzeichnis]: Admin delete confirm uses JS-less <details> two-step disclosure (no client boundary) — DoctorRow stays a Server Component — Single destructive button does not warrant a 'use client' boundary; <details>/<summary> gives a native, accessible two-click confirm that wraps the Server Action form. Re-usable pattern for future admin rows.
 - [Phase 46-aerzteverzeichnis]: Admin pages under (admin)/* do NOT call requireAuth() — layout gates the route group — src/app/(admin)/layout.tsx already does verifySessionCookie + redirect('/admin/login') for every child route; per-page requireAuth() would be duplicate and risks drift. Empirically confirmed in checkpoint Step 7 (incognito visits to /admin/aerzte/new and /admin/aerzte/[id]/edit redirect to /admin/login).
 - [Phase 46-aerzteverzeichnis]: Shared DoctorForm is a Server Component (no 'use client') with formAction prop binding the correct Server Action for /new vs /[id]/edit — Uncontrolled fields with defaultValue cover the edit case; passing the Server Action function as a prop keeps the form JSX identical across both routes. Avoids a client boundary for a form that has no client-side interactive state.
+- [Phase 46-aerzteverzeichnis]: Helper extraction over integrated-function tests for sitemap arms — Extracted buildDoctorSitemapEntries as a named export from src/app/sitemap.ts so the test imports it directly and asserts pure-function shape. Avoids the vi.mock chain over listArticles/listBezirke/listDoctors + defaultPrisma needed to test the integrated sitemap() default export. The integrated call is covered by the Phase 46 smoke checkpoint (Step 5). Reusable pattern for future sitemap arms with non-trivial mapping.
+- [Phase 46-aerzteverzeichnis]: Site chrome uses master design tokens only — --dir-* is scoped to directory PAGES, not the AppBar/Footer/BottomNav around them — LodenAppBar and Footer Ärzte/Ärzteverzeichnis links reuse adjacent links' Tailwind classes (hover:text-accent transition-colors) — no new tokens introduced for chrome. --dir-* tokens stay confined to /aerzte and /admin/aerzte page bodies per DESIGN.md scoping.
+- [Phase 46-aerzteverzeichnis]: BottomNav 2-tab lock honoured — discoverability for /aerzte goes via AppBar + Footer only — CONTEXT.md locked BottomNav at 2 tabs. Discoverability for /aerzte ships via LodenAppBar (desktop nav + mobile drawer) and Footer Rubriken column. git diff src/components/reader/BottomNav.tsx is empty after Plan 46-05.
 
 ### Pending Todos
 
@@ -138,8 +142,8 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-14T13:48:40.120Z
-Stopped at: Completed 46-03-PLAN.md (Admin CRUD UI: 6 files, 3 tasks incl. checkpoint, ~40 min wall-clock; Doctor table migration deployed to Neon out-of-band). Plan 46-05 (sitemap + AppBar/Footer Ärzte-link + smoke checkpoint) is the only remaining plan in Phase 46.
+Last session: 2026-05-14T14:39:34.170Z
+Stopped at: Completed 46-05-PLAN.md (sitemap + nav-link + Phase 46 end-to-end smoke approved). Phase 46 COMPLETE — Ärzteverzeichnis MVP shipped, all 13 DIR-* requirements satisfied.
 
 Resume with one of:
 1) **Plan Phase 46** — `/gsd:plan-phase 46` resolves the 9 open questions in CONTEXT.md (felder-vollkatalog, map-engine, suche-modus, JSON-LD, sortierung, bulk-import, AppBar-link, sitemap, token-prefix) and breaks the work into plans.

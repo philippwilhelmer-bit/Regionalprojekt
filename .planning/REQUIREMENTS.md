@@ -73,8 +73,8 @@ Public doctor directory under `/aerzte` with editorial CRUD, Nominatim geocoding
 - [x] **DIR-08**: Public `/aerzte/[publicId]/[slug]` detail page with `permanentRedirect` slug canonicalization via `slugify()` from `lib/reader/slug`
 - [x] **DIR-09**: Doctor map asset generated at admin save via `generateMapImage(lat, lon, name, doctorId, locType, { pathPrefix: 'doctor' })`; persisted as `mapImageUrl`; failure logs warn but does not block save
 - [x] **DIR-10**: Detail page emits JSON-LD: `@type: 'Physician'` for ALLGEMEINMEDIZIN+FACHARZT, `@type: 'Dentist'` for ZAHNARZT, with `address: PostalAddress`, optional `geo: GeoCoordinates`, optional `medicalSpecialty` for FACHARZT
-- [ ] **DIR-11**: `src/app/sitemap.ts` includes `/aerzte` index + all `/aerzte/{publicId}/{slug}` URLs (priority 0.7, weekly); bounded `take: 5000`
-- [ ] **DIR-12**: `LodenAppBar` desktop + mobile drawer gain "Ärzte" link; `Footer` "Rubriken" column gains "Ärzteverzeichnis"; "Angaben ohne Gewähr" disclaimer rendered in detail-page footer
+- [x] **DIR-11**: `src/app/sitemap.ts` includes `/aerzte` index + all `/aerzte/{publicId}/{slug}` URLs (priority 0.7, weekly); bounded `take: 5000`
+- [x] **DIR-12**: `LodenAppBar` desktop + mobile drawer gain "Ärzte" link; `Footer` "Rubriken" column gains "Ärzteverzeichnis"; "Angaben ohne Gewähr" disclaimer rendered in detail-page footer
 - [x] **DIR-13**: Phase-local CSS tokens added to `src/app/globals.css @theme` under `--color-dir-*` / `--radius-dir-*` / `--spacing-dir-*` namespace — full DESIGN.md YAML token set, additive only, no master-token edits
 
 ## v2 Requirements
@@ -158,8 +158,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DIR-08 | Phase 46 | Complete |
 | DIR-09 | Phase 46 | Complete |
 | DIR-10 | Phase 46 | Complete |
-| DIR-11 | Phase 46 | Pending |
-| DIR-12 | Phase 46 | Pending |
+| DIR-11 | Phase 46 | Complete |
+| DIR-12 | Phase 46 | Complete |
 | DIR-13 | Phase 46 | Complete |
 
 **Coverage:**
