@@ -214,13 +214,13 @@ Plans:
 6. The new design tokens introduced for the directory live in `globals.css` under a namespace prefix; no live token semantics changed
 7. `sitemap.ts` includes all `Doctor` detail URLs; SEO emits `Physician` (or `Dentist`) JSON-LD per detail page
 
-**Plans:** 4/6 plans executed
+**Plans:** 5/6 plans executed
 
 Plans:
 - [ ] 46-00-PLAN.md — Foundation prep: parameterize `mapgen.ts` Blob path prefix + add `--dir-*` design tokens to `globals.css` (DIR-09 prep, DIR-13)
 - [ ] 46-01-PLAN.md — Prisma `Doctor` model + additive migration + DAL `doctors.ts` with overload + duck-typed DI + DAL pglite tests + `REQUIREMENTS.md` DIR-01..13 backfill (DIR-01, DIR-02, DIR-03)
 - [ ] 46-02-PLAN.md — Server-Action-Trinity `doctors-actions.ts`: pure `*Db` + `*Action` (auth + two-phase create with geocode + mapgen) + `*Form` wrappers; vi.mock'd tests for happy + failure paths (DIR-04, DIR-05, DIR-09)
-- [ ] 46-03-PLAN.md — Admin CRUD UI: `/admin/aerzte` list with filter chips, `/admin/aerzte/new`, `/admin/aerzte/[id]/edit`, row component with toggle-verified + delete forms (DIR-06)
+- [x] 46-03-PLAN.md — Admin CRUD UI: `/admin/aerzte` list with filter chips, `/admin/aerzte/new`, `/admin/aerzte/[id]/edit`, row component with toggle-verified + delete forms (DIR-06)
 - [ ] 46-04-PLAN.md — Public pages: `/aerzte` list + filter chips + `/aerzte/[publicId]/[slug]` detail with slug canonicalization, JSON-LD (Physician/Dentist), static map display, related-articles cross-links, `Angaben ohne Gewähr` disclaimer (DIR-07, DIR-08, DIR-10)
 - [ ] 46-05-PLAN.md — Sitemap inclusion, AppBar + Footer nav-link "Ärzte", end-to-end integration smoke checkpoint (DIR-11, DIR-12)
 
@@ -247,4 +247,4 @@ Plans:
 | 43 | 4/4 | Complete    | 2026-05-11 | - |
 | 44 | 1/4 | In Progress|  | - |
 | 45 | v3.2 | 0/TBD | Not started | - |
-| 46 | 4/6 | In Progress|  | - |
+| 46 | 5/6 | In Progress|  | - |

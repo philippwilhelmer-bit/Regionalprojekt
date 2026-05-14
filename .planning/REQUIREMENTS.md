@@ -68,7 +68,7 @@ Public doctor directory under `/aerzte` with editorial CRUD, Nominatim geocoding
 - [x] **DIR-03**: DAL `src/lib/content/doctors.ts` exports `listDoctors`, `getDoctorByPublicId`, `getDoctorById` — overloaded for duck-typed DI, ordering verified-first then name-ASC, filter support for bezirkId/bezirkSlug/kategorie/fachrichtung/isVerified/limit/offset
 - [x] **DIR-04**: Server-Action-Trinity in `src/lib/admin/doctors-actions.ts`: pure `*Db` (no auth), `*Action` (requireAuth + delegate), `*Form` (FormData parser + revalidate/redirect) — for `create`, `update`, `softDelete`, `toggleVerified`
 - [x] **DIR-05**: `createDoctor` / `updateDoctor` Server Action geocodes `address` via existing `geocodeLocation()` — single Nominatim call per save, no sleep needed; failure persists row with `lat/lon=null` and surfaces non-blocking admin warning
-- [ ] **DIR-06**: Admin pages `/admin/aerzte` (list with filters + "Neu" link), `/admin/aerzte/new`, `/admin/aerzte/[id]/edit` — mirror `/admin/articles` patterns
+- [x] **DIR-06**: Admin pages `/admin/aerzte` (list with filters + "Neu" link), `/admin/aerzte/new`, `/admin/aerzte/[id]/edit` — mirror `/admin/articles` patterns
 - [x] **DIR-07**: Public `/aerzte` list page, Server Component, `dynamic = 'force-dynamic'`, query-param filters bezirk/kategorie/fachrichtung; "Mein Bezirk" auto-prefill from `bezirk_selection` localStorage convention (client-island reads, server reads query param)
 - [x] **DIR-08**: Public `/aerzte/[publicId]/[slug]` detail page with `permanentRedirect` slug canonicalization via `slugify()` from `lib/reader/slug`
 - [x] **DIR-09**: Doctor map asset generated at admin save via `generateMapImage(lat, lon, name, doctorId, locType, { pathPrefix: 'doctor' })`; persisted as `mapImageUrl`; failure logs warn but does not block save
@@ -153,7 +153,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DIR-03 | Phase 46 | Complete |
 | DIR-04 | Phase 46 | Complete |
 | DIR-05 | Phase 46 | Complete |
-| DIR-06 | Phase 46 | Pending |
+| DIR-06 | Phase 46 | Complete |
 | DIR-07 | Phase 46 | Complete |
 | DIR-08 | Phase 46 | Complete |
 | DIR-09 | Phase 46 | Complete |

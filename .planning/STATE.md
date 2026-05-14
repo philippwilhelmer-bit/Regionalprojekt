@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_plan: 4
-status: "46-00 + 46-01 + 46-02 SHIPPED (and 46-04 in parallel). Foundation in place: mapgen.uploadToBlob pathPrefix option (46-00), Phase 46 design tokens (46-00), Doctor model + additive migration (DIR-01/02), doctors.ts read-only DAL with duck-typed DI (DIR-03), doctors-actions.ts Server-Action-Trinity with two-phase create + geocode/mapgen orchestration (DIR-04/05/09), public list+detail pages with JSON-LD (DIR-07/08/10 via parallel-track 46-04), 21+21 pglite/action tests passing, REQUIREMENTS.md DIR-01..DIR-13 minted. v3.2 work parked."
-stopped_at: Completed 46-02-PLAN.md (Doctor Server-Action-Trinity — 4 *Db + 4 Action + 4 Form exports, two-phase create, 21 tests pass). Plan 46-03 (admin pages) is next.
-last_updated: "2026-05-14T13:04:38.848Z"
+current_plan: 5
+status: "46-00 + 46-01 + 46-02 SHIPPED (and 46-04 in parallel). Foundation in place: mapgen.uploadToBlob pathPrefix option (46-00), Phase 46 design tokens (46-00), Doctor model + additive migration (DIR-01/02), doctors.ts read-only DAL with duck-typed DI (DIR-03), doctors-actions.ts Server-Action-Trinity (DIR-04/05/09), public list+detail pages (DIR-07/08/10 via parallel-track 46-04). v3.2 work parked."
+stopped_at: "Completed 46-03-PLAN.md (Admin CRUD UI: 6 files, 3 tasks incl. checkpoint, ~40 min wall-clock; Doctor table migration deployed to Neon out-of-band). Plan 46-05 (sitemap + AppBar/Footer Ärzte-link + smoke checkpoint) is the only remaining plan in Phase 46."
+last_updated: "2026-05-14T13:48:40.123Z"
 last_activity: 2026-05-14
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 14
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -27,10 +27,10 @@ See: .planning/PROJECT.md (updated 2026-05-10)
 
 Milestone: v3.3 Directory Expansion (scaffolded 2026-05-14, executing)
 Phase: 46 — Ärzteverzeichnis (Doctor Directory)
-Current Plan: 4
+Current Plan: 5
 Total Plans in Phase: 6 (46-00 through 46-05)
 Status: 46-00 + 46-01 + 46-02 SHIPPED (and 46-04 in parallel). Foundation in place: mapgen.uploadToBlob pathPrefix option (46-00), Phase 46 design tokens (46-00), Doctor model + additive migration (DIR-01/02), doctors.ts read-only DAL with duck-typed DI (DIR-03), doctors-actions.ts Server-Action-Trinity (DIR-04/05/09), public list+detail pages (DIR-07/08/10 via parallel-track 46-04). v3.2 work parked.
-Last activity: 2026-05-14 — Plan 46-02 executed (7 min, 3 tasks, 2 files). Two commits: `e074200` (test RED — 21 failing tests) → `0c22a7e` (feat GREEN — Server-Action-Trinity impl + test deep-equal fix).
+Last activity: 2026-05-14
 
 ```
 v3.3 Progress: [████████░░] ~79% — Phase 46 Plans 00/01/02/04 of 6 complete
@@ -64,6 +64,7 @@ v3.3 Progress: [████████░░] ~79% — Phase 46 Plans 00/01/02
 | Phase 46 P01 | 7 min | 4 tasks | 5 files |
 | Phase 46-aerzteverzeichnis P04 | 4 min | 3 tasks | 7 files |
 | Phase 46-aerzteverzeichnis P02 | 7 min | 3 tasks | 2 files |
+| Phase 46-aerzteverzeichnis P03 | 40 min | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -111,6 +112,9 @@ See PROJECT.md Key Decisions for full history.
 - [Phase 46-aerzteverzeichnis]: softDeleteDoctor is a HARD delete — Doctor has no status enum (DIR-01); naming kept for API symmetry with articles' softDelete (status=REJECTED) but operation is db.doctor.delete
 - [Phase 46-aerzteverzeichnis]: updateDoctor re-geocodes only when input.address !== prev.address — avoids gratuitous Nominatim 1 req/s rate-limit hits on non-address edits; prev-row read is one indexed lookup
 - [Phase 46-aerzteverzeichnis]: Test pattern: positional mock.calls[N][i] assertions instead of toHaveBeenCalledWith(prismaClient, ...) — Vitest deep-equality blows the stack on PrismaClient's circular references; positional indexing is equally precise
+- [Phase 46-aerzteverzeichnis]: Admin delete confirm uses JS-less <details> two-step disclosure (no client boundary) — DoctorRow stays a Server Component — Single destructive button does not warrant a 'use client' boundary; <details>/<summary> gives a native, accessible two-click confirm that wraps the Server Action form. Re-usable pattern for future admin rows.
+- [Phase 46-aerzteverzeichnis]: Admin pages under (admin)/* do NOT call requireAuth() — layout gates the route group — src/app/(admin)/layout.tsx already does verifySessionCookie + redirect('/admin/login') for every child route; per-page requireAuth() would be duplicate and risks drift. Empirically confirmed in checkpoint Step 7 (incognito visits to /admin/aerzte/new and /admin/aerzte/[id]/edit redirect to /admin/login).
+- [Phase 46-aerzteverzeichnis]: Shared DoctorForm is a Server Component (no 'use client') with formAction prop binding the correct Server Action for /new vs /[id]/edit — Uncontrolled fields with defaultValue cover the edit case; passing the Server Action function as a prop keeps the form JSX identical across both routes. Avoids a client boundary for a form that has no client-side interactive state.
 
 ### Pending Todos
 
@@ -134,8 +138,8 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-14T13:04:38.846Z
-Stopped at: Completed 46-02-PLAN.md (Doctor Server-Action-Trinity — 4 *Db + 4 Action + 4 Form exports, two-phase create, 21 tests pass). Plan 46-03 (admin pages) is next.
+Last session: 2026-05-14T13:48:40.120Z
+Stopped at: Completed 46-03-PLAN.md (Admin CRUD UI: 6 files, 3 tasks incl. checkpoint, ~40 min wall-clock; Doctor table migration deployed to Neon out-of-band). Plan 46-05 (sitemap + AppBar/Footer Ärzte-link + smoke checkpoint) is the only remaining plan in Phase 46.
 
 Resume with one of:
 1) **Plan Phase 46** — `/gsd:plan-phase 46` resolves the 9 open questions in CONTEXT.md (felder-vollkatalog, map-engine, suche-modus, JSON-LD, sortierung, bulk-import, AppBar-link, sitemap, token-prefix) and breaks the work into plans.
