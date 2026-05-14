@@ -12,6 +12,10 @@ vi.mock('@/lib/content/bezirke', () => ({
   listBezirke: vi.fn().mockResolvedValue([{ slug: 'liezen' }]),
 }))
 
+vi.mock('@/lib/content/doctors', () => ({
+  listDoctors: vi.fn().mockResolvedValue([]),
+}))
+
 vi.mock('@/lib/reader/slug', () => ({
   slugify: vi.fn().mockReturnValue('test'),
 }))
