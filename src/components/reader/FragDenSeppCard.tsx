@@ -15,7 +15,7 @@ export function FragDenSeppCard() {
       <img
         src="/images/wurzelmann%20freigestellt.png"
         alt="Sepp"
-        className="w-16 h-16 object-contain shrink-0"
+        className="w-16 h-16 object-contain shrink-0 [clip-path:circle(38%)]"
       />
       <div className="flex-1">
         <Eyebrow tone="on-dark" className="mb-1">

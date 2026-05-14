@@ -34,7 +34,7 @@ export function SeppTipBox({
           <img
             src="/images/wurzelmann%20freigestellt.png"
             alt="Sepp"
-            className="w-full h-full object-contain"
+            className="w-full h-full object-cover [clip-path:circle(38%)]"
           />
         </div>
 

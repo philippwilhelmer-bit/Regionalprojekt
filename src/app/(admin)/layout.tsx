@@ -32,7 +32,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <img
             src="/images/wurzelmann%20freigestellt.png"
             alt=""
-            className="w-10 h-10 object-contain shrink-0"
+            className="w-10 h-10 object-contain shrink-0 [clip-path:circle(38%)]"
           />
           <span className="font-headline italic text-lg text-primary group-hover:text-accent transition-colors">
             Loden &amp; Leute
