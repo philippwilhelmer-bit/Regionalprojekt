@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_plan: 6
-status: "Phase 46 COMPLETE 2026-05-14 — Ärzteverzeichnis MVP shipped (all 13 DIR-* requirements complete, 6/6 plans, end-to-end smoke approved). Doctor schema + DAL + Server-Action-Trinity + admin CRUD + public list/detail + sitemap + nav-links + JSON-LD + slug-canonical + phase-local design tokens + disclaimer all in place. v3.2 work parked: 44-01/02/03 + Phase 45 still DEFERRED."
+current_plan: 6 (last — phase complete)
+status: verifying
 stopped_at: Completed 46-05-PLAN.md (sitemap + nav-link + Phase 46 end-to-end smoke approved). Phase 46 COMPLETE — Ärzteverzeichnis MVP shipped, all 13 DIR-* requirements satisfied.
-last_updated: "2026-05-14T14:39:48.550Z"
+last_updated: "2026-05-14T14:46:49.366Z"
 last_activity: 2026-05-14
 progress:
   total_phases: 4
