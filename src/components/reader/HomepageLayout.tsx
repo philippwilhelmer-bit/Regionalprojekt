@@ -77,7 +77,7 @@ export function HomepageLayout({
 
       {/* 2. Wetter — parchment, prominent under hero */}
       <SectionBlock bg="parchment" voidSize="md">
-        <WeatherWidget />
+        <WeatherWidget bezirke={bezirke} />
       </SectionBlock>
 
       {/* 3. Mascot — surface, tonal shift down */}

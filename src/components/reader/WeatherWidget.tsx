@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import type { BezirkItem } from "@/types/bundesland";
 
 function openBezirkModal() {
   window.dispatchEvent(new Event("openBezirkModal"));
@@ -36,7 +37,11 @@ interface WeatherData {
   weather_code: number;
 }
 
-export function WeatherWidget() {
+interface WeatherWidgetProps {
+  bezirke: BezirkItem[];
+}
+
+export function WeatherWidget({ bezirke }: WeatherWidgetProps) {
   const [mounted, setMounted] = useState(false);
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [bezirkName, setBezirkName] = useState<string | null>(null);
@@ -57,11 +62,12 @@ export function WeatherWidget() {
         .catch(() => {
           // Silently fail — weather is non-critical
         });
-      setBezirkName(slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()));
+      const match = bezirke.find((b) => b.slug === slug);
+      setBezirkName(match?.name ?? slug);
     } catch {
       // Invalid JSON
     }
-  }, []);
+  }, [bezirke]);
 
   if (!mounted) return null;
 
