@@ -97,6 +97,99 @@
   --text-label-md--line-height: 1.4;
   --text-label-md--letter-spacing: 0.08em;
   --text-label-md--font-weight: 600;
+
+  /* === PHASE 46 DIRECTORY TOKENS (additive, scoped to /aerzte and /admin/aerzte) === */
+  /* See .planning/phases/46-aerzteverzeichnis/DESIGN.md for full spec (YAML authoritative).
+     Master tokens (--color-primary etc.) intentionally untouched.
+     Full Material 3 token surface — including the secondary and tertiary-fixed families
+     that may not be referenced by Plan 03/04/05 UI yet but are present for future polish. */
+
+  /* --- Surface ramp --- */
+  --color-dir-surface:                   #faf9f5;
+  --color-dir-surface-dim:               #dbdad6;
+  --color-dir-surface-bright:            #faf9f5;
+  --color-dir-surface-container-lowest:  #ffffff;
+  --color-dir-surface-container-low:     #f4f4f0;
+  --color-dir-surface-container:         #efeeea;
+  --color-dir-surface-container-high:    #e9e8e4;
+  --color-dir-surface-container-highest: #e3e2df;
+  --color-dir-surface-variant:           #e3e2df;
+
+  /* --- Text on directory surfaces --- */
+  --color-dir-on-surface:          #1b1c1a;
+  --color-dir-on-surface-variant:  #434840;
+  --color-dir-on-background:       #1b1c1a;
+  --color-dir-background:          #faf9f5;
+
+  /* --- Inverse --- */
+  --color-dir-inverse-surface:     #2f312e;
+  --color-dir-inverse-on-surface:  #f2f1ed;
+
+  /* --- Outline + tint --- */
+  --color-dir-outline:          #737970;
+  --color-dir-outline-variant:  #c3c8be;
+  --color-dir-surface-tint:     #4a6546;
+
+  /* --- Primary (Forest Green, phase-local — darker than live --color-primary) --- */
+  --color-dir-primary:               #0f270d;
+  --color-dir-on-primary:            #ffffff;
+  --color-dir-primary-container:     #243d21;
+  --color-dir-on-primary-container:  #8ba884;
+  --color-dir-inverse-primary:       #b1cfa8;
+
+  /* --- Secondary (Alpine Clay — value matches live --color-accent; naming-shift only) --- */
+  --color-dir-secondary:              #9f411e;
+  --color-dir-on-secondary:           #ffffff;
+  --color-dir-secondary-container:    #fd885f;
+  --color-dir-on-secondary-container: #732100;
+
+  /* --- Tertiary (dunkles Burgund — verification badge) --- */
+  --color-dir-tertiary:              #381624;
+  --color-dir-on-tertiary:           #ffffff;
+  --color-dir-tertiary-container:    #512b3a;
+  --color-dir-on-tertiary-container: #c592a3;
+
+  /* --- Error --- */
+  --color-dir-error:              #ba1a1a;
+  --color-dir-on-error:           #ffffff;
+  --color-dir-error-container:    #ffdad6;
+  --color-dir-on-error-container: #93000a;
+
+  /* --- Fixed-tone primary (Material 3) --- */
+  --color-dir-primary-fixed:                #ccebc3;
+  --color-dir-primary-fixed-dim:            #b1cfa8;
+  --color-dir-on-primary-fixed:             #082008;
+  --color-dir-on-primary-fixed-variant:     #334d2f;
+
+  /* --- Fixed-tone secondary (Material 3) --- */
+  --color-dir-secondary-fixed:              #ffdbcf;
+  --color-dir-secondary-fixed-dim:          #ffb59c;
+  --color-dir-on-secondary-fixed:           #390c00;
+  --color-dir-on-secondary-fixed-variant:   #7f2a07;
+
+  /* --- Fixed-tone tertiary (Material 3) --- */
+  --color-dir-tertiary-fixed:               #ffd9e4;
+  --color-dir-tertiary-fixed-dim:           #efb7ca;
+  --color-dir-on-tertiary-fixed:            #31101e;
+  --color-dir-on-tertiary-fixed-variant:    #633b4a;
+
+  /* --- Radius scale --- */
+  --radius-dir-sm:       0.25rem;
+  --radius-dir-default:  0.5rem;
+  --radius-dir-md:       0.75rem;
+  --radius-dir-lg:       1rem;
+  --radius-dir-xl:       1.5rem;
+  --radius-dir-full:     9999px;
+
+  /* --- Spacing scale --- */
+  --spacing-dir-xs:               4px;
+  --spacing-dir-sm:               8px;
+  --spacing-dir-md:               16px;
+  --spacing-dir-lg:               24px;
+  --spacing-dir-xl:               48px;
+  --spacing-dir-gutter:           24px;
+  --spacing-dir-margin-mobile:    16px;
+  --spacing-dir-margin-desktop:   64px;
 }
 
 body {
