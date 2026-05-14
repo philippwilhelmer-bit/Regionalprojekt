@@ -1,16 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v3.3
-milestone_name: Directory Expansion
-status: "Phase 46 (Ärzteverzeichnis) discussed and CONTEXT.md drafted. Ready for /gsd:plan-phase 46. v3.2 still has 44-01/02/03 DEFERRED + Phase 45 not started — those are parked and remain orthogonal."
-stopped_at: "Phase 46 context-gathering complete. CONTEXT.md + phase-local DESIGN.md (with reconciliation against live tokens) written in .planning/phases/46-aerzteverzeichnis/. Next: plan-phase."
-last_updated: "2026-05-14T13:35:00.000Z"
-last_activity: 2026-05-14 — Phase 46 discuss-phase: scope captured (full MVP: Editorial CRUD + map + editorial notes + cross-links + verification badge; /aerzte route; Alle Arzt-Kategorien; phase-local design tokens). Plus ad-hoc Bright & Modern UI iteration + freigestellt mascot asset swap + clip-path fix + WeatherWidget umlaut fix shipped to main.
+milestone: v1.0
+milestone_name: milestone
+current_plan: "1 of 6 (next: 46-02 — action layer)"
+status: 46-00 SHIPPED — mapgen.uploadToBlob gains optional pathPrefix parameter (empty-string-safe via `|| 'article'` guard); globals.css gains 47 `--color-dir-*` + 6 `--radius-dir-*` + 8 `--spacing-dir-*` Phase-46 tokens inside `@theme`. Master tokens untouched, build green, 54 mapgen/map-actions tests pass. Plan 46-01 (Doctor model + DAL) also shipped on a parallel track. v3.2 work parked.
+stopped_at: Completed 46-01-PLAN.md (Doctor schema + DAL + DIR-01..13 minted). Plan 46-02 (doctors-actions.ts trinity) is next — schema/types/DAL are all in place.
+last_updated: "2026-05-14T12:51:21.439Z"
+last_activity: "2026-05-14 — Plan 46-00 executed (7 min, 2 tasks, 3 files modified). Three commits: `414bb3b` (test RED) → `bc85cbb` (refactor GREEN) → `e557c1e` (feat tokens)."
 progress:
-  total_phases: 3
+  total_phases: 4
   completed_phases: 1
-  total_plans: 8
-  completed_plans: 5
+  total_plans: 14
+  completed_plans: 7
 ---
 
 # Project State
@@ -24,14 +25,15 @@ See: .planning/PROJECT.md (updated 2026-05-10)
 
 ## Current Position
 
-Milestone: v3.3 Directory Expansion (new, scaffolded 2026-05-14)
+Milestone: v3.3 Directory Expansion (scaffolded 2026-05-14, executing)
 Phase: 46 — Ärzteverzeichnis (Doctor Directory)
-Plan: none yet — `/gsd:plan-phase 46` is the next step
-Status: CONTEXT.md captures scope, decisions and 9 open questions; phase-local DESIGN.md captures the new design-token system with reconciliation against the live tokens (YAML authoritative on the two YAML-vs-prose conflicts).
-Last activity: 2026-05-14 — Phase 46 discuss-phase complete.
+Current Plan: 2 of 6 (next: 46-02 — action layer)
+Total Plans in Phase: 6 (46-00 through 46-05)
+Status: 46-00 + 46-01 SHIPPED. Foundation in place: mapgen.uploadToBlob pathPrefix option (46-00), Phase 46 design tokens (46-00), Doctor model + additive migration (DIR-01/02), doctors.ts read-only DAL with duck-typed DI (DIR-03), 21 pglite tests passing, REQUIREMENTS.md DIR-01..DIR-13 minted. v3.2 work parked.
+Last activity: 2026-05-14 — Plan 46-01 executed (7 min, 4 tasks, 5 files). Four commits: `758ba3b` (feat schema+migration) → `b0cee4d` (feat DAL) → `7800b6a` (test pglite) → `3fa67fb` (docs DIR-* mint).
 
 ```
-v3.3 Progress: [░░░░░░░░░░] 0% — Phase 46 awaiting plan
+v3.3 Progress: [███░░░░░░░] ~33% — Phase 46 Plans 00 + 01 of 6 complete
 ```
 
 **Parked from v3.2 (carried forward, untouched here):**
@@ -58,6 +60,8 @@ v3.3 Progress: [░░░░░░░░░░] 0% — Phase 46 awaiting plan
 
 *Updated after each milestone completion*
 | Phase 44 P04 | 20min | 4 tasks | 11 files |
+| Phase 46-aerzteverzeichnis P00 | 7 min | 2 tasks | 3 files |
+| Phase 46 P01 | 7 min | 4 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -92,6 +96,12 @@ See PROJECT.md Key Decisions for full history.
 - [Phase 44]: 44-04: Proxy-wrap PrismaClient in tests when vi.spyOn can't see $-methods — Prisma client is a Proxy with value:undefined descriptors until accessed. Pattern reusable for future transactional tests.
 - [Phase 44]: 44-04 post-deploy: drop Accept header from rssAdapter. BMI's myracloud-fronted feed (https://www.bmi.gv.at/rss/stmk_presse.xml) 302-redirects to an error page when the request advertises `Accept: application/rss+xml, application/atom+xml, application/xml` — server serves text/xml and its content-negotiator does not recognize the canonical RSS media types. Trust the server's default. Commit 21ade92.
 - [Deploy]: prisma migrate deploy can fail to bootstrap when an earlier migration was applied via `prisma db push` (Article.theme case from v3.1). Recovery path: `prisma migrate resolve --applied <migration-name>` after verifying the schema state matches the migration's intent (column + index both already present), then `prisma migrate deploy` runs the remaining pending migrations cleanly. Pattern reusable if future db-push debt surfaces.
+- [Phase 46-aerzteverzeichnis]: Use `||` (not `??`) for pathPrefix fallback in mapgen.uploadToBlob so empty string ALSO falls back to 'article' — JS default-param would let '' produce broken path `maps/-{id}.jpg`
+- [Phase 46-aerzteverzeichnis]: Phase-local design tokens land in same `@theme` block as master tokens (`--*-dir-*` namespace) — Tailwind v4 only generates utilities from tokens inside @theme; separate :root or @layer would not produce bg-dir-*/rounded-dir-*
+- [Phase 46-aerzteverzeichnis]: Full Material 3 token surface added (47 colors incl. secondary-fixed/tertiary-fixed), not subset — DESIGN.md YAML authoritative; future polish phases can use any M3 token without re-editing globals.css
+- [Phase 46]: Doctor.publicId is non-null String (vs Article.publicId nullable) — public detail URL requires it from row birth; Prisma @default(nanoid()) runs client-side, so migration SQL emits no server-side default
+- [Phase 46]: Doctor.bezirkId FK uses ON DELETE RESTRICT — Bezirke cannot be deleted while doctors reference them, requires explicit migration if a Bezirk ever needs decommissioning
+- [Phase 46]: Doctor DAL is read-only (listDoctors/getDoctorByPublicId/getDoctorById); write paths (create/update/softDelete/toggleVerified) live in doctors-actions.ts per Plan 46-02 — same shape as articles.ts vs articles-actions.ts
 
 ### Pending Todos
 
@@ -115,8 +125,8 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-14T13:35:00Z
-Stopped at: Phase 46 (Ärzteverzeichnis) discuss-phase complete. `.planning/phases/46-aerzteverzeichnis/46-CONTEXT.md` + phase-local `DESIGN.md` written. v3.3 milestone scaffolded (note: ROADMAP.md not yet updated to add v3.3 entry — happens at plan-phase or new-milestone). Working tree clean since `e9a60da fix(weather): use bezirke lookup instead of capitalised slug`.
+Last session: 2026-05-14T12:50:50.861Z
+Stopped at: Completed 46-01-PLAN.md (Doctor schema + DAL + DIR-01..13 minted). Plan 46-02 (doctors-actions.ts trinity) is next — schema/types/DAL are all in place.
 
 Resume with one of:
 1) **Plan Phase 46** — `/gsd:plan-phase 46` resolves the 9 open questions in CONTEXT.md (felder-vollkatalog, map-engine, suche-modus, JSON-LD, sortierung, bulk-import, AppBar-link, sitemap, token-prefix) and breaks the work into plans.
