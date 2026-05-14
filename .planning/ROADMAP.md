@@ -214,7 +214,7 @@ Plans:
 6. The new design tokens introduced for the directory live in `globals.css` under a namespace prefix; no live token semantics changed
 7. `sitemap.ts` includes all `Doctor` detail URLs; SEO emits `Physician` (or `Dentist`) JSON-LD per detail page
 
-**Plans:** 2/6 plans executed
+**Plans:** 4/6 plans executed
 
 Plans:
 - [ ] 46-00-PLAN.md — Foundation prep: parameterize `mapgen.ts` Blob path prefix + add `--dir-*` design tokens to `globals.css` (DIR-09 prep, DIR-13)
@@ -247,4 +247,4 @@ Plans:
 | 43 | 4/4 | Complete    | 2026-05-11 | - |
 | 44 | 1/4 | In Progress|  | - |
 | 45 | v3.2 | 0/TBD | Not started | - |
-| 46 | 2/6 | In Progress|  | - |
+| 46 | 4/6 | In Progress|  | - |
