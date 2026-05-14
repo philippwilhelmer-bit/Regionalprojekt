@@ -580,12 +580,27 @@ async function stitchTiles(tiles: Buffer[][], cols: number, rows: number): Promi
 /**
  * Upload a JPEG image buffer to Vercel Blob storage.
  *
- * @param articleId - Article ID used in the storage path
+ * Path pattern: `maps/${prefix}-${id}.jpg` where prefix defaults to `'article'`.
+ * The `|| 'article'` guard covers BOTH undefined and empty-string inputs —
+ * a JS default parameter (`pathPrefix: string = 'article'`) would only fire
+ * on undefined, leaving `''` to produce the broken path `maps/-{id}.jpg`.
+ *
+ * @param id - Entity ID used in the storage path
  * @param imageBuffer - JPEG image buffer
+ * @param pathPrefix - Optional Blob path prefix; falls back to `'article'`
+ *   when undefined OR empty string. Phase 46 introduces `'doctor'` for
+ *   doctor-directory maps; existing article callers pass nothing.
  * @returns Public URL of the uploaded blob
  */
-async function uploadToBlob(articleId: number, imageBuffer: Buffer): Promise<string> {
-  const blob = await put(`maps/article-${articleId}.jpg`, imageBuffer, {
+async function uploadToBlob(
+  id: number,
+  imageBuffer: Buffer,
+  pathPrefix?: string,
+): Promise<string> {
+  // `||` not `??` — empty string MUST also fall back to 'article' so a misuse
+  // like `{ pathPrefix: '' }` cannot produce the broken path `maps/-{id}.jpg`.
+  const prefix = pathPrefix || 'article'
+  const blob = await put(`maps/${prefix}-${id}.jpg`, imageBuffer, {
     access: 'public',
     contentType: 'image/jpeg',
     allowOverwrite: true,
@@ -598,7 +613,8 @@ async function uploadToBlob(articleId: number, imageBuffer: Buffer): Promise<str
 // ---------------------------------------------------------------------------
 
 /**
- * Generate a map image for an article and upload to Vercel Blob.
+ * Generate a map image for an entity (article by default, or e.g. doctor) and
+ * upload to Vercel Blob.
  *
  * Full pipeline:
  * 1. Auto-select zoom via selectZoom(locationType) — MAP-04
@@ -606,24 +622,30 @@ async function uploadToBlob(articleId: number, imageBuffer: Buffer): Promise<str
  * 3. Select layer from headline keywords
  * 4. Fetch 5x3 tile grid concurrently
  * 5. Stitch tiles, crop to 1200x630, overlay attribution
- * 6. Upload JPEG to Vercel Blob
+ * 6. Upload JPEG to Vercel Blob at `maps/${options.pathPrefix || 'article'}-${id}.jpg`
  * 7. Return { url, credit: '© basemap.at' }
  *
  * Any failure returns null (does not throw). Failures are logged via console.warn.
  *
  * @param lat - Location latitude
  * @param lon - Location longitude
- * @param headline - Article headline (for layer selection)
- * @param articleId - Article ID (for Blob path naming)
+ * @param headline - Headline (for layer selection)
+ * @param id - Entity ID (for Blob path naming)
  * @param locationType - OSM place type (for zoom selection via MAP-04)
+ * @param options - Optional Blob path config:
+ *   - `pathPrefix`: namespace under `maps/` (e.g. `'doctor'`). Defaults to
+ *     `'article'`. Empty string ALSO falls back to `'article'` via the
+ *     `|| 'article'` guard in `uploadToBlob` — a JS default-param would
+ *     only catch `undefined`, leaving `''` to produce `maps/-{id}.jpg`.
  * @returns MapImage with url and credit, or null on any failure
  */
 export async function generateMapImage(
   lat: number,
   lon: number,
   headline: string,
-  articleId: number,
+  id: number,
   locationType?: string,
+  options?: { pathPrefix?: string },
 ): Promise<MapImage | null> {
   try {
     // 1. Select zoom level based on location type (MAP-04)
@@ -641,14 +663,14 @@ export async function generateMapImage(
     // 5. Stitch, crop to 1200x630, overlay attribution SVG
     const imageBuffer = await stitchTiles(tiles, 5, 3)
 
-    // 6. Upload to Vercel Blob
-    const url = await uploadToBlob(articleId, imageBuffer)
+    // 6. Upload to Vercel Blob — `uploadToBlob` applies `|| 'article'` fallback
+    const url = await uploadToBlob(id, imageBuffer, options?.pathPrefix)
 
     // 7. Return result
     return { url, credit: '© basemap.at' }
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
-    console.warn(`[mapgen] article id=${articleId} -- ${msg} -- lat=${lat} lon=${lon}`)
+    console.warn(`[mapgen] id=${id} -- ${msg} -- lat=${lat} lon=${lon}`)
     return null
   }
 }
