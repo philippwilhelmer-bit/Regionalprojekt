@@ -2,17 +2,17 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Directory Expansion
-current_plan: 6 (last — phase complete)
-status: executing
-stopped_at: Phase 47 context gathered
-last_updated: "2026-05-16T13:30:04.036Z"
-last_activity: 2026-05-16 -- Phase 47 planning complete
+current_plan: 6 (Phase 47 complete)
+status: complete
+stopped_at: Phase 47 shipped (manual UI smoke pending operator)
+last_updated: "2026-05-16T18:10:00.000Z"
+last_activity: 2026-05-16 -- Phase 47 complete (7/7 plans shipped)
 progress:
   total_phases: 9
-  completed_phases: 7
+  completed_phases: 8
   total_plans: 31
-  completed_plans: 21
-  percent: 68
+  completed_plans: 28
+  percent: 90
 ---
 
 # Project State
@@ -22,20 +22,24 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-10)
 
 **Core value:** Steiermark residents get relevant, hyperlocal news for their Bezirk — automatically, without an editorial team needed to run it.
-**Current focus:** v3.3 Directory Expansion — adding a public doctor directory under `/aerzte` with editorial admin CRUD, map pins, editorial notes and verification badges. Phase 46 is freshly discussed (CONTEXT.md + phase-local DESIGN.md drafted on 2026-05-14). v3.2 work is parked: Phase 43 closed, 44-04 deployed, 44-01/02/03 + Phase 45 remain DEFERRED. The v3.2 ≥50% input-token reduction success criterion remains NOT met — explicitly deferred to a future model-class re-evaluation.
+**Current focus:** Phase 47 complete — next: Phase 44 replan or Phase 45 REVIEW Heuristic
 
 ## Current Position
 
 Milestone: v3.3 Directory Expansion (scaffolded 2026-05-14, SHIPPED 2026-05-14)
-Phase: 46 — Ärzteverzeichnis (Doctor Directory) — COMPLETE
-Current Plan: 6 (last — phase complete)
-Total Plans in Phase: 7
-Status: Ready to execute
-Last activity: 2026-05-16 -- Phase 47 planning complete
+Phase: 47 (aerzteverzeichnis-vollkatalog-und-csv-import) — COMPLETE
+Plan: 6 of 6 (final gate plan)
+Current Plan: 6 (Phase 47 complete)
+Total Plans in Phase: 7 (plans 00–06)
+Status: Phase 47 COMPLETE — all 18 DIR-14..DIR-31 requirements implemented; 7/7 plans shipped
+Last activity: 2026-05-16 -- Phase 47 complete (manual UI smoke pending operator)
 
 ```
-v3.3 Progress: [██████████] 100% — Phase 46 Plans 00..05 all shipped (6/6)
+v3.3 Progress: [██████████] 100% — Phase 46 (6/6) + Phase 47 (7/7) all shipped
+Phase 47 complete (7/7 plans shipped) — 28 of 31 total plans complete (90%)
 ```
+
+**Manual UI smoke pending:** Operator must run the 14-step smoke checklist at `/admin/aerzte/import` (as described in 47-06-PLAN.md Task 2) before merging to remote. Automated tests (vitest + tsc + build) all pass.
 
 **Parked from v3.2 (carried forward, untouched here):**
 
@@ -69,6 +73,13 @@ v3.3 Progress: [██████████] 100% — Phase 46 Plans 00..05 a
 | Phase 46-aerzteverzeichnis P02 | 7 min | 3 tasks | 2 files |
 | Phase 46-aerzteverzeichnis P03 | 40 min | 3 tasks | 6 files |
 | Phase 46-aerzteverzeichnis P05 | 7 min | 3 tasks | 5 files |
+| Phase 47 P00 | ~15 min | 2 tasks | 3 files |
+| Phase 47 P01 | ~30 min | 4 tasks | 9 files |
+| Phase 47 P02 | ~20 min | 3 tasks | 5 files |
+| Phase 47 P03 | ~30 min | 3 tasks | 6 files |
+| Phase 47 P04 | ~25 min | 4 tasks | 8 files |
+| Phase 47 P05 | ~20 min | 3 tasks | 5 files |
+| Phase 47 P06 | ~30 min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -124,6 +135,18 @@ See PROJECT.md Key Decisions for full history.
 - [Phase 46-aerzteverzeichnis]: Site chrome uses master design tokens only — --dir-* is scoped to directory PAGES, not the AppBar/Footer/BottomNav around them — LodenAppBar and Footer Ärzte/Ärzteverzeichnis links reuse adjacent links' Tailwind classes (hover:text-accent transition-colors) — no new tokens introduced for chrome. --dir-* tokens stay confined to /aerzte and /admin/aerzte page bodies per DESIGN.md scoping.
 - [Phase 46-aerzteverzeichnis]: BottomNav 2-tab lock honoured — discoverability for /aerzte goes via AppBar + Footer only — CONTEXT.md locked BottomNav at 2 tabs. Discoverability for /aerzte ships via LodenAppBar (desktop nav + mobile drawer) and Footer Rubriken column. git diff src/components/reader/BottomNav.tsx is empty after Plan 46-05.
 
+**v3.3 Phase 47-specific decisions:**
+
+- [Phase 47-csv-import]: papaparse selected as CSV parser (multi-line quoted values D-07); single new runtime dep, DECISIONS.md entry recorded per AGENTS.md anti-bloat rule
+- [Phase 47-csv-import]: Fachrichtung enum minted as closed 51-value Prisma enum; identifiers derived via uppercase + Ä→AE / Ö→OE / Ü→UE / ß→SS / strip .,() / space-dash→_ transform; collision-free over the 51 source labels
+- [Phase 47-csv-import]: Doctor table TRUNCATEd in migration (D-12 wipe-and-reload); Phase 46 shipped with test/seed data only, no production-critical rows
+- [Phase 47-csv-import]: In-memory PREVIEW_CACHE Map keyed by crypto.randomUUID() — single-editor workflow tolerates Vercel cold-start cache loss; user re-uploads on expiry (D-15)
+- [Phase 47-csv-import]: Admin-triggered batch geocoder (200 doctors / click) replaces background cron — Vercel Hobby 1-cron/day already consumed by ingest. 18 clicks for 3,577 doctors; one-time seeding burden per D-22
+- [Phase 47-csv-import]: JSON-LD always @type='Physician' (Dentist branch deleted — no dentists in source CSV); medicalSpecialty populated from FACHRICHTUNG_LABELS unconditionally (fachrichtung now NOT NULL)
+- [Phase 47-csv-import]: Public Fachrichtung filter uses HTML5 <datalist> — native browser autocomplete over 51 options, no JS framework added (D-25)
+- [Phase 47-csv-import]: profilUrl open-redirect risk deferred to future phase — admin-controlled source (trusted CSV); rel="noopener noreferrer" + target=_blank mitigates window-opener attacks
+- [Phase 47-06-build-fix]: maxDuration must be exported from route segment (page.tsx / route.ts), NOT from 'use server' files — Next.js 15 forbids non-async exports in server action files; moved from doctors-import-actions.ts to admin/aerzte/page.tsx
+
 ### Pending Todos
 
 - **v3.2 ROADMAP success-criterion revision:** the ≥50% input-token reduction goal needs to be marked as "deferred" or "not achieved with current model class" — separate edit to `.planning/PROJECT.md` and roadmap docs after this session's closure.
@@ -146,14 +169,16 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-16T12:21:17.096Z
-Stopped at: Phase 47 context gathered
+Last session: 2026-05-16T18:10:00.000Z
+Stopped at: Phase 47 shipped (manual UI smoke pending operator)
+
+**BEFORE MERGING TO REMOTE:** Run the 14-step manual smoke checklist in 47-06-PLAN.md Task 2 (`npm run dev` → visit `/admin/aerzte/import` → upload 10-row fixture → preview → commit → geocode → re-import idempotency → JSON-LD → public filter datalist).
 
 Resume with one of:
-1) **Plan Phase 46** — `/gsd:plan-phase 46` resolves the 9 open questions in CONTEXT.md (felder-vollkatalog, map-engine, suche-modus, JSON-LD, sortierung, bulk-import, AppBar-link, sitemap, token-prefix) and breaks the work into plans.
-2) **Research Phase 46** — `/gsd:research-phase 46` if Nominatim-rate-limit or Leaflet-bundle-size needs spiking before plan.
-3) **Update ROADMAP.md** — add v3.3 Directory Expansion entry under the milestones list. Currently not yet done — STATE.md leads, ROADMAP.md follows.
-4) **Resume v3.2 parked work** — `/gsd:plan-phase 44` (replan 44-01/02/03 with legacy-is-live context) or `/gsd:plan-phase 45` (REVIEW Heuristic & Quality Loop).
+1) **Manual smoke first** — Run the 14-step smoke at `/admin/aerzte/import` then `git push` to close Phase 47 fully.
+2) **Replan Phase 44** — `/gsd:plan-phase 44` (replan 44-01/02/03 with legacy-is-live context).
+3) **Phase 45** — `/gsd:plan-phase 45` (REVIEW Heuristic & Quality Loop — not started).
+4) **v3.4 bootstrap** — plan the next milestone (telemetry schema TLM-01..04, Batches API TLM-05..07, quality-eval QUAL-01..10) after smoke closure.
 5) **Continue ad-hoc UI iteration** — outside GSD; recent: Bright & Modern mockup, freigestellt mascot asset, clip-path fix, WeatherWidget umlaut fix.
 
 Carry-over artifacts (still relevant, untouched):
