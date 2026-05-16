@@ -3,16 +3,17 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback } from 'react'
 import type { Bezirk } from '@prisma/client'
+import type { Fachrichtung } from '@prisma/client'
+import { FACHRICHTUNG_OPTIONS } from '@/lib/admin/import/fachrichtung-mapping'
 
 /**
- * Admin filter chips for the doctor list (Phase 47 / DIR-06).
+ * Admin filter controls for the doctor list (Phase 47 / DIR-06).
  *
  * Updated from Phase 46: the Kategorie chip row is removed (D-03, DoctorKategorie dropped).
- * Fachrichtung filter UI rewrite is deferred to Plan 47-04. For now: Bezirk chips + Verified
- * chips remain; the Kategorie row is gone entirely.
+ * Phase 47 (47-04): Fachrichtung <select> filter added. Bezirk chips + Verified chips remain.
  *
- * Two chip groups (Bezirk, Verified) — each click rewrites the search params and pushes
- * via the router. Pill-shaped chips use --dir-* design tokens per DESIGN.md.
+ * 'use client' — router/searchParams hooks require client context.
+ * Each change rewrites the search params and pushes via the router.
  */
 
 const VERIFIED_OPTIONS: Array<{ value: 'true' | 'false'; label: string }> = [
@@ -25,6 +26,7 @@ interface DoctorFiltersProps {
   active: {
     bezirk?: string
     isVerified?: boolean
+    fachrichtung?: Fachrichtung | string
   }
 }
 
@@ -75,6 +77,26 @@ export function DoctorFilters({ bezirke, active }: DoctorFiltersProps) {
             label={b.name}
           />
         ))}
+      </div>
+
+      {/* Fachrichtung select */}
+      <div className="flex items-center gap-dir-xs">
+        <span className="text-xs font-medium text-dir-on-surface-variant mr-dir-xs">
+          Fachrichtung:
+        </span>
+        <select
+          name="fachrichtung"
+          value={active.fachrichtung ?? ''}
+          onChange={(e) => updateParam('fachrichtung', e.target.value || null)}
+          className="border border-dir-outline-variant rounded-dir-sm px-dir-sm py-dir-xs text-sm text-dir-on-surface bg-dir-surface focus:outline-none focus:ring-2 focus:ring-dir-primary"
+        >
+          <option value="">Alle Fachrichtungen</option>
+          {FACHRICHTUNG_OPTIONS.map((o) => (
+            <option key={o.id} value={o.id}>
+              {o.label}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Verified row */}
