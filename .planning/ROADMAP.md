@@ -132,6 +132,7 @@ Full details: `.planning/phases/46-aerzteverzeichnis/46-CONTEXT.md` + phase-loca
 **Requirements:** AIPL-01, AIPL-02, AIPL-03, AIPL-04, AIPL-05, AIPL-06, AIPL-07, AIPL-08, AIPL-09, AIPL-10
 
 **Success Criteria** (what must be TRUE):
+
 1. A FETCHED article reaches WRITTEN or REVIEW status via exactly one Anthropic API call (verifiable by mock or log inspection — no step1-tag + step2-write sequence)
 2. Total `inputTokens` in PipelineRun drops by at least 50% compared to the pre-merge baseline on an equivalent article set
 3. `cache_read_input_tokens > 0` appears in PipelineRun on the second article of a run that shares a system prefix
@@ -141,6 +142,7 @@ Full details: `.planning/phases/46-aerzteverzeichnis/46-CONTEXT.md` + phase-loca
 **Plans:** 4/4 plans complete
 
 Plans:
+
 - [x] 43-01-PLAN.md — Merged AI call (`runMergedCall`) + unit suite — single `tool_use` call, `cache_control` on static prefix, `max_tokens: 1024`, cache-aware token split, `isStateWide` defensive guard (AIPL-01..05)
 - [x] 43-02-PLAN.md — Per-source clean extractors (`extractors/ots.ts`, `extractors/rss.ts`, `extractors/index.ts`) — strip OTS metadata + dispatch by `ArticleSource` enum (AIPL-06)
 - [x] 43-03-PLAN.md — Pipeline integration — flag-gated merged branch, TAGGED retry selector, `llmLocationFallback` signature change + token accounting, Anthropic `maxRetries: 2`, TAGGED enum deprecation comment, AIPL-10 SQL doc (AIPL-07..10)
@@ -159,6 +161,7 @@ Plans:
 **Requirements:** TLM-01, TLM-02, TLM-03, TLM-04, TLM-05, TLM-06, TLM-07, INGEST-01, INGEST-02, INGEST-03, INGEST-04, INGEST-05
 
 **Success Criteria** (what must be TRUE):
+
 1. Every WRITTEN or PUBLISHED article produced after this phase has `aiInputTokens`, `aiOutputTokens`, `aiCostUsd`, and `aiModel` populated (NULL only on pre-v3.2 rows)
 2. Admin can open the articles list, sort by `aiCostUsd` descending, and read the source name next to each cost figure
 3. The pipeline submits articles to the Anthropic Message Batches API by default; switching to per-article mode requires only toggling a feature flag
@@ -183,6 +186,7 @@ Plans:
 **Requirements:** QUAL-01, QUAL-02, QUAL-03, QUAL-04, QUAL-05, QUAL-06, QUAL-07, QUAL-08, QUAL-09, QUAL-10
 
 **Success Criteria** (what must be TRUE):
+
 1. A replay of the last 200 REVIEW-status articles against the new prompt reclassifies at least 60% as WRITTEN (officeholder-only mentions no longer trigger REVIEW)
 2. The admin can trigger the historical REVIEW re-evaluation via a button in the CMS — it does not run automatically
 3. The string `'steiermark-weit'` appears in zero source files and zero database rows after this phase
@@ -195,13 +199,50 @@ Plans:
 
 ### Phase 47: Aerzteverzeichnis Vollkatalog und CSV-Import
 
-**Goal:** [To be planned]
-**Requirements**: TBD
-**Depends on:** Phase 46
-**Plans:** 0 plans
+**Goal:** Extend the live Ärzteverzeichnis with the data shape and bulk-import pipeline needed to seed Steiermark-wide content from the Ärztekammer Steiermark merged CSV (3,577 rows, 13 Bezirke, 51 Fachrichtungen). Adds `arztNr` natural key, renames `website` → `profilUrl`, promotes `fachrichtung` to a closed 51-value Prisma enum, drops the now-unused `kategorie` enum. Ships admin `/admin/aerzte/import` with dry-run preview + upsert-on-arztNr semantics + admin-triggered batch geocoder (200 doctors / click, fits Vercel 5-min cap).
+
+**Requirements:** DIR-14, DIR-15, DIR-16, DIR-17, DIR-18, DIR-19, DIR-20, DIR-21, DIR-22, DIR-23, DIR-24, DIR-25, DIR-26, DIR-27, DIR-28, DIR-29, DIR-30, DIR-31
+
+**Depends on:** Phase 46 (extends DIR-01..DIR-13 baseline)
+
+**Plans:** 7 plans
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 47 to break down)
+**Wave 1**
+
+- [ ] 47-01-PLAN.md — Schema migration: Fachrichtung enum + arztNr + profilUrl rename + TRUNCATE + kategorie drop; DAL + Trinity factory updates (DIR-14, DIR-15, DIR-16, DIR-17, DIR-22, DIR-31)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 47-00-PLAN.md — Foundation: papaparse install + DECISIONS.md + 51-entry FACHRICHTUNG mapping + Bezirk alias map (DIR-17, DIR-20)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 47-02-PLAN.md — CSV parser + 10-row fixture: papaparse wrapper, per-row validator, header/BOM/multi-line/required/unknown-enum/dedupe coverage (DIR-18, DIR-19, DIR-21, DIR-25, DIR-30)
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
+- [ ] 47-03-PLAN.md — Server-Action-Trinity: parseAndPreviewCsv + commitCsvImport (db.$transaction allow-list) + geocodeBatch (sleep(1100), maxDuration=300) + PREVIEW_CACHE (DIR-23, DIR-24, DIR-25, DIR-26)
+
+**Wave 5** *(blocked on Wave 4 completion)*
+
+- [ ] 47-04-PLAN.md — Admin UI: /admin/aerzte/import page + ImportPreview component; /admin/aerzte counter + Geocode button + CSV importieren link; DoctorFilters/Row/Form rewrite (DIR-27, DIR-30, DIR-31)
+- [ ] 47-05-PLAN.md — Public UI: /aerzte filter datalist rewrite; detail page profilUrl link; doctor-metadata.ts Physician-only + medicalSpecialty from FACHRICHTUNG_LABELS (DIR-28, DIR-29)
+
+**Wave 6** *(blocked on Wave 5 completion)*
+
+- [ ] 47-06-PLAN.md — Integration smoke + STATE.md closure: full vitest + tsc + build + 14-step manual smoke checklist; STATE.md + REQUIREMENTS.md updates (covers all 18 DIR-* via verification)
+
+**Wave structure** (revised 2026-05-16 to break the 47-00↔47-01 circular type dependency — 47-01 now seeds the Fachrichtung enum first, 47-00 codegens against the landed Prisma client in Wave 2):
+
+- Wave 1: 47-01 (schema + migration + DAL + Server-Action-Trinity factory updates — lands the `Fachrichtung` enum in `@prisma/client`)
+- Wave 2: 47-00 (papaparse install + DECISIONS.md + 51-entry FACHRICHTUNG mapping + Bezirk alias map — uses the generated Prisma `Fachrichtung` enum directly, no fallback type needed)
+- Wave 3: 47-02 (csv-parser + 10-row fixture — depends on 47-00 mapping + 47-01 enum)
+- Wave 4: 47-03 (Server-Action-Trinity: parseAndPreviewCsv + commitCsvImport + geocodeBatch + PREVIEW_CACHE — depends on 47-02)
+- Wave 5: 47-04 (admin UI — depends on 47-03), 47-05 (public UI — depends on 47-00 + 47-01) — parallel; disjoint admin vs public files
+- Wave 6: 47-06 (integration smoke + STATE.md / REQUIREMENTS.md closure — depends on 47-04 + 47-05)
+
+**Risk:** The 18-batch geocoder cadence (3,577 doctors / 200 per click) requires editorial commitment to click the button across multiple days. Mitigation: locked decision D-22 confirms this is acceptable as a one-time seeding burden; future Vercel Pro upgrade would unlock background cron geocoding.
 
 ---
 
@@ -216,6 +257,7 @@ Plans:
 (IDs to be minted in `.planning/REQUIREMENTS.md` as part of Plan 01 Task 1.4.)
 
 **Success Criteria** (what must be TRUE):
+
 1. A public-facing list at `/aerzte` shows all `Doctor` rows filterable by Bezirk and Kategorie (Allgemeinmedizin / Facharzt / Zahnarzt) and Fachrichtung
 2. Each `Doctor` has a public detail page at `/aerzte/{publicId}/{slug}` with canonical slug redirect, address, optional map pin (when Nominatim succeeded), editorial note (rendered Markdown), and "Mehr zum Thema" article cross-links
 3. Admin can create / edit / delete / verify-toggle a doctor entry from `/admin/aerzte` using the project's Server-Action-Trinity pattern (Db / Action / Form)
@@ -227,6 +269,7 @@ Plans:
 **Plans:** 6/6 plans complete
 
 Plans:
+
 - [x] 46-00-PLAN.md — Foundation prep: parameterize `mapgen.ts` Blob path prefix + add `--dir-*` design tokens to `globals.css` (DIR-09 prep, DIR-13)
 - [x] 46-01-PLAN.md — Prisma `Doctor` model + additive migration + DAL `doctors.ts` with overload + duck-typed DI + DAL pglite tests + `REQUIREMENTS.md` DIR-01..13 backfill (DIR-01, DIR-02, DIR-03)
 - [x] 46-02-PLAN.md — Server-Action-Trinity `doctors-actions.ts`: pure `*Db` + `*Action` (auth + two-phase create with geocode + mapgen) + `*Form` wrappers; vi.mock'd tests for happy + failure paths (DIR-04, DIR-05, DIR-09)
@@ -235,6 +278,7 @@ Plans:
 - [x] 46-05-PLAN.md — Sitemap inclusion, AppBar + Footer nav-link "Ärzte", end-to-end integration smoke checkpoint (DIR-11, DIR-12)
 
 **Wave structure:**
+
 - Wave 1: 46-00, 46-01 (parallel — different files)
 - Wave 2: 46-02 (depends on 00+01), 46-04 (depends on 01)
 - Wave 3: 46-03 (depends on 02)

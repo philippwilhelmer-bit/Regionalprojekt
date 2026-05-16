@@ -3,16 +3,16 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Directory Expansion
 current_plan: 6 (last — phase complete)
-status: verifying
+status: executing
 stopped_at: Phase 47 context gathered
-last_updated: "2026-05-16T12:21:17.110Z"
-last_activity: 2026-05-14
+last_updated: "2026-05-16T13:30:04.036Z"
+last_activity: 2026-05-16 -- Phase 47 planning complete
 progress:
   total_phases: 9
   completed_phases: 7
-  total_plans: 24
+  total_plans: 31
   completed_plans: 21
-  percent: 78
+  percent: 68
 ---
 
 # Project State
@@ -29,9 +29,9 @@ See: .planning/PROJECT.md (updated 2026-05-10)
 Milestone: v3.3 Directory Expansion (scaffolded 2026-05-14, SHIPPED 2026-05-14)
 Phase: 46 — Ärzteverzeichnis (Doctor Directory) — COMPLETE
 Current Plan: 6 (last — phase complete)
-Total Plans in Phase: 6 (46-00 through 46-05) — all shipped
-Status: Phase 46 COMPLETE 2026-05-14. All 13 DIR-* requirements complete, 6/6 plans shipped, end-to-end smoke approved across all 9 verifier steps (admin create → list filter → detail render → JSON-LD + slug-canonical + 404 → discoverability via AppBar/Footer → sitemap → token scoping → disclaimer → build green → test baseline). v3.2 work still parked: 44-01/02/03 + Phase 45 DEFERRED.
-Last activity: 2026-05-14
+Total Plans in Phase: 7
+Status: Ready to execute
+Last activity: 2026-05-16 -- Phase 47 planning complete
 
 ```
 v3.3 Progress: [██████████] 100% — Phase 46 Plans 00..05 all shipped (6/6)
