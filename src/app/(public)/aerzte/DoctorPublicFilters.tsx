@@ -2,6 +2,10 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import type { Bezirk, Fachrichtung } from '@prisma/client'
+import {
+  FACHRICHTUNG_OPTIONS,
+  FACHRICHTUNG_LABELS,
+} from '@/lib/admin/import/fachrichtung-mapping'
 
 type ActiveFilters = {
   bezirk?: string
@@ -14,11 +18,11 @@ type Props = {
 }
 
 /**
- * Client-side filter bar for the public Ärzte list (Phase 47 / updated from Phase 46).
+ * Client-side filter bar for the public Ärzte list (Phase 47 / D-25).
  *
- * Updated from Phase 46: kategorie chips removed (D-03). Fachrichtung free-text input
- * retained for now — full searchable datalist rewrite deferred to Plan 47-04.
- * URL contract: ?fachrichtung=ENUM_ID (enum identifier, not display label).
+ * Bezirk chips unchanged from Phase 46. Fachrichtung free-text field replaced
+ * with HTML5 datalist over 51 options (D-25). URL contract: ?fachrichtung=ENUM_ID
+ * (enum identifier round-tripped via FACHRICHTUNG_OPTIONS reverse-lookup on blur).
  *
  * Drives the list by mutating the URL query params (`bezirk`, `fachrichtung`).
  * The server reads them on the next navigation; page.tsx is `force-dynamic`.
@@ -60,15 +64,25 @@ export default function DoctorPublicFilters({ bezirke, active }: Props) {
         })}
       </div>
 
-      {/* Fachrichtung free-text (enum identifier — Plan 47-04 will add datalist UI) */}
+      {/* Fachrichtung searchable datalist (D-25) */}
       <div className="flex flex-wrap items-center gap-dir-sm">
         <input
           type="text"
-          placeholder="Fachrichtung…"
-          defaultValue={active.fachrichtung ?? ''}
-          onBlur={(e) => setParam('fachrichtung', e.target.value || undefined)}
+          list="fachrichtungen"
+          placeholder="Fachrichtung wählen…"
+          defaultValue={active.fachrichtung ? FACHRICHTUNG_LABELS[active.fachrichtung] : ''}
+          onBlur={(e) => {
+            const label = e.target.value.trim()
+            const id = FACHRICHTUNG_OPTIONS.find((o) => o.label === label)?.id
+            setParam('fachrichtung', id ?? undefined)
+          }}
           className="bg-dir-surface-container-lowest text-dir-on-surface rounded-dir-md px-dir-md py-dir-xs text-sm border border-dir-outline-variant focus:outline-none focus:ring-2 focus:ring-dir-primary"
         />
+        <datalist id="fachrichtungen">
+          {FACHRICHTUNG_OPTIONS.map((o) => (
+            <option key={o.id} value={o.label} />
+          ))}
+        </datalist>
         {hasActive && (
           <button
             type="button"
