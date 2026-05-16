@@ -3,7 +3,6 @@ import type { Doctor } from '@prisma/client'
 import {
   buildDoctorMetadata,
   buildDoctorJsonLd,
-  kategorieLabel,
 } from './doctor-metadata'
 
 type DoctorForMetadata = Doctor & { bezirk: { name: string } }
@@ -12,16 +11,16 @@ function makeDoctor(overrides: Partial<DoctorForMetadata> = {}): DoctorForMetada
   return {
     id: 1,
     publicId: 'abc123',
+    arztNr: 'A1234',
     name: 'Maria Müller',
     titel: null,
-    kategorie: 'ALLGEMEINMEDIZIN',
-    fachrichtung: null,
+    fachrichtung: 'ALLGEMEINMEDIZIN',
     address: 'Herrengasse 16, 8010 Graz',
     lat: null,
     lon: null,
     bezirkId: 1,
     email: null,
-    website: null,
+    profilUrl: null,
     phone: null,
     editorialNote: null,
     relatedArticleIds: [],
@@ -37,30 +36,17 @@ function makeDoctor(overrides: Partial<DoctorForMetadata> = {}): DoctorForMetada
 const BASE_URL = 'https://example.com'
 
 describe('buildDoctorJsonLd', () => {
-  it('Test 1: ALLGEMEINMEDIZIN doctor → @type === "Physician"', () => {
-    const doctor = makeDoctor({ kategorie: 'ALLGEMEINMEDIZIN' })
+  it('Test 1: always @type === "Physician" (no Dentist branch — D-27)', () => {
+    const doctor = makeDoctor({ fachrichtung: 'ALLGEMEINMEDIZIN' })
     const jsonLd = buildDoctorJsonLd(doctor, `${BASE_URL}/aerzte/abc123/maria-mueller`)
     expect(jsonLd['@type']).toBe('Physician')
   })
 
-  it('Test 2: FACHARZT doctor → @type === "Physician" + medicalSpecialty', () => {
-    const doctor = makeDoctor({
-      kategorie: 'FACHARZT',
-      fachrichtung: 'Kardiologie',
-    })
+  it('Test 2: medicalSpecialty always set to fachrichtung value (required enum)', () => {
+    const doctor = makeDoctor({ fachrichtung: 'INNERE_MEDIZIN_UND_KARDIOLOGIE' })
     const jsonLd = buildDoctorJsonLd(doctor, `${BASE_URL}/aerzte/abc123/maria-mueller`)
     expect(jsonLd['@type']).toBe('Physician')
-    expect(jsonLd.medicalSpecialty).toBe('Kardiologie')
-  })
-
-  it('Test 3: ZAHNARZT doctor → @type === "Dentist", no medicalSpecialty', () => {
-    const doctor = makeDoctor({
-      kategorie: 'ZAHNARZT',
-      fachrichtung: null,
-    })
-    const jsonLd = buildDoctorJsonLd(doctor, `${BASE_URL}/aerzte/abc123/maria-mueller`)
-    expect(jsonLd['@type']).toBe('Dentist')
-    expect(jsonLd).not.toHaveProperty('medicalSpecialty')
+    expect(jsonLd.medicalSpecialty).toBe('INNERE_MEDIZIN_UND_KARDIOLOGIE')
   })
 
   it('Test 4: doctor with lat/lon set → JSON-LD includes geo GeoCoordinates', () => {
@@ -97,12 +83,12 @@ describe('buildDoctorJsonLd', () => {
     expect(j2).not.toHaveProperty('telephone')
   })
 
-  it('Test 8: doctor with website set → sameAs: [website]; without → no sameAs', () => {
-    const withWebsite = makeDoctor({ website: 'https://praxis-mueller.at' })
-    const withoutWebsite = makeDoctor({ website: null })
-    const j1 = buildDoctorJsonLd(withWebsite, `${BASE_URL}/aerzte/abc123/maria-mueller`)
-    const j2 = buildDoctorJsonLd(withoutWebsite, `${BASE_URL}/aerzte/abc123/maria-mueller`)
-    expect(j1.sameAs).toEqual(['https://praxis-mueller.at'])
+  it('Test 8: doctor with profilUrl set → sameAs: [profilUrl] (D-28); without → no sameAs', () => {
+    const withProfilUrl = makeDoctor({ profilUrl: 'https://www.aekstmk.or.at/aerztesuche-46?arztnr=A1234' })
+    const withoutProfilUrl = makeDoctor({ profilUrl: null })
+    const j1 = buildDoctorJsonLd(withProfilUrl, `${BASE_URL}/aerzte/abc123/maria-mueller`)
+    const j2 = buildDoctorJsonLd(withoutProfilUrl, `${BASE_URL}/aerzte/abc123/maria-mueller`)
+    expect(j1.sameAs).toEqual(['https://www.aekstmk.or.at/aerztesuche-46?arztnr=A1234'])
     expect(j2).not.toHaveProperty('sameAs')
   })
 
@@ -143,13 +129,5 @@ describe('buildDoctorMetadata', () => {
     expect(result.alternates?.canonical).toBe(
       'https://example.com/aerzte/abc123/maria-mueller',
     )
-  })
-})
-
-describe('kategorieLabel', () => {
-  it('Test 13: returns localized German labels for each enum value', () => {
-    expect(kategorieLabel('ALLGEMEINMEDIZIN')).toBe('Allgemeinmediziner:in')
-    expect(kategorieLabel('FACHARZT')).toBe('Facharzt/Fachärztin')
-    expect(kategorieLabel('ZAHNARZT')).toBe('Zahnarzt/Zahnärztin')
   })
 })

@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import { slugify } from '@/lib/reader/slug'
-import { kategorieLabel } from '@/lib/reader/doctor-metadata'
 import type { DoctorWithBezirk } from '@/lib/content/doctors'
 
 /**
- * Public list-row card for a doctor.
+ * Public list-row card for a doctor (Phase 47 / updated from Phase 46).
+ *
+ * Updated from Phase 46: kategorie removed (D-03); fachrichtung is now always
+ * set (required enum) — shown directly (label map ships in Plan 47-04).
  *
  * Server Component (no client state). Links to /aerzte/{publicId}/{slug}.
  * Renders verification badge when isVerified. Uses --dir-* design tokens.
@@ -29,10 +31,7 @@ export default function DoctorPublicCard({ doctor }: { doctor: DoctorWithBezirk 
         )}
       </div>
       <p className="text-dir-on-surface-variant text-sm mt-dir-xs">
-        {kategorieLabel(doctor.kategorie)}
-        {doctor.kategorie === 'FACHARZT' && doctor.fachrichtung
-          ? ` · ${doctor.fachrichtung}`
-          : ''}
+        {doctor.fachrichtung}
         {' · '}
         {doctor.bezirk.name}
       </p>

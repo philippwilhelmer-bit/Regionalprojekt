@@ -2,21 +2,18 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback } from 'react'
-import type { Bezirk, DoctorKategorie } from '@prisma/client'
+import type { Bezirk } from '@prisma/client'
 
 /**
- * Admin filter chips for the doctor list (Phase 46 / DIR-06).
+ * Admin filter chips for the doctor list (Phase 47 / DIR-06).
  *
- * Three chip groups (Bezirk, Kategorie, Verified) — each click rewrites the
- * search params and pushes via the router. Pill-shaped chips use
- * --dir-* design tokens per DESIGN.md.
+ * Updated from Phase 46: the Kategorie chip row is removed (D-03, DoctorKategorie dropped).
+ * Fachrichtung filter UI rewrite is deferred to Plan 47-04. For now: Bezirk chips + Verified
+ * chips remain; the Kategorie row is gone entirely.
+ *
+ * Two chip groups (Bezirk, Verified) — each click rewrites the search params and pushes
+ * via the router. Pill-shaped chips use --dir-* design tokens per DESIGN.md.
  */
-
-const KATEGORIE_OPTIONS: Array<{ value: DoctorKategorie; label: string }> = [
-  { value: 'ALLGEMEINMEDIZIN', label: 'Allgemeinmedizin' },
-  { value: 'FACHARZT', label: 'Facharzt' },
-  { value: 'ZAHNARZT', label: 'Zahnarzt' },
-]
 
 const VERIFIED_OPTIONS: Array<{ value: 'true' | 'false'; label: string }> = [
   { value: 'true', label: 'Nur verifizierte' },
@@ -27,7 +24,6 @@ interface DoctorFiltersProps {
   bezirke: Bezirk[]
   active: {
     bezirk?: string
-    kategorie?: DoctorKategorie
     isVerified?: boolean
   }
 }
@@ -77,26 +73,6 @@ export function DoctorFilters({ bezirke, active }: DoctorFiltersProps) {
             active={active.bezirk === b.slug}
             onClick={() => updateParam('bezirk', b.slug)}
             label={b.name}
-          />
-        ))}
-      </div>
-
-      {/* Kategorie row */}
-      <div className="flex flex-wrap items-center gap-dir-xs">
-        <span className="text-xs font-medium text-dir-on-surface-variant mr-dir-xs">
-          Kategorie:
-        </span>
-        <Chip
-          active={!active.kategorie}
-          onClick={() => updateParam('kategorie', null)}
-          label="Alle"
-        />
-        {KATEGORIE_OPTIONS.map((opt) => (
-          <Chip
-            key={opt.value}
-            active={active.kategorie === opt.value}
-            onClick={() => updateParam('kategorie', opt.value)}
-            label={opt.label}
           />
         ))}
       </div>

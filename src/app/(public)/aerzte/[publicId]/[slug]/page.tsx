@@ -5,7 +5,6 @@ import { slugify } from '@/lib/reader/slug'
 import {
   buildDoctorMetadata,
   buildDoctorJsonLd,
-  kategorieLabel,
 } from '@/lib/reader/doctor-metadata'
 import { getArticleByPublicId } from '@/lib/content/articles'
 import { EditorialStackCard } from '@/components/reader/EditorialStackCard'
@@ -80,10 +79,7 @@ export default async function DoctorDetailPage({ params }: Props) {
             )}
           </div>
           <p className="text-dir-on-surface-variant text-base md:text-lg mt-dir-sm">
-            {kategorieLabel(doctor.kategorie)}
-            {doctor.kategorie === 'FACHARZT' && doctor.fachrichtung
-              ? ` · ${doctor.fachrichtung}`
-              : ''}
+            {doctor.fachrichtung}
             {' · '}
             {doctor.bezirk.name}
           </p>
@@ -107,16 +103,16 @@ export default async function DoctorDetailPage({ params }: Props) {
               </a>
             </p>
           )}
-          {doctor.website && (
+          {doctor.profilUrl && (
             <p className="text-dir-on-surface">
-              Website:{' '}
+              Profil auf aekstmk.or.at:{' '}
               <a
-                href={doctor.website}
+                href={doctor.profilUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-dir-primary underline"
               >
-                {doctor.website}
+                {doctor.profilUrl}
               </a>
             </p>
           )}

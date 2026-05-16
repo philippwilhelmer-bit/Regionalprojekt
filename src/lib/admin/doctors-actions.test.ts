@@ -1,5 +1,8 @@
 /**
- * Tests for src/lib/admin/doctors-actions.ts — Phase 46-02.
+ * Tests for src/lib/admin/doctors-actions.ts — Phase 47-01.
+ *
+ * Updated from Phase 46: arztNr (required), fachrichtung (Fachrichtung enum, required),
+ * profilUrl (renamed from website). All kategorie and website references removed.
  *
  * Three layers exercised:
  *  - *Db functions (pure, accept PrismaClient as first arg — passed pglite client directly).
@@ -75,19 +78,58 @@ afterAll(async () => {
   vi.doUnmock('../prisma')
 })
 
-// ── Db-layer tests (Task 2.1 behaviours — direct db injection) ────────────────
+// ── Db-layer tests (direct db injection) ─────────────────────────────────────
 
 describe('createDoctorDb', () => {
+  it('Test 1: persists row with arztNr and fachrichtung; no kategorie attempted', async () => {
+    const doctor = await actions.createDoctorDb(db, {
+      arztNr: 'A1',
+      name: 'Dr. Test',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
+      address: 'Hauptplatz 1, 8010 Graz',
+      bezirkId: grazId,
+    })
+
+    expect(doctor.arztNr).toBe('A1')
+    expect(doctor.name).toBe('Dr. Test')
+    expect(doctor.fachrichtung).toBe('ALLGEMEINMEDIZIN')
+    expect(doctor.address).toBe('Hauptplatz 1, 8010 Graz')
+    expect(doctor.bezirkId).toBe(grazId)
+    expect(doctor.isVerified).toBe(false)
+    expect(doctor.relatedArticleIds).toEqual([])
+    expect(doctor.publicId).toBeTruthy()
+    expect(doctor.lat).toBeNull()
+    expect(doctor.lon).toBeNull()
+    expect(doctor.mapImageUrl).toBeNull()
+    // Ensure no kategorie field
+    expect('kategorie' in doctor).toBe(false)
+  })
+
+  it('Test 2: persists profilUrl (not website)', async () => {
+    const doctor = await actions.createDoctorDb(db, {
+      arztNr: 'A2',
+      name: 'Dr. ProfilUrl',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
+      address: 'Hauptplatz 2',
+      bezirkId: grazId,
+      profilUrl: 'https://www.aekstmk.or.at/aerztesuche-46?arztnr=A2',
+    })
+
+    expect(doctor.profilUrl).toBe('https://www.aekstmk.or.at/aerztesuche-46?arztnr=A2')
+    expect('website' in doctor).toBe(false)
+  })
+
   it('persists row with required fields; defaults isVerified=false, relatedArticleIds=[]', async () => {
     const doctor = await actions.createDoctorDb(db, {
+      arztNr: 'A3',
       name: 'Dr. Anna Schmidt',
-      kategorie: 'ALLGEMEINMEDIZIN',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
       address: 'Hauptplatz 1, 8010 Graz',
       bezirkId: grazId,
     })
 
     expect(doctor.name).toBe('Dr. Anna Schmidt')
-    expect(doctor.kategorie).toBe('ALLGEMEINMEDIZIN')
+    expect(doctor.fachrichtung).toBe('ALLGEMEINMEDIZIN')
     expect(doctor.address).toBe('Hauptplatz 1, 8010 Graz')
     expect(doctor.bezirkId).toBe(grazId)
     expect(doctor.isVerified).toBe(false)
@@ -102,8 +144,9 @@ describe('createDoctorDb', () => {
     const doctor = await actions.createDoctorDb(
       db,
       {
+        arztNr: 'A4',
         name: 'Dr. X',
-        kategorie: 'ZAHNARZT',
+        fachrichtung: 'ALLGEMEINMEDIZIN',
         address: 'A',
         bezirkId: grazId,
       },
@@ -119,8 +162,9 @@ describe('createDoctorDb', () => {
     const doctor = await actions.createDoctorDb(
       db,
       {
+        arztNr: 'A5',
         name: 'Dr. Y',
-        kategorie: 'FACHARZT',
+        fachrichtung: 'INNERE_MEDIZIN',
         address: 'B',
         bezirkId: grazId,
       },
@@ -133,8 +177,9 @@ describe('createDoctorDb', () => {
 
   it('without geo arg sets lat/lon/mapImageUrl = null', async () => {
     const doctor = await actions.createDoctorDb(db, {
+      arztNr: 'A6',
       name: 'Dr. Z',
-      kategorie: 'ALLGEMEINMEDIZIN',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
       address: 'C',
       bezirkId: grazId,
     })
@@ -146,12 +191,32 @@ describe('createDoctorDb', () => {
 })
 
 describe('updateDoctorDb', () => {
+  it('Test 4: accepts partial fachrichtung (Fachrichtung enum) — no kategorie key', async () => {
+    const created = await actions.createDoctorDb(db, {
+      arztNr: 'B1',
+      name: 'Dr. Fach Update',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
+      address: 'Addr B1',
+      bezirkId: grazId,
+    })
+
+    await actions.updateDoctorDb(db, {
+      id: created.id,
+      fachrichtung: 'INNERE_MEDIZIN',
+    })
+
+    const updated = await db.doctor.findUnique({ where: { id: created.id } })
+    expect(updated?.fachrichtung).toBe('INNERE_MEDIZIN')
+    expect('kategorie' in updated!).toBe(false)
+  })
+
   it('updates only provided fields; preserves omitted fields', async () => {
     const created = await actions.createDoctorDb(
       db,
       {
+        arztNr: 'B2',
         name: 'Dr. Original',
-        kategorie: 'ALLGEMEINMEDIZIN',
+        fachrichtung: 'ALLGEMEINMEDIZIN',
         address: 'Old Address',
         bezirkId: grazId,
         email: 'orig@example.at',
@@ -177,7 +242,13 @@ describe('updateDoctorDb', () => {
   it('clears lat/lon when geo=null explicitly', async () => {
     const created = await actions.createDoctorDb(
       db,
-      { name: 'Dr. Geo', kategorie: 'ALLGEMEINMEDIZIN', address: 'X', bezirkId: grazId },
+      {
+        arztNr: 'B3',
+        name: 'Dr. Geo',
+        fachrichtung: 'ALLGEMEINMEDIZIN',
+        address: 'X',
+        bezirkId: grazId,
+      },
       { lat: 47.0, lon: 15.0 },
     )
 
@@ -192,8 +263,9 @@ describe('updateDoctorDb', () => {
 describe('toggleVerifiedDb', () => {
   it('flips current isVerified value (false → true)', async () => {
     const created = await actions.createDoctorDb(db, {
+      arztNr: 'C1',
       name: 'Dr. Flip',
-      kategorie: 'ALLGEMEINMEDIZIN',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
       address: 'X',
       bezirkId: grazId,
     })
@@ -205,8 +277,9 @@ describe('toggleVerifiedDb', () => {
 
   it('flips again (true → false)', async () => {
     const created = await actions.createDoctorDb(db, {
+      arztNr: 'C2',
       name: 'Dr. Flip2',
-      kategorie: 'ALLGEMEINMEDIZIN',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
       address: 'X',
       bezirkId: grazId,
     })
@@ -223,8 +296,9 @@ describe('toggleVerifiedDb', () => {
 describe('softDeleteDoctorDb', () => {
   it('deletes the row', async () => {
     const created = await actions.createDoctorDb(db, {
+      arztNr: 'D1',
       name: 'Dr. Gone',
-      kategorie: 'ALLGEMEINMEDIZIN',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
       address: 'X',
       bezirkId: grazId,
     })
@@ -236,10 +310,10 @@ describe('softDeleteDoctorDb', () => {
   })
 })
 
-// ── Action-layer tests (Task 2.2 behaviours — vi.mock geocode/mapgen, vi.doMock prisma) ─
+// ── Action-layer tests ────────────────────────────────────────────────────────
 
 describe('createDoctor (Server Action)', () => {
-  it('geocode success → row persisted with lat/lon/mapImageUrl all set', async () => {
+  it('Test 5: two-phase create — geocode + mapgen called; lat/lon/mapImageUrl set', async () => {
     mockedGeocode.mockResolvedValueOnce({
       lat: 47.07,
       lon: 15.43,
@@ -252,8 +326,9 @@ describe('createDoctor (Server Action)', () => {
     })
 
     const doctor = await actions.createDoctor({
+      arztNr: 'E1',
       name: 'Dr. Geo',
-      kategorie: 'ALLGEMEINMEDIZIN',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
       address: 'Hauptplatz 1, 8010 Graz',
       bezirkId: grazId,
     })
@@ -283,8 +358,9 @@ describe('createDoctor (Server Action)', () => {
     mockedGeocode.mockResolvedValueOnce(null)
 
     const doctor = await actions.createDoctor({
+      arztNr: 'E2',
       name: 'Dr. NoGeo',
-      kategorie: 'ALLGEMEINMEDIZIN',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
       address: 'Unknown Address That Geocoder Cannot Find',
       bezirkId: grazId,
     })
@@ -300,8 +376,9 @@ describe('createDoctor (Server Action)', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
     const doctor = await actions.createDoctor({
+      arztNr: 'E3',
       name: 'Dr. Boom',
-      kategorie: 'ALLGEMEINMEDIZIN',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
       address: 'Broken Address',
       bezirkId: grazId,
     })
@@ -327,8 +404,9 @@ describe('createDoctor (Server Action)', () => {
     mockedMapgen.mockResolvedValueOnce(null)
 
     const doctor = await actions.createDoctor({
+      arztNr: 'E4',
       name: 'Dr. MapNull',
-      kategorie: 'ALLGEMEINMEDIZIN',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
       address: 'Some Street',
       bezirkId: grazId,
     })
@@ -353,8 +431,9 @@ describe('updateDoctor (Server Action)', () => {
       credit: 'basemap.at',
     })
     const created = await actions.createDoctor({
+      arztNr: 'F1',
       name: 'Dr. Existing',
-      kategorie: 'ALLGEMEINMEDIZIN',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
       address: 'Existing Address',
       bezirkId: grazId,
     })
@@ -388,8 +467,9 @@ describe('updateDoctor (Server Action)', () => {
       credit: 'basemap.at',
     })
     const created = await actions.createDoctor({
+      arztNr: 'F2',
       name: 'Dr. Moving',
-      kategorie: 'ALLGEMEINMEDIZIN',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
       address: 'Old Address',
       bezirkId: grazId,
     })
@@ -424,8 +504,9 @@ describe('updateDoctor (Server Action)', () => {
 describe('toggleVerified (Server Action)', () => {
   it('delegates to Db layer', async () => {
     const created = await actions.createDoctorDb(db, {
+      arztNr: 'G1',
       name: 'Dr. Verify',
-      kategorie: 'ALLGEMEINMEDIZIN',
+      fachrichtung: 'ALLGEMEINMEDIZIN',
       address: 'X',
       bezirkId: grazId,
     })
@@ -438,18 +519,18 @@ describe('toggleVerified (Server Action)', () => {
 // ── Form-layer tests ──────────────────────────────────────────────────────────
 
 describe('createDoctorForm', () => {
-  it('parses FormData fields correctly and creates the doctor', async () => {
+  it('Test 3: FormData reads arztNr, profilUrl, fachrichtung — no kategorie, no website', async () => {
     mockedGeocode.mockResolvedValueOnce(null)
 
     const fd = new FormData()
+    fd.set('arztNr', 'H1')
     fd.set('name', 'Dr. Form')
     fd.set('titel', 'MR')
-    fd.set('kategorie', 'ALLGEMEINMEDIZIN')
-    fd.set('fachrichtung', 'Allgemeinmedizin')
+    fd.set('fachrichtung', 'ALLGEMEINMEDIZIN')
     fd.set('address', 'Form Address 1')
     fd.set('bezirkId', String(grazId))
     fd.set('email', 'form@example.at')
-    fd.set('website', 'https://example.at')
+    fd.set('profilUrl', 'https://www.aekstmk.or.at/aerztesuche-46?arztnr=H1')
     fd.set('phone', '+43 316 0000000')
     fd.set('editorialNote', 'Note')
     fd.set('relatedArticleIds', '')
@@ -460,22 +541,31 @@ describe('createDoctorForm', () => {
 
     const created = await db.doctor.findFirst({ where: { name: 'Dr. Form' } })
     expect(created).not.toBeNull()
+    expect(created?.arztNr).toBe('H1')
     expect(created?.titel).toBe('MR')
-    expect(created?.kategorie).toBe('ALLGEMEINMEDIZIN')
+    expect(created?.fachrichtung).toBe('ALLGEMEINMEDIZIN')
     expect(created?.address).toBe('Form Address 1')
     expect(created?.bezirkId).toBe(grazId)
     expect(created?.email).toBe('form@example.at')
-    expect(created?.website).toBe('https://example.at')
+    expect(created?.profilUrl).toBe('https://www.aekstmk.or.at/aerztesuche-46?arztnr=H1')
     expect(created?.phone).toBe('+43 316 0000000')
     expect(created?.editorialNote).toBe('Note')
     expect(created?.relatedArticleIds).toEqual([])
+    // Ensure no kategorie or website
+    expect('kategorie' in created!).toBe(false)
+    expect('website' in created!).toBe(false)
+
+    // Positional mock.calls assertions for createDoctorDb call
+    expect(mockedGeocode).toHaveBeenCalledTimes(1)
+    expect(mockedGeocode.mock.calls[0][1]).toBe('Form Address 1')
   })
 
   it('relatedArticleIds: empty string → []', async () => {
     mockedGeocode.mockResolvedValueOnce(null)
     const fd = new FormData()
+    fd.set('arztNr', 'H2')
     fd.set('name', 'Dr. EmptyRel')
-    fd.set('kategorie', 'ALLGEMEINMEDIZIN')
+    fd.set('fachrichtung', 'ALLGEMEINMEDIZIN')
     fd.set('address', 'X')
     fd.set('bezirkId', String(grazId))
     fd.set('relatedArticleIds', '')
@@ -487,8 +577,9 @@ describe('createDoctorForm', () => {
   it('relatedArticleIds: "abc,def" → ["abc", "def"]', async () => {
     mockedGeocode.mockResolvedValueOnce(null)
     const fd = new FormData()
+    fd.set('arztNr', 'H3')
     fd.set('name', 'Dr. TwoRel')
-    fd.set('kategorie', 'ALLGEMEINMEDIZIN')
+    fd.set('fachrichtung', 'ALLGEMEINMEDIZIN')
     fd.set('address', 'X')
     fd.set('bezirkId', String(grazId))
     fd.set('relatedArticleIds', 'abc,def')
@@ -500,8 +591,9 @@ describe('createDoctorForm', () => {
   it('relatedArticleIds: "abc, ,def" → ["abc", "def"] (whitespace + empty stripped)', async () => {
     mockedGeocode.mockResolvedValueOnce(null)
     const fd = new FormData()
+    fd.set('arztNr', 'H4')
     fd.set('name', 'Dr. MessyRel')
-    fd.set('kategorie', 'ALLGEMEINMEDIZIN')
+    fd.set('fachrichtung', 'ALLGEMEINMEDIZIN')
     fd.set('address', 'X')
     fd.set('bezirkId', String(grazId))
     fd.set('relatedArticleIds', 'abc, ,def')
