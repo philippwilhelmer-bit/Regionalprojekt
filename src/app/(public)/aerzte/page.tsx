@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import type { Fachrichtung } from '@prisma/client'
 import { listDoctors } from '@/lib/content/doctors'
 import { listBezirke } from '@/lib/content/bezirke'
+import { FACHRICHTUNG_LABELS } from '@/lib/admin/import/fachrichtung-mapping'
 import DoctorPublicCard from './DoctorPublicCard'
 import DoctorPublicFilters from './DoctorPublicFilters'
 
@@ -24,7 +25,12 @@ export default async function AerztePage({
   searchParams: SearchParams
 }) {
   const sp = await searchParams
-  const fachrichtungRaw = sp.fachrichtung?.toUpperCase() as Fachrichtung | undefined
+  // Validate fachrichtung against allow-list (FACHRICHTUNG_LABELS keys) — T-47-05-INJ-FILTER
+  const fachrichtungCandidate = sp.fachrichtung?.toUpperCase()
+  const fachrichtungRaw: Fachrichtung | undefined =
+    fachrichtungCandidate && fachrichtungCandidate in FACHRICHTUNG_LABELS
+      ? (fachrichtungCandidate as Fachrichtung)
+      : undefined
 
   const [doctors, bezirke] = await Promise.all([
     listDoctors({
