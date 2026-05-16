@@ -1,17 +1,18 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.0
-milestone_name: milestone
+milestone_name: Directory Expansion
 current_plan: 6 (last — phase complete)
 status: verifying
-stopped_at: Completed 46-05-PLAN.md (sitemap + nav-link + Phase 46 end-to-end smoke approved). Phase 46 COMPLETE — Ärzteverzeichnis MVP shipped, all 13 DIR-* requirements satisfied.
-last_updated: "2026-05-14T14:46:49.366Z"
+stopped_at: Phase 47 context gathered
+last_updated: "2026-05-16T12:21:17.110Z"
 last_activity: 2026-05-14
 progress:
-  total_phases: 3
-  completed_phases: 2
-  total_plans: 14
-  completed_plans: 11
+  total_phases: 9
+  completed_phases: 7
+  total_plans: 24
+  completed_plans: 21
+  percent: 78
 ---
 
 # Project State
@@ -37,6 +38,7 @@ v3.3 Progress: [██████████] 100% — Phase 46 Plans 00..05 a
 ```
 
 **Parked from v3.2 (carried forward, untouched here):**
+
 - Phase 44 Plan 04 ✅ deployed + verified in prod 2026-05-12
 - Phase 44 Plans 01/02/03 DEFERRED pending replan with legacy-is-live context
 - Phase 45 (REVIEW Heuristic & Quality Loop) not started
@@ -45,6 +47,7 @@ v3.3 Progress: [██████████] 100% — Phase 46 Plans 00..05 a
 ## Performance Metrics
 
 **Velocity (prior milestones):**
+
 - v3.1: 3 phases, 6 plans over ~3 active build days + verification pause (35-day calendar)
 - v3.0: 12 plans + 2 quick tasks, ~25 min/plan average
 - v2.0: 11 plans over 3 days
@@ -74,6 +77,7 @@ v3.3 Progress: [██████████] 100% — Phase 46 Plans 00..05 a
 See PROJECT.md Key Decisions for full history.
 
 **v3.2-specific decisions:**
+
 - Merged single-call pipeline (runWriteAndTag) replaces step1-tag + step2-write — highest-leverage change, underpins everything else in the milestone
 - Phase 43 is schema-free: no `prisma db push` or migration required — all wins via code changes only
 - Phase 44 ordering: TLM-01–04 (telemetry schema + admin views) before TLM-05–07 (Batches API + BATCHED enum) so instrumentation is already in place when async path lands
@@ -142,8 +146,8 @@ See PROJECT.md Key Decisions for full history.
 
 ## Session Continuity
 
-Last session: 2026-05-14T14:39:34.170Z
-Stopped at: Completed 46-05-PLAN.md (sitemap + nav-link + Phase 46 end-to-end smoke approved). Phase 46 COMPLETE — Ärzteverzeichnis MVP shipped, all 13 DIR-* requirements satisfied.
+Last session: 2026-05-16T12:21:17.096Z
+Stopped at: Phase 47 context gathered
 
 Resume with one of:
 1) **Plan Phase 46** — `/gsd:plan-phase 46` resolves the 9 open questions in CONTEXT.md (felder-vollkatalog, map-engine, suche-modus, JSON-LD, sortierung, bulk-import, AppBar-link, sitemap, token-prefix) and breaks the work into plans.
@@ -153,6 +157,7 @@ Resume with one of:
 5) **Continue ad-hoc UI iteration** — outside GSD; recent: Bright & Modern mockup, freigestellt mascot asset, clip-path fix, WeatherWidget umlaut fix.
 
 Carry-over artifacts (still relevant, untouched):
+
 - `/tmp/baseline.json`, `/tmp/baseline-post-rollback.json` — PipelineRun history from v3.2
 - `/tmp/replay-v3-cutover-fail.log`, `/tmp/replay-iter1..4*.log` — merged-prompt tuning harness runs
 - `/tmp/baseline-query.ts`, `/tmp/aipl-10-sql.ts`, `/tmp/verify-source-schema.ts`, `/tmp/verify-44-04-features.ts`, `/tmp/inspect-migrations.ts`, `/tmp/check-idx.ts`, `/tmp/bezirke-q.ts` — one-off DB-inspection scripts (kept for reproducibility, not committed)
