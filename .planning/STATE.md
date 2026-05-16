@@ -8,7 +8,7 @@ stopped_at: Completed 46-05-PLAN.md (sitemap + nav-link + Phase 46 end-to-end sm
 last_updated: "2026-05-14T14:46:49.366Z"
 last_activity: 2026-05-14
 progress:
-  total_phases: 4
+  total_phases: 3
   completed_phases: 2
   total_plans: 14
   completed_plans: 11

@@ -193,6 +193,16 @@ Plans:
 
 **Risk:** Re-classifying historical REVIEW rows is irreversible if the new heuristic is wrong. Mitigation: make it opt-in via the admin button (QUAL-03), not automatic. Run the eval harness against the fixture first to confirm the new prompt's reclassification rate before triggering the backlog sweep.
 
+### Phase 47: Aerzteverzeichnis Vollkatalog und CSV-Import
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 46
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 47 to break down)
+
 ---
 
 ### Phase 46: Ärzteverzeichnis (Doctor Directory)
@@ -231,20 +241,3 @@ Plans:
 - Wave 4: 46-05 (depends on 03+04)
 
 **Risk:** Manual data pflege at scale is unsustainable beyond a few hundred entries (Steiermark has ~2000+ active doctors). Mitigation: MVP launch covers Graz + 2-3 angrenzende Bezirke; growth is operator-driven, not feature-driven. Verification-badge is a signal not a guarantee — clear disclaimer in detail-page footer is mandatory ("Angaben ohne Gewähr").
-
----
-
-## Progress
-
-| Phase | Milestone | Plans Complete | Status | Completed |
-|-------|-----------|----------------|--------|-----------|
-| 1-15 | v1.0 | 52/52 | Complete | 2026-03-25 |
-| 16-20 | v1.1 | 10/10 | Complete | 2026-03-26 |
-| 21-25 | v1.2 | 7/7 | Complete | 2026-03-28 |
-| 26-32 | v2.0 | 11/11 | Complete | 2026-03-30 |
-| 33-39 | v3.0 | 12/12 + 2 quick | Complete | 2026-04-05 |
-| 40-42 | v3.1 | 6/6 | Complete | 2026-05-10 |
-| 43 | 4/4 | Complete    | 2026-05-11 | - |
-| 44 | 1/4 | In Progress|  | - |
-| 45 | v3.2 | 0/TBD | Not started | - |
-| 46 | 6/6 | Complete    | 2026-05-14 | - |

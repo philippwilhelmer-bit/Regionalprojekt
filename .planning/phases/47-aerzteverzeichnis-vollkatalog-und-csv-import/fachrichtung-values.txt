@@ -1,0 +1,59 @@
+# Fachrichtung Enum Values — Source: aerzte_steiermark_merged.csv
+# Total rows: 3577
+# Distinct values: 51
+#
+# Format: <enum_identifier>  |  <German display label>  |  <row count>
+#
+# Transform rule (D-05): uppercase → ÄÖÜß→AE/OE/UE/SS → non-alphanum→_ → collapse repeats → strip
+
+ALLGEMEINMEDIZIN                                                   |  Allgemeinmedizin                                              |  1250
+ALLGEMEINMEDIZIN_UND_FAMILIENMEDIZIN                               |  Allgemeinmedizin und Familienmedizin                          |  493
+INNERE_MEDIZIN                                                     |  Innere Medizin                                                |  306
+FRAUENHEILKUNDE_UND_GEBURTSHILFE                                   |  Frauenheilkunde und Geburtshilfe                              |  166
+AUGENHEILKUNDE_UND_OPTOMETRIE                                      |  Augenheilkunde und Optometrie                                 |  115
+ALLGEMEINCHIRURGIE_UND_VISZERALCHIRURGIE                           |  Allgemeinchirurgie und Viszeralchirurgie                      |  110
+ORTHOPAEDIE_UND_TRAUMATOLOGIE                                      |  Orthopädie und Traumatologie                                  |  109
+UNFALLCHIRURGIE                                                    |  Unfallchirurgie                                               |  98
+ORTHOPAEDIE_UND_ORTHOPAEDISCHE_CHIRURGIE                           |  Orthopädie und Orthopädische Chirurgie                        |  95
+PSYCHIATRIE_U_PSYCHOTHERAPEUTISCHE_MEDIZIN                         |  Psychiatrie u. Psychotherapeutische Medizin                   |  90
+HAUT_UND_GESCHLECHTSKRANKHEITEN                                    |  Haut- und Geschlechtskrankheiten                              |  86
+KINDER_UND_JUGENDHEILKUNDE                                         |  Kinder- und Jugendheilkunde                                   |  80
+HALS_NASEN_UND_OHRENHEILKUNDE                                      |  Hals-, Nasen- und Ohrenheilkunde                              |  68
+NEUROLOGIE                                                         |  Neurologie                                                    |  65
+RADIOLOGIE                                                         |  Radiologie                                                    |  52
+UROLOGIE                                                           |  Urologie                                                      |  51
+ANAESTHESIOLOGIE_UND_INTENSIVMEDIZIN                               |  Anästhesiologie und Intensivmedizin                           |  42
+PLASTISCHE_REKONSTRUKTIVE_U_AESTHETISCHE_CHIRURGIE                 |  Plastische, Rekonstruktive u. Ästhetische Chirurgie           |  39
+INNERE_MEDIZIN_UND_KARDIOLOGIE                                     |  Innere Medizin und Kardiologie                                |  32
+LUNGENKRANKHEITEN                                                  |  Lungenkrankheiten                                             |  32
+PSYCHIATRIE_UND_NEUROLOGIE                                         |  Psychiatrie und Neurologie                                    |  26
+MUND_KIEFER_UND_GESICHTSCHIRURGIE                                  |  Mund-, Kiefer- und Gesichtschirurgie                          |  23
+NEUROLOGIE_UND_PSYCHIATRIE                                         |  Neurologie und Psychiatrie                                    |  22
+NEUROCHIRURGIE                                                     |  Neurochirurgie                                                |  14
+KINDER_U_JUGENDPSYCHIATRIE_U_PSYCHOTHERAPEUTISCHE_MEDIZIN          |  Kinder- u. Jugendpsychiatrie u. Psychotherapeutische Medizin  |  13
+APPROBIERTER_ARZT                                                  |  Approbierter Arzt                                             |  9
+MEDIZINISCHE_UND_CHEMISCHE_LABORDIAGNOSTIK                         |  Medizinische und Chemische Labordiagnostik                    |  9
+PHYSIKALISCHE_MEDIZIN_U_ALLGEMEINE_REHABILITATION                  |  Physikalische Medizin u. Allgemeine Rehabilitation            |  9
+PSYCHIATRIE                                                        |  Psychiatrie                                                   |  9
+ALLGEMEINCHIRURGIE_UND_GEFAESSCHIRURGIE                            |  Allgemeinchirurgie und Gefäßchirurgie                         |  8
+INNERE_MEDIZIN_UND_PNEUMOLOGIE                                     |  Innere Medizin und Pneumologie                                |  8
+NUKLEARMEDIZIN                                                     |  Nuklearmedizin                                                |  7
+KINDER_UND_JUGENDPSYCHIATRIE                                       |  Kinder- und Jugendpsychiatrie                                 |  5
+KLINISCHE_PATHOLOGIE_UND_MOLEKULARPATHOLOGIE                       |  Klinische Pathologie und Molekularpathologie                  |  5
+KINDER_UND_JUGENDCHIRURGIE                                         |  Kinder- und Jugendchirurgie                                   |  4
+HERZCHIRURGIE                                                      |  Herzchirurgie                                                 |  3
+INNERE_MEDIZIN_UND_GASTROENTEROLOGIE_UND_HEPATOLOGIE               |  Innere Medizin und Gastroenterologie und Hepatologie          |  3
+KLINISCHE_MIKROBIOLOGIE_UND_HYGIENE                                |  Klinische Mikrobiologie und Hygiene                           |  3
+STRAHLENTHERAPIE_RADIOONKOLOGIE                                    |  Strahlentherapie-Radioonkologie                               |  3
+ANATOMIE                                                           |  Anatomie                                                      |  2
+KLINISCHE_IMMUNOLOGIE                                              |  Klinische Immunologie                                         |  2
+THORAXCHIRURGIE                                                    |  Thoraxchirurgie                                               |  2
+ARBEITSMEDIZIN                                                     |  Arbeitsmedizin                                                |  1
+GERICHTSMEDIZIN                                                    |  Gerichtsmedizin                                               |  1
+INNERE_MEDIZIN_UND_ANGIOLOGIE                                      |  Innere Medizin und Angiologie                                 |  1
+INNERE_MEDIZIN_UND_ENDOKRINOLOGIE_U_DIABETOLOGIE                   |  Innere Medizin und Endokrinologie u. Diabetologie             |  1
+INNERE_MEDIZIN_UND_HAEMATOLOGIE_UND_INTERNISTISCHE_ONKOLOGIE       |  Innere Medizin und Hämatologie und internistische Onkologie   |  1
+INNERE_MEDIZIN_UND_INFEKTIOLOGIE                                   |  Innere Medizin und Infektiologie                              |  1
+INNERE_MEDIZIN_UND_INTENSIVMEDIZIN                                 |  Innere Medizin und Intensivmedizin                            |  1
+INNERE_MEDIZIN_UND_NEPHROLOGIE                                     |  Innere Medizin und Nephrologie                                |  1
+MEDIZINISCHE_GENETIK                                               |  Medizinische Genetik                                          |  1
