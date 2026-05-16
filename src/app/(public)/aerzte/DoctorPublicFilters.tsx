@@ -1,12 +1,11 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import type { Bezirk } from '@prisma/client'
+import type { Bezirk, Fachrichtung } from '@prisma/client'
 
 type ActiveFilters = {
   bezirk?: string
-  kategorie?: string
-  fachrichtung?: string
+  fachrichtung?: Fachrichtung
 }
 
 type Props = {
@@ -14,22 +13,15 @@ type Props = {
   active: ActiveFilters
 }
 
-const KATEGORIEN: Array<{ id: string; label: string }> = [
-  { id: 'ALLGEMEINMEDIZIN', label: 'Allgemeinmedizin' },
-  { id: 'FACHARZT', label: 'Facharzt' },
-  { id: 'ZAHNARZT', label: 'Zahnarzt' },
-]
-
 /**
- * Client-side filter chip bar for the public Ärzte list.
+ * Client-side filter bar for the public Ärzte list (Phase 47 / updated from Phase 46).
  *
- * Drives the list by mutating the URL query params (`bezirk`,
- * `kategorie`, `fachrichtung`). The server reads them on the next
- * navigation, the page.tsx is `force-dynamic`. Kategorie chips emit
- * lowercase strings; the server uppercases them for the Prisma enum.
+ * Updated from Phase 46: kategorie chips removed (D-03). Fachrichtung free-text input
+ * retained for now — full searchable datalist rewrite deferred to Plan 47-04.
+ * URL contract: ?fachrichtung=ENUM_ID (enum identifier, not display label).
  *
- * localStorage `bezirk_selection` auto-prefill is deferred to a
- * polish task — query params are the source of truth for now.
+ * Drives the list by mutating the URL query params (`bezirk`, `fachrichtung`).
+ * The server reads them on the next navigation; page.tsx is `force-dynamic`.
  */
 export default function DoctorPublicFilters({ bezirke, active }: Props) {
   const router = useRouter()
@@ -43,7 +35,7 @@ export default function DoctorPublicFilters({ bezirke, active }: Props) {
     router.push(qs ? `/aerzte?${qs}` : '/aerzte')
   }
 
-  const hasActive = Boolean(active.bezirk || active.kategorie || active.fachrichtung)
+  const hasActive = Boolean(active.bezirk || active.fachrichtung)
 
   return (
     <div className="flex flex-col gap-dir-md p-dir-md bg-dir-surface-container rounded-dir-md">
@@ -68,33 +60,7 @@ export default function DoctorPublicFilters({ bezirke, active }: Props) {
         })}
       </div>
 
-      {/* Kategorie chips */}
-      <div className="flex flex-wrap gap-dir-xs">
-        {KATEGORIEN.map((k) => {
-          const isActive = (active.kategorie ?? '').toUpperCase() === k.id
-          return (
-            <button
-              key={k.id}
-              type="button"
-              onClick={() =>
-                setParam(
-                  'kategorie',
-                  isActive ? undefined : k.id.toLowerCase(),
-                )
-              }
-              className={
-                isActive
-                  ? 'bg-dir-primary-container text-dir-on-primary-container rounded-dir-full px-dir-md py-dir-xs text-sm'
-                  : 'bg-dir-surface-container-high text-dir-on-surface rounded-dir-full px-dir-md py-dir-xs text-sm hover:bg-dir-surface-container-highest transition-colors'
-              }
-            >
-              {k.label}
-            </button>
-          )
-        })}
-      </div>
-
-      {/* Fachrichtung free-text */}
+      {/* Fachrichtung free-text (enum identifier — Plan 47-04 will add datalist UI) */}
       <div className="flex flex-wrap items-center gap-dir-sm">
         <input
           type="text"

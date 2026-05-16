@@ -1,5 +1,8 @@
 /**
- * Admin list page for the doctor directory (Phase 46 / DIR-06).
+ * Admin list page for the doctor directory (Phase 47 / DIR-06, updated from Phase 46).
+ *
+ * Updated from Phase 46: kategorie filter removed (D-03, DoctorKategorie dropped).
+ * Fachrichtung filter UI rewrite is deferred to Plan 47-04.
  *
  * Server Component reading filters from searchParams and dispatching to the
  * read-only DAL (listDoctors). No auth call here — `(admin)/layout.tsx` already
@@ -8,7 +11,6 @@
  * Mirrors the structural shape of `src/app/(admin)/admin/articles/page.tsx`.
  */
 import Link from 'next/link'
-import type { DoctorKategorie } from '@prisma/client'
 import { listDoctors } from '@/lib/content/doctors'
 import { listBezirke } from '@/lib/content/bezirke'
 import { DoctorFilters } from './DoctorFilters'
@@ -18,15 +20,7 @@ export const dynamic = 'force-dynamic'
 
 interface SearchParams {
   bezirk?: string
-  kategorie?: string
   isVerified?: string
-}
-
-function parseKategorie(raw: string | undefined): DoctorKategorie | undefined {
-  if (raw === 'ALLGEMEINMEDIZIN' || raw === 'FACHARZT' || raw === 'ZAHNARZT') {
-    return raw
-  }
-  return undefined
 }
 
 function parseIsVerified(raw: string | undefined): boolean | undefined {
@@ -41,13 +35,11 @@ export default async function AdminDoctorsPage({
   searchParams: Promise<SearchParams>
 }) {
   const params = await searchParams
-  const kategorie = parseKategorie(params.kategorie)
   const isVerified = parseIsVerified(params.isVerified)
 
   const [doctors, bezirke] = await Promise.all([
     listDoctors({
       bezirkSlug: params.bezirk,
-      kategorie,
       isVerified,
       limit: 200,
     }),
@@ -73,7 +65,6 @@ export default async function AdminDoctorsPage({
           bezirke={bezirke}
           active={{
             bezirk: params.bezirk,
-            kategorie,
             isVerified,
           }}
         />

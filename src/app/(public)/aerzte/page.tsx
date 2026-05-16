@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import type { DoctorKategorie } from '@prisma/client'
+import type { Fachrichtung } from '@prisma/client'
 import { listDoctors } from '@/lib/content/doctors'
 import { listBezirke } from '@/lib/content/bezirke'
 import DoctorPublicCard from './DoctorPublicCard'
@@ -10,12 +10,11 @@ export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'Ärzteverzeichnis — Loden & Leute',
   description:
-    'Allgemeinmediziner, Fachärzte und Zahnärzte in der Steiermark — kuratiert von der Loden & Leute Redaktion.',
+    'Allgemeinmediziner und Fachärzte in der Steiermark — kuratiert von der Loden & Leute Redaktion.',
 }
 
 type SearchParams = Promise<{
   bezirk?: string
-  kategorie?: string
   fachrichtung?: string
 }>
 
@@ -25,19 +24,12 @@ export default async function AerztePage({
   searchParams: SearchParams
 }) {
   const sp = await searchParams
-  const kategorieRaw = sp.kategorie?.toUpperCase() as DoctorKategorie | undefined
-  const validKategorie =
-    kategorieRaw === 'ALLGEMEINMEDIZIN' ||
-    kategorieRaw === 'FACHARZT' ||
-    kategorieRaw === 'ZAHNARZT'
-      ? kategorieRaw
-      : undefined
+  const fachrichtungRaw = sp.fachrichtung?.toUpperCase() as Fachrichtung | undefined
 
   const [doctors, bezirke] = await Promise.all([
     listDoctors({
       bezirkSlug: sp.bezirk,
-      kategorie: validKategorie,
-      fachrichtung: sp.fachrichtung,
+      fachrichtung: fachrichtungRaw,
       limit: 200,
     }),
     listBezirke(),
@@ -51,7 +43,7 @@ export default async function AerztePage({
             Ärzteverzeichnis
           </h1>
           <p className="text-dir-on-surface-variant text-base md:text-lg">
-            Allgemeinmediziner, Fachärzte und Zahnärzte in der Steiermark —
+            Allgemeinmediziner und Fachärzte in der Steiermark —
             kuratiert von unserer Redaktion.
           </p>
         </header>
@@ -61,8 +53,7 @@ export default async function AerztePage({
             bezirke={bezirke}
             active={{
               bezirk: sp.bezirk,
-              kategorie: validKategorie,
-              fachrichtung: sp.fachrichtung,
+              fachrichtung: fachrichtungRaw,
             }}
           />
         </div>

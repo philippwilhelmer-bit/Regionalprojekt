@@ -1,5 +1,9 @@
 /**
- * Doctors Server Actions — Phase 46 / DIR-04, DIR-05, DIR-09.
+ * Doctors Server Actions — Phase 47 / DIR-14..DIR-17.
+ *
+ * Updated from Phase 46: fachrichtung is now a required Fachrichtung enum (not String?).
+ * The old DoctorKategorie column and field are removed (D-03). arztNr (required, unique)
+ * and profilUrl (D-02 rename) are added (D-01, D-02).
  *
  * Server-Action-Trinity for the Ärzteverzeichnis:
  *   - *Db functions: pure, injectable PrismaClient, no auth — testable.
@@ -27,7 +31,7 @@
  */
 'use server'
 
-import type { Doctor, DoctorKategorie, PrismaClient } from '@prisma/client'
+import type { Doctor, Fachrichtung, PrismaClient } from '@prisma/client'
 import { prisma as defaultPrisma } from '../prisma'
 import { requireAuth } from './auth-node'
 import { geocodeLocation } from '../images/geocode'
@@ -36,14 +40,14 @@ import { generateMapImage } from '../images/mapgen'
 // ─── Input types ─────────────────────────────────────────────────────────────
 
 export interface CreateDoctorInput {
+  arztNr: string
   name: string
   titel?: string
-  kategorie: DoctorKategorie
-  fachrichtung?: string
+  fachrichtung: Fachrichtung
   address: string
   bezirkId: number
   email?: string
-  website?: string
+  profilUrl?: string
   phone?: string
   editorialNote?: string
   relatedArticleIds?: string[]
@@ -51,16 +55,16 @@ export interface CreateDoctorInput {
 
 export interface UpdateDoctorInput {
   id: number
+  arztNr?: string
   name?: string
-  titel?: string
-  kategorie?: DoctorKategorie
-  fachrichtung?: string
+  titel?: string | null
+  fachrichtung?: Fachrichtung
   address?: string
   bezirkId?: number
-  email?: string
-  website?: string
-  phone?: string
-  editorialNote?: string
+  email?: string | null
+  profilUrl?: string | null
+  phone?: string | null
+  editorialNote?: string | null
   relatedArticleIds?: string[]
 }
 
@@ -85,14 +89,14 @@ export async function createDoctorDb(
 ): Promise<Doctor> {
   return db.doctor.create({
     data: {
+      arztNr: input.arztNr,
       name: input.name,
       titel: input.titel,
-      kategorie: input.kategorie,
       fachrichtung: input.fachrichtung,
       address: input.address,
       bezirkId: input.bezirkId,
       email: input.email,
-      website: input.website,
+      profilUrl: input.profilUrl ?? null,
       phone: input.phone,
       editorialNote: input.editorialNote,
       relatedArticleIds: input.relatedArticleIds ?? [],
@@ -281,14 +285,14 @@ export async function createDoctorForm(formData: FormData): Promise<void> {
     formData.get('relatedArticleIds')?.toString(),
   )
   await createDoctor({
+    arztNr: formData.get('arztNr')?.toString() ?? '',
     name: formData.get('name')?.toString() ?? '',
     titel: formData.get('titel')?.toString() || undefined,
-    kategorie: formData.get('kategorie')?.toString() as DoctorKategorie,
-    fachrichtung: formData.get('fachrichtung')?.toString() || undefined,
+    fachrichtung: formData.get('fachrichtung')?.toString() as Fachrichtung,
     address: formData.get('address')?.toString() ?? '',
     bezirkId: Number(formData.get('bezirkId')),
     email: formData.get('email')?.toString() || undefined,
-    website: formData.get('website')?.toString() || undefined,
+    profilUrl: formData.get('profilUrl')?.toString() || undefined,
     phone: formData.get('phone')?.toString() || undefined,
     editorialNote: formData.get('editorialNote')?.toString() || undefined,
     relatedArticleIds,
@@ -305,18 +309,18 @@ export async function updateDoctorForm(formData: FormData): Promise<void> {
   )
   await updateDoctor({
     id,
+    arztNr: formData.get('arztNr')?.toString() || undefined,
     name: formData.get('name')?.toString() || undefined,
     titel: formData.get('titel')?.toString() || undefined,
-    kategorie:
-      (formData.get('kategorie')?.toString() as DoctorKategorie | undefined) ||
+    fachrichtung:
+      (formData.get('fachrichtung')?.toString() as Fachrichtung | undefined) ||
       undefined,
-    fachrichtung: formData.get('fachrichtung')?.toString() || undefined,
     address: formData.get('address')?.toString() || undefined,
     bezirkId: formData.get('bezirkId')
       ? Number(formData.get('bezirkId'))
       : undefined,
     email: formData.get('email')?.toString() || undefined,
-    website: formData.get('website')?.toString() || undefined,
+    profilUrl: formData.get('profilUrl')?.toString() || undefined,
     phone: formData.get('phone')?.toString() || undefined,
     editorialNote: formData.get('editorialNote')?.toString() || undefined,
     relatedArticleIds,

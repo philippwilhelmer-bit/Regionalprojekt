@@ -1,19 +1,21 @@
 /**
- * Doctor metadata + JSON-LD helper module (Phase 46 / DIR-10).
+ * Doctor metadata + JSON-LD helper module (Phase 47 / DIR-10, DIR-14, DIR-17).
+ *
+ * Updated from Phase 46: kategorie + DoctorKategorie removed (D-03). fachrichtung
+ * is now a required Fachrichtung enum (D-04). profilUrl replaces website (D-02).
+ * JSON-LD always @type: 'Physician' (D-27). medicalSpecialty always set (D-04).
  *
  * Pure helpers for the public Ärzte detail page:
  *   - buildDoctorMetadata: Next.js Metadata object (title / description /
  *     canonical / OG tags) — returns {} for null doctor so generateMetadata
  *     can handle not-found gracefully without throwing.
- *   - buildDoctorJsonLd: schema.org Physician (ALLGEMEINMEDIZIN / FACHARZT)
- *     or Dentist (ZAHNARZT) JSON-LD payload. Optional keys are omitted
- *     (not nulled) when source values are unset.
- *   - kategorieLabel: German display label for the DoctorKategorie enum.
+ *   - buildDoctorJsonLd: schema.org Physician JSON-LD payload. Optional keys
+ *     are omitted (not nulled) when source values are unset.
  *
  * No try/catch (pure transforms). No DB calls. No side effects.
  */
 import type { Metadata } from 'next'
-import type { Doctor, DoctorKategorie } from '@prisma/client'
+import type { Doctor } from '@prisma/client'
 import { slugify } from './slug'
 
 type DoctorForMetadata = Doctor & { bezirk: { name: string } }
@@ -32,7 +34,7 @@ export function buildDoctorMetadata(
     `${titleParts}: ${doctor.address}`
 
   return {
-    title: `${titleParts} — ${kategorieLabel(doctor.kategorie)} in ${doctor.bezirk.name}`,
+    title: `${titleParts} — ${doctor.bezirk.name}`,
     description,
     alternates: { canonical },
     openGraph: {
@@ -48,12 +50,12 @@ export function buildDoctorJsonLd(
   doctor: DoctorForMetadata,
   canonicalUrl: string,
 ): Record<string, unknown> {
-  const baseType = doctor.kategorie === 'ZAHNARZT' ? 'Dentist' : 'Physician'
   const jsonLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
-    '@type': baseType,
+    '@type': 'Physician',
     name: [doctor.titel, doctor.name].filter(Boolean).join(' '),
     url: canonicalUrl,
+    medicalSpecialty: doctor.fachrichtung as string,
     address: {
       '@type': 'PostalAddress',
       streetAddress: doctor.address,
@@ -71,24 +73,9 @@ export function buildDoctorJsonLd(
     }
   }
 
-  if (doctor.kategorie === 'FACHARZT' && doctor.fachrichtung) {
-    jsonLd.medicalSpecialty = doctor.fachrichtung
-  }
-
   if (doctor.email) jsonLd.email = doctor.email
   if (doctor.phone) jsonLd.telephone = doctor.phone
-  if (doctor.website) jsonLd.sameAs = [doctor.website]
+  if (doctor.profilUrl) jsonLd.sameAs = [doctor.profilUrl]
 
   return jsonLd
-}
-
-export function kategorieLabel(k: DoctorKategorie): string {
-  switch (k) {
-    case 'ALLGEMEINMEDIZIN':
-      return 'Allgemeinmediziner:in'
-    case 'FACHARZT':
-      return 'Facharzt/Fachärztin'
-    case 'ZAHNARZT':
-      return 'Zahnarzt/Zahnärztin'
-  }
 }

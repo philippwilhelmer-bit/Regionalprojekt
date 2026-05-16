@@ -1,13 +1,15 @@
 import Link from 'next/link'
 import type { DoctorWithBezirk } from '@/lib/content/doctors'
-import { kategorieLabel } from '@/lib/reader/doctor-metadata'
 import {
   toggleVerifiedForm,
   softDeleteDoctorForm,
 } from '@/lib/admin/doctors-actions'
 
 /**
- * Admin list row for a single doctor (Phase 46 / DIR-06).
+ * Admin list row for a single doctor (Phase 47 / DIR-06, updated from Phase 46).
+ *
+ * Updated from Phase 46: kategorie removed (D-03); fachrichtung is now a required
+ * Fachrichtung enum — always shown directly (label map ships in Plan 47-00).
  *
  * Server Component. Three action surfaces:
  *   - Edit link → /admin/aerzte/{id}/edit
@@ -21,10 +23,6 @@ export function DoctorRow({ doctor }: { doctor: DoctorWithBezirk }) {
   const display = [doctor.titel, doctor.name].filter(Boolean).join(' ')
   const address =
     doctor.address.length > 60 ? doctor.address.slice(0, 60) + '…' : doctor.address
-  const fachrichtungLine =
-    doctor.kategorie === 'FACHARZT' && doctor.fachrichtung
-      ? ` · ${doctor.fachrichtung}`
-      : ''
 
   return (
     <div className="flex flex-wrap items-center gap-dir-md p-dir-md hover:bg-dir-surface-container-low">
@@ -52,8 +50,7 @@ export function DoctorRow({ doctor }: { doctor: DoctorWithBezirk }) {
           )}
         </div>
         <p className="text-dir-on-surface-variant text-sm mt-dir-xs">
-          {kategorieLabel(doctor.kategorie)}
-          {fachrichtungLine}
+          {doctor.fachrichtung}
           {' · '}
           {doctor.bezirk.name}
         </p>
