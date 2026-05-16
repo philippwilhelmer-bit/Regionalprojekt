@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { DoctorWithBezirk } from '@/lib/content/doctors'
+import { FACHRICHTUNG_LABELS } from '@/lib/admin/import/fachrichtung-mapping'
 import {
   toggleVerifiedForm,
   softDeleteDoctorForm,
@@ -8,8 +9,8 @@ import {
 /**
  * Admin list row for a single doctor (Phase 47 / DIR-06, updated from Phase 46).
  *
- * Updated from Phase 46: kategorie removed (D-03); fachrichtung is now a required
- * Fachrichtung enum — always shown directly (label map ships in Plan 47-00).
+ * Updated from Phase 47-04: FACHRICHTUNG_LABELS used for fachrichtung display.
+ * ArztNr shown as monospaced chip. FACHRICHTUNG_LABELS used for fachrichtung display.
  *
  * Server Component. Three action surfaces:
  *   - Edit link → /admin/aerzte/{id}/edit
@@ -48,9 +49,14 @@ export function DoctorRow({ doctor }: { doctor: DoctorWithBezirk }) {
               ⚠ keine Koordinaten
             </span>
           )}
+          {doctor.arztNr && (
+            <span className="font-mono text-xs text-dir-on-surface-variant">
+              {doctor.arztNr}
+            </span>
+          )}
         </div>
         <p className="text-dir-on-surface-variant text-sm mt-dir-xs">
-          {doctor.fachrichtung}
+          {FACHRICHTUNG_LABELS[doctor.fachrichtung]}
           {' · '}
           {doctor.bezirk.name}
         </p>

@@ -14,6 +14,7 @@
  * Mirrors the structural shape of `src/app/(admin)/admin/articles/page.tsx`.
  */
 import Link from 'next/link'
+import type { Fachrichtung } from '@prisma/client'
 import { listDoctors } from '@/lib/content/doctors'
 import { listBezirke } from '@/lib/content/bezirke'
 import { prisma } from '@/lib/prisma'
@@ -44,11 +45,16 @@ export default async function AdminDoctorsPage({
 }) {
   const params = await searchParams
   const isVerified = parseIsVerified(params.isVerified)
+  // Fachrichtung filter: only pass if it's a non-empty string (enum value)
+  const fachrichtung = params.fachrichtung
+    ? (params.fachrichtung as Fachrichtung)
+    : undefined
 
   const [doctors, bezirke, total, geocoded] = await Promise.all([
     listDoctors({
       bezirkSlug: params.bezirk,
       isVerified,
+      fachrichtung,
       limit: 200,
     }),
     listBezirke(),
@@ -121,6 +127,7 @@ export default async function AdminDoctorsPage({
           active={{
             bezirk: params.bezirk,
             isVerified,
+            fachrichtung,
           }}
         />
       </div>
