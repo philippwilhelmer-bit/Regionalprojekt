@@ -1,5 +1,8 @@
 /**
- * Tests for the Doctor content data access layer (doctors.ts) — Phase 46 / DIR-03.
+ * Tests for the Doctor content data access layer (doctors.ts) — Phase 47 / DIR-14..DIR-17, DIR-22.
+ *
+ * Updated from Phase 46: kategorie → fachrichtung enum (Fachrichtung), arztNr added,
+ * profilUrl replaces website. All test factories include arztNr (unique per row).
  *
  * Covers: listDoctors() (filter combinations, ordering, pagination, production-style
  * call), getDoctorByPublicId(), getDoctorById(), plus Prisma-layer assertions for
@@ -10,6 +13,13 @@
  *
  * pglite parallelism note (per STATE.md): full-suite runs may show flakiness;
  * run this file in isolation during development if needed.
+ *
+ * pglite migration smoke (DIR-22 / D-12 indirect): createTestDb() walks
+ * prisma/migrations/* and replays each migration.sql in order. The new
+ * 20260516_phase47_csv_schema/migration.sql (TRUNCATE + CREATE TYPE Fachrichtung +
+ * ALTER TABLE + DROP TYPE DoctorKategorie) must apply cleanly for this test file to
+ * bootstrap at all. A DDL incompatibility surfaces as a bootstrap error before the
+ * first it() executes — so green tests confirm DIR-22 compliance.
  */
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest'
 import { createTestDb } from '../../test/setup-db'
@@ -39,6 +49,13 @@ describe('Doctor DAL', () => {
     await prisma.doctor.deleteMany({})
   })
 
+  // Counter for unique arztNr generation within each test
+  let arztNrCounter = 0
+
+  function nextArztNr(): string {
+    return `A${++arztNrCounter}`
+  }
+
   // Use the unchecked variant explicitly so `bezirkId: number` is acceptable
   // alongside the nested-relation alternative the broader Partial<…> picks up.
   async function seedDoctor(
@@ -46,8 +63,9 @@ describe('Doctor DAL', () => {
   ) {
     return prisma.doctor.create({
       data: {
+        arztNr: nextArztNr(),
         name: 'Dr. Test Müller',
-        kategorie: 'ALLGEMEINMEDIZIN',
+        fachrichtung: 'ALLGEMEINMEDIZIN',
         address: 'Testgasse 1, 8010 Graz',
         bezirkId: grazId,
         ...overrides,
@@ -90,32 +108,51 @@ describe('Doctor DAL', () => {
     expect(docs).toEqual([])
   })
 
-  it('filters by kategorie', async () => {
-    await seedDoctor({ name: 'Allgemein 1', kategorie: 'ALLGEMEINMEDIZIN' })
-    await seedDoctor({ name: 'Zahn 1', kategorie: 'ZAHNARZT' })
-    await seedDoctor({ name: 'Facharzt 1', kategorie: 'FACHARZT' })
+  // ── Fachrichtung enum filter tests (replaces Phase 46 kategorie filter tests) ──
 
-    const zahn = await listDoctors(prisma, { kategorie: 'ZAHNARZT' })
-    expect(zahn).toHaveLength(1)
-    expect(zahn[0].name).toBe('Zahn 1')
+  it('Test 1: filters by fachrichtung ALLGEMEINMEDIZIN enum — returns only matching doctors', async () => {
+    await seedDoctor({ name: 'Allgemein 1', fachrichtung: 'ALLGEMEINMEDIZIN' })
+    await seedDoctor({ name: 'Augen 1', fachrichtung: 'AUGENHEILKUNDE_UND_OPTOMETRIE' })
+    await seedDoctor({ name: 'Innere 1', fachrichtung: 'INNERE_MEDIZIN' })
+
+    const result = await listDoctors(prisma, { fachrichtung: 'ALLGEMEINMEDIZIN' })
+    expect(result).toHaveLength(1)
+    expect(result[0].name).toBe('Allgemein 1')
   })
 
-  it('filters by fachrichtung with insensitive contains match', async () => {
-    await seedDoctor({
-      name: 'Dr. Ortho',
-      kategorie: 'FACHARZT',
-      fachrichtung: 'Orthopädie',
-    })
-    await seedDoctor({
-      name: 'Dr. Kardio',
-      kategorie: 'FACHARZT',
-      fachrichtung: 'Kardiologie',
-    })
+  it('Test 2: filters by fachrichtung AUGENHEILKUNDE_UND_OPTOMETRIE enum — negative coverage', async () => {
+    await seedDoctor({ name: 'Allgemein 2', fachrichtung: 'ALLGEMEINMEDIZIN' })
+    await seedDoctor({ name: 'Augen 2', fachrichtung: 'AUGENHEILKUNDE_UND_OPTOMETRIE' })
 
-    // lowercase substring should still match "Orthopädie"
-    const ortho = await listDoctors(prisma, { fachrichtung: 'ortho' })
-    expect(ortho).toHaveLength(1)
-    expect(ortho[0].name).toBe('Dr. Ortho')
+    const result = await listDoctors(prisma, { fachrichtung: 'AUGENHEILKUNDE_UND_OPTOMETRIE' })
+    expect(result).toHaveLength(1)
+    expect(result[0].name).toBe('Augen 2')
+  })
+
+  it('Test 3: listDoctors() without fachrichtung filter returns all rows', async () => {
+    await seedDoctor({ fachrichtung: 'ALLGEMEINMEDIZIN' })
+    await seedDoctor({ fachrichtung: 'AUGENHEILKUNDE_UND_OPTOMETRIE' })
+    await seedDoctor({ fachrichtung: 'INNERE_MEDIZIN' })
+
+    const result = await listDoctors(prisma)
+    expect(result).toHaveLength(3)
+  })
+
+  it('Test 4: arztNr round-trip — seeded doctor with arztNr is retrievable and unchanged', async () => {
+    const created = await seedDoctor({ arztNr: 'A1234', name: 'Dr. ArztNr Test' })
+    const result = await getDoctorByPublicId(prisma, created.publicId)
+    expect(result).not.toBeNull()
+    expect(result!.arztNr).toBe('A1234')
+  })
+
+  it('Test 5: profilUrl round-trip — seeded doctor with profilUrl is retrievable and unchanged, no website field', async () => {
+    const profilUrl = 'https://www.aekstmk.or.at/aerztesuche-46?arztnr=A1234'
+    const created = await seedDoctor({ arztNr: 'B5678', profilUrl })
+    const result = await getDoctorByPublicId(prisma, created.publicId)
+    expect(result).not.toBeNull()
+    expect(result!.profilUrl).toBe(profilUrl)
+    // Ensure no website field on the returned shape (it should not exist)
+    expect('website' in result!).toBe(false)
   })
 
   it('filters by isVerified', async () => {
@@ -181,13 +218,14 @@ describe('Doctor DAL', () => {
 
   // ── Prisma / enum / defaults ───────────────────────────────────────────────
 
-  it('rejects unknown kategorie at Prisma level', async () => {
+  it('rejects unknown fachrichtung at Prisma level', async () => {
     await expect(
       prisma.doctor.create({
         data: {
+          arztNr: 'INVALID-TEST',
           name: 'Dr. Quack',
           // @ts-expect-error — intentional invalid enum value
-          kategorie: 'QUACKSALBER',
+          fachrichtung: 'QUACKSALBER',
           address: 'Nirgendwo 1',
           bezirkId: grazId,
         },
@@ -224,8 +262,9 @@ describe('Doctor DAL', () => {
     await expect(
       prisma.doctor.create({
         data: {
+          arztNr: 'ORPHAN-TEST',
           name: 'Orphan Doc',
-          kategorie: 'ALLGEMEINMEDIZIN',
+          fachrichtung: 'ALLGEMEINMEDIZIN',
           address: 'Lostland 1',
           bezirkId: 99999, // not seeded
         },

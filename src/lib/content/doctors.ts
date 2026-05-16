@@ -1,9 +1,13 @@
 /**
- * Doctor data access layer (Phase 46 / DIR-03).
+ * Doctor data access layer (Phase 47 / DIR-14, DIR-16, DIR-22).
+ *
+ * Updated from Phase 46: fachrichtung is now a required Fachrichtung enum (not a free-text
+ * String?). The old filter parameter and DoctorKategorie type are removed (D-03). arztNr and
+ * profilUrl are available on the Doctor row shape from the generated client.
  *
  * Read-only DAL for the Ärzteverzeichnis. Write paths (create/update/softDelete/
  * toggleVerified) live in src/lib/admin/doctors-actions.ts per Server-Action-Trinity
- * (Plan 46-02).
+ * (Plan 46-02, updated in Plan 47-01).
  *
  * Production usage (no-arg client): functions use the singleton from src/lib/prisma.ts.
  * Test usage: pass a pglite-backed PrismaClient as the first argument.
@@ -11,7 +15,7 @@
  * DI dispatch via duck-typing (`'$connect' in clientOrOptions`) per AGENTS.md —
  * NEVER `instanceof PrismaClient` (breaks vitest module isolation).
  */
-import type { Doctor, DoctorKategorie, PrismaClient } from '@prisma/client'
+import type { Doctor, Fachrichtung, PrismaClient } from '@prisma/client'
 import { prisma as defaultPrisma } from '../prisma'
 
 export type DoctorWithBezirk = Doctor & {
@@ -21,9 +25,8 @@ export type DoctorWithBezirk = Doctor & {
 export interface ListDoctorsOptions {
   bezirkId?: number
   bezirkSlug?: string
-  kategorie?: DoctorKategorie
-  /** Free-text contains match against fachrichtung, case-insensitive. */
-  fachrichtung?: string
+  /** Exact enum match against fachrichtung (Fachrichtung enum value). */
+  fachrichtung?: Fachrichtung
   isVerified?: boolean
   limit?: number
   offset?: number
@@ -56,7 +59,6 @@ export async function listDoctors(
   const {
     bezirkId,
     bezirkSlug,
-    kategorie,
     fachrichtung,
     isVerified,
     limit = 50,
@@ -75,10 +77,7 @@ export async function listDoctors(
   return db.doctor.findMany({
     where: {
       ...(resolvedBezirkId !== undefined ? { bezirkId: resolvedBezirkId } : {}),
-      ...(kategorie !== undefined ? { kategorie } : {}),
-      ...(fachrichtung !== undefined
-        ? { fachrichtung: { contains: fachrichtung, mode: 'insensitive' } }
-        : {}),
+      ...(fachrichtung !== undefined ? { fachrichtung } : {}),
       ...(isVerified !== undefined ? { isVerified } : {}),
     },
     include: { bezirk: { select: { id: true, slug: true, name: true } } },
