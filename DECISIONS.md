@@ -229,3 +229,44 @@ v3.2 Merged-Call-Arbeit wird als "infeasible mit Kostenziel" geschlossen:
 - Commits: 25007cc, 27bc1f3, 6a0c63f (alle Code-Änderungen bleiben in tree, dormant)
 
 ---
+
+## 2026-05-16 — Phase 47: papaparse als CSV-Parser-Dependency
+
+**Datum:** 2026-05-16
+
+**Kontext:**
+Phase 47 (Ärzteverzeichnis Vollkatalog + CSV-Import) benötigt einen CSV-Parser für den
+Bulk-Import der 3.577-zeiligen Ärztekammer-Steiermark-CSV. Die Quelldatei enthält
+mehrstellige quoted-value-Felder (z. B. `"Hals-, Nasen- und Ohrenheilkunde"` — Komma
+innerhalb von Anführungszeichen, D-07). Ein naiver `split(',')` würde diese Felder
+fälschlicherweise aufteilen.
+
+**Entscheidung:**
+`papaparse` (runtime) v5.5.3 + `@types/papaparse` (devDependency) v5.5.2 werden dem Projekt
+hinzugefügt. AGENTS.md Anti-Bloat-Regel erfordert diesen Eintrag.
+
+**Begründung:**
+- papaparse ist der npm-Standard für Browser- und Node-CSV-Parsing (>10 Jahre Trackrecord,
+  >5M Downloads/Woche, MIT-Lizenz, zero runtime dependencies).
+- Sync-API (`Papa.parse(string, { header: true })`) passt perfekt zu Server-Action-Use-Case
+  (kein Streaming-Overhead für 3.577 Zeilen).
+- BOM-Stripping (`csvText.replace(/^﻿/, '')`) muss einmalig vorangestellt werden,
+  dann liefert papaparse saubere Objekte (D-07).
+- `dynamicTyping: false` hält alle Felder als `string` — verhindert ungewollte Typ-Konversion
+  bei ArztNr-Feldern, die rein numerisch aussehen können (Pitfall 4, RESEARCH.md).
+- Einzige neue Runtime-Dependency in Phase 47 — minimaler Anti-Bloat-Impact.
+
+**Verworfene Alternativen:**
+
+| Alternative | Verworfen weil |
+| ----------- | -------------- |
+| `csv-parse` (node-csv) | Strikte Streaming-API, async-Iterator overhead für einen einmaligen 3.577-Zeilen Sync-Parse; größerer API-Footprint ohne Mehrwert. |
+| Hand-rolled `split(',')` + State-Machine | AGENTS.md "Don't Hand-Roll": Multi-Line quoted CSV-Strings (D-07: `"Hals-, Nasen- und Ohrenheilkunde"`) erfordern korrekte FSM-Implementierung — re-created known footguns. Keine Linting/Test-Basis für Edge-Cases. |
+
+**Referenzen:**
+- D-07 (CONTEXT.md): CSV-Format enthält Kommas innerhalb von Anführungszeichen
+- RESEARCH.md § Standard Stack (lines 30-69): Installations- und Versions-Verifikation
+- RESEARCH.md § Pitfall 1 (CSV multi-line): quoted-value edge cases
+- RESEARCH.md § Anti-Patterns: Warnung gegen Hand-Roll-Parser
+
+---
