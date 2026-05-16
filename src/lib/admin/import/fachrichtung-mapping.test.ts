@@ -21,10 +21,17 @@ describe('fachrichtung-mapping', () => {
     expect(new Set(labels).size).toBe(51)
   })
 
-  it('FACHRICHTUNG_OPTIONS has 51 entries, first is ALLGEMEINMEDIZIN, last is UROLOGIE', () => {
+  it('FACHRICHTUNG_OPTIONS has 51 entries sorted by German localeCompare, last is UROLOGIE', () => {
     expect(FACHRICHTUNG_OPTIONS.length).toBe(51)
-    expect(FACHRICHTUNG_OPTIONS[0].id).toBe('ALLGEMEINMEDIZIN')
+    // German locale: 'Allgemeinchirurgie' < 'Allgemeinmedizin' (c < m)
+    expect(FACHRICHTUNG_OPTIONS[0].id).toBe('ALLGEMEINCHIRURGIE_UND_GEFAESSCHIRURGIE')
     expect(FACHRICHTUNG_OPTIONS[FACHRICHTUNG_OPTIONS.length - 1].id).toBe('UROLOGIE')
+    // Verify sorted invariant: each entry <= next entry
+    for (let i = 0; i < FACHRICHTUNG_OPTIONS.length - 1; i++) {
+      expect(
+        FACHRICHTUNG_OPTIONS[i].label.localeCompare(FACHRICHTUNG_OPTIONS[i + 1].label, 'de'),
+      ).toBeLessThanOrEqual(0)
+    }
   })
 
   it('HALS_NASEN_UND_OHRENHEILKUNDE label contains comma-in-quotes value', () => {
