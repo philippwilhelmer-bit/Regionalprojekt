@@ -1,8 +1,8 @@
 /**
  * Doctor metadata + JSON-LD helper module (Phase 47 / DIR-10, DIR-14, DIR-17).
  *
- * Updated from Phase 46: kategorie + DoctorKategorie removed (D-03). fachrichtung
- * is now a required Fachrichtung enum (D-04). profilUrl replaces website (D-02).
+ * Updated from Phase 46: old filter fields removed (D-03). fachrichtung
+ * is now a required Fachrichtung enum (D-04). profilUrl added (D-02 rename).
  * JSON-LD always @type: 'Physician' (D-27). medicalSpecialty always set (D-04).
  *
  * Pure helpers for the public Ärzte detail page:
@@ -17,6 +17,7 @@
 import type { Metadata } from 'next'
 import type { Doctor } from '@prisma/client'
 import { slugify } from './slug'
+import { FACHRICHTUNG_LABELS } from '@/lib/admin/import/fachrichtung-mapping'
 
 type DoctorForMetadata = Doctor & { bezirk: { name: string } }
 
@@ -55,7 +56,7 @@ export function buildDoctorJsonLd(
     '@type': 'Physician',
     name: [doctor.titel, doctor.name].filter(Boolean).join(' '),
     url: canonicalUrl,
-    medicalSpecialty: doctor.fachrichtung as string,
+    medicalSpecialty: FACHRICHTUNG_LABELS[doctor.fachrichtung],
     address: {
       '@type': 'PostalAddress',
       streetAddress: doctor.address,

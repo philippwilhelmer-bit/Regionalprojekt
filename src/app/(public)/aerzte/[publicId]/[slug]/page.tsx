@@ -105,14 +105,13 @@ export default async function DoctorDetailPage({ params }: Props) {
           )}
           {doctor.profilUrl && (
             <p className="text-dir-on-surface">
-              Profil auf aekstmk.or.at:{' '}
               <a
                 href={doctor.profilUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-dir-primary underline"
               >
-                {doctor.profilUrl}
+                Profil auf aekstmk.or.at
               </a>
             </p>
           )}
