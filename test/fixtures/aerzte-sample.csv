@@ -1,0 +1,11 @@
+Bezirk,Fachrichtung,Name,Adresse,Telefonnummer,ArztNr,ProfilURL
+"Graz-Stadt",Allgemeinmedizin,"Mustermann, Maria","Hauptplatz 1, 8010 Graz",+43 316 123456,A0001,https://www.aekstmk.or.at/aerztesuche-46?arztnr=A0001
+"Graz-Stadt",Innere Medizin,"Schmidt, Hans","Schillerplatz 4, 8010 Graz",+43 316 654321,A0002,https://www.aekstmk.or.at/aerztesuche-46?arztnr=A0002
+Murtal,Allgemeinmedizin,"Huber, Anna","Bahnhofstraße 12, 8750 Judenburg",+43 3572 12345,A0003,
+Murtal,"Hals-, Nasen- und Ohrenheilkunde","Wagner, Franz","Ringstraße 5, 8750 Judenburg",,A0004,https://www.aekstmk.or.at/aerztesuche-46?arztnr=A0004
+Liezen,Augenheilkunde und Optometrie,"Berger, Petra","Hauptstraße 22, 8940 Liezen",+43 3612 22334,A0005,
+Liezen,Allgemeinmedizin,"Maier, Johann","Ennstalstraße 8, 8940 Liezen",,A0006,https://www.aekstmk.or.at/aerztesuche-46?arztnr=A0006
+Weiz,Orthopädie und Traumatologie,"Gruber, Elisabeth","Weizbergstraße 3, 8160 Weiz",+43 3172 33445,A0007,https://www.aekstmk.or.at/aerztesuche-46?arztnr=A0007
+Weiz,Innere Medizin,"Fuchs, Karl","Marktplatz 7, 8160 Weiz",+43 3172 55667,A0008,https://www.aekstmk.or.at/aerztesuche-46?arztnr=A0008
+"Graz-Stadt",Augenheilkunde und Optometrie,"Schneider, Rosa","Annenstraße 15, 8020 Graz",+43 316 778899,A0009,https://www.aekstmk.or.at/aerztesuche-46?arztnr=A0009
+Murtal,"Hals-, Nasen- und Ohrenheilkunde","Brandstätter, Georg","Obere Marktstraße 2, 8750 Judenburg",+43 3572 98765,A0010,https://www.aekstmk.or.at/aerztesuche-46?arztnr=A0010
