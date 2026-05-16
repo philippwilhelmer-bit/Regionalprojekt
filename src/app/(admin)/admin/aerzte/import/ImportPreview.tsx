@@ -11,6 +11,7 @@
  */
 import { commitCsvImportForm } from '@/lib/admin/doctors-import-actions'
 import type { RowConflict } from '@/lib/admin/import/csv-parser'
+import { CommitButton } from './CommitButton'
 
 interface PreviewSummary {
   totalRows: number
@@ -98,25 +99,22 @@ export function ImportPreview({ token, summary, conflicts }: ImportPreviewProps)
         </details>
       )}
 
-      {/* Commit form — two-step confirm via <details> (JS-less, per DoctorRow pattern) */}
+      {/* Commit form — two-step confirm via <details> reveals the actual submit button.
+          CommitButton is 'use client' + useFormStatus() so the user sees an "Importiere…"
+          disabled state while commitCsvImportForm runs (multi-second DB transaction). */}
       {commitCount > 0 && (
         <form action={commitCsvImportForm}>
           <input type="hidden" name="token" value={token} />
           <details className="inline-block">
-            <summary className="px-dir-md py-dir-sm rounded-dir-sm border border-dir-outline-variant text-dir-error text-sm font-medium cursor-pointer list-none hover:bg-dir-error-container">
-              Import bestätigen ({commitCount} Zeilen)
+            <summary className="px-dir-md py-dir-sm rounded-dir-sm border border-dir-outline-variant text-dir-on-surface-variant text-sm font-medium cursor-pointer list-none hover:bg-dir-surface-variant">
+              Import vorbereiten ({commitCount} Zeilen) ▾
             </summary>
             <div className="mt-dir-xs">
               <p className="text-xs text-dir-on-surface-variant mb-dir-xs">
                 Diese Aktion importiert {newRows} neue Ärzte und aktualisiert {updateRows}{' '}
                 bestehende Einträge. Dieser Vorgang kann nicht rückgängig gemacht werden.
               </p>
-              <button
-                type="submit"
-                className="px-dir-md py-dir-sm bg-dir-error text-dir-on-error text-sm font-medium rounded-dir-sm hover:opacity-90"
-              >
-                Wirklich importieren
-              </button>
+              <CommitButton label={`Import bestätigen (${commitCount} Zeilen)`} />
             </div>
           </details>
         </form>
