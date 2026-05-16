@@ -23,6 +23,9 @@ import { DoctorFilters } from './DoctorFilters'
 import { DoctorRow } from './DoctorRow'
 
 export const dynamic = 'force-dynamic'
+// Allow up to 5 minutes for the batch geocoding Server Action (200 docs × 1.1 s ≈ 220 s).
+// Must live in the route segment, not in the 'use server' file (Next.js 15 constraint).
+export const maxDuration = 300
 
 interface SearchParams {
   bezirk?: string

@@ -8,13 +8,18 @@ vi.mock('../../lib/content/articles', () => ({
 vi.mock('../../lib/content/bezirke', () => ({
   listBezirke: vi.fn(),
 }))
+vi.mock('../../lib/content/doctors', () => ({
+  listDoctors: vi.fn(),
+}))
 
 import { listArticles } from '../../lib/content/articles'
 import { listBezirke } from '../../lib/content/bezirke'
+import { listDoctors } from '../../lib/content/doctors'
 import sitemap from '../../app/sitemap'
 
 const mockListArticles = vi.mocked(listArticles)
 const mockListBezirke = vi.mocked(listBezirke)
+const mockListDoctors = vi.mocked(listDoctors)
 
 // Minimal bezirk fixture
 function makeBezirk(slug: string, name: string, id: number) {
@@ -62,6 +67,7 @@ describe('sitemap', () => {
   it('includes homepage URL with priority 1.0', async () => {
     mockListArticles.mockResolvedValue([])
     mockListBezirke.mockResolvedValue(THIRTEEN_BEZIRKE)
+    mockListDoctors.mockResolvedValue([])
 
     const entries = await sitemap()
     const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://lodenundleute.at'
@@ -73,6 +79,7 @@ describe('sitemap', () => {
   it('includes /impressum URL', async () => {
     mockListArticles.mockResolvedValue([])
     mockListBezirke.mockResolvedValue(THIRTEEN_BEZIRKE)
+    mockListDoctors.mockResolvedValue([])
 
     const entries = await sitemap()
     const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://lodenundleute.at'
@@ -83,6 +90,7 @@ describe('sitemap', () => {
   it('includes /bezirk/[slug] URLs for all 13 Bezirke', async () => {
     mockListArticles.mockResolvedValue([])
     mockListBezirke.mockResolvedValue(THIRTEEN_BEZIRKE)
+    mockListDoctors.mockResolvedValue([])
 
     const entries = await sitemap()
     const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://lodenundleute.at'
@@ -97,6 +105,7 @@ describe('sitemap', () => {
     const article = makeArticle('k7x9mn', 'Liezen Unwetter Warnung')
     mockListArticles.mockResolvedValue([article as any])
     mockListBezirke.mockResolvedValue(THIRTEEN_BEZIRKE)
+    mockListDoctors.mockResolvedValue([])
 
     const entries = await sitemap()
     const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://lodenundleute.at'
@@ -110,6 +119,7 @@ describe('sitemap', () => {
     const article = makeArticle('abc111', 'Test Artikel')
     mockListArticles.mockResolvedValue([article as any])
     mockListBezirke.mockResolvedValue(THIRTEEN_BEZIRKE)
+    mockListDoctors.mockResolvedValue([])
 
     const entries = await sitemap()
     const articleEntry = entries.find(e => e.url.includes('/artikel/abc111/'))
@@ -117,13 +127,14 @@ describe('sitemap', () => {
     expect(articleEntry?.lastModified).toEqual(publishedAt)
   })
 
-  it('total URL count equals 1 (home) + 1 (impressum) + 13 (bezirke) + N (articles)', async () => {
+  it('total URL count equals 1 (home) + 1 (impressum) + 1 (aerzte) + 13 (bezirke) + N (articles)', async () => {
     const articles = [makeArticle('id1', 'Artikel 1'), makeArticle('id2', 'Artikel 2')]
     mockListArticles.mockResolvedValue(articles as any)
     mockListBezirke.mockResolvedValue(THIRTEEN_BEZIRKE)
+    mockListDoctors.mockResolvedValue([])
 
     const entries = await sitemap()
-    // 1 home + 1 impressum + 13 bezirke + 2 articles = 17
-    expect(entries).toHaveLength(17)
+    // 1 home + 1 impressum + 1 aerzte + 13 bezirke + 2 articles = 18
+    expect(entries).toHaveLength(18)
   })
 })

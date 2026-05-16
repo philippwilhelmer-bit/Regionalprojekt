@@ -27,7 +27,6 @@
  * Next.js treating the helpers as Server Actions (Plan 47-03 Task 1 mitigation).
  */
 'use server'
-export const maxDuration = 300
 
 import { randomUUID } from 'node:crypto'
 import type { Fachrichtung, PrismaClient } from '@prisma/client'
@@ -40,14 +39,11 @@ import type { ParsedRow, RowConflict } from './import/csv-parser'
 import { setPreview, getPreview } from './import/preview-cache'
 import type { CachedPreview } from './import/preview-cache'
 
-// Re-export cache for testability (tree-shaken from client bundle by @vercel/next)
-export { PREVIEW_CACHE } from './import/preview-cache'
-
 // ─── Shared sleep helper ──────────────────────────────────────────────────────
-// Exported for testability: tests inject a no-op sleepFn into geocodeBatchDb
+// Not exported — tests inject a no-op sleepFn into geocodeBatchDb
 // instead of faking global setTimeout (which breaks pglite's internal timers).
 
-export function sleep(ms: number): Promise<void> {
+function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms))
 }
 
