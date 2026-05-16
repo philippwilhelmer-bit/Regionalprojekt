@@ -4,6 +4,7 @@ import {
   buildDoctorMetadata,
   buildDoctorJsonLd,
 } from './doctor-metadata'
+import { FACHRICHTUNG_LABELS } from '@/lib/admin/import/fachrichtung-mapping'
 
 type DoctorForMetadata = Doctor & { bezirk: { name: string } }
 
@@ -42,11 +43,19 @@ describe('buildDoctorJsonLd', () => {
     expect(jsonLd['@type']).toBe('Physician')
   })
 
-  it('Test 2: medicalSpecialty always set to fachrichtung value (required enum)', () => {
+  it('Test 2: medicalSpecialty is the German label from FACHRICHTUNG_LABELS (D-27)', () => {
     const doctor = makeDoctor({ fachrichtung: 'INNERE_MEDIZIN_UND_KARDIOLOGIE' })
     const jsonLd = buildDoctorJsonLd(doctor, `${BASE_URL}/aerzte/abc123/maria-mueller`)
     expect(jsonLd['@type']).toBe('Physician')
-    expect(jsonLd.medicalSpecialty).toBe('INNERE_MEDIZIN_UND_KARDIOLOGIE')
+    expect(jsonLd.medicalSpecialty).toBe(FACHRICHTUNG_LABELS['INNERE_MEDIZIN_UND_KARDIOLOGIE'])
+    expect(jsonLd.medicalSpecialty).toBe('Innere Medizin und Kardiologie')
+  })
+
+  it('Test 3: medicalSpecialty uses FACHRICHTUNG_LABELS for any fachrichtung value', () => {
+    const doctor = makeDoctor({ fachrichtung: 'ALLGEMEINMEDIZIN' })
+    const jsonLd = buildDoctorJsonLd(doctor, `${BASE_URL}/aerzte/abc123/maria-mueller`)
+    expect(jsonLd.medicalSpecialty).toBe(FACHRICHTUNG_LABELS['ALLGEMEINMEDIZIN'])
+    expect(jsonLd.medicalSpecialty).toBe('Allgemeinmedizin')
   })
 
   it('Test 4: doctor with lat/lon set → JSON-LD includes geo GeoCoordinates', () => {
