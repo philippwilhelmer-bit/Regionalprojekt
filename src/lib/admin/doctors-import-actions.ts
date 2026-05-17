@@ -285,7 +285,9 @@ export async function geocodeBatchDb(
   const candidates = await db.doctor.findMany({
     where: { lat: null },
     select: { id: true, name: true, address: true },
-    take: 200, // D-21: cap at 200 (200 × 1.1s = 220s < maxDuration=300)
+    // Realistic per-doctor cost: ~1.1s sleep + ~0.5s Nominatim + ~2s mapgen+Blob upload + ~0.05s DB = ~3.5s.
+    // Cap at 80 so a batch fits inside maxDuration=300 with margin (80 × 3.5 ≈ 280s).
+    take: 80,
   })
 
   let processed = 0

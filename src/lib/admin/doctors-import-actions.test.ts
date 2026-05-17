@@ -442,8 +442,8 @@ describe('geocodeBatch — Task 3 tests', () => {
     expect(result.processed).toBe(5)
   })
 
-  it('Test 2 (batch cap): 250 null doctors → first call processes 200, returns remaining 50', async () => {
-    await seedDoctors(250, false)
+  it('Test 2 (batch cap): 100 null doctors → first call processes 80, returns remaining 20', async () => {
+    await seedDoctors(100, false)
 
     mockGeocode.mockResolvedValue({
       lat: 47.0,
@@ -454,8 +454,8 @@ describe('geocodeBatch — Task 3 tests', () => {
     mockMapgen.mockResolvedValue({ url: 'https://blob/map.jpg', credit: '© basemap.at' })
 
     const result = await actions.geocodeBatchDb(db, noopSleep)
-    expect(result.processed).toBe(200)
-    expect(result.remaining).toBe(50)
+    expect(result.processed).toBe(80)
+    expect(result.remaining).toBe(20)
   })
 
   it('Test 3 (sleep timing): sleepFn is called with 1100ms after each geocodeLocation call', async () => {

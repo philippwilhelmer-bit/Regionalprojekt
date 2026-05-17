@@ -15,7 +15,7 @@ export function GeocodeButton({ disabled }: GeocodeButtonProps) {
       aria-busy={pending}
       className="px-dir-sm py-dir-xs text-sm rounded-dir-sm border border-dir-outline-variant text-dir-on-surface hover:bg-dir-surface-container disabled:opacity-40 disabled:cursor-not-allowed"
     >
-      {pending ? 'Geocodiere… (bis zu 4 min)' : 'Geocode next 200 (~4 min)'}
+      {pending ? 'Geocodiere… (bis zu 5 min)' : 'Geocode next 80 (~5 min)'}
     </button>
   )
 }

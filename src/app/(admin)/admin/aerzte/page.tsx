@@ -3,7 +3,7 @@
  *
  * Phase 47 additions:
  *   - Geocoder progress counter: "X von Y Ärzte geocoded (Z ausstehend)" (D-22)
- *   - "Geocode next 200 (~4 min)" button posting to geocodeBatchForm
+ *   - "Geocode next 80 (~5 min)" button posting to geocodeBatchForm
  *   - "CSV importieren" link to /admin/aerzte/import
  *   - Success banners for ?imported=N and ?geocoded=N redirects
  *
@@ -24,7 +24,9 @@ import { DoctorRow } from './DoctorRow'
 import { GeocodeButton } from './GeocodeButton'
 
 export const dynamic = 'force-dynamic'
-// Allow up to 5 minutes for the batch geocoding Server Action (200 docs × 1.1 s ≈ 220 s).
+// Allow up to 5 minutes for the batch geocoding Server Action.
+// Real per-doctor cost: ~1.1s sleep + ~0.5s Nominatim + ~2s mapgen+Blob = ~3.5s.
+// Batch capped at 80 in geocodeBatchDb so 80 × 3.5 ≈ 280s fits inside this 300s ceiling.
 // Must live in the route segment, not in the 'use server' file (Next.js 15 constraint).
 export const maxDuration = 300
 
