@@ -2,10 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import type { Bezirk, Fachrichtung } from '@prisma/client'
-import {
-  FACHRICHTUNG_OPTIONS,
-  FACHRICHTUNG_LABELS,
-} from '@/lib/admin/import/fachrichtung-mapping'
+import { FACHRICHTUNG_OPTIONS } from '@/lib/admin/import/fachrichtung-mapping'
 
 type ActiveFilters = {
   bezirk?: string
@@ -20,9 +17,9 @@ type Props = {
 /**
  * Client-side filter bar for the public Ärzte list (Phase 47 / D-25).
  *
- * Bezirk chips unchanged from Phase 46. Fachrichtung free-text field replaced
- * with HTML5 datalist over 51 options (D-25). URL contract: ?fachrichtung=ENUM_ID
- * (enum identifier round-tripped via FACHRICHTUNG_OPTIONS reverse-lookup on blur).
+ * Bezirk chips unchanged from Phase 46. Fachrichtung uses a native <select>
+ * dropdown over 51 options. URL contract: ?fachrichtung=ENUM_ID (enum
+ * identifier emitted directly as the option value — no label round-trip).
  *
  * Drives the list by mutating the URL query params (`bezirk`, `fachrichtung`).
  * The server reads them on the next navigation; page.tsx is `force-dynamic`.
@@ -64,25 +61,20 @@ export default function DoctorPublicFilters({ bezirke, active }: Props) {
         })}
       </div>
 
-      {/* Fachrichtung searchable datalist (D-25) */}
+      {/* Fachrichtung dropdown */}
       <div className="flex flex-wrap items-center gap-dir-sm">
-        <input
-          type="text"
-          list="fachrichtungen"
-          placeholder="Fachrichtung wählen…"
-          defaultValue={active.fachrichtung ? FACHRICHTUNG_LABELS[active.fachrichtung] : ''}
-          onBlur={(e) => {
-            const label = e.target.value.trim()
-            const id = FACHRICHTUNG_OPTIONS.find((o) => o.label === label)?.id
-            setParam('fachrichtung', id ?? undefined)
-          }}
+        <select
+          value={active.fachrichtung ?? ''}
+          onChange={(e) => setParam('fachrichtung', e.target.value || undefined)}
           className="bg-dir-surface-container-lowest text-dir-on-surface rounded-dir-md px-dir-md py-dir-xs text-sm border border-dir-outline-variant focus:outline-none focus:ring-2 focus:ring-dir-primary"
-        />
-        <datalist id="fachrichtungen">
+        >
+          <option value="">Alle Fachrichtungen</option>
           {FACHRICHTUNG_OPTIONS.map((o) => (
-            <option key={o.id} value={o.label} />
+            <option key={o.id} value={o.id}>
+              {o.label}
+            </option>
           ))}
-        </datalist>
+        </select>
         {hasActive && (
           <button
             type="button"
