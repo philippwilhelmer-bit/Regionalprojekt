@@ -87,6 +87,50 @@ export async function listDoctors(
   })
 }
 
+export type CountDoctorsOptions = Pick<
+  ListDoctorsOptions,
+  'bezirkId' | 'bezirkSlug' | 'fachrichtung' | 'isVerified'
+>
+
+export async function countDoctors(options?: CountDoctorsOptions): Promise<number>
+export async function countDoctors(
+  client: PrismaClient,
+  options?: CountDoctorsOptions,
+): Promise<number>
+export async function countDoctors(
+  clientOrOptions?: PrismaClient | CountDoctorsOptions,
+  options?: CountDoctorsOptions,
+): Promise<number> {
+  let db: PrismaClient
+  let opts: CountDoctorsOptions
+  if (
+    clientOrOptions !== null &&
+    typeof clientOrOptions === 'object' &&
+    '$connect' in clientOrOptions
+  ) {
+    db = clientOrOptions as PrismaClient
+    opts = options ?? {}
+  } else {
+    db = defaultPrisma
+    opts = (clientOrOptions as CountDoctorsOptions) ?? {}
+  }
+
+  let resolvedBezirkId = opts.bezirkId
+  if (resolvedBezirkId === undefined && opts.bezirkSlug !== undefined) {
+    const b = await db.bezirk.findUnique({ where: { slug: opts.bezirkSlug } })
+    if (!b) return 0
+    resolvedBezirkId = b.id
+  }
+
+  return db.doctor.count({
+    where: {
+      ...(resolvedBezirkId !== undefined ? { bezirkId: resolvedBezirkId } : {}),
+      ...(opts.fachrichtung !== undefined ? { fachrichtung: opts.fachrichtung } : {}),
+      ...(opts.isVerified !== undefined ? { isVerified: opts.isVerified } : {}),
+    },
+  })
+}
+
 export async function getDoctorByPublicId(publicId: string): Promise<DoctorWithBezirk | null>
 export async function getDoctorByPublicId(
   client: PrismaClient,

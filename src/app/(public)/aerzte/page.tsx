@@ -1,12 +1,15 @@
 import type { Metadata } from 'next'
 import type { Fachrichtung } from '@prisma/client'
-import { listDoctors } from '@/lib/content/doctors'
+import { countDoctors, listDoctors } from '@/lib/content/doctors'
 import { listBezirke } from '@/lib/content/bezirke'
 import { FACHRICHTUNG_LABELS } from '@/lib/admin/import/fachrichtung-mapping'
 import DoctorPublicCard from './DoctorPublicCard'
 import DoctorPublicFilters from './DoctorPublicFilters'
+import Pager from './Pager'
 
 export const dynamic = 'force-dynamic'
+
+const PAGE_SIZE = 50
 
 export const metadata: Metadata = {
   title: 'Ärzteverzeichnis — Loden & Leute',
@@ -17,6 +20,7 @@ export const metadata: Metadata = {
 type SearchParams = Promise<{
   bezirk?: string
   fachrichtung?: string
+  page?: string
 }>
 
 export default async function AerztePage({
@@ -32,14 +36,23 @@ export default async function AerztePage({
       ? (fachrichtungCandidate as Fachrichtung)
       : undefined
 
-  const [doctors, bezirke] = await Promise.all([
-    listDoctors({
-      bezirkSlug: sp.bezirk,
-      fachrichtung: fachrichtungRaw,
-      limit: 200,
-    }),
+  const pageParam = Number.parseInt(sp.page ?? '1', 10)
+  const page = Number.isFinite(pageParam) && pageParam >= 1 ? pageParam : 1
+  const offset = (page - 1) * PAGE_SIZE
+
+  const filterArgs = {
+    bezirkSlug: sp.bezirk,
+    fachrichtung: fachrichtungRaw,
+  }
+
+  const [doctors, totalCount, bezirke] = await Promise.all([
+    listDoctors({ ...filterArgs, limit: PAGE_SIZE, offset }),
+    countDoctors(filterArgs),
     listBezirke(),
   ])
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
+  const safePage = Math.min(page, totalPages)
 
   return (
     <main className="bg-dir-surface min-h-screen">
@@ -67,13 +80,22 @@ export default async function AerztePage({
         {doctors.length === 0 ? (
           <p className="text-dir-on-surface-variant">Keine Einträge gefunden.</p>
         ) : (
-          <ul className="flex flex-col gap-dir-sm">
-            {doctors.map((d) => (
-              <li key={d.id}>
-                <DoctorPublicCard doctor={d} />
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className="flex flex-col gap-dir-sm">
+              {doctors.map((d) => (
+                <li key={d.id}>
+                  <DoctorPublicCard doctor={d} />
+                </li>
+              ))}
+            </ul>
+            <Pager
+              page={safePage}
+              totalPages={totalPages}
+              totalCount={totalCount}
+              pageSize={PAGE_SIZE}
+              params={{ bezirk: sp.bezirk, fachrichtung: sp.fachrichtung }}
+            />
+          </>
         )}
       </div>
     </main>

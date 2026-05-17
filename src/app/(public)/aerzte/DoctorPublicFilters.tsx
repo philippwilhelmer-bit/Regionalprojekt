@@ -32,6 +32,8 @@ export default function DoctorPublicFilters({ bezirke, active }: Props) {
     const next = new URLSearchParams(sp?.toString() ?? '')
     if (value === undefined || value === '') next.delete(key)
     else next.set(key, value)
+    // Any filter change resets pagination to page 1.
+    next.delete('page')
     const qs = next.toString()
     router.push(qs ? `/aerzte?${qs}` : '/aerzte')
   }
