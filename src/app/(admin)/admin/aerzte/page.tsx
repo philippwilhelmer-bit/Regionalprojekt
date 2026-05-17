@@ -21,6 +21,7 @@ import { prisma } from '@/lib/prisma'
 import { geocodeBatchForm } from '@/lib/admin/doctors-import-actions'
 import { DoctorFilters } from './DoctorFilters'
 import { DoctorRow } from './DoctorRow'
+import { GeocodeButton } from './GeocodeButton'
 
 export const dynamic = 'force-dynamic'
 // Allow up to 5 minutes for the batch geocoding Server Action (200 docs × 1.1 s ≈ 220 s).
@@ -114,13 +115,7 @@ export default async function AdminDoctorsPage({
           {geocoded} von {total} Ärzte geocoded ({pending} ausstehend)
         </p>
         <form action={geocodeBatchForm}>
-          <button
-            type="submit"
-            disabled={pending === 0}
-            className="px-dir-sm py-dir-xs text-sm rounded-dir-sm border border-dir-outline-variant text-dir-on-surface hover:bg-dir-surface-container disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            Geocode next 200 (~4 min)
-          </button>
+          <GeocodeButton disabled={pending === 0} />
         </form>
       </div>
 
