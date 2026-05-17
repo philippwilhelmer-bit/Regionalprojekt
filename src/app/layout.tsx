@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   const isTestSite = process.env.NEXT_PUBLIC_IS_TEST_SITE === 'true'
   return (
-    <html lang="de" className={`h-full antialiased ${newsreader.variable} ${plusJakartaSans.variable}`}>
+    <html lang="de" className={`h-full antialiased ${newsreader.variable} ${plusJakartaSans.variable}`} suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
