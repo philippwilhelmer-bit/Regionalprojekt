@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { slugify } from '@/lib/reader/slug'
 import type { DoctorWithBezirk } from '@/lib/content/doctors'
+import { FACHRICHTUNG_LABELS } from '@/lib/admin/import/fachrichtung-mapping'
 
 /**
  * Public list-row card for a doctor (Phase 47 / updated from Phase 46).
@@ -31,7 +32,7 @@ export default function DoctorPublicCard({ doctor }: { doctor: DoctorWithBezirk 
         )}
       </div>
       <p className="text-dir-on-surface-variant text-sm mt-dir-xs">
-        {doctor.fachrichtung}
+        {FACHRICHTUNG_LABELS[doctor.fachrichtung]}
         {' · '}
         {doctor.bezirk.name}
       </p>

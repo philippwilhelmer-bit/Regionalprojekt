@@ -9,6 +9,7 @@ import {
 import { getArticleByPublicId } from '@/lib/content/articles'
 import { EditorialStackCard } from '@/components/reader/EditorialStackCard'
 import DoctorMap from './DoctorMap'
+import { FACHRICHTUNG_LABELS } from '@/lib/admin/import/fachrichtung-mapping'
 
 export const dynamic = 'force-dynamic'
 
@@ -79,7 +80,7 @@ export default async function DoctorDetailPage({ params }: Props) {
             )}
           </div>
           <p className="text-dir-on-surface-variant text-base md:text-lg mt-dir-sm">
-            {doctor.fachrichtung}
+            {FACHRICHTUNG_LABELS[doctor.fachrichtung]}
             {' · '}
             {doctor.bezirk.name}
           </p>
