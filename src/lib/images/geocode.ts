@@ -61,9 +61,19 @@ export async function geocodeLocation(
     `https://nominatim.openstreetmap.org/search` +
     `?q=${encodeURIComponent(query)}&countrycodes=at&format=jsonv2&limit=1`
 
-  const res = await fetch(url, {
+  let res = await fetch(url, {
     headers: { 'User-Agent': 'LodenUndLeute/1.0 (https://lodenundleute.at)' },
   })
+
+  // One-shot retry on 429 (Nominatim throttling — typically transient on burst,
+  // e.g. when two batches overlap or a previous invocation didn't fully unwind).
+  // 5 s back-off matches Nominatim's documented short-term cooldown.
+  if (res.status === 429) {
+    await new Promise((resolve) => setTimeout(resolve, 5000))
+    res = await fetch(url, {
+      headers: { 'User-Agent': 'LodenUndLeute/1.0 (https://lodenundleute.at)' },
+    })
+  }
 
   if (!res.ok) throw new Error(`Nominatim HTTP ${res.status}`)
 

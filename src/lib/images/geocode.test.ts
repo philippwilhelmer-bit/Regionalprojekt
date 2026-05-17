@@ -108,14 +108,56 @@ describe('geocodeLocation', () => {
     expect(result).toBeNull()
   })
 
-  it('throws when Nominatim returns HTTP error', async () => {
+  it('throws immediately on non-429 HTTP error (no retry)', async () => {
     const db = makeMockDb(null)
-    vi.spyOn(global, 'fetch').mockResolvedValue({
+    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
       ok: false,
-      status: 429,
+      status: 500,
     } as Response)
 
+    await expect(geocodeLocation(db, 'Graz')).rejects.toThrow('Nominatim HTTP 500')
+    expect(fetchSpy).toHaveBeenCalledOnce()
+  })
+
+  it('retries once on 429 — succeeds if second attempt is ok', async () => {
+    const db = makeMockDb(null)
+    // Make the 5s back-off instant for the test
+    const setTimeoutSpy = vi
+      .spyOn(global, 'setTimeout')
+      .mockImplementation(((cb: () => void) => {
+        cb()
+        return 0 as unknown as NodeJS.Timeout
+      }) as typeof setTimeout)
+    const fetchSpy = vi
+      .spyOn(global, 'fetch')
+      .mockResolvedValueOnce({ ok: false, status: 429 } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => [GRAZ_NOMINATIM_RESULT],
+      } as Response)
+
+    const result = await geocodeLocation(db, 'Graz')
+
+    expect(fetchSpy).toHaveBeenCalledTimes(2)
+    expect(result).not.toBeNull()
+    setTimeoutSpy.mockRestore()
+  })
+
+  it('throws if 429 persists after retry', async () => {
+    const db = makeMockDb(null)
+    const setTimeoutSpy = vi
+      .spyOn(global, 'setTimeout')
+      .mockImplementation(((cb: () => void) => {
+        cb()
+        return 0 as unknown as NodeJS.Timeout
+      }) as typeof setTimeout)
+    const fetchSpy = vi
+      .spyOn(global, 'fetch')
+      .mockResolvedValue({ ok: false, status: 429 } as Response)
+
     await expect(geocodeLocation(db, 'Graz')).rejects.toThrow('Nominatim HTTP 429')
+    expect(fetchSpy).toHaveBeenCalledTimes(2)
+    setTimeoutSpy.mockRestore()
   })
 
   it('stores result via upsert on cache miss', async () => {
